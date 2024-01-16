@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "55237249346",
+    "project_id": "petcong-58bea",
+    "storage_bucket": "petcong-58bea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:55237249346:android:ee09a00d623769719ae0db",
+        "android_client_info": {
+          "package_name": "com.example.petcong"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "55237249346-fi30ntpg2lccamkkm0sp0ihctm4eshs4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.petcong",
+            "certificate_hash": "aceeb15d0a41734facdb8ebd0a6093d401836a99"
+          }
+        },
+        {
+          "client_id": "55237249346-jf7mba41fi0is75chlcrrnda9td2gco0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.petcong",
+            "certificate_hash": "a2b1e61d54e790d05d833789111025b8070698ad"
+          }
+        },
+        {
+          "client_id": "55237249346-o0cjnutevi9s45b6v2voemvpq6bnedhv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.petcong",
+            "certificate_hash": "28cd4c63afb2e68ae36dd9db02355a27a66f9142"
+          }
+        },
+        {
+          "client_id": "55237249346-56ildqr6rnf4o2enllbv4fqbsl09utl1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDU6qVmu5bCCqTs0bofHDZv7oWkqgzhGe8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "55237249346-56ildqr6rnf4o2enllbv4fqbsl09utl1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "55237249346-8bd92lk7gthnm7c947pnns5qdc9il69u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.petcong.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

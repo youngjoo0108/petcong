@@ -1,6 +1,6 @@
 {
-    "name": "client_petcong",
-    "short_name": "client_petcong",
+    "name": "petcong",
+    "short_name": "petcong",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

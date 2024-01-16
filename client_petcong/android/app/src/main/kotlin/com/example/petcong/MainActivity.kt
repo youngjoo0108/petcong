@@ -1,4 +1,4 @@
-package com.example.client_petcong
+package com.example.petcong
 
 import io.flutter.embedding.android.FlutterActivity
 
