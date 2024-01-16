@@ -1,92 +1,70 @@
-# petcong
+# 펫콩! 반려동물 실시간 랜덤 소개팅 모바일 어플리케이션
+## 웹/모바일(웹 기술) 프로젝트
+
+<!-- 필수 항목 -->
+
+## 카테고리
+
+| Application | Domain | Language | Framework |
+| ---- | ---- | ---- | ---- |
+| :black_square_button: Desktop Web | :black_square_button: AI | :black_square_button: JavaScript | :black_square_button: Vue.js |
+| :white_check_mark: Mobile Web | :black_square_button: Big Data | :black_square_button: TypeScript | :black_square_button: React |
+| :black_square_button: Responsive Web | :black_square_button: Blockchain | :white_check_mark: Dart | :white_check_mark: Flutter |
+| :white_check_mark: Android App | :black_square_button: IoT | :black_square_button: C# | :black_square_button: Node.js |
+| :white_check_mark: iOS App | :black_square_button: AR/VR/Metaverse | :black_square_button: Python | :black_square_button: Flask/Django |
+| :black_square_button: Desktop App | :black_square_button: Game | :white_check_mark: Java | :white_check_mark: Spring/Springboot |
+
+| Application | Domain | Language | Framework |
+| ---- | ---- | ---- | ---- |
+| Android App | Social Media | Java | Spring Boot |
+| iOS App | Dating | Dart | Flutter |
 
 
+<!-- 필수 항목 -->
 
-## Getting started
+## 프로젝트 소개
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+* 프로젝트명: 반려동물 
+* 서비스 특징: 웹/모바일(웹 기술) 프로젝트를 위한 스켈레톤 프로젝트
+* 주요 기능
+  - 회원 관리
+  - 화상 미팅룸
+  - 그룹 채팅
+* 주요 기술
+  - WebRTC
+  - WebSocket
+  - JWT Authentication
+  - REST API
+* 참조 리소스
+  * Dart
+* 배포 환경
+  - URL: // 웹 서비스, 랜딩 페이지, 프로젝트 소개 등의 배포 URL 기입
+  - 테스트 계정: // 로그인이 필요한 경우, 사용 가능한 테스트 계정(ID/PW) 기입
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+<!-- 자유 양식 -->
 
-## Add your files
+## 팀 소개
+* 박종우: 팀장, 백엔드 개발
+* 이정호: 부팀장, 기획 및 와이어프레임 작성, 프론트엔드 개발
+* 신문영: 백엔드 과장, 개발 및 QA 담당
+* 송영주: 프론트엔드 과장, 개발, 
+* 강이규: 백엔드 개발, 코드 리뷰 및 인프라 담당, CI/CD, HTTPS, Docker 구성
+* 주재원: 프론트엔드 개발, Swagger API 문서 관리
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+<!-- 자유 양식 -->
 
-```
-cd existing_repo
-git remote add origin https://lab.ssafy.com/jongwoop97/petcong.git
-git branch -M master
-git push -uf origin master
-```
+## 프로젝트 상세 설명
 
-## Integrate with your tools
+// 개발 환경, 기술 스택, 시스템 구성도, ERD, 기능 상세 설명 등
+### 기능명세
+[기능 명세서 바로가기](https://hyper-wisteria-d2b.notion.site/c82dca87a1414de3a668275e3f75be47?pvs=74)  
+![spec_img](./readme_ref/spec.PNG){ height=440 }
 
-- [ ] [Set up project integrations](https://lab.ssafy.com/jongwoop97/petcong/-/settings/integrations)
+### ERD
+[ERD 바로가기](https://www.erdcloud.com/d/mCQ44wmdTtEFPeKst)  
+![erd_img](./readme_ref/petcong-erd.png){ height=440 }
 
-## Collaborate with your team
+### Wireframe
+[와이어프레임 바로가기](https://www.figma.com/file/taokPQiKfBR0jMYqdag0NF/PetCong?type=design&node-id=0%3A1&mode=design&t=yVl8A3FTkFFbI3cB-1)  
+![wireframe_img](./readme_ref/wireframe.PNG){ height=440 }
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
