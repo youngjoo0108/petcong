@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:petcong/pages/homepage.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -37,12 +38,33 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  void _handleGoogleSignIn() {
+  // void _handleGoogleSignIn() {
+  //   try {
+  //     GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
+  //     FirebaseAuth.instance.signInWithProvider(googleAuthProvider);
+  //   } catch (error) {
+  //     print(error);
+  //   }
+  // }
+  void _handleGoogleSignIn() async {
     try {
-      GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-      FirebaseAuth.instance.signInWithProvider(googleAuthProvider);
+      final user = await UserController.loginWithGoogle();
+      if (user != null && mounted) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const HomePage()));
+      }
+    } on FirebaseAuthException catch (error) {
+      print(error.message);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+        error.message ?? "Something went wrong",
+      )));
     } catch (error) {
       print(error);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+        error.toString(),
+      )));
     }
   }
 }
