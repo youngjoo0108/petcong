@@ -16,12 +16,6 @@ class MyBottomNavigationBar extends StatefulWidget {
 }
 
 class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
-  static const TextStyle optionStyle = TextStyle(
-    fontSize: 30,
-    fontWeight: FontWeight.bold,
-    color: Colors.grey,
-  );
-
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
@@ -30,20 +24,12 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
       showUnselectedLabels: false,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.star_rounded),
-          label: 'Star',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.space_dashboard_rounded),
-          label: 'Search',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.hotel_class_rounded),
-          label: 'main',
-        ),
-        BottomNavigationBarItem(
           icon: Icon(Icons.chat_outlined),
           label: 'chat',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.star_rounded),
+          label: 'Star',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
