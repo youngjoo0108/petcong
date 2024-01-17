@@ -6,6 +6,10 @@ import 'package:petcong/services/my_image_picker.dart';
 import 'package:petcong/widgets/display_image.dart';
 import 'package:image_picker/image_picker.dart';
 
+// 정보 입력창 만들기 이전 결과(물론 코드 수정은 있어야 함)
+// 하단에 다트 로고 누르면 화면 이동하고 갤러리, 사진 찍기 버튼 등장
+// 각 버튼 기능 자체는 정상적으로 작동
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -70,7 +74,7 @@ class _SelectAndDisplayImageState extends State<SelectAndDisplayImage> {
                 _imageFile = pickedFile;
               });
             } else {
-              print('No image selected');
+              ('No image selected');
             }
           },
           tooltip: 'Pick Image from Gallery',
@@ -84,7 +88,7 @@ class _SelectAndDisplayImageState extends State<SelectAndDisplayImage> {
                 _imageFile = pickedFile;
               });
             } else {
-              print('No image selected');
+              ('No image selected');
             }
           },
           tooltip: 'Take a Photo',
