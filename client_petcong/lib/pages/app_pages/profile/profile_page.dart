@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:petcong/main.dart';
 import 'package:petcong/pages/signin_pages/sign_in_page.dart';
 
 class MainProfilePage extends StatefulWidget {
@@ -10,18 +11,22 @@ class MainProfilePage extends StatefulWidget {
 }
 
 class _MainProfilePageState extends State<MainProfilePage> {
-  void _handleSignOut(BuildContext context) async {
-    BuildContext scaffoldContext = context; // Save the context outside async
-
+  Future<void> signOut(BuildContext context) async {
     try {
+      print(mounted);
       await FirebaseAuth.instance.signOut();
-
-      if (!mounted) {
-        Navigator.of(scaffoldContext).pushReplacement(
-            MaterialPageRoute(builder: (context) => const SignInPage()));
+      print("sign out");
+      print(mounted);
+      if (mounted) {
+        print("sign out mounted");
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const SignInPage()),
+          (route) => false,
+        );
       }
     } catch (error) {
-      print("로그아웃 중 오류 발생: $error");
+      debugPrint('sign out failed $error');
     }
   }
 
@@ -35,7 +40,13 @@ class _MainProfilePageState extends State<MainProfilePage> {
             const Text("프로필 페이지"),
             const SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () => _handleSignOut(context),
+              onPressed: () => {signOut(context)},
+              // {
+              //   // Navigator.push(
+              //   //   context,
+              //   //   MaterialPageRoute(builder: (context) => const MyAppContent()),
+              //   // );
+              // },
               child: const Text("로그아웃"),
             ),
           ],
