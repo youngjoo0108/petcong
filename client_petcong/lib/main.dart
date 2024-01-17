@@ -3,8 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:petcong/firebase_options.dart';
 import 'package:petcong/pages/homepage.dart';
-import 'package:petcong/pages/sign_in_page.dart';
-import 'package:petcong/pages/splash_screen_page.dart';
+import 'package:petcong/pages/signin_pages/sign_in_page.dart';
+import 'package:petcong/pages/signin_pages/splash_screen_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

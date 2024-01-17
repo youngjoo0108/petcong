@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:petcong/assets/navigations.dart';
+import 'package:petcong/assets/widgets/navigations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
