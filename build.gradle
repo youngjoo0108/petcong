@@ -38,6 +38,8 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
 
     implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+    implementation 'com.h2database:h2'
 }
 
 tasks.named('test') {
