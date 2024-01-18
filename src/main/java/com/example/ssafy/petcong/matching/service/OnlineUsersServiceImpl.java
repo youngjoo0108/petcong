@@ -9,6 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class OnlineUsersServiceImpl implements OnlineUsersService {
     private final BlockingQueue<Integer> onlineUserQueue = new LinkedBlockingQueue<>();
 
+    @Override
     public void addUserToQueue(int userId) {
         try {
             onlineUserQueue.put(userId);
@@ -16,9 +17,9 @@ public class OnlineUsersServiceImpl implements OnlineUsersService {
             Thread.currentThread().interrupt();
             // Handle interruption if needed
         }
-        onlineUserQueue.peek();
     }
 
+    @Override
     public int removeUserFromQueue() {
         try {
             return onlineUserQueue.take();
@@ -27,6 +28,11 @@ public class OnlineUsersServiceImpl implements OnlineUsersService {
             // Handle interruption if needed
             return -1;
         }
+    }
+
+    @Override
+    public int sizeOfQueue() {
+        return onlineUserQueue.size();
     }
 
 }
