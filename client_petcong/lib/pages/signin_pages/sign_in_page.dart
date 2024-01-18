@@ -55,7 +55,7 @@ class _SignInPageState extends State<SignInPage> {
     } else {
       try {
         GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-        FirebaseAuth.instance.signInWithProvider(googleAuthProvider);
+        FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
       } catch (error) {
         print(error);
       }
