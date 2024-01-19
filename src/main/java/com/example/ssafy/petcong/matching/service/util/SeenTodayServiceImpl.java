@@ -1,9 +1,12 @@
 package com.example.ssafy.petcong.matching.service.util;
 
+import org.springframework.stereotype.Service;
+
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Service
 public class SeenTodayServiceImpl implements  SeenTodayService {
     private final ConcurrentHashMap<Integer, Set<Integer>> userProfileMap = new ConcurrentHashMap<>();
 
