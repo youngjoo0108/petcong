@@ -1,8 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/pages/app_pages/profile/pet_name_page.dart';
 import 'package:petcong/pages/signin_pages/sign_in_page.dart';
+import 'package:petcong/widgets/continue_button.dart';
+import 'package:petcong/widgets/create_button.dart';
+import 'package:petcong/widgets/delete_button.dart';
 
 class MainProfilePage extends StatelessWidget {
   const MainProfilePage({Key? key}) : super(key: key);
@@ -35,6 +37,16 @@ class MainProfilePage extends StatelessWidget {
                       (route) => false);
                 },
                 child: const Text('log out')),
+            const SizedBox(
+              height: 30,
+            ),
+            const ContinueButton(isFilled: false),
+            const SizedBox(
+              height: 30,
+            ),
+            const ContinueButton(isFilled: true),
+            const RoundGradientXButton(),
+            const RoundGradientPlusButton(),
           ],
         ),
       ),

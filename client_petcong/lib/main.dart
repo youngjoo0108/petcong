@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:petcong/pages/signin_pages/sign_in_page.dart';
+import 'package:petcong/pages/signin_pages/splash_screen_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +15,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: SignInPage(),
+      home: SplashScreen(
+        child: SignInPage(),
+      ),
     );
   }
 }
