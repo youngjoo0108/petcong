@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:petcong/controller/user_controller.dart';
+import 'package:petcong/pages/homepage.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -45,17 +46,27 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  void _handleGoogleSignIn() {
-    if (Platform.isAndroid) {
+  void _handleGoogleSignIn() async {
+    if (true) {
       try {
-        UserController.loginWithGoogle();
-      } catch (error) {
-        print(error);
-      }
-    } else {
-      try {
-        GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-        FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
+        User? user = await FirebaseAuth.instance.authStateChanges().first;
+        if (user != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        } else {
+          if (Platform.isAndroid) {
+            await UserController.loginWithGoogle();
+          } else {
+            GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
+            await FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
+          }
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        }
       } catch (error) {
         print(error);
       }
