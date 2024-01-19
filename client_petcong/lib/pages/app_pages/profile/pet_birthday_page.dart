@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pet_gender_page.dart'; // GenderPage를 import
+import 'pet_gender_page.dart'; // PetGenderPage를 import
 
 class PetBirthdayPage extends StatefulWidget {
   final String petName;
@@ -53,6 +53,9 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
                 controller: _controller,
                 decoration: const InputDecoration(hintText: 'YYYY/MM/DD'),
                 validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return '생일을 입력해주세요.'; // 생일을 입력하지 않았을 경우 에러 메시지 반환
+                  }
                   return null;
                 },
               ),
