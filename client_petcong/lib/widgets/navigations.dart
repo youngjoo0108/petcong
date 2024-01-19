@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:petcong/assets/style.dart';
+import 'package:petcong/style.dart';
 
 class MyBottomNavigationBar extends StatefulWidget {
   const MyBottomNavigationBar({

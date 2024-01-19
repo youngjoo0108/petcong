@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:petcong/assets/widgets/navigations.dart';
+import 'package:petcong/widgets/navigations.dart';
 import 'package:petcong/pages/app_pages/chat/chat_page.dart';
 import 'package:petcong/pages/app_pages/matching/matching_page.dart';
 import 'package:petcong/pages/app_pages/profile/profile_page.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:petcong/assets/style.dart';
+import 'package:petcong/style.dart';
 
 class ContinueButton extends StatelessWidget {
   const ContinueButton({Key? key, required this.isFilled}) : super(key: key);

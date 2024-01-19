@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:petcong/assets/style.dart';
+import 'package:petcong/style.dart';
 
 class RoundGradientPlusButton extends StatelessWidget {
   const RoundGradientPlusButton({Key? key}) : super(key: key);
