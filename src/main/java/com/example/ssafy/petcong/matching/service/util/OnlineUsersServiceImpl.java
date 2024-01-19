@@ -1,4 +1,4 @@
-package com.example.ssafy.petcong.matching.service;
+package com.example.ssafy.petcong.matching.service.util;
 
 import org.springframework.stereotype.Service;
 
