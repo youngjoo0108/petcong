@@ -10,4 +10,5 @@ import lombok.Setter;
 public class ChoiceReq {
     private int requestUserId;
     private int partnerUserId;
+    private CallStatus callStatus;
 }
