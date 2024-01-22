@@ -1,5 +1,6 @@
 package com.example.ssafy.petcong.user.controller;
 
+import com.example.ssafy.petcong.user.model.record.UserImgRecord;
 import com.example.ssafy.petcong.user.model.record.UserRecord;
 import com.example.ssafy.petcong.user.service.UserService;
 
@@ -15,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Slf4j
 @CrossOrigin("*")
@@ -59,6 +63,14 @@ public class UserController {
                     .accepted()
                     .body("No user founded.");
         }
+    }
+
+    @PostMapping("/picture")
+    public ResponseEntity<?> picture(@RequestParam("file")MultipartFile file) throws IOException {
+        userService.uploadImage(null, file);
+        return ResponseEntity
+                .ok()
+                .body("Upload success.");
     }
 
 }
