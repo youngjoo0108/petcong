@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/matchings")
-public class MatchingController {
+public class MatchingController2 {
 
     private final MatchingConnectionService matchingConnectionService;
 
-    public MatchingController(MatchingConnectionService matchingConnectionService) {
+    public MatchingController2(MatchingConnectionService matchingConnectionService) {
         this.matchingConnectionService = matchingConnectionService;
     }
 
