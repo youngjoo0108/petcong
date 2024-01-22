@@ -4,7 +4,9 @@ import com.example.ssafy.petcong.user.model.enums.Gender;
 import com.example.ssafy.petcong.user.model.enums.Preference;
 import com.example.ssafy.petcong.user.model.enums.Status;
 import com.example.ssafy.petcong.user.model.record.UserRecord;
+
 import jakarta.persistence.*;
+
 import lombok.*;
 
 import java.util.Date;
@@ -81,9 +83,13 @@ public class User {
         this.status = userRecord.status();
         this.preference = userRecord.preference();
     }
-
+    public User(int userId) {
+        this.userId = userId;
+    }
     public User updateCallable(boolean callable) {
         this.callable = callable;
         return this;
     }
+
+
 }
