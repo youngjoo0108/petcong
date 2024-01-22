@@ -18,7 +18,7 @@ public record UserRecord(
         int age,
 
         @NotNull
-        boolean isCallable,
+        boolean callable,
 
         @NotNull
         @Size(max = 30)

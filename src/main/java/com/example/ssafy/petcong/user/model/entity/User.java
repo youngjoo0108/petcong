@@ -70,7 +70,7 @@ public class User {
     public User(UserRecord userRecord) {
         this.userId = userRecord.userId();
         this.age = userRecord.age();
-        this.callable = userRecord.isCallable();
+        this.callable = userRecord.callable();
         this.nickname = userRecord.nickname();
         this.email = userRecord.email();
         this.address = userRecord.address();
