@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class MainMatchingPage extends StatelessWidget {
-  const MainMatchingPage({super.key});
+class MainChatPage extends StatelessWidget {
+  const MainChatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text("Matching Page"),
+        child: Text("Chat Page"),
       ),
     );
   }
