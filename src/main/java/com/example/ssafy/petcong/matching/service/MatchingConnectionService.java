@@ -2,32 +2,30 @@ package com.example.ssafy.petcong.matching.service;
 
 import com.example.ssafy.petcong.matching.model.*;
 import com.example.ssafy.petcong.matching.repository.MatchingRepository;
-import com.example.ssafy.petcong.matching.repository.UserRepository;
-import io.openvidu.java.client.*;
-import lombok.RequiredArgsConstructor;
+import com.example.ssafy.petcong.user.model.User;
+import com.example.ssafy.petcong.user.repository.UserRepository;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
-import java.math.MathContext;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
-public class RtcConnectService {
+public class MatchingConnectionService {
 
     private final MatchingRepository matchingRepository;
     private final UserRepository userRepository;
 
-    private final SimpleSend
+    private final SimpMessageSendingOperations sendingOperations;
     private final int RANDOM_STR_LEN = 20;
 
-    public RtcConnectService(MatchingRepository matchingRepository, UserRepository userRepository) {
+    public MatchingConnectionService(MatchingRepository matchingRepository, UserRepository userRepository,
+                                     SimpMessageSendingOperations sendingOperations) {
         this.matchingRepository = matchingRepository;
         this.userRepository = userRepository;
+        this.sendingOperations = sendingOperations;
     }
 
     @Transactional
@@ -54,16 +52,15 @@ public class RtcConnectService {
         fromUser.setCallable(false);
         toUser.setCallable(false);
 
+        // 클라이언트끼리 연결할 링크를 반환
         Map<String, String> responseMap = new HashMap<>();
-        // fromUser -> toUser로 ws 연결 요청할 링크 반환
-//        responseMap.put("targetLink", "/queue/" + toUser.getId());
-        String link = RandomStringUtils.randomAlphanumeric(RANDOM_STR_LEN);
         Map<String, String> resMap2 = new HashMap<>();
-        responseMap.put("targetLink", link);
-        resMap2.put("selfLink", link);
 
+        String link = RandomStringUtils.randomAlphanumeric(RANDOM_STR_LEN);
+        responseMap.put("targetLink", "/ws/" + link);
+        resMap2.put("selfLink", "/ws/" + link);
 
-
+        sendingOperations.convertAndSend("/queue/" + toUser.getId(), resMap2);
 
         return responseMap;
     }
