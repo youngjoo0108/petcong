@@ -1,12 +1,12 @@
 package com.example.ssafy.petcong.user.repository;
 
-import com.example.ssafy.petcong.user.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.example.ssafy.petcong.user.model.entity.User;
+import com.example.ssafy.petcong.user.model.record.UserRecord;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+import org.springframework.data.repository.Repository;
 
-    User save(User user);
-    User findById(int id);
+public interface UserRepository extends Repository<User, String> {
+    UserRecord findUserByUserId(int userId);
+    UserRecord findUserByUid(String uid);
+    UserRecord save(User user);
 }
