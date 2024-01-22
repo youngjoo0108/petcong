@@ -20,4 +20,6 @@ public interface MatchingRepository extends JpaRepository<Matching, Integer>, Ma
 //    @Override
 //    <S extends Matching> S save(S entity);
     Matching save(Matching matching);
+
+    Matching findByFromUserIdAndToUserId(int fromUserId, int toUserId);
 }
