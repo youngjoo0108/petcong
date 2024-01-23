@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/pages/homepage.dart';
 import 'package:petcong/constants/style.dart';
@@ -77,10 +78,7 @@ class _SignInPageState extends State<SignInPage> {
       try {
         User? user = await FirebaseAuth.instance.authStateChanges().first;
         if (user != null) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
-          );
+          Get.offAll(const HomePage());
         } else {
           if (kIsWeb) {
             GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
@@ -88,13 +86,10 @@ class _SignInPageState extends State<SignInPage> {
           } else {
             await UserController.loginWithGoogle();
           }
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
-          );
+          Get.offAll(const HomePage());
         }
       } catch (error) {
-        print(error);
+        debugPrint(error.toString());
       }
     }
   }
