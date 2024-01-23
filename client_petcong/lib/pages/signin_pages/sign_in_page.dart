@@ -18,15 +18,13 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            begin: Alignment(0.00, -1.00),
+            end: Alignment(0, 1),
             colors: [
-              MyColor.myColor4.withOpacity(0.5), // 우측 상단 색상
-              MyColor.myColor2.withOpacity(0.4), // 좌측 상단 색상
-              Colors.white,
-              Colors.white,
+              Color.fromARGB(255, 240, 107, 100), // 우측 상단 색상
+              Color.fromARGB(255, 255, 87, 143), // 좌측 상단 색상
             ],
           ),
         ),
