@@ -1,4 +1,4 @@
-package com.example.ssafy.petcong.config;
+package com.example.ssafy.petcong.interceptor;
 
 import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.repository.UserRepository;

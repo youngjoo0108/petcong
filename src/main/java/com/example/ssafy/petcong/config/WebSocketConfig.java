@@ -1,5 +1,6 @@
 package com.example.ssafy.petcong.config;
 
+import com.example.ssafy.petcong.interceptor.PostWebSocketHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
