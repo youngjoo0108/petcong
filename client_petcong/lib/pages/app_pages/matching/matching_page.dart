@@ -7,22 +7,23 @@ class MainMatchingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-      child: Column(
-        children: [
-          const Text("Matching Page"),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainVideoCall(),
-                  ),
-                );
-              },
-              child: const Text('Call'))
-        ],
+      body: Center(
+        child: Column(
+          children: [
+            const Text("Matching Page"),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MainVideoCall(),
+                    ),
+                  );
+                },
+                child: const Text('Call'))
+          ],
+        ),
       ),
-    ));
+    );
   }
 }
