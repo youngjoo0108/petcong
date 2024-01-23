@@ -17,7 +17,6 @@ public class MatchingConnectionService {
 
     private final MatchingRepository matchingRepository;
     private final UserRepository userRepository;
-    private final int RANDOM_STR_LEN = 20;
 
     public MatchingConnectionService(MatchingRepository matchingRepository, UserRepository userRepository) {
         this.matchingRepository = matchingRepository;

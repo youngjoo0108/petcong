@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class MatchingControllerAdvice2 {
+public class MatchingControllerAdvice {
 
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<?> runtimeExceptionHandler(RuntimeException e) {
