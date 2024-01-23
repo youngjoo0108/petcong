@@ -1,6 +1,6 @@
 package com.example.ssafy.petcong.config;
 
-import com.example.ssafy.petcong.user.model.User;
+import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.repository.UserRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -57,7 +57,7 @@ public class PostWebSocketHandler implements ChannelInterceptor {
 
     @Transactional
     public void changeOnlineStatus(int userId, boolean toStatus) {
-        User user = userRepository.findById(userId);
+        User user = new User(userRepository.findUserByUserId(userId));
         user.setCallable(toStatus);
     }
 }

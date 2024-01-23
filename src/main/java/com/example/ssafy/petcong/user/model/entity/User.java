@@ -20,6 +20,7 @@ public class User {
 
     private int age;
 
+    @Setter
     private boolean callable;
 
     private String nickname;

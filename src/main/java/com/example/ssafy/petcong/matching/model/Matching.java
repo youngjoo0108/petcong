@@ -1,6 +1,6 @@
 package com.example.ssafy.petcong.matching.model;
 
-import com.example.ssafy.petcong.user.model.User;
+import com.example.ssafy.petcong.user.model.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -2,7 +2,7 @@ package com.example.ssafy.petcong.matching.service;
 
 import com.example.ssafy.petcong.matching.model.*;
 import com.example.ssafy.petcong.matching.repository.MatchingRepository;
-import com.example.ssafy.petcong.user.model.User;
+import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.repository.UserRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -17,23 +17,19 @@ public class MatchingConnectionService {
 
     private final MatchingRepository matchingRepository;
     private final UserRepository userRepository;
-
-    private final SimpMessageSendingOperations sendingOperations;
     private final int RANDOM_STR_LEN = 20;
 
-    public MatchingConnectionService(MatchingRepository matchingRepository, UserRepository userRepository,
-                                     SimpMessageSendingOperations sendingOperations) {
+    public MatchingConnectionService(MatchingRepository matchingRepository, UserRepository userRepository) {
         this.matchingRepository = matchingRepository;
         this.userRepository = userRepository;
-        this.sendingOperations = sendingOperations;
     }
 
     @Transactional
     public Map<String, String> choice(ChoiceReq choiceReq){
         // DB에서 requestUserId, partnerUserId인 데이터 가져오기
         Matching matching = matchingRepository.findByUsersId(choiceReq.getPartnerUserId(), choiceReq.getRequestUserId());
-        User fromUser = userRepository.findById(choiceReq.getRequestUserId());
-        User toUser = userRepository.findById(choiceReq.getPartnerUserId());
+        User fromUser = new User(userRepository.findUserByUserId(choiceReq.getRequestUserId()));
+        User toUser = new User(userRepository.findUserByUserId(choiceReq.getPartnerUserId()));
 
         // 기존 데이터 없으면
         if (matching == null) {
@@ -54,20 +50,15 @@ public class MatchingConnectionService {
 
         // 클라이언트끼리 연결할 링크를 반환
         Map<String, String> responseMap = new HashMap<>();
-        Map<String, String> resMap2 = new HashMap<>();
 
-        String link = RandomStringUtils.randomAlphanumeric(RANDOM_STR_LEN);
-        responseMap.put("targetLink", "/ws/" + link);
-        resMap2.put("selfLink", "/ws/" + link);
-
-        sendingOperations.convertAndSend("/queue/" + toUser.getId(), resMap2);
+        responseMap.put("targetLink", "/websocket/" + toUser.getUserId());
 
         return responseMap;
     }
 
     @Transactional
     public void changeToCallable(int userId) {
-        User user = userRepository.findById(userId);
+        User user = new User(userRepository.findUserByUserId(userId));
         user.setCallable(true);
     }
 }
