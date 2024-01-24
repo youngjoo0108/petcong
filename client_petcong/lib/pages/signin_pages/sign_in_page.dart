@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/pages/homepage.dart';
-import 'package:petcong/style.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -18,15 +17,13 @@ class _SignInPageState extends State<SignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            begin: Alignment(0.00, -1.00),
+            end: Alignment(0, 1),
             colors: [
-              MyColor.myColor4.withOpacity(0.5), // 우측 상단 색상
-              MyColor.myColor2.withOpacity(0.4), // 좌측 상단 색상
-              Colors.white,
-              Colors.white,
+              Color.fromARGB(255, 240, 107, 100), // 우측 상단 색상
+              Color.fromARGB(255, 255, 87, 143), // 좌측 상단 색상
             ],
           ),
         ),
@@ -78,24 +75,18 @@ class _SignInPageState extends State<SignInPage> {
       try {
         User? user = await FirebaseAuth.instance.authStateChanges().first;
         if (user != null) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
-          );
+          Get.offAll(const HomePage());
         } else {
-          if (Platform.isAndroid) {
-            await UserController.loginWithGoogle();
-          } else {
+          if (kIsWeb) {
             GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
             await FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
+          } else {
+            await UserController.loginWithGoogle();
           }
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
-          );
+          Get.offAll(const HomePage());
         }
       } catch (error) {
-        print(error);
+        debugPrint(error.toString());
       }
     }
   }
