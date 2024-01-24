@@ -20,7 +20,6 @@ class _MainVideoCallState extends State<MainVideoCall> {
 
   @override
   void initState() {
-    // TODO: implement initState
     init();
     super.initState();
   }

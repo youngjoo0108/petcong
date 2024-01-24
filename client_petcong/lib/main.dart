@@ -6,14 +6,10 @@ import 'package:petcong/utils/firebase_options.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 void main() async {
-  debugPrint("before WidgetFlutterBinding");
   WidgetsFlutterBinding.ensureInitialized();
-  debugPrint("before initialization");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  debugPrint("after initializing");
-
   setPathUrlStrategy();
 
   runApp(const MyApp());
