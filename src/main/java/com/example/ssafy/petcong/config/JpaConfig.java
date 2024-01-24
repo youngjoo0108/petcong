@@ -3,6 +3,7 @@ package com.example.ssafy.petcong.config;
 import jakarta.persistence.EntityManagerFactory;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -14,40 +15,35 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.TransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
+@Slf4j
 @Configuration
 @EnableJpaRepositories("com.example.ssafy.petcong.*.repository")
-@EnableTransactionManagement
-@RequiredArgsConstructor
 public class JpaConfig {
-    @Bean
-    public HibernateJpaVendorAdapter hibernateJpaVendorAdapter() {
-        HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
-        hibernateJpaVendorAdapter.setShowSql(true);
-        return hibernateJpaVendorAdapter;
-    }
     @Bean
     @ConfigurationProperties("spring.datasource.hikari")
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-            DataSource dataSource,
-            JpaVendorAdapter hibernateJpaVendorAdapter) {
-        var factory = new LocalContainerEntityManagerFactoryBean();
-        factory.setJpaVendorAdapter(hibernateJpaVendorAdapter);
+    public JpaVendorAdapter jpaVendorAdapter() {
+        return new HibernateJpaVendorAdapter();
+    }
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setDataSource(dataSource);
+        factory.setJpaVendorAdapter(jpaVendorAdapter);
         factory.setPackagesToScan("com.example.ssafy.petcong.*.model.entity");
         return factory;
     }
     @Bean
     public TransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
-        jpaTransactionManager.setEntityManagerFactory(entityManagerFactory);
-        return jpaTransactionManager;
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory);
+        return transactionManager;
     }
+
 }
