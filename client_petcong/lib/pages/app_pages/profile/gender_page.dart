@@ -106,4 +106,3 @@ class _PetNamePageState extends State<PetNamePage> {
     return const Scaffold();
   }
 }
-  

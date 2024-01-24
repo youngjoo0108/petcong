@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:petcong/constants/style.dart';
 
 class ContinueButton extends StatelessWidget {
-  const ContinueButton({Key? key, required this.isFilled}) : super(key: key);
+  const ContinueButton({
+    Key? key,
+    required this.isFilled,
+    required this.buttonText,
+    this.onPressed,
+  }) : super(key: key);
 
   final bool isFilled;
+  final String buttonText;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -41,17 +48,17 @@ class ContinueButton extends StatelessWidget {
           disabledForegroundColor: Colors.transparent.withOpacity(0.38),
           disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
           shadowColor: Colors.transparent,
-          minimumSize: const Size(500.0, 30.0), // 가로 길이와 세로 길이를 조절
+          minimumSize: const Size(500.0, 30.0),
         ),
-        onPressed: () {},
-        child: const Padding(
-          padding: EdgeInsets.only(
+        onPressed: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.only(
             top: 6,
             bottom: 6,
           ),
           child: Text(
-            "Continue",
-            style: TextStyle(
+            buttonText, // 이전에는 'Continue'였는데, 이제는 buttonText를 사용합니다.
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 30,
             ),

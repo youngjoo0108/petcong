@@ -1,109 +1,131 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:petcong/services/my_image_picker.dart'; // MyImagePicker import
+import 'select_image_page.dart';
+import 'package:petcong/widgets/continue_button.dart';
+import 'package:petcong/widgets/create_button.dart';
+import 'package:petcong/widgets/delete_button.dart'; // SelectImagePage를 import 해야 합니다.
 
 class PhotoSelectionPage extends StatefulWidget {
-  const PhotoSelectionPage({Key? key}) : super(key: key);
+  final double progress; // progress 변수 추가
+
+  const PhotoSelectionPage({
+    Key? key,
+    required this.progress, // progress 파라미터 추가
+  }) : super(key: key);
 
   @override
   _PhotoSelectionPageState createState() => _PhotoSelectionPageState();
 }
 
 class _PhotoSelectionPageState extends State<PhotoSelectionPage> {
-  final _images = <File>[]; // 업로드한 사진을 저장하는 리스트
-  final _picker = MyImagePicker(); // MyImagePicker 인스턴스 생성
-  double _progress = 7 / 10;
+  bool _isButtonDisabled = false;
+  double _progress;
+
+  _PhotoSelectionPageState() : _progress = 7 / 10;
+
+  @override
+  void initState() {
+    super.initState();
+    _progress = widget.progress; // progress 값을 _progress에 할당
+  }
 
   void _increaseProgress() {
     setState(() {
-      _progress += 1 / 10; // 진행 상황을 증가시킴
+      _progress += 1 / 10;
+      if (_progress >= 1.0) {
+        _isButtonDisabled = true;
+      }
     });
   }
 
-  Future<void> _getImage(int index) async {
-    if (_images.length >= 6) {
-      return; // 이미 6개의 사진을 업로드했다면 아무것도 하지 않음
-    }
-    final pickedFile = await _picker.getImageFromGallery(); // 갤러리에서 이미지 선택
-    if (pickedFile != null) {
-      setState(() {
-        if (index < _images.length) {
-          _images[index] = File(pickedFile.path); // 이미 있는 위치면 이미지 교체
-        } else {
-          _images.add(File(pickedFile.path)); // 새로운 위치면 이미지 추가
-          if (_images.length >= 2) {
-            _increaseProgress(); // 사진을 두 장 이상 업로드하면 진행 상황 증가
-          }
-        }
-      });
-    }
-  }
-
-  void _removeImage(int index) {
-    setState(() {
-      _images.removeAt(index); // 이미지 삭제
-    });
+  void _onAddPhoto() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SelectImagePage()),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const IconButton(
-          icon: Icon(Icons.close), // X 모양의 아이콘
-          onPressed: null, // 이전 페이지로 이동하는 기능 삭제
+        automaticallyImplyLeading: false,
+        title: LinearProgressIndicator(
+          value: _progress,
+          valueColor: const AlwaysStoppedAnimation<Color>(
+              Color.fromARGB(255, 234, 64, 128)),
         ),
-        title: LinearProgressIndicator(value: _progress), // 상단 진행 상황 바
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
-            GridView.count(
-              crossAxisCount: 3,
-              children: List.generate(6, (index) {
-                return Stack(
-                  alignment: Alignment.topRight,
-                  children: <Widget>[
-                    if (index < _images.length)
-                      Image.file(_images[index]) // 이미지가 있으면 이미지 표시
-                    else
-                      const Placeholder(
-                          fallbackHeight: 100,
-                          fallbackWidth: 100), // 이미지가 없으면 Placeholder 표시
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: IconButton(
-                        icon: Icon(index < _images.length
-                            ? Icons.close
-                            : Icons.add), // 이미지가 있으면 'x' 아이콘, 없으면 '+' 아이콘
-                        onPressed: () {
-                          if (index < _images.length) {
-                            _removeImage(index); // 이미지가 있으면 _removeImage 메서드 호출
-                          } else {
-                            _getImage(index); // 이미지가 없으면 _getImage 메서드 호출
-                          }
-                        },
-                      ),
-                    ),
-                    if (index < _images.length)
-                      const Positioned(
-                        top: 0,
-                        child: Icon(Icons.star), // 이미지가 있으면 별 모양 아이콘 표시
-                      ),
-                  ],
-                );
-              }),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back_ios, size: 32),
+                onPressed: () => Navigator.pop(context),
+              ),
             ),
-            ElevatedButton(
-              onPressed: _images.length < 2
-                  ? null
-                  : () {
-                      // 이미지가 2개 이상 업로드 되지 않았다면 버튼 비활성화
-                      // 다음 페이지로 이동하는 코드를 여기에 추가
-                    },
-              child: const Text('Continue'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: <Widget>[
+                  const Text('사진 첨부', style: TextStyle(fontSize: 24.0)),
+                  const SizedBox(height: 20.0),
+                  const Text(
+                    '최소 2개의 사진을 첨부해주세요!',
+                    style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 30.0),
+                  Expanded(
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
+                      ),
+                      itemCount: 6,
+                      itemBuilder: (context, index) {
+                        return Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            Container(
+                              color: Colors.grey[300],
+                              child: Center(
+                                child: Text('사진 ${index + 1}'),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: InkWell(
+                                onTap: _onAddPhoto,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.blue,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.add,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 50.0),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: _isButtonDisabled ? null : _increaseProgress,
+                      child: const Text('Continue'),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

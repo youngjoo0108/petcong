@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:petcong/pages/homepage.dart';
 import 'package:petcong/pages/signin_pages/sign_in_page.dart';
+import 'package:petcong/services/socket_service.dart';
 
 class UserController extends GetxController {
   static UserController instance = Get.find();

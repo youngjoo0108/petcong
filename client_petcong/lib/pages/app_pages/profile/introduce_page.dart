@@ -1,9 +1,14 @@
-// introduce_page.dart
 import 'package:flutter/material.dart';
 import 'photo_selection_page.dart';
+import 'package:petcong/widgets/continue_button.dart';
 
 class IntroducePage extends StatefulWidget {
-  const IntroducePage({Key? key}) : super(key: key);
+  final double progress;
+
+  const IntroducePage({
+    Key? key,
+    required this.progress,
+  }) : super(key: key);
 
   @override
   _IntroducePageState createState() => _IntroducePageState();
@@ -12,23 +17,23 @@ class IntroducePage extends StatefulWidget {
 class _IntroducePageState extends State<IntroducePage> {
   final _controller = TextEditingController();
   bool _isButtonDisabled = true;
-  double _progress = 6 / 10;
+  late double _progress;
 
-  void _increaseProgress() {
+  void _decreaseProgress() {
     setState(() {
-      _progress += 1 / 10; // 진행 상황을 증가시킴
+      if (_progress > 0) {
+        _progress -= 1 / 10;
+      }
     });
   }
 
   @override
   void initState() {
     super.initState();
+    _progress = widget.progress;
     _controller.addListener(() {
       setState(() {
         _isButtonDisabled = _controller.text.trim().isEmpty;
-        if (!_isButtonDisabled) {
-          _increaseProgress(); // 텍스트 필드가 비어있지 않다면 진행 상황 증가
-        }
       });
     });
   }
@@ -37,32 +42,63 @@ class _IntroducePageState extends State<IntroducePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.close), // X 모양의 아이콘
-          onPressed: () => Navigator.pop(context), // 버튼이 눌렸을 때 이전 페이지로 돌아감
+        automaticallyImplyLeading: false,
+        title: LinearProgressIndicator(
+          value: _progress,
+          valueColor: const AlwaysStoppedAnimation<Color>(
+              Color.fromARGB(255, 234, 64, 128)),
         ),
-        title: LinearProgressIndicator(value: _progress), // 상단 진행 상황 바
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
-            const Text('자기 소개 해주세요!', style: TextStyle(fontSize: 24.0)), // 텍스트
-            TextField(
-              controller: _controller,
-              decoration: const InputDecoration(hintText: '반려동물 이름을 입력하세요'),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: const Icon(Icons.close, size: 32),
+                onPressed: () => Navigator.pop(context),
+              ),
             ),
-            ElevatedButton(
-              onPressed: _isButtonDisabled
-                  ? null
-                  : () {
+            const SizedBox(height: 10.0),
+            const Text('자기 소개 해주세요!', style: TextStyle(fontSize: 40.0)),
+            const SizedBox(height: 50.0),
+            SizedBox(
+              width: 300.0, // 너비를 300으로 설정
+              child: TextField(
+                controller: _controller,
+                style: const TextStyle(
+                  fontSize: 20.0, // 텍스트 크기를 20.0으로 설정
+                  decoration: TextDecoration.none,
+                  fontWeight: FontWeight.normal,
+                ),
+                decoration: InputDecoration(
+                  hintText: '자기 소개',
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _controller.clear();
+                    },
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 50.0),
+            ContinueButton(
+              isFilled: !_isButtonDisabled,
+              buttonText: 'Continue',
+              onPressed: !_isButtonDisabled
+                  ? () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PhotoSelectionPage()),
+                          builder: (context) => PhotoSelectionPage(
+                            progress: widget.progress + 1 / 10,
+                          ),
+                        ),
                       );
-                    },
-              child: const Text('Continue'),
+                    }
+                  : null,
             ),
           ],
         ),

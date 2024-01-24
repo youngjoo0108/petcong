@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:petcong/controller/user_controller.dart';
-import 'package:petcong/pages/app_pages/profile/pet_name_page.dart';
+import 'package:petcong/pages/app_pages/profile/nickname_page.dart';
 import 'package:petcong/pages/signin_pages/sign_in_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:petcong/widgets/create_button.dart';
@@ -23,7 +23,8 @@ class MainProfilePage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const PetNamePage()),
+                        builder: (context) => const NicknamePage(
+                            progress: 0.0)), // progress를 0으로 설정합니다.
                   );
                 },
                 child: const Text('Go to write profile')),
@@ -40,11 +41,13 @@ class MainProfilePage extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            const ContinueButton(isFilled: false),
+            const ContinueButton(
+                isFilled: false, buttonText: "Continue"), // buttonText 추가
             const SizedBox(
               height: 30,
             ),
-            const ContinueButton(isFilled: true),
+            const ContinueButton(
+                isFilled: true, buttonText: "Continue"), // buttonText 추가
             const RoundGradientXButton(),
             const RoundGradientPlusButton(),
           ],
