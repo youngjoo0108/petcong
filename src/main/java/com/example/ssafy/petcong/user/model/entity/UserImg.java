@@ -1,42 +1,47 @@
 package com.example.ssafy.petcong.user.model.entity;
 
 import com.example.ssafy.petcong.user.model.record.UserImgRecord;
+
 import jakarta.persistence.*;
 
 import lombok.*;
 
 @Entity
+@Table(name = "user_imgs")
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserImg {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "img_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int imgId;
-    @OneToOne
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
-    private User user;
+    @Column(name = "user_id")
+    private int userId;
+    private int ordinal;
+
+    private long length;
+
     private String url;
+    @Column(name = "content_type")
     private String contentType;
-    private int length;
-    private int order;
 
     @Builder
-    public UserImg(int imgId, User user, String url, String contentType, int length, int order) {
+    public UserImg(int imgId, int user, String url, String contentType, long length, int ordinal) {
         this.imgId = imgId;
-        this.user = user;
+        this.userId = user;
         this.url = url;
         this.contentType = contentType;
         this.length = length;
-        this.order = order;
+        this.ordinal = ordinal;
     }
 
     public UserImg(UserImgRecord userImgRecord) {
         this.imgId = userImgRecord.userId();
-        this.user = new User(userImgRecord.userId());
+        this.userId = userImgRecord.userId();
         this.url = userImgRecord.url();
         this.contentType = userImgRecord.contentType();
         this.length = userImgRecord.length();
-        this.order = userImgRecord.order();
+        this.ordinal = userImgRecord.ordinal();
     }
 }

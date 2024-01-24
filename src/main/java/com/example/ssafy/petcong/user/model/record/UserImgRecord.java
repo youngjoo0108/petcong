@@ -1,25 +1,33 @@
 package com.example.ssafy.petcong.user.model.record;
 
-import jakarta.validation.constraints.NotNull;
+import com.example.ssafy.petcong.user.model.entity.UserImg;
+
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
+import lombok.Builder;
+
+@Builder
 public record UserImgRecord(
-        @NotNull
         int imgId,
-        @NotNull
         int userId,
-        @NotNull
         @Size(max = 255)
         String url,
-        @NotNull
         @Size(max = 20)
         String contentType,
-        @NotNull
         @Positive
-        int length,
-        @NotNull
+        long length,
         @Positive
-        int order
+        int ordinal
 ) {
+        public UserImgRecord(UserImg userImg) {
+                this(
+                        userImg.getImgId(),
+                        userImg.getUserId(),
+                        userImg.getUrl(),
+                        userImg.getContentType(),
+                        userImg.getLength(),
+                        userImg.getOrdinal()
+                );
+        }
 }
