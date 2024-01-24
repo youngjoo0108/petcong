@@ -3,11 +3,13 @@ package com.example.ssafy.petcong.matching.model.entity;
 import com.example.ssafy.petcong.matching.model.enums.CallStatus;
 import com.example.ssafy.petcong.user.model.entity.Users;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "MATCHINGS")
 @NoArgsConstructor
+@Getter
 public class Matchings {
 
     public Matchings(Users u1, Users u2) {

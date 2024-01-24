@@ -1,26 +1,26 @@
 package com.example.ssafy.petcong.matching.service;
 
+import com.example.ssafy.petcong.matching.model.entity.Matchings;
+import com.example.ssafy.petcong.matching.model.enums.CallStatus;
+import com.example.ssafy.petcong.matching.repository.MatchingRepository;
 import com.example.ssafy.petcong.matching.service.util.OnlineUsersService;
 import com.example.ssafy.petcong.matching.service.util.SeenTodayService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.ssafy.petcong.user.model.entity.Users;
+import com.example.ssafy.petcong.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class MatchingProfileServiceImpl implements MatchingProfileService {
 
     private final OnlineUsersService onlineUsers;
     private final SeenTodayService seenToday;
-
-    @Autowired
-    public MatchingProfileServiceImpl(OnlineUsersService onlineUsers, SeenTodayService seenToday) {
-        this.onlineUsers = onlineUsers;
-        this.seenToday = seenToday;
-    }
+    private final UserRepository userRepository;
+    private final MatchingRepository matchingRepository;
 
     public List<String> pictures(int userId) {
         ArrayList<String> urls = null;
@@ -30,17 +30,17 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
     public Map<String, Object> details(int userId) {
         int filteredUser = -1;
         for (int i = 0; i < onlineUsers.sizeOfQueue(); i++) {
-            int potentialUser = nextOnlineUser();
-            if (potentialUser == -1) {
+            int potentialUserId = nextOnlineUser();
+            if (potentialUserId == -1) {
                 break;
-            } else if (isPotentialUser(userId, potentialUser)) {
-                filteredUser = potentialUser;
+            } else if (isPotentialUser(userId, potentialUserId)) {
+                filteredUser = potentialUserId;
                 break;
             }
         }
 
         Map<String, Object> res = new HashMap<>();
-        res.put("potentialUser", filteredUser);
+        res.put("potentialUserId", filteredUser);
         return res;
     }
 
@@ -55,16 +55,27 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         return userid;
     }
 
-    private boolean isPotentialUser(int requestingUser, int potentialUser) {
+    @Transactional
+    public boolean isPotentialUser(int requestingUserId, int potentialUserId) {
+        Optional<Users> optionalPotentialUser = userRepository.findById(potentialUserId);
+        Optional<Users> optionalRequestingUser = userRepository.findById(potentialUserId);
+        Users requestingUser = optionalRequestingUser.orElseThrow();
+        Users potentialUser = optionalPotentialUser.orElseThrow();
+
         // 1. 본인인지 확인
-        if (requestingUser == potentialUser) return false;
+        if (requestingUserId == potentialUserId) return false;
         // 2. 온라인 유저인지 확인
+        if (!potentialUser.isCallable()) return false;
 
         // 3. matching table에서 서로 매치한적 있는지 또는 거절 받은 유저인지 확인
+        Matchings matchingSentByRequesting = matchingRepository.findByFromUsersAndToUsers(requestingUser, potentialUser);
+        if (matchingSentByRequesting != null) return false;
+        Matchings matchingSentByPotential = matchingRepository.findByFromUsersAndToUsers(potentialUser, requestingUser);
+        if (matchingSentByPotential != null && matchingSentByPotential.getCallStatus() != CallStatus.PENDING) return false;
 
         // 4. 오늘 본적 있는지
-        if (!seenToday.hasSeen(requestingUser, potentialUser)) return false;
-        seenToday.addSeen(requestingUser, potentialUser);
+        if (!seenToday.hasSeen(requestingUserId, potentialUserId)) return false;
+        seenToday.addSeen(requestingUserId, potentialUserId);
 
         return true;
     }
