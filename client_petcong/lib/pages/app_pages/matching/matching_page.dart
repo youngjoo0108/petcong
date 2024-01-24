@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 
 class MainMatchingPage extends StatelessWidget {
@@ -14,7 +13,7 @@ class MainMatchingPage extends StatelessWidget {
             const Text("Matching Page"),
             ElevatedButton(
                 onPressed: () {
-                  Get.to(WebRTC());
+                  Get.to(const MainMatchingPage());
                 },
                 child: const Text('Call'))
           ],
