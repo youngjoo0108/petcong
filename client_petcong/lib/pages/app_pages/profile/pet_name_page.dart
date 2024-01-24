@@ -14,7 +14,6 @@ class PetNamePage extends StatefulWidget {
 class _PetNamePageState extends State<PetNamePage> {
   final _controller = TextEditingController();
   bool _isButtonDisabled = true;
-
   @override
   void initState() {
     super.initState();
