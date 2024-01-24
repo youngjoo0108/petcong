@@ -1,5 +1,6 @@
-package com.example.ssafy.petcong.matching.model;
+package com.example.ssafy.petcong.matching.model.entity;
 
+import com.example.ssafy.petcong.matching.model.CallStatus;
 import com.example.ssafy.petcong.user.model.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +14,7 @@ public class Matching {
     public Matching(User fromUser, User toUser) {
         this.fromUser = fromUser;
         this.toUser = toUser;
-        this.callStatus = CallStatus.pending;
+        this.callStatus = CallStatus.PENDING;
     }
 
     public Matching(User fromUser, User toUser, CallStatus callStatus) {

@@ -9,13 +9,14 @@ import lombok.*;
 
 import java.util.Date;
 
-@Entity
+@Entity(name = "users")
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private int userId;
 
     private int age;
@@ -26,6 +27,8 @@ public class User {
     private String nickname;
     private String email;
     private String address;
+
+    @Column(name = "social_url")
     private String socialUrl;
     private String uid;
 
@@ -71,7 +74,7 @@ public class User {
     public User(UserRecord userRecord) {
         this.userId = userRecord.userId();
         this.age = userRecord.age();
-        this.callable = userRecord.isCallable();
+        this.callable = userRecord.callable();
         this.nickname = userRecord.nickname();
         this.email = userRecord.email();
         this.address = userRecord.address();

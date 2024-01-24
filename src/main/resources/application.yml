@@ -2,6 +2,6 @@ spring:
   datasource:
     hikari:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://localhost:3306/sys?serverTimezone=UTC
-      username: ssafy
-      password: ssafy
+      jdbc-url: jdbc:mysql://localhost:3306/petcongdb?serverTimezone=UTC
+      username: root
+      password: k1056349

@@ -31,11 +31,15 @@ public class PostWebSocketHandler implements ChannelInterceptor {
 
         if (command == SUBSCRIBE) {
             // userId 가져오기
-            String destination = headers.get("simpDestination", String.class);
-            System.out.println("destination = " + destination);
-            String userIdStr = destination.substring(destination.lastIndexOf("/") + 1);
-            System.out.println("userId = " + userIdStr);
-            int userId = Integer.parseInt(userIdStr);
+//            String destination = headers.get("simpDestination", String.class);
+//            System.out.println("destination = " + destination);
+//            String userIdStr = destination.substring(destination.lastIndexOf("/") + 1);
+//            System.out.println("userId = " + userIdStr);
+//            int userId = Integer.parseInt(userIdStr);
+
+            int userId = Integer.parseInt(
+                    headers.get("userId", String.class)
+            );
 
             // 유저 online상태로 변경
             changeOnlineStatus(userId, true);
