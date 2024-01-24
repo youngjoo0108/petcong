@@ -4,6 +4,7 @@ import com.example.ssafy.petcong.matching.model.*;
 import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.repository.MatchingRepository;
 import com.example.ssafy.petcong.user.model.entity.User;
+import com.example.ssafy.petcong.user.model.record.UserRecord;
 import com.example.ssafy.petcong.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +27,16 @@ public class MatchingConnectionService {
     public Map<String, String> choice(ChoiceReq choiceReq){
         // DB에서 requestUserId, partnerUserId인 데이터 가져오기
         Matching matching = matchingRepository.findByUsersId(choiceReq.getPartnerUserId(), choiceReq.getRequestUserId());
-        User fromUser = new User(userRepository.findUserByUserId(choiceReq.getRequestUserId()));
-        User toUser = new User(userRepository.findUserByUserId(choiceReq.getPartnerUserId()));
+        UserRecord fromUserRecord = userRepository.findUserByUserId(choiceReq.getRequestUserId());
+        UserRecord toUserRecord = userRepository.findUserByUserId(choiceReq.getPartnerUserId());
+
+        // userId가 잘못된 값이면
+        if (fromUserRecord == null || toUserRecord == null) {
+            throw new RuntimeException();
+        }
+
+        User fromUser = new User(fromUserRecord);
+        User toUser = new User(toUserRecord);
 
         // 기존 데이터 없으면
         if (matching == null) {
