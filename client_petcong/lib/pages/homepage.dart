@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:petcong/services/socket_service.dart';
+import 'package:petcong/pages/app_pages/matching/swiping_page.dart';
 import 'package:petcong/widgets/navigations.dart';
 import 'package:petcong/pages/app_pages/chat/chat_page.dart';
 import 'package:petcong/pages/app_pages/matching/matching_page.dart';
@@ -20,7 +21,8 @@ class _HomePageState extends State<HomePage> {
 
   final screens = [
     const MainChatPage(),
-    const MainMatchingPage(),
+    const SwipingPage(),
+    // const MainMatchingPage(),
     const MainProfilePage(),
   ];
 

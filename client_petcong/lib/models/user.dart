@@ -8,7 +8,6 @@ class User extends Equatable {
   String? displayName;
   String? userName;
   String? profilePic;
-  String? bannerImage;
   String? contact;
   String? bio;
   String? location;
@@ -25,7 +24,6 @@ class User extends Equatable {
       this.userId,
       this.displayName,
       this.profilePic,
-      this.bannerImage,
       this.key,
       this.contact,
       this.bio,
@@ -48,7 +46,6 @@ class User extends Equatable {
     userId = map['userId'];
     displayName = map['displayName'];
     profilePic = map['profilePic'];
-    bannerImage = map['bannerImage'];
     key = map['key'];
     bio = map['bio'];
     location = map['location'];
@@ -65,14 +62,14 @@ class User extends Equatable {
         followersList!.add(value);
       });
     }
-    followers = followersList != null ? followersList!.length : null;
+    followers = followersList?.length;
     if (map['followingList'] != null) {
       followingList = <String>[];
       map['followingList'].forEach((value) {
         followingList!.add(value);
       });
     }
-    following = followingList != null ? followingList!.length : null;
+    following = followingList?.length;
   }
   toJson() {
     return {
@@ -81,13 +78,12 @@ class User extends Equatable {
       "email": email,
       'displayName': displayName,
       'profilePic': profilePic,
-      'bannerImage': bannerImage,
       'contact': contact,
       'bio': bio,
       'location': location,
       'createdAt': createdAt,
-      'followers': followersList != null ? followersList!.length : null,
-      'following': followingList != null ? followingList!.length : null,
+      'followers': followersList?.length,
+      'following': followingList?.length,
       'userName': userName,
       'isVerified': isVerified ?? false,
       'fcmToken': fcmToken,
@@ -129,7 +125,6 @@ class User extends Equatable {
       key: key ?? this.key,
       location: location ?? this.location,
       profilePic: profilePic ?? this.profilePic,
-      bannerImage: bannerImage ?? this.bannerImage,
       userId: userId ?? this.userId,
       userName: userName ?? this.userName,
       fcmToken: fcmToken ?? this.fcmToken,
@@ -154,7 +149,6 @@ class User extends Equatable {
         displayName,
         userName,
         profilePic,
-        bannerImage,
         contact,
         bio,
         location,

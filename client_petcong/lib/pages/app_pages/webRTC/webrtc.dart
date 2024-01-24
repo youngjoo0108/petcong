@@ -33,9 +33,9 @@ class _MainVideoCallState extends State<MainVideoCall> {
   }
 
   Future connectSocket() async {
-    socket = IO.io('http://localhost:3000',
+    socket = IO.io('http://i10a603.p.ssafy.io:3000',
         IO.OptionBuilder().setTransports(['websocket']).build());
-    socket.onConnect((data) => print('연결 완료 !'));
+    socket.onConnect((data) => debugPrint('연결 완료 !'));
 
     socket.on('joined', (data) {
       _sendOffer();
@@ -101,26 +101,26 @@ class _MainVideoCallState extends State<MainVideoCall> {
   }
 
   Future _sendOffer() async {
-    print('send offer');
+    debugPrint('send offer');
     var offer = await pc!.createOffer();
     pc!.setLocalDescription(offer);
     socket.emit('offer', jsonEncode(offer.toMap()));
   }
 
   Future _gotOffer(RTCSessionDescription offer) async {
-    print('got offer');
+    debugPrint('got offer');
     pc!.setRemoteDescription(offer);
   }
 
   Future _sendAnswer() async {
-    print('send answer');
+    debugPrint('send answer');
     var answer = await pc!.createAnswer();
     pc!.setLocalDescription(answer);
     socket.emit('answer', jsonEncode(answer.toMap()));
   }
 
   Future _gotAnswer(RTCSessionDescription answer) async {
-    print('got answer');
+    debugPrint('got answer');
     pc!.setRemoteDescription(answer);
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:get/get.dart';
 
 class MainMatchingPage extends StatelessWidget {
   const MainMatchingPage({super.key});
@@ -7,24 +8,18 @@ class MainMatchingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text("Matching Page"),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const MainVideoCall(),
-                ),
-              );
-            },
-            child: const Text('Call'),
-          ),
-        ],
+      body: Center(
+        child: Column(
+          children: [
+            const Text("Matching Page"),
+            ElevatedButton(
+                onPressed: () {
+                  Get.to(WebRTC());
+                },
+                child: const Text('Call'))
+          ],
+        ),
       ),
-    ));
+    );
   }
 }
