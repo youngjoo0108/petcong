@@ -17,7 +17,7 @@ public class MatchingController {
 
     /**
      * @param choiceReq
-     * @return 200 & body x when pending
+     * @return 200 & empty body when pending
      * <br> 200 & ws link when matched
      * <br> 400 when matched, rejected
      */
