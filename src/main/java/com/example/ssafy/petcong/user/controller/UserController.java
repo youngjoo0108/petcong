@@ -35,7 +35,7 @@ public class UserController {
             @ApiResponse(code = 400, message = "가입 시 필요한 유저 정보 누락")
     })
     @PostMapping("/signup")
-    public ResponseEntity<UserRecord> signup(@Valid UserRecord user) {
+    public ResponseEntity<UserRecord> signup(@RequestBody @Valid UserRecord user) {
         UserRecord savedUser = userService.save(user);
 
         return ResponseEntity
@@ -49,7 +49,8 @@ public class UserController {
             @ApiResponse(code = 202, message = "가입 기록 없음")
     })
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(String uid) {
+    public ResponseEntity<?> signin(@RequestBody String uid) {
+        log.info("input: " + uid);
         UserRecord user = userService.findUserByUid(uid);
 
         if (user != null) {
@@ -64,13 +65,35 @@ public class UserController {
                     .body("No user founded.");
         }
     }
-
-    @PostMapping("/picture")
-    public ResponseEntity<?> picture(@RequestParam("file")MultipartFile file) throws IOException {
-        userService.uploadImage(null, file);
+    @ApiOperation(value = "프로필 이미지 url 얻기", notes = "생성된 presigned url로 이미지를 업로드")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "url 생성 성공")
+    })
+    @GetMapping("/picture")
+    public ResponseEntity<?> getProfileImageUrl(String key) {
+        String url = userService.createPresignedUrlForGetImage(key);
         return ResponseEntity
                 .ok()
-                .body("Upload success.");
+                .body(url);
     }
+
+    @ApiOperation(value = "프로필 이미지 업로드", notes = "이미지 업로드")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "업로드 성공")
+    })
+    @PostMapping("/picture")
+    public ResponseEntity<?> postProfileImage(@RequestBody String uid, @RequestParam("file")MultipartFile file) throws IOException {
+//        String uid = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+
+        UserRecord user = userService.findUserByUid(uid);
+
+        UserImgRecord userImgRecord = userService.uploadImage(user, file);
+
+        return ResponseEntity
+                .ok()
+                .body(userImgRecord);
+    }
+
+
 
 }
