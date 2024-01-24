@@ -1,10 +1,10 @@
 package com.example.ssafy.petcong.config;
 
-import com.amazonaws.auth.*;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.Bucket;
+import software.amazon.awssdk.services.s3.model.Bucket;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.regions.Region;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,27 +13,21 @@ import org.springframework.context.annotation.Configuration;
 public class AmazonS3Config {
     @Bean
     public Bucket bucket() {
-        Bucket bucket = new Bucket();
-        bucket.setName(System.getenv("S3_BUCKET_NAME"));
+        Bucket bucket = Bucket.builder()
+                .name(System.getenv("S3_BUCKET_NAME"))
+                .build();
         return bucket;
     }
     @Bean
-    public AWSCredentials awsCredentials() {
-        var environmentVariableCredentialsProvider = new EnvironmentVariableCredentialsProvider();
-        AWSCredentials awsCredentials = environmentVariableCredentialsProvider.getCredentials();
-        return awsCredentials;
-    }
-    @Bean
-    public AWSCredentialsProvider awsCredentialsProvider(AWSCredentials awsCredentials) {
-        AWSStaticCredentialsProvider awsCredentialsProvider = new AWSStaticCredentialsProvider(awsCredentials);
+    public AwsCredentialsProvider awsCredentialsProvider() {
+        AwsCredentialsProvider awsCredentialsProvider = EnvironmentVariableCredentialsProvider.create();
         return awsCredentialsProvider;
     }
     @Bean
-    public AmazonS3 amazonS3Client(AWSCredentialsProvider awsCredentialsProvider) {
-        Regions clientRegion = Regions.AP_NORTHEAST_2;
-        AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                .withRegion(clientRegion)
-                .withCredentials(awsCredentialsProvider)
+    public S3Client s3Client(AwsCredentialsProvider awsCredentialsProvider) {
+        S3Client s3Client = S3Client.builder()
+                .region(Region.AP_NORTHEAST_2)
+                .credentialsProvider(awsCredentialsProvider)
                 .build();
         return s3Client;
     }
