@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:petcong/services/socket_service.dart';
 
 class UserController {
   static User? user = FirebaseAuth.instance.currentUser;
@@ -23,5 +24,6 @@ class UserController {
   static Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
+    SocketService().disposeSocket();
   }
 }
