@@ -19,7 +19,12 @@ public class MatchingProfileServiceTest {
     @Test
     @DisplayName("매칭 프로필 서비스를 테스팅합니다")
     void testMatchingProfile() {
-        final String
+ /*
+        separately test services (matching profile, online users, seen today)
+        test situations:
+        1. all success, and return next online user
+        2. no user to return
+*/
     }
 
 }

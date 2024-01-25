@@ -49,14 +49,14 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         if (onlineUsers.sizeOfQueue() == 0) {
             return -1;
         }
-        // to-do: get next online user
-        int userid = onlineUsers.removeUserFromQueue();
+        int userid = onlineUsers.removeUserIdFromQueue();
+        onlineUsers.addUserIdToQueue(userid);
 
         return userid;
     }
 
     @Transactional
-    public boolean isPotentialUser(int requestingUserId, int potentialUserId) {
+    protected boolean isPotentialUser(int requestingUserId, int potentialUserId) {
         Optional<Users> optionalPotentialUser = userRepository.findById(potentialUserId);
         Optional<Users> optionalRequestingUser = userRepository.findById(potentialUserId);
         Users requestingUser = optionalRequestingUser.orElseThrow();
