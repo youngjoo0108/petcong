@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -26,11 +25,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager firebaseAuthenticationManager) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
+            .authenticationManager(firebaseAuthenticationManager)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterAt(new FirebaseAuthenticationFilter(firebaseAuthenticationManager), UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(requests -> requests
                     .anyRequest().permitAll())
-            .authenticationManager(firebaseAuthenticationManager)
-            .addFilterBefore(new FirebaseAuthenticationFilter(firebaseAuthenticationManager), UsernamePasswordAuthenticationFilter.class)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling(configurer -> configurer
                     .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
         return http.build();
