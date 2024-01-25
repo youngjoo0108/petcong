@@ -56,7 +56,7 @@ public class MatchingConnectionService {
 
         // rtc 연결 handshake를 위한 toUser의 구독 링크 반환
         Map<String, String> responseMap = new HashMap<>();
-        responseMap.put("targetLink", "/websocket/" + toUser.getUserId());
+        responseMap.put("targetLink", "/queue/" + toUser.getUserId());
 
         return responseMap;
     }
