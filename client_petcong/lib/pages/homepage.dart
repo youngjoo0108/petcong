@@ -34,7 +34,21 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page'),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Image.asset(
+            'assets/src/petcong_logo.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              // 여기 드롭바 해서 설정페이지 가거나 바로 프로필 설정 페이지로 이동
+            },
+          ),
+        ],
       ),
       body: screens[currentIndex],
       bottomNavigationBar: MyBottomNavigationBar(
