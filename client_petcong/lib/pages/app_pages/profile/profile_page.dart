@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/pages/app_pages/profile/nickname_page.dart';
-import 'package:petcong/pages/signin_pages/sign_in_page.dart';
-// import 'package:petcong/constants/style.dart';
 import 'package:petcong/widgets/continue_button.dart';
 
 class MainProfilePage extends StatelessWidget {
@@ -40,10 +38,6 @@ class MainProfilePage extends StatelessWidget {
               buttonText: 'Log out',
               onPressed: () {
                 UserController.signOut();
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SignInPage()),
-                    (route) => false);
               },
             ),
             const SizedBox(
