@@ -22,6 +22,7 @@ public class MatchingController {
      * <br> 200 & ws link when matched
      * <br> 400 when matched, rejected
      */
+    @MakeCallable
     @PostMapping("/choice")
     public ResponseEntity<?> choice(@RequestBody ChoiceReq choiceReq) {
         return ResponseEntity
@@ -31,8 +32,7 @@ public class MatchingController {
     @MakeCallable
     @PatchMapping("/callable/{userId}")
     public ResponseEntity<?> onCallEnd(@PathVariable int userId) {
-//        matchingConnectionService.changeToCallable(userId);
-        if (userId == 2) throw new RuntimeException();
+        matchingConnectionService.changeToCallable(userId);
         return ResponseEntity
                 .ok()
                 .build();
