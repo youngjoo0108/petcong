@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/pages/app_pages/profile/nickname_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
