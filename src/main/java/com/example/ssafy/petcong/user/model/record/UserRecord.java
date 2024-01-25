@@ -1,53 +1,60 @@
 package com.example.ssafy.petcong.user.model.record;
 
+import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.model.enums.Gender;
 import com.example.ssafy.petcong.user.model.enums.Preference;
 import com.example.ssafy.petcong.user.model.enums.Status;
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public record UserRecord(
-        @NotNull
         int userId,
 
-        @NotNull
         @Positive
         int age,
 
-        @NotNull
         boolean callable,
 
-        @NotNull
         @Size(max = 30)
         String nickname,
 
-        @NotNull
         @Email
         @Size(max = 50)
         String email,
 
-        @Nullable
         @Size(max = 50)
         String address,
 
-        @Nullable
         @Size(max = 255)
         String socialUrl,
 
-        @NotNull
         @Size(max = 30)
         String uid,
 
-        @Nullable
         @Past
-        Date birthday,
+        LocalDate birthday,
 
         Gender gender,
 
         Status status,
 
         Preference preference) {
+        public UserRecord(User user) {
+                this(
+                        user.getUserId(),
+                        user.getAge(),
+                        user.isCallable(),
+                        user.getNickname(),
+                        user.getEmail(),
+                        user.getAddress(),
+                        user.getSocialUrl(),
+                        user.getUid(),
+                        user.getBirthday(),
+                        user.getGender(),
+                        user.getStatus(),
+                        user.getPreference()
+                );
+        }
 }

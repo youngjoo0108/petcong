@@ -60,7 +60,7 @@ public class PostWebSocketHandler implements ChannelInterceptor {
 
     @Transactional
     public void changeOnlineStatus(int userId, boolean toStatus) {
-        User user = new User(userRepository.findUserByUserId(userId));
+        User user = userRepository.findUserByUserId(userId);
         user.setCallable(toStatus);
         userRepository.save(user);
     }

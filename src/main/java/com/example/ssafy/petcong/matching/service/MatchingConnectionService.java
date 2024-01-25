@@ -27,16 +27,13 @@ public class MatchingConnectionService {
     public Map<String, String> choice(ChoiceReq choiceReq){
         // DB에서 requestUserId, partnerUserId인 데이터 가져오기
         Matching matching = matchingRepository.findByUsersId(choiceReq.getPartnerUserId(), choiceReq.getRequestUserId());
-        UserRecord fromUserRecord = userRepository.findUserByUserId(choiceReq.getRequestUserId());
-        UserRecord toUserRecord = userRepository.findUserByUserId(choiceReq.getPartnerUserId());
+        User fromUser = userRepository.findUserByUserId(choiceReq.getRequestUserId());
+        User toUser = userRepository.findUserByUserId(choiceReq.getPartnerUserId());
 
         // invalid userId
-        if (fromUserRecord == null || toUserRecord == null) {
+        if (fromUser == null || toUser == null) {
             throw new RuntimeException();
         }
-
-        User fromUser = new User(fromUserRecord);
-        User toUser = new User(toUserRecord);
 
         // to pending
         if (matching == null) {
@@ -66,7 +63,7 @@ public class MatchingConnectionService {
 
     @Transactional
     public void changeToCallable(int userId) {
-        User user = new User(userRepository.findUserByUserId(userId));
+        User user = userRepository.findUserByUserId(userId);
         user.setCallable(true);
         userRepository.save(user);
     }
