@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:3306/petcongdb?serverTimezone=UTC
+      username: ssafy
+      password: ssafy
+  jpa:
+    hibernate:
+      naming:
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+logging:
+  level:
+    org.hibernate: off
