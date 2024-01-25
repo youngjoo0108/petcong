@@ -34,6 +34,7 @@ import java.time.Duration;
 public class UserServiceImpl implements UserService {
     private final Bucket bucket;
     private final S3Client s3Client;
+    private final S3Presigner s3Presigner;
     private final UserRepository userRepository;
     private final UserImgRepository userImgRepository;
 
@@ -62,22 +63,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String createPresignedUrlForGetImage(String key) {
-        try (S3Presigner s3Presigner = S3Presigner.create()) {
-            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                    .bucket(bucket.name())
-                    .key(key)
-                    .build();
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucket.name())
+                .key(key)
+                .build();
 
-            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
-                    .getObjectRequest(getObjectRequest)
-                    .signatureDuration(Duration.ofMinutes(1))
-                    .build();
+        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                .getObjectRequest(getObjectRequest)
+                .signatureDuration(Duration.ofMinutes(10))
+                .build();
 
-            PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
+        PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
 
-            String url = presignedRequest.url().toString();
-            return url;
-        }
+        String url = presignedRequest.url().toString();
+        return url;
     }
 
     @Override
