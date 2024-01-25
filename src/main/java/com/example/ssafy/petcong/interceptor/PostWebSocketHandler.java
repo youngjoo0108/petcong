@@ -31,7 +31,7 @@ public class PostWebSocketHandler implements ChannelInterceptor {
         MessageHeaders headers = message.getHeaders();
 
         // 처리 대상 요청이 아니면 return
-        if (!(command == SUBSCRIBE || command == DISCONNECT)) {
+        if (!(command == DISCONNECT)) {
             return;
         }
 
@@ -44,13 +44,7 @@ public class PostWebSocketHandler implements ChannelInterceptor {
 //        int userId = user.userId();
 //        // end
 
-        if (command == SUBSCRIBE) {
-            // 유저 online상태로 변경
-            changeOnlineStatus(userId, true);
-
-            // 완료 처리
-            System.out.println("user " + userId + "subscribe");
-        } else {
+        if (command == DISCONNECT) {
             // 유저 offline으로 변경
             changeOnlineStatus(userId, false);
 

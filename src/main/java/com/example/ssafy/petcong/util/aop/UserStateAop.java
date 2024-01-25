@@ -5,6 +5,7 @@ import com.example.ssafy.petcong.user.repository.UserRepository;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 //import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -20,23 +21,21 @@ public class UserStateAop {
     // MakeCallable 어노테이션을 달지 않는 모든 컨트롤러 메소드 전에 callable = false로 바꾸는 로직 추가
     @Before("execution(* com.example.ssafy.petcong.*.controller.*.*(..)) && !@annotation(com.example.ssafy.petcong.util.annotation.MakeCallable)")
     public void changeToNotCallable() {
-//        changeCallable(false);
-        System.out.println("user callable changed to false.");
+        changeCallable(false);
     }
 
 
     // MakeCallble을 단 메소드 전에 callable = true로 바꾸는 로직 추가
     @Before("execution(* com.example.ssafy.petcong.*.controller.*.*(..)) && @annotation(com.example.ssafy.petcong.util.annotation.MakeCallable)")
     public void changeToCallable() {
-//        changeCallable(true);
-        System.out.println("user callable changed to true");
+        changeCallable(true);
     }
 
-//    private void changeCallable(boolean callable) {
-//        String uid = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString(); // uid
-//        User user = new User(userRepository.findUserByUid(uid));
-//
-//        user.setCallable(callable);
-//        userRepository.save(user);
-//    }
+    private void changeCallable(boolean callable) {
+        String uid = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString(); // uid
+        User user = userRepository.findUserByUid(uid);
+
+        user.setCallable(callable);
+        userRepository.save(user);
+    }
 }
