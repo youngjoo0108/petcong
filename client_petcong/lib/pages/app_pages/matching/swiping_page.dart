@@ -51,48 +51,8 @@ class _SwipingPageState extends State<SwipingPage> {
                     cards[index],
               ),
             ),
-<<<<<<< client_petcong/lib/pages/app_pages/matching/swiping_page.dart
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FloatingActionButton(
-                    heroTag: 'rotate_left',
-                    onPressed: controller.undo,
-                    child: const Icon(Icons.rotate_left),
-                  ),
-                  FloatingActionButton(
-                    heroTag: 'rotate_rignt',
-                    onPressed: controller.swipe,
-                    child: const Icon(Icons.rotate_right),
-                  ),
-                  FloatingActionButton(
-                    heroTag: 'left',
-                    onPressed: controller.swipeLeft,
-                    child: const Icon(Icons.keyboard_arrow_left),
-                  ),
-                  FloatingActionButton(
-                    heroTag: 'rignt',
-                    onPressed: controller.swipeRight,
-                    child: const Icon(Icons.keyboard_arrow_right),
-                  ),
-                  FloatingActionButton(
-                    heroTag: 'top',
-                    onPressed: controller.swipeTop,
-                    child: const Icon(Icons.keyboard_arrow_up),
-                  ),
-                  FloatingActionButton(
-                    heroTag: 'down',
-                    onPressed: controller.swipeBottom,
-                    child: const Icon(Icons.keyboard_arrow_down),
-                  ),
-                ],
-              ),
-=======
             const Padding(
               padding: EdgeInsets.all(16.0),
->>>>>>> client_petcong/lib/pages/app_pages/matching/swiping_page.dart
             ),
             ElevatedButton(
                 onPressed: () {
