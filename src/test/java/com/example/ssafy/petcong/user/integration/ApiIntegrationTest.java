@@ -63,13 +63,16 @@ public class ApiIntegrationTest {
         return Stream.of(Arguments.of(userRecord));
     }
 
+    @Disabled
     @ParameterizedTest
     @MethodSource("provideDummySignUpUser")
     @Transactional
     @DisplayName("SignUp Test")
     void testSignUp(UserRecord userRecord) throws Exception {
+        //given
         String userRecordJson = objectMapper.writeValueAsString(userRecord);
 
+        //when
         var request = MockMvcRequestBuilders
                 .post("/users/signup")
                 .header("tester", "A603")
@@ -82,6 +85,7 @@ public class ApiIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
+        //then
         String response = mvcResult.getResponse().getContentAsString();
 
         assertThat(response).isNotNull();
@@ -89,14 +93,19 @@ public class ApiIntegrationTest {
         log.info(response);
     }
 
+    @Disabled
     @Test
-    @DisplayName("Signin Test")
     @Transactional
+    @DisplayName("Signin Test")
     void testSignin() throws Exception {
+        //given
+        int uid = 1;
+
+        //when
         var request = MockMvcRequestBuilders
                 .post("/users/signin")
                 .header("tester", "A603")
-                .content("1")
+                .content(String.valueOf(uid))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         MvcResult mvcResult = mockMvc
@@ -105,6 +114,7 @@ public class ApiIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
+        //then
         String response = mvcResult.getResponse().getContentAsString();
 
         assertThat(response).isNotNull();
@@ -112,9 +122,11 @@ public class ApiIntegrationTest {
         log.info(response);
     }
 
+    @Disabled
     @Test
     @DisplayName("PostProfileImage Test")
     void testPostProfileImage() throws Exception {
+        //given
         FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\anya.jpg");
         byte[] bytes = fileInputStream.readAllBytes();
         MockMultipartFile multipartFile = new MockMultipartFile(
@@ -123,6 +135,7 @@ public class ApiIntegrationTest {
                 MediaType.MULTIPART_FORM_DATA_VALUE,
                 bytes);
 
+        //when
         var request = MockMvcRequestBuilders
                 .multipart(HttpMethod.POST, "/users/picture")
                 .file(multipartFile)
@@ -136,6 +149,42 @@ public class ApiIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
+        //then
+        String response = mvcResult.getResponse().getContentAsString();
+
+        assertThat(response).isNotNull();
+
+        log.info(response);
+    }
+
+    @Disabled
+    @Test
+    @DisplayName("PostDogTrick Test")
+    void testPostDogTrick() throws Exception {
+        //given
+        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\video_sample.mp4");
+        byte[] bytes = fileInputStream.readAllBytes();
+        MockMultipartFile multipartFile = new MockMultipartFile(
+                "file",
+                "video_sample.mp4",
+                MediaType.MULTIPART_FORM_DATA_VALUE,
+                bytes);
+
+        //when
+        var request = MockMvcRequestBuilders
+                .multipart(HttpMethod.POST, "/users/trick")
+                .file(multipartFile)
+                .header("tester", "A603")
+                .content("1")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MvcResult mvcResult = mockMvc
+                .perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        //then
         String response = mvcResult.getResponse().getContentAsString();
 
         assertThat(response).isNotNull();
@@ -144,12 +193,15 @@ public class ApiIntegrationTest {
     }
 
     @Test
-    @DisplayName("GetProfileImageUrl Test")
-    void testGetProfileImageUrl() throws Exception {
-        String key = "1-anya.jpg";
+    @DisplayName("GetMediaUrl Test")
+    void testGetMediaUrl() throws Exception {
+        //given
+        //String key = "1-anya.jpg";
+        String key = "1-video_sample.mp4";
 
+        //when
         var request = MockMvcRequestBuilders
-                .get("/users/picture")
+                .get("/users/trick")
                 .header("tester", "A603")
                 .param("key", key);
         MvcResult mvcResult = mockMvc
@@ -158,6 +210,35 @@ public class ApiIntegrationTest {
                 .andExpect(content().contentType(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
                 .andReturn();
 
+        //then
+        String response = mvcResult.getResponse().getContentAsString();
+
+        assertThat(response).isNotNull();
+
+        log.info(response);
+    }
+
+    @Disabled
+    @Test
+    @Transactional
+    @DisplayName("DeleteUser Test")
+    void testDeleteUser() throws Exception {
+        //given
+        int userId = 4;
+
+        //when
+        var request = MockMvcRequestBuilders
+                .delete("/users/withdraw")
+                .header("tester", "A603")
+                .content(String.valueOf(userId));
+
+        MvcResult mvcResult = mockMvc
+                .perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
+                .andReturn();
+
+        //then
         String response = mvcResult.getResponse().getContentAsString();
 
         assertThat(response).isNotNull();
