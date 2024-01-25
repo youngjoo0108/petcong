@@ -170,7 +170,7 @@ class _BirthdayPageState extends State<BirthdayPage> {
                       child: ContinueButton(
                         isFilled: _controller.text.isNotEmpty &&
                             _errorMessage == null,
-                        buttonText: 'Continue',
+                        buttonText: 'CONTINUE',
                         onPressed:
                             _controller.text.isNotEmpty && _errorMessage == null
                                 ? () {

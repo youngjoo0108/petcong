@@ -90,7 +90,7 @@ class _PetNamePageState extends State<PetNamePage> {
               ), // TextField 위젯과 ElevatedButton 위젯 사이에 100픽셀의 공간을 만듭니다.
               ContinueButton(
                 isFilled: !_isButtonDisabled,
-                buttonText: 'Continue',
+                buttonText: 'CONTINUE',
                 onPressed: !_isButtonDisabled
                     ? () {
                         Navigator.push(

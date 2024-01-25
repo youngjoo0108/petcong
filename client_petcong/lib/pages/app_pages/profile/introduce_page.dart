@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'photo_selection_page.dart';
+import 'photo_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 
 class IntroducePage extends StatefulWidget {
@@ -86,13 +86,13 @@ class _IntroducePageState extends State<IntroducePage> {
             const SizedBox(height: 30.0),
             ContinueButton(
               isFilled: !_isButtonDisabled,
-              buttonText: 'Continue',
+              buttonText: 'CONTINUE',
               onPressed: !_isButtonDisabled
                   ? () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => PhotoSelectionPage(
+                          builder: (context) => PhotoPage(
                             progress: widget.progress + 1 / 10,
                           ),
                         ),

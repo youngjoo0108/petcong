@@ -95,7 +95,7 @@ class _GenderPageState extends State<GenderPage> {
             const SizedBox(height: 100.0),
             ContinueButton(
               isFilled: !_isButtonDisabled,
-              buttonText: 'Continue',
+              buttonText: 'CONTINUE',
               onPressed: !_isButtonDisabled
                   ? () {
                       Navigator.push(

@@ -143,7 +143,7 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
                         child: ContinueButton(
                           isFilled: value ==
                               null, // value가 null인 경우에 버튼이 활성화되도록 수정합니다.
-                          buttonText: 'Continue',
+                          buttonText: 'CONTINUE',
                           onPressed:
                               value == null // value가 null인 경우에 버튼이 눌리도록 수정합니다.
                                   ? () {

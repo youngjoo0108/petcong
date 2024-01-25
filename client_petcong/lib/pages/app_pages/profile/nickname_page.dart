@@ -86,7 +86,7 @@ class _NicknamePageState extends State<NicknamePage> {
             const SizedBox(height: 30.0),
             ContinueButton(
               isFilled: !_isButtonDisabled,
-              buttonText: 'Continue',
+              buttonText: 'CONTINUE',
               onPressed: !_isButtonDisabled
                   ? () {
                       Navigator.push(

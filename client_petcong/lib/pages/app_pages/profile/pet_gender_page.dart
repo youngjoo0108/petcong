@@ -120,7 +120,7 @@ class _PetGenderPageState extends State<PetGenderPage> {
             const SizedBox(height: 50.0),
             ContinueButton(
               isFilled: !_isButtonDisabled,
-              buttonText: 'Continue',
+              buttonText: 'CONTINUE',
               onPressed: !_isButtonDisabled
                   ? () {
                       Navigator.push(
