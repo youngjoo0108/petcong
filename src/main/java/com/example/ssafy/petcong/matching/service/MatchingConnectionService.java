@@ -30,7 +30,7 @@ public class MatchingConnectionService {
         UserRecord fromUserRecord = userRepository.findUserByUserId(choiceReq.getRequestUserId());
         UserRecord toUserRecord = userRepository.findUserByUserId(choiceReq.getPartnerUserId());
 
-        // userId가 잘못된 값이면
+        // invalid userId
         if (fromUserRecord == null || toUserRecord == null) {
             throw new RuntimeException();
         }
@@ -38,26 +38,27 @@ public class MatchingConnectionService {
         User fromUser = new User(fromUserRecord);
         User toUser = new User(toUserRecord);
 
-        // 기존 데이터 없으면
+        // to pending
         if (matching == null) {
             // DB에 pending 상태로 추가
             matchingRepository.save(new Matching(fromUser, toUser));
-            System.out.println("saved");
             return null;
         }
-        // 이미 매치되었거나, reject상태이면
+        // 이미 matched / rejected 이면
         if (matching.getCallStatus() != CallStatus.PENDING) {
             throw new RuntimeException();
         }
-        // update to matched
+        // to matched
         matching.setCallStatus(CallStatus.MATCHED);
-        // fromUser, toUser의 callable을 false로 변경
+
+        // update users to not callable
         fromUser.setCallable(false);
         toUser.setCallable(false);
+        userRepository.save(fromUser);
+        userRepository.save(toUser);
 
-        // 클라이언트끼리 연결할 링크를 반환
+        // rtc 연결 handshake를 위한 toUser의 구독 링크 반환
         Map<String, String> responseMap = new HashMap<>();
-
         responseMap.put("targetLink", "/websocket/" + toUser.getUserId());
 
         return responseMap;
@@ -67,5 +68,6 @@ public class MatchingConnectionService {
     public void changeToCallable(int userId) {
         User user = new User(userRepository.findUserByUserId(userId));
         user.setCallable(true);
+        userRepository.save(user);
     }
 }
