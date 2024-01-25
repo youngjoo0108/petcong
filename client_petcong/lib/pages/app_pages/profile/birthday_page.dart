@@ -137,14 +137,14 @@ class _BirthdayPageState extends State<BirthdayPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(0.0),
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
                     const Text(
                       '내 생일은?',
-                      style: TextStyle(fontSize: 40.0),
+                      style: TextStyle(fontSize: 32.0),
                     ),
                     const SizedBox(height: 30.0),
                     SizedBox(
@@ -163,7 +163,7 @@ class _BirthdayPageState extends State<BirthdayPage> {
                         validator: (value) => _errorMessage,
                       ),
                     ),
-                    const SizedBox(height: 50.0),
+                    const SizedBox(height: 30.0),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 6.0), // 위 아래로 패딩 6 추가

@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:petcong/controller/user_controller.dart';
-import 'package:petcong/pages/homepage.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -72,19 +70,28 @@ class _SignInPageState extends State<SignInPage> {
 
   void _handleGoogleSignIn() async {
     try {
-      User? user = await FirebaseAuth.instance.authStateChanges().first;
-      if (user != null) {
-        Get.offAll(const HomePage());
+      if (kIsWeb) {
+        GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
+        await FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
       } else {
-        if (kIsWeb) {
-          GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-          await FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
-        } else {
-          await UserController.loginWithGoogle();
-        }
+        await UserController.loginWithGoogle();
       }
-    } catch (error) {
-      debugPrint(error.toString());
+    } catch (e) {
+      debugPrint(e.toString());
     }
+
+    // User? user = await FirebaseAuth.instance.authStateChanges().first;
+    // try {
+    //   if (user == null) {
+    //     if (kIsWeb) {
+    //       GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
+    //       await FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
+    //     } else {
+    //       await UserController.loginWithGoogle();
+    //     }
+    //   }
+    // } catch (e) {
+    //   debugPrint(e.toString());
+    // }
   }
 }

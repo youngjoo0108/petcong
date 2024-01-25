@@ -48,7 +48,7 @@ class ContinueButton extends StatelessWidget {
           disabledForegroundColor: Colors.transparent.withOpacity(0.38),
           disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
           shadowColor: Colors.transparent,
-          minimumSize: const Size(500.0, 30.0),
+          minimumSize: const Size(300.0, 30.0),
         ),
         onPressed: onPressed,
         child: Padding(
