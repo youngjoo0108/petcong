@@ -1,13 +1,11 @@
 package com.example.ssafy.petcong.matching.service;
 
 import com.example.ssafy.petcong.matching.model.CallStatus;
-import com.example.ssafy.petcong.matching.model.Matching;
+import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.repository.MatchingRepository;
 import com.example.ssafy.petcong.matching.service.util.OnlineUsersService;
 import com.example.ssafy.petcong.matching.service.util.SeenTodayService;
-import com.example.ssafy.petcong.user.model.enums.Status;
-import com.example.ssafy.petcong.user.model.record.UserRecord;
-import com.example.ssafy.petcong.user.model.entity.Users;
+import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -59,10 +57,10 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
 
     @Transactional
     protected boolean isPotentialUser(int requestingUserId, int potentialUserId) {
-        Optional<Users> optionalPotentialUser = userRepository.findById(potentialUserId);
-        Optional<Users> optionalRequestingUser = userRepository.findById(potentialUserId);
-        Users requestingUser = optionalRequestingUser.orElseThrow();
-        Users potentialUser = optionalPotentialUser.orElseThrow();
+        Optional<User> optionalPotentialUser = userRepository.findById(potentialUserId);
+        Optional<User> optionalRequestingUser = userRepository.findById(potentialUserId);
+        User requestingUser = optionalRequestingUser.orElseThrow();
+        User potentialUser = optionalPotentialUser.orElseThrow();
 
         // 1. 본인인지 확인
         if (requestingUserId == potentialUserId) return false;
@@ -70,9 +68,9 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         if (!potentialUser.isCallable()) return false;
 
         // 3. matching table에서 서로 매치한적 있는지 또는 거절 받은 유저인지 확인
-        Matchings matchingSentByRequesting = matchingRepository.findByFromUsersAndToUsers(requestingUser, potentialUser);
+        Matching matchingSentByRequesting = matchingRepository.findByFromUserAndToUser(requestingUser, potentialUser);
         if (matchingSentByRequesting != null) return false;
-        Matchings matchingSentByPotential = matchingRepository.findByFromUsersAndToUsers(potentialUser, requestingUser);
+        Matching matchingSentByPotential = matchingRepository.findByFromUserAndToUser(potentialUser, requestingUser);
         if (matchingSentByPotential != null && matchingSentByPotential.getCallStatus() != CallStatus.PENDING) return false;
 
         // 4. 오늘 본적 있는지
