@@ -69,18 +69,29 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   void _handleGoogleSignIn() async {
-    User? user = await FirebaseAuth.instance.authStateChanges().first;
     try {
-      if (user == null) {
-        if (kIsWeb) {
-          GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-          await FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
-        } else {
-          await UserController.loginWithGoogle();
-        }
+      if (kIsWeb) {
+        GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
+        await FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
+      } else {
+        await UserController.loginWithGoogle();
       }
     } catch (e) {
       debugPrint(e.toString());
     }
+
+    // User? user = await FirebaseAuth.instance.authStateChanges().first;
+    // try {
+    //   if (user == null) {
+    //     if (kIsWeb) {
+    //       GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
+    //       await FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
+    //     } else {
+    //       await UserController.loginWithGoogle();
+    //     }
+    //   }
+    // } catch (e) {
+    //   debugPrint(e.toString());
+    // }
   }
 }
