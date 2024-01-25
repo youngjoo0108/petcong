@@ -1,9 +1,12 @@
 package com.example.ssafy.petcong.user.service;
 
+import com.example.ssafy.petcong.user.model.entity.SkillMultimedia;
 import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.model.entity.UserImg;
+import com.example.ssafy.petcong.user.model.record.SkillMultimediaRecord;
 import com.example.ssafy.petcong.user.model.record.UserImgRecord;
 import com.example.ssafy.petcong.user.model.record.UserRecord;
+import com.example.ssafy.petcong.user.repository.SkillMultimediaRepository;
 import com.example.ssafy.petcong.user.repository.UserImgRepository;
 import com.example.ssafy.petcong.user.repository.UserRepository;
 
@@ -37,6 +40,17 @@ public class UserServiceImpl implements UserService {
     private final S3Presigner s3Presigner;
     private final UserRepository userRepository;
     private final UserImgRepository userImgRepository;
+    private final SkillMultimediaRepository skillMultimediaRepository;
+
+    private void uploadMediaToS3(InputStream fileInputStream, long size, PutObjectRequest putObjectRequest) {
+        RequestBody requestBody = RequestBody.fromInputStream(fileInputStream, size);
+        s3Client.putObject(putObjectRequest, requestBody);
+    }
+
+    @Override
+    public int findUserIdByUid(String uid) {
+        return userRepository.findUserIdByUid(uid);
+    }
 
     @Override
     public UserRecord findUserByUid(String uid) {
@@ -46,6 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserRecord save(UserRecord userRecord) {
         User userEntity = new User(userRecord);
         User result = userRepository.save(userEntity);
@@ -54,6 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserRecord updateCallable(UserRecord userRecord, boolean state) {
         User userEntity = new User(userRecord).updateCallable(state);
         User result = userRepository.save(userEntity);
@@ -62,7 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String createPresignedUrlForGetImage(String key) {
+    public String createPresignedUrl(String key) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucket.name())
                 .key(key)
@@ -81,7 +97,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserImgRecord uploadImage(UserRecord user, MultipartFile file) throws IOException {
+    public UserImgRecord uploadUserImage(UserRecord user, MultipartFile file) throws IOException {
         try (InputStream fileInputStream = file.getInputStream()) {
             String uid = user.uid();
             String key = new StringBuilder(uid)
@@ -108,11 +124,49 @@ public class UserServiceImpl implements UserService {
                     .contentLength(result.getLength())
                     .build();
 
-            RequestBody requestBody = RequestBody.fromInputStream(fileInputStream, result.getLength());
-
-            s3Client.putObject(putObjectRequest, requestBody);
+            uploadMediaToS3(fileInputStream, result.getLength(), putObjectRequest);
 
             return new UserImgRecord(result);
         }
+    }
+
+    @Override
+    public SkillMultimediaRecord uploadSkillMultimedia(UserRecord user, MultipartFile file) throws IOException {
+        try(InputStream fileInputStream = file.getInputStream()) {
+            String uid = user.uid();
+            String key = new StringBuilder(uid)
+                    .append("-")
+                    .append(file.getOriginalFilename())
+                    .toString();
+            String contentType = file.getContentType();
+            long size = file.getSize();
+            log.info("key: " + key);
+
+            SkillMultimedia skillMultimedia = SkillMultimedia.builder()
+                    .user(user.userId())
+                    .url(key)
+                    .contentType(contentType)
+                    .length(size)
+                    .build();
+
+            SkillMultimedia result = skillMultimediaRepository.save(skillMultimedia);
+
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucket.name())
+                    .key(result.getUrl())
+                    .contentType(result.getContentType())
+                    .contentLength(result.getLength())
+                    .build();
+
+            uploadMediaToS3(fileInputStream, result.getLength(), putObjectRequest);
+
+            return new SkillMultimediaRecord(result);
+        }
+    }
+
+    @Override
+    @Transactional
+    public int deleteUserByUserId(int userId) {
+        return userRepository.deleteUserByUserId(userId);
     }
 }
