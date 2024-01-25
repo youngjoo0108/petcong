@@ -4,18 +4,22 @@ import com.example.ssafy.petcong.user.model.enums.Gender;
 import com.example.ssafy.petcong.user.model.enums.Preference;
 import com.example.ssafy.petcong.user.model.enums.Status;
 import com.example.ssafy.petcong.user.model.record.UserRecord;
+
 import jakarta.persistence.*;
+
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
+@Table(name = "users")
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
     private int age;
@@ -25,10 +29,11 @@ public class User {
     private String nickname;
     private String email;
     private String address;
+    @Column(name =  "social_url")
     private String socialUrl;
     private String uid;
 
-    private Date birthday;
+    private LocalDate birthday;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -49,7 +54,7 @@ public class User {
             String address,
             String socialUrl,
             String uid,
-            Date birthday,
+            LocalDate birthday,
             Gender gender,
             Status status,
             Preference preference) {
@@ -70,7 +75,7 @@ public class User {
     public User(UserRecord userRecord) {
         this.userId = userRecord.userId();
         this.age = userRecord.age();
-        this.callable = userRecord.isCallable();
+        this.callable = userRecord.callable();
         this.nickname = userRecord.nickname();
         this.email = userRecord.email();
         this.address = userRecord.address();
@@ -81,9 +86,13 @@ public class User {
         this.status = userRecord.status();
         this.preference = userRecord.preference();
     }
-
+    public User(int userId) {
+        this.userId = userId;
+    }
     public User updateCallable(boolean callable) {
         this.callable = callable;
         return this;
     }
+
+
 }
