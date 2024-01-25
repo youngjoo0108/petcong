@@ -1,7 +1,9 @@
 package com.example.ssafy.petcong.user.model.entity;
 
 import com.example.ssafy.petcong.user.model.record.SkillMultimediaRecord;
+
 import jakarta.persistence.*;
+
 import lombok.*;
 
 @Entity
