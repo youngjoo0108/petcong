@@ -1,9 +1,11 @@
-// pet_name_page.dart
 import 'package:flutter/material.dart';
 import 'pet_birthday_page.dart';
+import 'package:petcong/widgets/continue_button.dart';
 
 class PetNamePage extends StatefulWidget {
-  const PetNamePage({super.key});
+  final double progress;
+
+  const PetNamePage({Key? key, required this.progress}) : super(key: key);
 
   @override
   _PetNamePageState createState() => _PetNamePageState();
@@ -12,60 +14,99 @@ class PetNamePage extends StatefulWidget {
 class _PetNamePageState extends State<PetNamePage> {
   final _controller = TextEditingController();
   bool _isButtonDisabled = true;
-  double _progress = 3 / 10;
-
-  void _increaseProgress() {
-    setState(() {
-      _progress += 1 / 10; // 진행 상황을 증가시킴
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _controller.addListener(() {
-      setState(() {
-        _isButtonDisabled = _controller.text.trim().isEmpty;
-        if (!_isButtonDisabled) {
-          _increaseProgress(); // 텍스트 필드가 비어있지 않다면 진행 상황 증가
-        }
-      });
+    _controller.addListener(_updateButtonState);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _updateButtonState() {
+    setState(() {
+      _isButtonDisabled =
+          _controller.text.isEmpty || _controller.text.trim().isEmpty;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.close), // X 모양의 아이콘
-          onPressed: () => Navigator.pop(context), // 버튼이 눌렸을 때 이전 페이지로 돌아감
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, widget.progress);
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: LinearProgressIndicator(
+            value: widget.progress,
+            valueColor: const AlwaysStoppedAnimation<Color>(
+                Color.fromARGB(255, 234, 64, 128)),
+          ),
         ),
-        title: LinearProgressIndicator(value: _progress), // 상단 진행 상황 바
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            const Text('내 반려동물 이름은?', style: TextStyle(fontSize: 24.0)), // 텍스트
-            TextField(
-              controller: _controller,
-              decoration: const InputDecoration(hintText: '반려동물 이름을 입력하세요'),
-            ),
-            ElevatedButton(
-              onPressed: _isButtonDisabled
-                  ? null
-                  : () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                PetBirthdayPage(petName: _controller.text)),
-                      );
-                    },
-              child: const Text('Continue'),
-            ),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  icon: const Icon(Icons.close, size: 32),
+                  onPressed: () => Navigator.pop(context, widget.progress),
+                ),
+              ),
+              const SizedBox(height: 10.0),
+              const Center(
+                  child: Text('내 반려동물 이름은?', style: TextStyle(fontSize: 32.0))),
+              const SizedBox(height: 30.0),
+              SizedBox(
+                width: 300, // 원하는 너비 설정
+                child: TextField(
+                  controller: _controller,
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    decoration: TextDecoration.none,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  decoration: const InputDecoration(
+                    hintText: '반려동물 이름을 입력하세요',
+                    border: InputBorder.none,
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 30.0,
+              ), // TextField 위젯과 ElevatedButton 위젯 사이에 100픽셀의 공간을 만듭니다.
+              ContinueButton(
+                isFilled: !_isButtonDisabled,
+                buttonText: 'CONTINUE',
+                onPressed: !_isButtonDisabled
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PetBirthdayPage(
+                              petName: _controller.text,
+                              progress: widget.progress + 1 / 10,
+                            ),
+                          ),
+                        );
+                      }
+                    : null,
+              ),
+            ],
+          ),
         ),
       ),
     );

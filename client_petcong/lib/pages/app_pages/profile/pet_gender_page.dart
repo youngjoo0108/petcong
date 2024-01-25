@@ -1,23 +1,33 @@
 import 'package:flutter/material.dart';
 import 'introduce_page.dart';
+import 'package:petcong/widgets/continue_button.dart';
 
 class PetGenderPage extends StatefulWidget {
   final String petName;
+  final double progress;
 
-  const PetGenderPage({required this.petName, Key? key}) : super(key: key);
+  const PetGenderPage({required this.petName, required this.progress, Key? key})
+      : super(key: key);
 
   @override
   _PetGenderPageState createState() => _PetGenderPageState();
 }
 
 class _PetGenderPageState extends State<PetGenderPage> {
-  String _gender = ''; // 선택된 성별을 저장하는 상태
-  bool _isNeutered = false; // 중성화 여부를 저장하는 상태
-  double _progress = 5 / 10; // 진행 상황을 나타내는 상태
+  String _gender = '';
+  final bool _isNeutered = false;
+  late double _progress; // _progress를 late로 선언
+  bool _isButtonDisabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _progress = widget.progress; // initState에서 _progress를 초기화
+  }
 
   void _increaseProgress() {
     setState(() {
-      _progress += 1 / 10; // 진행 상황을 최대로 증가
+      _progress += 1 / 10;
     });
   }
 
@@ -25,63 +35,104 @@ class _PetGenderPageState extends State<PetGenderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back), // < 모양의 아이콘
-          onPressed: () => Navigator.pop(context), // 버튼이 눌렸을 때 이전 페이지로 돌아감
+        automaticallyImplyLeading: false,
+        title: LinearProgressIndicator(
+          value: _progress,
+          valueColor: const AlwaysStoppedAnimation<Color>(
+              Color.fromARGB(255, 234, 64, 128)),
         ),
-        title: LinearProgressIndicator(value: _progress), // 상단 진행 상황 바
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
-            Text('${widget.petName}의 성별을 선택하세요',
-                style: const TextStyle(fontSize: 24.0)), // 텍스트
-            ElevatedButton(
-              onPressed: _isNeutered
-                  ? null
-                  : () {
-                      setState(() {
-                        _gender = 'FEMALE';
-                        _increaseProgress(); // 성별을 선택하면 진행 상황 증가
-                      });
-                    },
-              child: const Text('FEMALE'),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back_ios, size: 32),
+                onPressed: () => Navigator.pop(context), // Navigator.pop으로 변경
+              ),
             ),
-            ElevatedButton(
-              onPressed: _isNeutered
-                  ? null
-                  : () {
-                      setState(() {
-                        _gender = 'MALE';
-                        _increaseProgress(); // 성별을 선택하면 진행 상황 증가
-                      });
-                    },
-              child: const Text('MALE'),
+            Text('${widget.petName}의 성별은?',
+                style: const TextStyle(fontSize: 32.0)),
+            const SizedBox(height: 40.0),
+            Center(
+              child: SizedBox(
+                width: 300.0,
+                height: 60.0,
+                child: ContinueButton(
+                  isFilled: _gender == '여자',
+                  buttonText: 'FEMALE',
+                  onPressed: () {
+                    setState(() {
+                      _gender = '여자';
+                      _isButtonDisabled = false;
+                    });
+                  },
+                ),
+              ),
             ),
-            CheckboxListTile(
-              title: const Text('중성화했어요'),
-              value: _isNeutered,
-              onChanged: _gender.isEmpty
-                  ? null
-                  : (bool? value) {
-                      setState(() {
-                        _isNeutered = value!;
-                        _increaseProgress(); // 체크박스를 선택하면 진행 상황 증가
-                      });
-                    },
+            const SizedBox(height: 20.0),
+            Center(
+              child: SizedBox(
+                width: 300.0,
+                height: 60.0,
+                child: ContinueButton(
+                  isFilled: _gender == '남자',
+                  buttonText: 'MALE',
+                  onPressed: () {
+                    setState(() {
+                      _gender = '남자';
+                      _isButtonDisabled = false;
+                    });
+                  },
+                ),
+              ),
             ),
-            ElevatedButton(
-              onPressed: _gender.isEmpty
-                  ? null
-                  : () {
+            const SizedBox(height: 20.0),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Transform.scale(
+                    scale: 1.5, // 원하는 사이즈로 조절
+                    child: Checkbox(
+                      value: _gender == '중성화',
+                      activeColor:
+                          const Color.fromARGB(255, 234, 64, 128), // 체크박스 컬러 변경
+                      checkColor: Colors.white, // 체크 마크 컬러 변경
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _gender = '중성화';
+                          _isButtonDisabled = false;
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 20.0), // 체크박스와 텍스트 사이의 간격 조절
+                  const Text(
+                    '중성화했어요',
+                    style: TextStyle(fontSize: 20.0), // 텍스트 크기 조절
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 50.0),
+            ContinueButton(
+              isFilled: !_isButtonDisabled,
+              buttonText: 'CONTINUE',
+              onPressed: !_isButtonDisabled
+                  ? () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const IntroducePage()),
+                          builder: (context) => IntroducePage(
+                            progress: widget.progress + 1 / 10,
+                          ),
+                        ),
                       );
-                    },
-              child: const Text('Continue'),
+                    }
+                  : null,
             ),
           ],
         ),

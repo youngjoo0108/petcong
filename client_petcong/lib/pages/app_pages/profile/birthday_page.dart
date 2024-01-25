@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'gender_page.dart';
 import 'nickname_page.dart';
+import 'package:petcong/widgets/continue_button.dart';
 
 class ProgressProvider extends InheritedWidget {
   final double progress;
@@ -37,6 +38,18 @@ class _BirthdayPageState extends State<BirthdayPage> {
   String? _errorMessage;
 
   final _inputFormatter = TextInputFormatter.withFunction((oldValue, newValue) {
+    // 새로운 값이 기존 값보다 짧고, 새로운 값의 마지막 문자가 '/'가 아닌 경우
+    if (newValue.text.length < oldValue.text.length &&
+        !newValue.text.endsWith('/')) {
+      // 기존 값의 마지막 문자가 '/'인 경우
+      if (oldValue.text.endsWith('/')) {
+        return TextEditingValue(
+          text: newValue.text.substring(0, newValue.text.length - 1),
+          selection: TextSelection.collapsed(offset: newValue.text.length - 1),
+        );
+      }
+    }
+
     if (newValue.text.length == 4 || newValue.text.length == 7) {
       if (!newValue.text.endsWith('/')) {
         return TextEditingValue(
@@ -96,65 +109,88 @@ class _BirthdayPageState extends State<BirthdayPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ProgressProvider(
-      progress: widget.progress,
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const NicknamePage(),
-                ),
-              );
-            },
+    double progress = 0.1;
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: LinearProgressIndicator(
+          value: progress,
+          valueColor: const AlwaysStoppedAnimation<Color>(
+            Color.fromARGB(255, 234, 64, 128),
           ),
-          title: LinearProgressIndicator(value: widget.progress),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: <Widget>[
-                const Text(
-                  '내 생일은?',
-                  style: TextStyle(fontSize: 24.0),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back_ios, size: 32),
+                onPressed: () => Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NicknamePage(progress: 0),
+                  ),
                 ),
-                TextFormField(
-                  controller: _controller,
-                  inputFormatters: [_inputFormatter],
-                  decoration: const InputDecoration(hintText: 'YYYY/MM/DD'),
-                  onChanged: (value) {
-                    setState(() {
-                      _validateDate(value);
-                    });
-                  },
-                  validator: (value) => _errorMessage,
-                ),
-                ElevatedButton(
-                  onPressed:
-                      _controller.text.isNotEmpty && _errorMessage == null
-                          ? () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => GenderPage(
-                                    progress:
-                                        ProgressProvider.of(context)!.progress +
-                                            1 / 10,
-                                  ),
-                                ),
-                              );
-                            }
-                          : null,
-                  child: const Text('Continue'),
-                ),
-              ],
+              ),
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    const Text(
+                      '내 생일은?',
+                      style: TextStyle(fontSize: 32.0),
+                    ),
+                    const SizedBox(height: 30.0),
+                    SizedBox(
+                      width: 300, // 원하는 너비 설정
+                      child: TextFormField(
+                        controller: _controller,
+                        inputFormatters: [_inputFormatter],
+                        decoration:
+                            const InputDecoration(hintText: 'YYYY/MM/DD'),
+                        style: const TextStyle(fontSize: 20.0),
+                        onChanged: (value) {
+                          setState(() {
+                            _validateDate(value);
+                          });
+                        },
+                        validator: (value) => _errorMessage,
+                      ),
+                    ),
+                    const SizedBox(height: 30.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 6.0), // 위 아래로 패딩 6 추가
+                      child: ContinueButton(
+                        isFilled: _controller.text.isNotEmpty &&
+                            _errorMessage == null,
+                        buttonText: 'CONTINUE',
+                        onPressed:
+                            _controller.text.isNotEmpty && _errorMessage == null
+                                ? () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => GenderPage(
+                                          progress: widget.progress + 1 / 10,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                : null,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
