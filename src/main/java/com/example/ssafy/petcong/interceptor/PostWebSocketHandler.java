@@ -50,7 +50,7 @@ public class PostWebSocketHandler implements ChannelInterceptor {
 
             // 완료 처리
             System.out.println("user " + userId + "subscribe");
-        } else if (command == DISCONNECT) {
+        } else {
             // 유저 offline으로 변경
             changeOnlineStatus(userId, false);
 
