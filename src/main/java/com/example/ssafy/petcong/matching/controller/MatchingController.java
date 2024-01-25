@@ -2,6 +2,7 @@ package com.example.ssafy.petcong.matching.controller;
 
 import com.example.ssafy.petcong.matching.model.ChoiceReq;
 import com.example.ssafy.petcong.matching.service.MatchingConnectionService;
+import com.example.ssafy.petcong.util.annotation.MakeCallable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +28,11 @@ public class MatchingController {
                 .ok(matchingConnectionService.choice(choiceReq));
     }
 
+    @MakeCallable
     @PatchMapping("/callable/{userId}")
     public ResponseEntity<?> onCallEnd(@PathVariable int userId) {
-        matchingConnectionService.changeToCallable(userId);
+//        matchingConnectionService.changeToCallable(userId);
+        if (userId == 2) throw new RuntimeException();
         return ResponseEntity
                 .ok()
                 .build();
