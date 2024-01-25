@@ -32,4 +32,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage());
     }
+
+    @ExceptionHandler({RuntimeException.class})
+    public ResponseEntity<?> runtimeExceptionHandler(RuntimeException e) {
+        return ResponseEntity
+                .badRequest()
+                .body(e.getMessage());
+    }
 }

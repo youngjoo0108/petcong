@@ -1,11 +1,11 @@
 package com.example.ssafy.petcong.matching.service;
 
 import com.example.ssafy.petcong.matching.model.*;
+import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.repository.MatchingRepository;
-import com.example.ssafy.petcong.user.model.User;
+import com.example.ssafy.petcong.user.model.entity.User;
+import com.example.ssafy.petcong.user.model.record.UserRecord;
 import com.example.ssafy.petcong.user.repository.UserRepository;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,56 +18,53 @@ public class MatchingConnectionService {
     private final MatchingRepository matchingRepository;
     private final UserRepository userRepository;
 
-    private final SimpMessageSendingOperations sendingOperations;
-    private final int RANDOM_STR_LEN = 20;
-
-    public MatchingConnectionService(MatchingRepository matchingRepository, UserRepository userRepository,
-                                     SimpMessageSendingOperations sendingOperations) {
+    public MatchingConnectionService(MatchingRepository matchingRepository, UserRepository userRepository) {
         this.matchingRepository = matchingRepository;
         this.userRepository = userRepository;
-        this.sendingOperations = sendingOperations;
     }
 
     @Transactional
     public Map<String, String> choice(ChoiceReq choiceReq){
         // DB에서 requestUserId, partnerUserId인 데이터 가져오기
         Matching matching = matchingRepository.findByUsersId(choiceReq.getPartnerUserId(), choiceReq.getRequestUserId());
-        User fromUser = userRepository.findById(choiceReq.getRequestUserId());
-        User toUser = userRepository.findById(choiceReq.getPartnerUserId());
+        User fromUser = userRepository.findUserByUserId(choiceReq.getRequestUserId());
+        User toUser = userRepository.findUserByUserId(choiceReq.getPartnerUserId());
 
-        // 기존 데이터 없으면
+        // invalid userId
+        if (fromUser == null || toUser == null) {
+            throw new RuntimeException();
+        }
+
+        // to pending
         if (matching == null) {
             // DB에 pending 상태로 추가
             matchingRepository.save(new Matching(fromUser, toUser));
-            System.out.println("saved");
             return null;
         }
-        // 이미 매치되었거나, reject상태이면
-        if (matching.getCallStatus() != CallStatus.pending) {
+        // 이미 matched / rejected 이면
+        if (matching.getCallStatus() != CallStatus.PENDING) {
             throw new RuntimeException();
         }
-        // update to matched
-        matching.setCallStatus(CallStatus.matched);
-        // fromUser, toUser의 callable을 false로 변경
+        // to matched
+        matching.setCallStatus(CallStatus.MATCHED);
+
+        // update users to not callable
         fromUser.setCallable(false);
         toUser.setCallable(false);
+        userRepository.save(fromUser);
+        userRepository.save(toUser);
 
-        // 클라이언트끼리 연결할 링크를 반환
+        // rtc 연결 handshake를 위한 toUser의 구독 링크 반환
         Map<String, String> responseMap = new HashMap<>();
-        Map<String, String> resMap2 = new HashMap<>();
-
-        String link = RandomStringUtils.randomAlphanumeric(RANDOM_STR_LEN);
-        responseMap.put("targetLink", "/ws/" + link);
-        resMap2.put("selfLink", "/ws/" + link);
-
-        sendingOperations.convertAndSend("/queue/" + toUser.getId(), resMap2);
+        responseMap.put("targetLink", "/queue/" + toUser.getUserId());
 
         return responseMap;
     }
 
     @Transactional
     public void changeToCallable(int userId) {
-        User user = userRepository.findById(userId);
+        User user = userRepository.findUserByUserId(userId);
         user.setCallable(true);
+        userRepository.save(user);
     }
 }

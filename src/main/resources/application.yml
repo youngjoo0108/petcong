@@ -10,6 +10,7 @@ spring:
       naming:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    database-platform: org.hibernate.dialect.MySQLDialect
 
 logging:
   level:
