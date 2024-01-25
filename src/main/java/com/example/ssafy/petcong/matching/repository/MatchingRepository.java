@@ -2,6 +2,7 @@ package com.example.ssafy.petcong.matching.repository;
 
 import com.example.ssafy.petcong.matching.model.ChoiceReq;
 import com.example.ssafy.petcong.matching.model.Matching;
+import com.example.ssafy.petcong.user.model.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,5 +22,5 @@ public interface MatchingRepository extends JpaRepository<Matching, Integer>, Ma
 //    <S extends Matching> S save(S entity);
     Matching save(Matching matching);
 
-    Matching findByFromUserIdAndToUserId(int fromUserId, int toUserId);
+    Matching findByFromUsersAndToUsers(Users fromUsers, Users toUsers);
 }

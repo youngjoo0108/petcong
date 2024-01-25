@@ -39,6 +39,11 @@ dependencies {
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
     testImplementation 'org.springframework.security:spring-security-test'
 
+    implementation 'io.openvidu:openvidu-java-client:2.29.0'
+    // websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.apache.commons:commons-lang3'
+
     implementation 'com.google.firebase:firebase-admin:9.2.0'
     implementation 'com.h2database:h2'
 
@@ -51,6 +56,10 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    // lombok for test
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 // Querydsl 설정부
 def querydslDir = "$buildDir/generated/querydsl"
@@ -58,9 +67,11 @@ def querydslDir = "$buildDir/generated/querydsl"
 // querydsl QClass 파일 생성 위치를 지정
 tasks.withType(JavaCompile) {
     options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
-
 }
 
+tasks.named('test') {
+    useJUnitPlatform()
+}
 // java source set 에 querydsl QClass 위치 추가
 sourceSets {
     main.java.srcDirs += querydslDir
