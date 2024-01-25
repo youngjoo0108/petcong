@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:get/get.dart';
+import 'package:petcong/pages/app_pages/matching/dog_video.dart';
 import 'package:petcong/widgets/matching_card.dart';
 
 class SwipingPage extends StatefulWidget {
@@ -51,26 +53,32 @@ class _SwipingPageState extends State<SwipingPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   FloatingActionButton(
+                    heroTag: 'rotate_left',
                     onPressed: controller.undo,
                     child: const Icon(Icons.rotate_left),
                   ),
                   FloatingActionButton(
+                    heroTag: 'rotate_rignt',
                     onPressed: controller.swipe,
                     child: const Icon(Icons.rotate_right),
                   ),
                   FloatingActionButton(
+                    heroTag: 'left',
                     onPressed: controller.swipeLeft,
                     child: const Icon(Icons.keyboard_arrow_left),
                   ),
                   FloatingActionButton(
+                    heroTag: 'rignt',
                     onPressed: controller.swipeRight,
                     child: const Icon(Icons.keyboard_arrow_right),
                   ),
                   FloatingActionButton(
+                    heroTag: 'top',
                     onPressed: controller.swipeTop,
                     child: const Icon(Icons.keyboard_arrow_up),
                   ),
                   FloatingActionButton(
+                    heroTag: 'down',
                     onPressed: controller.swipeBottom,
                     child: const Icon(Icons.keyboard_arrow_down),
                   ),
@@ -79,6 +87,29 @@ class _SwipingPageState extends State<SwipingPage> {
             ),
           ],
         ),
+      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   currentIndex: 0,
+      //   items: const [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.call),
+      //       label: 'Call',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.call),
+      //       label: 'Call',
+      //     ),
+      //   ],
+      //   onTap: (index) {
+      //     Get.to(const MainDogVideos());
+      //   },
+      // ),
+      floatingActionButton: FloatingActionButton.large(
+        heroTag: 'call',
+        onPressed: () {
+          Get.to(const MainDogVideos());
+        },
+        child: const Text('call'),
       ),
     );
   }

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css" />
+</head>
+<body>
+<h1>Welcome to My Awesome App</h1>
+<div id="firebaseui-auth-container"></div>
+</body>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+    const firebaseConfig = {
+        apiKey: "your api key",
+        authDomain: "your auth domain",
+        projectId: "your project id",
+        storageBucket: "your storage bucket",
+        messagingSenderId: "your messaging sender id",
+        appId: "your app id"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = app.auth();
+    const uiConfig = {
+        callbacks: {
+            signInSuccessWithAuthResult: (authResult) => {
+                console.log(authResult);
+                const idToken = firebase.auth().currentUser.multiFactor.user.accessToken;
+                const url = "http://localhost:8080/users/signin";
+                fetch(url, {
+                    method: 'POST',
+                    headers: {'Petcong-id-token': idToken }
+                })
+                .then(result => console.log(result))
+                .catch(error => console.log(error));
+                return false;
+            }
+        },
+        signInOptions: [
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+        ],
+        tosUrl: 'https://www.google.com',
+        privacyPolicyUrl: 'https://www.google.com'
+    };
+    const ui = new firebaseui.auth.AuthUI(auth);
+    ui.start('#firebaseui-auth-container', uiConfig);
+</script>
+</html>

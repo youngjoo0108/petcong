@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/pages/app_pages/profile/nickname_page.dart';
 import 'package:petcong/pages/signin_pages/sign_in_page.dart';
+import 'package:petcong/services/socket_service.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:petcong/widgets/create_button.dart';
 import 'package:petcong/widgets/delete_button.dart';
@@ -30,12 +32,14 @@ class MainProfilePage extends StatelessWidget {
                 child: const Text('Go to write profile')),
             ElevatedButton(
                 onPressed: () {
+                  // SocketService().disposeSocket();
                   UserController.signOut();
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SignInPage()),
-                      (route) => false);
+
+                  // Navigator.pushAndRemoveUntil(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => const SignInPage()),
+                  //     (route) => false);
                 },
                 child: const Text('log out')),
             const SizedBox(
