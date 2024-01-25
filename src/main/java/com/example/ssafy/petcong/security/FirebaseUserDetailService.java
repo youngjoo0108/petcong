@@ -19,12 +19,12 @@ import org.springframework.stereotype.Service;
 public class FirebaseUserDetailService implements UserDetailsService {
     private final FirebaseAuth firebaseAuth;
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String idToken) throws UsernameNotFoundException {
         try {
-            FirebaseToken decodedToken = firebaseAuth.verifyIdToken(username);
+            FirebaseToken decodedToken = firebaseAuth.verifyIdToken(idToken);
             log.info("decoded Token: " + decodedToken.toString());
-            String password = decodedToken.getUid();
-            return User.withUsername(username).password(password).build();
+            String uid = decodedToken.getUid();
+            return User.withUsername(idToken).password(uid).build();
         } catch (FirebaseAuthException e) {
             throw new UsernameNotFoundException(e.getLocalizedMessage());
         }

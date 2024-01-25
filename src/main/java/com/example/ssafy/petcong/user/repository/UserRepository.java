@@ -1,12 +1,14 @@
 package com.example.ssafy.petcong.user.repository;
 
 import com.example.ssafy.petcong.user.model.entity.User;
-import com.example.ssafy.petcong.user.model.record.UserRecord;
 
-import org.springframework.data.repository.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends Repository<User, String> {
-    UserRecord findUserByUserId(int userId);
-    UserRecord findUserByUid(String uid);
-    UserRecord save(User user);
+public interface UserRepository extends JpaRepository<User, Integer> {
+    int findUserIdByUid(String uid);
+    User findUserByUserId(int userId);
+    User findUserByUid(String uid);
+    User save(User user);
+    int deleteUserByUserId(int userId);
+    int deleteUserByUid(String uid);
 }

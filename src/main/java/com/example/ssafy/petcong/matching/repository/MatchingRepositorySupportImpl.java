@@ -1,11 +1,10 @@
 package com.example.ssafy.petcong.matching.repository;
 
 import com.example.ssafy.petcong.matching.model.CallStatus;
-import com.example.ssafy.petcong.matching.model.Matching;
-import com.example.ssafy.petcong.matching.model.QMatching;
+import com.example.ssafy.petcong.matching.model.entity.Matching;
+import com.example.ssafy.petcong.matching.model.entity.QMatching;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -21,8 +20,8 @@ public class MatchingRepositorySupportImpl implements MatchingRepositorySupport 
         System.out.println("querydsl 실행됨");
         return jpaQueryFactory.select(matching)
                 .from(matching)
-                .where(matching.fromUser.id.eq(fromUserId)
-                        .and((matching.callStatus.eq(CallStatus.pending)))
+                .where(matching.fromUser.userId.eq(fromUserId)
+                        .and((matching.callStatus.eq(CallStatus.PENDING)))
                 ).fetch();
     }
 }

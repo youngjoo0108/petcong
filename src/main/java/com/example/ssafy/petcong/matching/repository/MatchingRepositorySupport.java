@@ -1,6 +1,6 @@
 package com.example.ssafy.petcong.matching.repository;
 
-import com.example.ssafy.petcong.matching.model.Matching;
+import com.example.ssafy.petcong.matching.model.entity.Matching;
 
 import java.util.List;
 
