@@ -1,6 +1,8 @@
 package com.example.ssafy.petcong.user.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.ssafy.petcong.user.model.enums.Gender;
 import com.example.ssafy.petcong.user.model.enums.Preference;
@@ -29,9 +31,9 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
@@ -65,7 +67,6 @@ public class ApiIntegrationTest {
     @MethodSource("provideDummySignUpUser")
     @Transactional
     @DisplayName("SignUp Test")
-    @Disabled
     void testSignUp(UserRecord userRecord) throws Exception {
         String userRecordJson = objectMapper.writeValueAsString(userRecord);
 
@@ -77,8 +78,8 @@ public class ApiIntegrationTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(request)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         String response = mvcResult.getResponse().getContentAsString();
@@ -91,7 +92,6 @@ public class ApiIntegrationTest {
     @Test
     @DisplayName("Signin Test")
     @Transactional
-    @Disabled
     void testSignin() throws Exception {
         var request = MockMvcRequestBuilders
                 .post("/users/signin")
@@ -101,8 +101,8 @@ public class ApiIntegrationTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(request)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         String response = mvcResult.getResponse().getContentAsString();
@@ -114,13 +114,12 @@ public class ApiIntegrationTest {
 
     @Test
     @DisplayName("PostProfileImage Test")
-    @Disabled
-    void testpostProfileImage() throws Exception {
+    void testPostProfileImage() throws Exception {
         FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\anya.jpg");
         byte[] bytes = fileInputStream.readAllBytes();
         MockMultipartFile multipartFile = new MockMultipartFile(
                 "file",
-                "img_anya",
+                "anya.jpg",
                 MediaType.MULTIPART_FORM_DATA_VALUE,
                 bytes);
 
@@ -133,8 +132,30 @@ public class ApiIntegrationTest {
 
         MvcResult mvcResult = mockMvc
                 .perform(request)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+
+        assertThat(response).isNotNull();
+
+        log.info(response);
+    }
+
+    @Test
+    @DisplayName("GetProfileImageUrl Test")
+    void testGetProfileImageUrl() throws Exception {
+        String key = "1-anya.jpg";
+
+        var request = MockMvcRequestBuilders
+                .get("/users/picture")
+                .header("tester", "A603")
+                .param("key", key);
+        MvcResult mvcResult = mockMvc
+                .perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
                 .andReturn();
 
         String response = mvcResult.getResponse().getContentAsString();
