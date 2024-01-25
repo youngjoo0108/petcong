@@ -106,14 +106,14 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(0.0),
               child: Column(
                 children: <Widget>[
                   Text(
                     '${widget.petName}의 생일은?',
-                    style: const TextStyle(fontSize: 40.0),
+                    style: const TextStyle(fontSize: 32.0),
                   ),
-                  const SizedBox(height: 50.0),
+                  const SizedBox(height: 30.0),
                   SizedBox(
                     width: 300, // 원하는 너비를 설정합니다.
                     child: TextField(
@@ -135,7 +135,7 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                  const SizedBox(height: 50.0),
+                  const SizedBox(height: 30.0),
                   ValueListenableBuilder<String?>(
                     valueListenable: _dateValidator,
                     builder: (context, value, child) {

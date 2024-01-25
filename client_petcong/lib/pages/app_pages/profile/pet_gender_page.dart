@@ -54,11 +54,11 @@ class _PetGenderPageState extends State<PetGenderPage> {
               ),
             ),
             Text('${widget.petName}의 성별은?',
-                style: const TextStyle(fontSize: 40.0)),
-            const SizedBox(height: 50.0),
+                style: const TextStyle(fontSize: 32.0)),
+            const SizedBox(height: 40.0),
             Center(
               child: SizedBox(
-                width: 500.0,
+                width: 300.0,
                 height: 60.0,
                 child: ContinueButton(
                   isFilled: _gender == '여자',
@@ -75,7 +75,7 @@ class _PetGenderPageState extends State<PetGenderPage> {
             const SizedBox(height: 20.0),
             Center(
               child: SizedBox(
-                width: 500.0,
+                width: 300.0,
                 height: 60.0,
                 child: ContinueButton(
                   isFilled: _gender == '남자',
@@ -89,7 +89,7 @@ class _PetGenderPageState extends State<PetGenderPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 50.0),
+            const SizedBox(height: 20.0),
             Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -104,6 +104,7 @@ class _PetGenderPageState extends State<PetGenderPage> {
                       onChanged: (bool? value) {
                         setState(() {
                           _gender = '중성화';
+                          _isButtonDisabled = false;
                         });
                       },
                     ),
@@ -116,7 +117,7 @@ class _PetGenderPageState extends State<PetGenderPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 100.0),
+            const SizedBox(height: 50.0),
             ContinueButton(
               isFilled: !_isButtonDisabled,
               buttonText: 'Continue',

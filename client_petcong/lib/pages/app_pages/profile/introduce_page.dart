@@ -61,8 +61,8 @@ class _IntroducePageState extends State<IntroducePage> {
               ),
             ),
             const SizedBox(height: 10.0),
-            const Text('자기 소개 해주세요!', style: TextStyle(fontSize: 40.0)),
-            const SizedBox(height: 50.0),
+            const Text('자기 소개 해주세요!', style: TextStyle(fontSize: 32.0)),
+            const SizedBox(height: 30.0),
             SizedBox(
               width: 300.0, // 너비를 300으로 설정
               child: TextField(
@@ -83,7 +83,7 @@ class _IntroducePageState extends State<IntroducePage> {
                 ),
               ),
             ),
-            const SizedBox(height: 50.0),
+            const SizedBox(height: 30.0),
             ContinueButton(
               isFilled: !_isButtonDisabled,
               buttonText: 'Continue',

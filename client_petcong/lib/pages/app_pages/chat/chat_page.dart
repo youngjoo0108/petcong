@@ -7,7 +7,10 @@ class MainChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text("Chat Page"),
+        child: Text(
+          "Chat Page",
+          style: TextStyle(fontSize: 36.0),
+        ),
       ),
     );
   }

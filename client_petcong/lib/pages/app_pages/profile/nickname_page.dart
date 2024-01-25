@@ -41,7 +41,7 @@ class _NicknamePageState extends State<NicknamePage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: Column(
           children: <Widget>[
             Align(
@@ -60,8 +60,8 @@ class _NicknamePageState extends State<NicknamePage> {
               ),
             ),
             const SizedBox(height: 10.0),
-            const Text('내 별명은?', style: TextStyle(fontSize: 40.0)),
-            const SizedBox(height: 50.0),
+            const Text('내 별명은?', style: TextStyle(fontSize: 32.0)),
+            const SizedBox(height: 30.0),
             SizedBox(
               width: 300, // 원하는 너비 설정
               child: TextField(
@@ -83,7 +83,7 @@ class _NicknamePageState extends State<NicknamePage> {
                 ),
               ),
             ),
-            const SizedBox(height: 50.0),
+            const SizedBox(height: 30.0),
             ContinueButton(
               isFilled: !_isButtonDisabled,
               buttonText: 'Continue',

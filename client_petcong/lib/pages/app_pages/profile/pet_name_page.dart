@@ -62,8 +62,8 @@ class _PetNamePageState extends State<PetNamePage> {
               ),
               const SizedBox(height: 10.0),
               const Center(
-                  child: Text('내 반려동물 이름은?', style: TextStyle(fontSize: 40.0))),
-              const SizedBox(height: 50.0),
+                  child: Text('내 반려동물 이름은?', style: TextStyle(fontSize: 32.0))),
+              const SizedBox(height: 30.0),
               SizedBox(
                 width: 300, // 원하는 너비 설정
                 child: TextField(
@@ -86,7 +86,7 @@ class _PetNamePageState extends State<PetNamePage> {
                 ),
               ),
               const SizedBox(
-                height: 50.0,
+                height: 30.0,
               ), // TextField 위젯과 ElevatedButton 위젯 사이에 100픽셀의 공간을 만듭니다.
               ContinueButton(
                 isFilled: !_isButtonDisabled,
