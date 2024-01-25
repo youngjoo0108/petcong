@@ -4,10 +4,12 @@ import software.amazon.awssdk.services.s3.model.Bucket;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.regions.Region;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 
 @Configuration
 public class AmazonS3Config {
@@ -30,5 +32,13 @@ public class AmazonS3Config {
                 .credentialsProvider(awsCredentialsProvider)
                 .build();
         return s3Client;
+    }
+    @Bean
+    public S3Presigner s3Presigner(AwsCredentialsProvider awsCredentialsProvider) {
+        S3Presigner s3Presigner = S3Presigner.builder()
+                .region(Region.AP_NORTHEAST_2)
+                .credentialsProvider(awsCredentialsProvider)
+                .build();
+        return s3Presigner;
     }
 }
