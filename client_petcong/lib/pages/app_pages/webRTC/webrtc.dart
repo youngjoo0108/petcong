@@ -29,7 +29,7 @@ class _MainVideoCallState extends State<MainVideoCall> {
     await _remoteRenderer.initialize();
 
     await connectSocket();
-    await joinRoom();
+    // await joinRoom();
   }
 
   Future connectSocket() async {
@@ -44,6 +44,7 @@ class _MainVideoCallState extends State<MainVideoCall> {
     socket.on('offer', (data) async {
       data = jsonDecode(data);
       await _gotOffer(RTCSessionDescription(data['sdp'], data['type']));
+
       await _sendAnswer();
     });
 
@@ -59,46 +60,46 @@ class _MainVideoCallState extends State<MainVideoCall> {
     });
   }
 
-  Future joinRoom() async {
-    final config = {
-      'iceServers': [
-        {"url": "stun:stun.l.google.com:19302"},
-      ]
-    };
+  // Future joinRoom() async {
+  //   final config = {
+  //     'iceServers': [
+  //       {"url": "stun:stun.l.google.com:19302"},
+  //     ]
+  //   };
 
-    final sdpConstraints = {
-      'mandatory': {
-        'OfferToReceiveAudio': true,
-        'OfferToReceiveVideo': true,
-      },
-      'optional': []
-    };
+  //   final sdpConstraints = {
+  //     'mandatory': {
+  //       'OfferToReceiveAudio': true,
+  //       'OfferToReceiveVideo': true,
+  //     },
+  //     'optional': []
+  //   };
 
-    pc = await createPeerConnection(config, sdpConstraints);
+  //   pc = await createPeerConnection(config, sdpConstraints);
 
-    final mediaConstraints = {
-      'audio': true,
-      'video': {'facingMode': 'user'}
-    };
+  //   final mediaConstraints = {
+  //     'audio': true,
+  //     'video': {'facingMode': 'user'}
+  //   };
 
-    _localStream = await Helper.openCamera(mediaConstraints);
+  //   _localStream = await Helper.openCamera(mediaConstraints);
 
-    _localStream!.getTracks().forEach((track) {
-      pc!.addTrack(track, _localStream!);
-    });
+  //   _localStream!.getTracks().forEach((track) {
+  //     pc!.addTrack(track, _localStream!);
+  //   });
 
-    _localRenderer.srcObject = _localStream;
+  //   _localRenderer.srcObject = _localStream;
 
-    pc!.onIceCandidate = (ice) {
-      _sendIce(ice);
-    };
+  //   pc!.onIceCandidate = (ice) {
+  //     _sendIce(ice);
+  //   };
 
-    pc!.onAddStream = (stream) {
-      _remoteRenderer.srcObject = stream;
-    };
+  //   pc!.onAddStream = (stream) {
+  //     _remoteRenderer.srcObject = stream;
+  //   };
 
-    socket.emit('join');
-  }
+  //   socket.emit('join');
+  // }
 
   Future _sendOffer() async {
     debugPrint('send offer');

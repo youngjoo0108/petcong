@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:petcong/pages/app_pages/matching/dog_video.dart';
 
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
 
 import 'package:petcong/widgets/matching_card.dart';
 import 'package:get/get.dart';
@@ -56,7 +57,7 @@ class _SwipingPageState extends State<SwipingPage> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  Get.to(WebRTC());
+                  Get.to(const MainVideoCall());
                 },
                 child: const Text('Call'))
 
@@ -112,11 +113,11 @@ class _SwipingPageState extends State<SwipingPage> {
       //   },
       // ),
       floatingActionButton: FloatingActionButton.large(
-        heroTag: 'call',
+        heroTag: 'dog video',
         onPressed: () {
           Get.to(const MainDogVideos());
         },
-        child: const Text('call'),
+        child: const Text('dog video'),
       ),
     );
   }
