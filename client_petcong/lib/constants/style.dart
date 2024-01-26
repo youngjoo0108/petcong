@@ -6,6 +6,10 @@ class MyColor {
   static const Color myColor3 = Color.fromRGBO(217, 90, 69, 1);
   static const Color myColor4 = Color.fromRGBO(249, 113, 95, 1);
   static const Color myColor5 = Color.fromRGBO(234, 64, 128, 1);
+  static const Color petCongColor1 = Color.fromRGBO(255, 243, 226, 1);
+  static const Color petCongColor2 = Color.fromRGBO(255, 229, 202, 1);
+  static const Color petCongColor3 = Color.fromRGBO(250, 152, 132, 1);
+  static const Color petCongColor4 = Color.fromRGBO(231, 70, 70, 1);
 
   static Widget getGradientContainer() {
     return Container(

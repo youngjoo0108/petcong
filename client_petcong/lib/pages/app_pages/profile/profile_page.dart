@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
-import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/pages/app_pages/profile/nickname_page.dart';
-import 'package:petcong/widgets/continue_button.dart';
 
 class MainProfilePage extends StatelessWidget {
   const MainProfilePage({Key? key}) : super(key: key);
@@ -26,12 +23,12 @@ class MainProfilePage extends StatelessWidget {
                     width: 200,
                     height: 200,
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          MyColor.myColor2,
-                          MyColor.myColor5,
+                          MyColor.petCongColor3.withOpacity(0.6),
+                          MyColor.petCongColor4,
                         ],
                       ),
                       shape: BoxShape.circle,
@@ -110,7 +107,7 @@ class MainProfilePage extends StatelessWidget {
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(10)),
                 child: Container(
-                  color: Colors.grey.withOpacity(0.3),
+                  // color: const Color.fromRGBO(238, 237, 235, 1),
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Column(
                     children: [
@@ -146,7 +143,39 @@ class MainProfilePage extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(15),
                                     child: SizedBox(
                                       child: Image.asset(
-                                        'assets/src/test_3.png',
+                                        'assets/src/test_4.jpg',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                width: 130,
+                                height: 150,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      spreadRadius: 2,
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: SizedBox(
+                                      child: Image.asset(
+                                        'assets/src/test_5.jpg',
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -210,6 +239,38 @@ class MainProfilePage extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(15),
                                     child: SizedBox(
                                       child: Image.asset(
+                                        'assets/src/test_3.png',
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                width: 130,
+                                height: 150,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      spreadRadius: 2,
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: SizedBox(
+                                      child: Image.asset(
                                         'assets/src/test_2.png',
                                         fit: BoxFit.cover,
                                       ),
@@ -235,8 +296,8 @@ class MainProfilePage extends StatelessWidget {
                                   ],
                                   gradient: LinearGradient(
                                     colors: [
-                                      MyColor.myColor3,
-                                      MyColor.myColor5.withOpacity(0.8),
+                                      MyColor.petCongColor3,
+                                      MyColor.petCongColor4.withOpacity(0.8),
                                     ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
@@ -274,10 +335,10 @@ class MainProfilePage extends StatelessWidget {
                               offset: const Offset(0, 3),
                             ),
                           ],
-                          gradient: const LinearGradient(
+                          gradient: LinearGradient(
                             colors: [
-                              MyColor.myColor2,
-                              MyColor.myColor5,
+                              MyColor.petCongColor3,
+                              MyColor.petCongColor4.withOpacity(0.8),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
