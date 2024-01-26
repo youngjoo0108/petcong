@@ -2,42 +2,51 @@ import 'package:flutter/material.dart';
 
 class ExampleCandidateModel {
   final String name;
-  final String job;
-  final String city;
+  final int age;
+  final String description;
   final List<Color> color;
+  final List<Image> images;
 
   ExampleCandidateModel({
     required this.name,
-    required this.job,
-    required this.city,
+    required this.age,
+    required this.description,
     required this.color,
+    required this.images,
   });
 }
 
+const String defaultImageSrc = 'assets/src/dog.jpg';
+Image defaultImages = Image.asset(defaultImageSrc);
+
 final List<ExampleCandidateModel> candidates = [
   ExampleCandidateModel(
-    name: 'One, 1',
-    job: 'Developer',
-    city: 'Areado',
+    name: 'One',
+    age: 3,
+    description: '내 강아지는 귀여워용',
     color: const [Color(0xFFFF3868), Color(0xFFFFB49A)],
+    images: [defaultImages],
   ),
   ExampleCandidateModel(
-    name: 'Two, 2',
-    job: 'Manager',
-    city: 'New York',
+    name: 'Two',
+    age: 5,
+    description: '내 강아지는 귀여워용',
     color: const [Color(0xFF736EFE), Color(0xFF62E4EC)],
+    images: [defaultImages],
   ),
   ExampleCandidateModel(
-    name: 'Three, 3',
-    job: 'Engineer',
-    city: 'London',
+    name: 'Three',
+    age: 21,
+    description: '내 강아지는 귀여워용',
     color: const [Color(0xFF2F80ED), Color(0xFF56CCF2)],
+    images: [defaultImages],
   ),
   ExampleCandidateModel(
-    name: 'Four, 4',
-    job: 'Designer',
-    city: 'Tokyo',
+    name: 'Four',
+    age: 11,
+    description: '내 강아지는 귀여워용',
     color: const [Color(0xFF0BA4E0), Color(0xFFA9E4BD)],
+    images: [defaultImages],
   ),
 ];
 
@@ -54,6 +63,10 @@ class MatchingCard extends StatelessWidget {
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
+        image: const DecorationImage(
+            image: AssetImage(defaultImageSrc),
+            // image: NetworkImage('https://picsum.photos/536/354'),
+            fit: BoxFit.cover),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         color: Colors.white,
         boxShadow: [
@@ -65,48 +78,56 @@ class MatchingCard extends StatelessWidget {
           ),
         ],
       ),
-      alignment: Alignment.center,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      alignment: Alignment.bottomLeft,
+      child: Stack(
         children: [
-          Flexible(
+          Positioned(
+            left: 0,
+            top: 409,
             child: Container(
-              decoration: BoxDecoration(
+              width: 380,
+              height: 277,
+              decoration: ShapeDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: candidate.color,
+                  begin: const Alignment(0.00, -1.00),
+                  end: const Alignment(0, 1),
+                  colors: [Colors.black.withOpacity(0), Colors.black],
+                ),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(11),
+                  ),
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  candidate.name,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  candidate.job,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  candidate.city,
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ],
+          Positioned(
+            left: 11,
+            top: 509,
+            child: Text(
+              '${candidate.name}, ${candidate.age}',
+              style: const TextStyle(
+                color: Color(0xFFFCFCFC),
+                fontSize: 37,
+                fontFamily: 'Mulish',
+                fontWeight: FontWeight.w700,
+                height: 0.01,
+              ),
+            ),
+          ),
+          Positioned(
+            left: 14,
+            top: 553,
+            child: Text(
+              candidate.description,
+              style: const TextStyle(
+                color: Color(0xFFFCFCFC),
+                fontSize: 16,
+                fontFamily: 'Mulish',
+                fontWeight: FontWeight.w400,
+                height: 0.03,
+              ),
             ),
           ),
         ],
