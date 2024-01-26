@@ -1,5 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:petcong/widgets/continue_button.dart';
+import 'package:petcong/widgets/create_button.dart';
+import 'package:petcong/widgets/delete_button.dart';
+import 'media_page.dart';
+import 'dart:io';
+
+// 이미지를 선택하고 화면에 표시되는 기능
+class DisplayImage extends StatelessWidget {
+  final String imagePath;
+
+  const DisplayImage({Key? key, required this.imagePath}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10.0), // 둥근 모서리의 크기를 지정합니다.
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: FileImage(File(imagePath)),
+            fit: BoxFit.cover, // 이미지를 그리드의 크기에 맞게 조절합니다.
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class PhotoPage extends StatefulWidget {
   final double progress;
@@ -15,7 +41,26 @@ class PhotoPage extends StatefulWidget {
 
 class _PhotoPageState extends State<PhotoPage> {
   late double _progress;
-  final bool _isButtonDisabled = false;
+  final List<String> _photoPaths = []; // 선택한 이미지들의 경로를 저장하는 리스트
+
+  void navigateToMediaPage(BuildContext context) async {
+    final result = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (context) => const MediaPage()),
+    );
+    // MediaPage에서 사진이 추가되었다면 _photoPaths를 업데이트합니다.
+    if (result != null) {
+      setState(() {
+        _photoPaths.add(result);
+      });
+    }
+  }
+
+  void deleteImage(int index) {
+    setState(() {
+      _photoPaths.removeAt(index);
+    });
+  }
 
   @override
   void initState() {
@@ -54,45 +99,89 @@ class _PhotoPageState extends State<PhotoPage> {
             const Center(
               child: Text('사진 첨부', style: TextStyle(fontSize: 32.0)),
             ),
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 10.0),
             const Center(
               child: Text(
                 '최소 2개의 사진을 첨부해주세요',
                 style: TextStyle(fontSize: 16.0, color: Colors.grey),
               ),
             ),
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 30.0),
             SizedBox(
-              height: 300, // GridView의 높이를 설정하세요
+              height: 300,
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  crossAxisSpacing: 8.0,
-                  mainAxisSpacing: 8.0,
+                  crossAxisSpacing: 10.0,
+                  mainAxisSpacing: 10.0,
                 ),
                 itemCount: 6,
                 itemBuilder: (context, index) {
-                  return AspectRatio(
-                    aspectRatio: 1.0, // 가로 세로 비율을 1로 설정
-                    child: Container(
-                      color: Colors.grey[300],
-                      child: Center(
-                        child: Text('사진 ${index + 1}'),
-                      ),
-                    ),
-                  );
+                  if (index < _photoPaths.length) {
+                    // 이미지가 선택되었다면 해당 이미지를 표시하고 '-' 버튼을 추가합니다.
+                    return Stack(
+                      children: [
+                        DisplayImage(imagePath: _photoPaths[index]),
+                        Positioned(
+                          bottom: -5,
+                          right: -5,
+                          child: RoundGradientXButton(
+                            onTap: () => deleteImage(index),
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    // 아직 이미지가 선택되지 않았다면 '+' 버튼을 표시합니다.
+                    return GridWithPlusButton(
+                      onTap: () => navigateToMediaPage(context),
+                    );
+                  }
                 },
               ),
             ),
-            const SizedBox(height: 10.0),
-            ContinueButton(
-              isFilled: !_isButtonDisabled,
-              buttonText: 'Continue',
-              onPressed: null,
+            Center(
+              // Center 위젯 추가
+              child: ContinueButton(
+                isFilled: _photoPaths.length >= 2, // 사진이 두 장 이상 추가되었는지 확인합니다.
+                buttonText: 'CONTINUE',
+                onPressed: null,
+                width: 300.0, // 원하는 가로 길이를 설정
+                height: 30.0, // 원하는 세로 길이를 설정
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class GridWithPlusButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const GridWithPlusButton({Key? key, required this.onTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        AspectRatio(
+          aspectRatio: 1.0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: -5,
+          right: -5,
+          child: RoundGradientPlusButton(onTap: onTap),
+        ),
+      ],
     );
   }
 }
