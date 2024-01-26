@@ -31,12 +31,17 @@ public class PostWebSocketHandler implements ChannelInterceptor {
         MessageHeaders headers = message.getHeaders();
 
         // 처리 대상 요청이 아니면 return
-        if (!(command == DISCONNECT)) {
+        if (!(command == DISCONNECT || command == SEND)) {
             return;
         }
 
         String userIdStr = headers.get("userId", String.class);
         int userId = Integer.parseInt(userIdStr);
+        if (command == SEND) {
+            changeOnlineStatus(userId, true);
+            System.out.println(message);
+            System.out.println("user changed to online");
+        }
 
 //        // if input userId = firebase uid
 //        String uid = headers.get("userId", String.class);

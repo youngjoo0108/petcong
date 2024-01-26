@@ -6,7 +6,7 @@ import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.repository.MatchingRepository;
 import com.example.ssafy.petcong.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.checkerframework.checker.units.qual.C;
+//import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +53,8 @@ class MatchingControllerTest {
     @DisplayName("choice / 정상 / pending처리")
     @Transactional
     void choice_pending() throws Exception {
-        int fromUserId = 100;
-        int toUserId = 101;
+        int fromUserId = 1;
+        int toUserId = 2;
         ChoiceReq choiceReq = new ChoiceReq(fromUserId, toUserId);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
