@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get/get.dart';
-import 'package:petcong/pages/app_pages/matching/dog_video.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
 import 'package:petcong/widgets/matching_card.dart';
 
@@ -47,64 +46,15 @@ class _SwipingPageState extends State<SwipingPage> {
                     cards[index],
               ),
             ),
-<<<<<<< client_petcong/lib/pages/app_pages/matching/swiping_page.dart
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  Get.to(const MainVideoCall());
-                },
-                child: const Text('Call'))
-=======
-            // ElevatedButton(
-            //     onPressed: () {
-            //       Get.to(WebRTC());
-            //     },
-            //     child: const Text('Call'))
->>>>>>> client_petcong/lib/pages/app_pages/matching/swiping_page.dart
-
-            // Padding(
-            //   padding: const EdgeInsets.all(16.0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //     children: [
-            //       FloatingActionButton(
-            //         onPressed: controller.undo,
-            //         child: const Icon(Icons.rotate_left),
-            //       ),
-            //       FloatingActionButton(
-            //         onPressed: controller.swipe,
-            //         child: const Icon(Icons.rotate_right),
-            //       ),
-            //       FloatingActionButton(
-            //         onPressed: controller.swipeLeft,
-            //         child: const Icon(Icons.keyboard_arrow_left),
-            //       ),
-            //       FloatingActionButton(
-            //         onPressed: controller.swipeRight,
-            //         child: const Icon(Icons.keyboard_arrow_right),
-            //       ),
-            //       FloatingActionButton(
-            //         onPressed: controller.swipeTop,
-            //         child: const Icon(Icons.keyboard_arrow_up),
-            //       ),
-            //       FloatingActionButton(
-            //         onPressed: controller.swipeBottom,
-            //         child: const Icon(Icons.keyboard_arrow_down),
-            //       ),
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.large(
-        heroTag: 'dog video',
+        heroTag: 'call',
         onPressed: () {
-          Get.to(const MainDogVideos());
+          Get.to(const MainVideoCall());
         },
-        child: const Text('dog video'),
+        child: const Text('call'),
       ),
     );
   }
