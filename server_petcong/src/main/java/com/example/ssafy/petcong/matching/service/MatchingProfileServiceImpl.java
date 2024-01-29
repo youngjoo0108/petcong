@@ -28,6 +28,8 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
     private final MatchingRepository matchingRepository;
     private final UserImgRepository userImgRepository;
 
+    private final int NO_USER = -1;
+
     public List<String> pictures(int userId) {
         List<UserImg> imgList =  userImgRepository.findByUserId(userId);
         return imgList.stream()
@@ -40,17 +42,17 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
     public Optional<ProfileRecord> profile(String uid) {
         User requestingUser = userRepository.findUserByUid(uid);
         int requestingUserId = requestingUser.getUserId();
-        int filteredUserId = -1;
+        int filteredUserId = NO_USER;
         for (int i = 0; i < onlineUsers.sizeOfQueue(); i++) {
             int potentialUserId = nextOnlineUser();
-            if (potentialUserId == -1) {
+            if (potentialUserId == NO_USER) {
                 break;
             } else if (isPotentialUser(requestingUserId, potentialUserId)) {
                 filteredUserId = potentialUserId;
                 break;
             }
         }
-        if (filteredUserId == -1) return Optional.empty();
+        if (filteredUserId == NO_USER) return Optional.empty();
         List<String> urls = pictures(filteredUserId);
         User filteredUser = userRepository.findUserByUserId(filteredUserId);
 
@@ -60,7 +62,7 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
     private int nextOnlineUser() {
         // if linkedblockingqueue is empty, return "empty"
         if (onlineUsers.sizeOfQueue() == 0) {
-            return -1;
+            return NO_USER;
         }
         int userid = onlineUsers.removeUserIdFromQueue();
         onlineUsers.addUserIdToQueue(userid);
