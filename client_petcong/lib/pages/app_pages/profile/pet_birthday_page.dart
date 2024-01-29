@@ -115,25 +115,25 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
                   ),
                   const SizedBox(height: 30.0),
                   SizedBox(
-                    width: 300, // 원하는 너비를 설정합니다.
+                    width: 200, // 원하는 너비를 설정합니다.
                     child: TextField(
-                      controller: _controller,
-                      decoration: const InputDecoration(
-                        hintText: 'YYYY/MM/DD',
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
+                        controller: _controller,
+                        decoration: const InputDecoration(
+                          hintText: 'YYYY/MM/DD',
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
                         ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                      ),
-                      style: const TextStyle(fontSize: 20.0),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp('[0-9/]')),
-                        _DateInputFormatter(),
-                      ],
-                      keyboardType: TextInputType.number,
-                    ),
+                        style: const TextStyle(fontSize: 20.0),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp('[0-9/]')),
+                          _DateInputFormatter(),
+                        ],
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.center),
                   ),
                   const SizedBox(height: 30.0),
                   ValueListenableBuilder<String?>(

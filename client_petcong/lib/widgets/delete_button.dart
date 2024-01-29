@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:petcong/constants/style.dart';
 
 class RoundGradientXButton extends StatelessWidget {
-  const RoundGradientXButton({Key? key}) : super(key: key);
+  final VoidCallback onTap;
+
+  const RoundGradientXButton({Key? key, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: _RoundGradientXButtonPainter(),
       child: InkWell(
-        onTap: () {},
-        borderRadius: BorderRadius.circular(50.0),
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(5.0),
         child: const Padding(
           padding: EdgeInsets.all(5.0),
           child: Icon(
             Icons.clear_rounded, // "X" 아이콘으로 변경
-            size: 50,
+            size: 25,
             color: Colors.red,
             weight: 50,
           ),

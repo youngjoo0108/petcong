@@ -10,7 +10,8 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 
 class SocketService extends ChangeNotifier {
   late StompClient client;
-
+  late List msgArr = [];
+  // late final _userId;
   SocketService() {
     connectSocket();
   }
@@ -26,13 +27,22 @@ class SocketService extends ChangeNotifier {
             onConnect: (StompFrame frame) {
               notifyListeners();
               debugPrint("연결됨");
+              client.subscribe(
+                destination: '/queue/1/',
+                headers: {},
+                callback: (frame) {
+                  msgArr.add(frame.body!);
+                  notifyListeners();
+                },
+              );
             },
             onWebSocketError: (dynamic error) =>
                 debugPrint('websocketerror : $error')));
-
+    //stompConnectHeaders: {'Authorization': 'Bearer yourToken'},
+    //webSocketConnectHeaders: {'Authorization': 'Bearer yourToken'},
     client.activate();
-    debugPrint(
-        '---------------------------------${client.isActive}-----------------------------------------');
+    // debugPrint(
+    //     '---------------------------------${client.isActive}-----------------------------------------');
     notifyListeners();
   }
 

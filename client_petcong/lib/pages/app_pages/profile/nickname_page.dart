@@ -63,7 +63,7 @@ class _NicknamePageState extends State<NicknamePage> {
             const Text('내 별명은?', style: TextStyle(fontSize: 32.0)),
             const SizedBox(height: 30.0),
             SizedBox(
-              width: 300, // 원하는 너비 설정
+              width: 200, // 원하는 너비 설정
               child: TextField(
                 controller: _controller,
                 style: const TextStyle(
@@ -81,6 +81,7 @@ class _NicknamePageState extends State<NicknamePage> {
                     borderSide: BorderSide(color: Colors.black),
                   ),
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: 30.0),
