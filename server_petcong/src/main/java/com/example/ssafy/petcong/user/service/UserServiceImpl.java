@@ -30,6 +30,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -48,15 +49,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int findUserIdByUid(String uid) {
-        return userRepository.findUserIdByUid(uid);
-    }
-
-    @Override
     public UserRecord findUserByUid(String uid) {
         User result = userRepository.findUserByUid(uid);
-        UserRecord record = new UserRecord(result);
-        return record;
+        return new UserRecord(result);
     }
 
     @Override
@@ -64,17 +59,32 @@ public class UserServiceImpl implements UserService {
     public UserRecord save(UserRecord userRecord) {
         User userEntity = new User(userRecord);
         User result = userRepository.save(userEntity);
-        UserRecord record = new UserRecord(result);
-        return record;
+        return new UserRecord(result);
     }
 
     @Override
     @Transactional
-    public UserRecord updateCallable(UserRecord userRecord, boolean state) {
-        User userEntity = new User(userRecord).updateCallable(state);
-        User result = userRepository.save(userEntity);
-        UserRecord record = new UserRecord(result);
-        return record;
+    public UserRecord updateCallable(String uid, boolean state) {
+        User user = userRepository.findUserByUid(uid);
+        if (user != null) {
+            user.setCallable(state);
+            User result = userRepository.save(user);
+            return new UserRecord(result);
+        } else {
+            throw new NoSuchElementException("There is no user.");
+        }
+    }
+
+    @Override
+    @Transactional
+    public UserRecord updateUserInfo(String uid, UserRecord userRecord) {
+        if (userRepository.findUserByUid(uid) != null) {
+            User userEntity = new User(userRecord);
+            User result = userRepository.save(userEntity);
+            return new UserRecord(result);
+        } else {
+            throw new NoSuchElementException("There is no user.");
+        }
     }
 
     @Override
@@ -91,8 +101,7 @@ public class UserServiceImpl implements UserService {
 
         PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
 
-        String url = presignedRequest.url().toString();
-        return url;
+        return presignedRequest.url().toString();
     }
 
     @Override
@@ -106,7 +115,6 @@ public class UserServiceImpl implements UserService {
                     .toString();
             String contentType = file.getContentType();
             long size = file.getSize();
-            log.info("key: " + key);
 
             UserImg userImg = UserImg.builder()
                     .user(user.userId())
@@ -131,6 +139,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public SkillMultimediaRecord uploadSkillMultimedia(UserRecord user, MultipartFile file) throws IOException {
         try(InputStream fileInputStream = file.getInputStream()) {
             String uid = user.uid();
@@ -140,7 +149,6 @@ public class UserServiceImpl implements UserService {
                     .toString();
             String contentType = file.getContentType();
             long size = file.getSize();
-            log.info("key: " + key);
 
             SkillMultimedia skillMultimedia = SkillMultimedia.builder()
                     .user(user.userId())
@@ -166,7 +174,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public int deleteUserByUserId(int userId) {
-        return userRepository.deleteUserByUserId(userId);
+    public int deleteUserByUid(String uid) {
+        if (userRepository.findUserByUid(uid) != null) {
+            return userRepository.deleteUserByUid(uid);
+        } else {
+            return 0;
+        }
     }
 }
