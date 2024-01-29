@@ -41,8 +41,8 @@ class SocketService extends ChangeNotifier {
     //stompConnectHeaders: {'Authorization': 'Bearer yourToken'},
     //webSocketConnectHeaders: {'Authorization': 'Bearer yourToken'},
     client.activate();
-    debugPrint(
-        '---------------------------------${client.isActive}-----------------------------------------');
+    // debugPrint(
+    //     '---------------------------------${client.isActive}-----------------------------------------');
     notifyListeners();
   }
 

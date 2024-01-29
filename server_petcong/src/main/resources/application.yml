@@ -3,7 +3,7 @@ spring:
     hikari:
       driver-class-name: com.mysql.cj.jdbc.Driver
       jdbc-url: jdbc:mysql://localhost:3306/petcongdb?serverTimezone=UTC
-      username: ssafy
+      username: root
       password: ssafy
   jpa:
     hibernate:
