@@ -148,20 +148,20 @@ class _BirthdayPageState extends State<BirthdayPage> {
                     ),
                     const SizedBox(height: 30.0),
                     SizedBox(
-                      width: 300, // 원하는 너비 설정
+                      width: 200, // 원하는 너비 설정
                       child: TextFormField(
-                        controller: _controller,
-                        inputFormatters: [_inputFormatter],
-                        decoration:
-                            const InputDecoration(hintText: 'YYYY/MM/DD'),
-                        style: const TextStyle(fontSize: 20.0),
-                        onChanged: (value) {
-                          setState(() {
-                            _validateDate(value);
-                          });
-                        },
-                        validator: (value) => _errorMessage,
-                      ),
+                          controller: _controller,
+                          inputFormatters: [_inputFormatter],
+                          decoration:
+                              const InputDecoration(hintText: 'YYYY/MM/DD'),
+                          style: const TextStyle(fontSize: 20.0),
+                          onChanged: (value) {
+                            setState(() {
+                              _validateDate(value);
+                            });
+                          },
+                          validator: (value) => _errorMessage,
+                          textAlign: TextAlign.center),
                     ),
                     const SizedBox(height: 30.0),
                     Padding(
