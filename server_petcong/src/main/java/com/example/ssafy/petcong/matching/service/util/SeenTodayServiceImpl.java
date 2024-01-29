@@ -1,5 +1,6 @@
 package com.example.ssafy.petcong.matching.service.util;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -26,6 +27,12 @@ public class SeenTodayServiceImpl implements  SeenTodayService {
     @Override
     public boolean hasSeen(int userId, int profileId) {
         return userProfileMap.getOrDefault(userId, new ConcurrentSkipListSet<>()).contains(profileId);
+    }
+
+    // Method to clear the map every 24 hours
+    @Scheduled(fixedRate = 1000 * 60 * 60 * 24)
+    public void clearMap() {
+        userProfileMap.clear();
     }
 
 }
