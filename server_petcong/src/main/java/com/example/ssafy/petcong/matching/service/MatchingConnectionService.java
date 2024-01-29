@@ -31,7 +31,7 @@ public class MatchingConnectionService {
         User toUser = userRepository.findUserByUserId(choiceReq.getPartnerUserId());
 
         // invalid userId
-        if (fromUser == null || toUser == null) {
+        if (fromUser == null || toUser == null || fromUser.getUserId() == toUser.getUserId()) {
             System.out.println("invalid userId");
             throw new RuntimeException();
         }
@@ -56,11 +56,8 @@ public class MatchingConnectionService {
         userRepository.save(fromUser);
         userRepository.save(toUser);
 
-        // rtc 연결 handshake를 위한 toUser의 구독 링크, 요청자 ip주소 반환
         Map<String, String> responseMap = new HashMap<>();
         responseMap.put("targetLink", "/queue/" + toUser.getUserId());
-        responseMap.put("requesterIP", requesterIp);
-        responseMap.put("requesterPort", String.valueOf(port));
 
         return responseMap;
     }
