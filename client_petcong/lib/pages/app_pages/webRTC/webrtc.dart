@@ -126,9 +126,16 @@ class _MainVideoCallState extends State<MainVideoCall> {
 
   Future joinRoom() async {
     final config = {
+      // RTCPeerConnection 객체가 iceServers 배열에 등록된 객체들 중 STUN 서버를 통해 먼저 연결을 시도하고,
+      // 불가능한 경우 TURN 서버로 시도한다.
       'iceServers': [
         {"url": "stun:stun.l.google.com:19302"},
-      ]
+        {
+          "url": "turn:43.200.28.137:3478",
+          "username": "ehigh",
+          "credential": "1234",
+        },
+      ],
     };
 
     final sdpConstraints = {

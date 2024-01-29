@@ -3,12 +3,8 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 
 import 'package:get/get.dart';
 import 'package:petcong/pages/app_pages/matching/dog_video.dart';
-
-import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
-
 import 'package:petcong/widgets/matching_card.dart';
-import 'package:get/get.dart';
 
 class SwipingPage extends StatefulWidget {
   const SwipingPage({super.key});
