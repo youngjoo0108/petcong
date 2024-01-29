@@ -17,7 +17,7 @@ class RoundGradientXButton extends StatelessWidget {
           padding: EdgeInsets.all(5.0),
           child: Icon(
             Icons.clear_rounded, // "X" 아이콘으로 변경
-            size: 20,
+            size: 25,
             color: Colors.red,
             weight: 50,
           ),
