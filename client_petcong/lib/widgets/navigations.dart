@@ -37,7 +37,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         ),
       ],
       currentIndex: widget.selectedIndex,
-      selectedItemColor: MyColor.myColor2,
+      selectedItemColor: MyColor.petCongColor4,
       onTap: widget.onItemTapped,
     );
   }

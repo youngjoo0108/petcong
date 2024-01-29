@@ -24,14 +24,15 @@ public class MatchingConnectionService {
     }
 
     @Transactional
-    public Map<String, String> choice(ChoiceReq choiceReq){
+    public Map<String, String> choice(ChoiceReq choiceReq, String requesterIp, int port){
         // DB에서 requestUserId, partnerUserId인 데이터 가져오기
         Matching matching = matchingRepository.findByUsersId(choiceReq.getPartnerUserId(), choiceReq.getRequestUserId());
         User fromUser = userRepository.findUserByUserId(choiceReq.getRequestUserId());
         User toUser = userRepository.findUserByUserId(choiceReq.getPartnerUserId());
 
         // invalid userId
-        if (fromUser == null || toUser == null) {
+        if (fromUser == null || toUser == null || fromUser.getUserId() == toUser.getUserId()) {
+            System.out.println("invalid userId");
             throw new RuntimeException();
         }
 
@@ -43,6 +44,7 @@ public class MatchingConnectionService {
         }
         // 이미 matched / rejected 이면
         if (matching.getCallStatus() != CallStatus.PENDING) {
+            System.out.println("invalid status");
             throw new RuntimeException();
         }
         // to matched
@@ -54,7 +56,6 @@ public class MatchingConnectionService {
         userRepository.save(fromUser);
         userRepository.save(toUser);
 
-        // rtc 연결 handshake를 위한 toUser의 구독 링크 반환
         Map<String, String> responseMap = new HashMap<>();
         responseMap.put("targetLink", "/queue/" + toUser.getUserId());
 

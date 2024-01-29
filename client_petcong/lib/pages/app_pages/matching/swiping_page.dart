@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get/get.dart';
 import 'package:petcong/pages/app_pages/matching/dog_video.dart';
+import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
 import 'package:petcong/widgets/matching_card.dart';
 
 class SwipingPage extends StatefulWidget {
@@ -46,11 +47,22 @@ class _SwipingPageState extends State<SwipingPage> {
                     cards[index],
               ),
             ),
+<<<<<<< client_petcong/lib/pages/app_pages/matching/swiping_page.dart
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Get.to(const MainVideoCall());
+                },
+                child: const Text('Call'))
+=======
             // ElevatedButton(
             //     onPressed: () {
             //       Get.to(WebRTC());
             //     },
             //     child: const Text('Call'))
+>>>>>>> client_petcong/lib/pages/app_pages/matching/swiping_page.dart
 
             // Padding(
             //   padding: const EdgeInsets.all(16.0),
@@ -88,11 +100,11 @@ class _SwipingPageState extends State<SwipingPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton.large(
-        heroTag: 'call',
+        heroTag: 'dog video',
         onPressed: () {
           Get.to(const MainDogVideos());
         },
-        child: const Text('call'),
+        child: const Text('dog video'),
       ),
     );
   }

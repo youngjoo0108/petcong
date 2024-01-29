@@ -14,12 +14,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.NoSuchElementException;
 
-@Slf4j
+//@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
-        log.warn(ex.getMessage());
+        ex.printStackTrace();
+//        log.warn(ex.getMessage());
         return ResponseEntity
                 .internalServerError()
                 .body(ex.getMessage());
@@ -27,7 +28,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        log.warn(ex.getMessage());
+//        log.warn(ex.getMessage());
+        ex.printStackTrace();
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage());
@@ -35,6 +38,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<?> runtimeExceptionHandler(RuntimeException e) {
+        e.printStackTrace();
         return ResponseEntity
                 .badRequest()
                 .body(e.getMessage());
