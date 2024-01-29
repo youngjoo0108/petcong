@@ -1,9 +1,10 @@
-package com.example.ssafy.petcong.util.aop;
-
-import com.example.ssafy.petcong.user.model.entity.User;
-import com.example.ssafy.petcong.user.repository.UserRepository;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
+//package com.example.ssafy.petcong.util.aop;
+//
+//import com.example.ssafy.petcong.user.model.entity.User;
+//import com.example.ssafy.petcong.user.repository.UserRepository;
+//import org.aspectj.lang.annotation.Aspect;
+//import org.aspectj.lang.annotation.Before;
+////import org.springframework.security.core.context.SecurityContextHolder;
 //import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -34,8 +35,9 @@ public class UserStateAop {
     private void changeCallable(boolean callable) {
         String uid = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString(); // uid
         User user = userRepository.findUserByUid(uid);
-
-        user.setCallable(callable);
-        userRepository.save(user);
+        if (user != null) {
+            user.setCallable(callable);
+            userRepository.save(user);
+        }
     }
 }

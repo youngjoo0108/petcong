@@ -12,6 +12,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -25,12 +27,9 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String idToken = request.getHeader("Petcong-id-token");
-            log.info("received token: " + idToken);
             Authentication firebaseAuthenticationToken = new FirebaseAuthentication(idToken);
             Authentication authenticated = firebaseAuthenticationManager.authenticate(firebaseAuthenticationToken);
-            log.info("authenticated!!!");
             SecurityContextHolder.getContext().setAuthentication(authenticated);
-            log.info("setAuthentication()");
         } catch (AuthenticationException e) {
             throw new ServletException(e.getLocalizedMessage());
         }
@@ -40,9 +39,13 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         if (request.getHeader("tester") != null && request.getHeader("tester").equals("A603")) {
+            String uid = "SA7q9H4r0WfIkvdah6OSIW7Y6XQ2";
+            UserDetails userDetails = User.withUsername("test").password(uid).build();
+            Authentication testAuthentication = new FirebaseAuthentication(userDetails, null, userDetails.getAuthorities());
+            testAuthentication.setAuthenticated(true);
+            SecurityContextHolder.getContext().setAuthentication(testAuthentication);
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

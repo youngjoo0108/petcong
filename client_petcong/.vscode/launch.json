@@ -6,20 +6,17 @@
     "configurations": [
         {
             "name": "client_petcong",
-            "cwd": "client_petcong",
             "request": "launch",
             "type": "dart"
         },
         {
             "name": "client_petcong (profile mode)",
-            "cwd": "client_petcong",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
             "name": "client_petcong (release mode)",
-            "cwd": "client_petcong",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
