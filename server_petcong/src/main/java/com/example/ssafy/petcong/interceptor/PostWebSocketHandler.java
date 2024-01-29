@@ -37,16 +37,8 @@ public class PostWebSocketHandler implements ChannelInterceptor {
             StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
             StompCommand command = accessor.getCommand();
 
-            System.out.println("-----------------------------------------------------------------------------");
-            System.out.println("\n\n\nmessage arrived / command = " + command + "\n\n\n");
-            System.out.println("-----------------------------------------------------------------------------");
-
             if (command == SEND) {
                 MessageHeaders headers = message.getHeaders();
-//                for (String key : headers.keySet()) {
-//                    System.out.println("key = " + key);
-//                    System.out.println("value = " + headers.get(key));
-//                }
                 Map<String, Object> nativeHeaders = (Map<String, Object>) headers.get("nativeHeaders");
                 // 파싱
                 String connectInfo  = Arrays.asList(nativeHeaders.get("info")).get(0)
@@ -61,9 +53,6 @@ public class PostWebSocketHandler implements ChannelInterceptor {
                 int userId = Integer.parseInt(userIdStr);
 
                 changeOnlineStatus(userId, callable);
-                
-                System.out.println("user changed to " + (callable ? "online" : "offline"));
-                System.out.println("userId = " + userId);
             }
 
 //        // if input userId = firebase uid
@@ -71,11 +60,6 @@ public class PostWebSocketHandler implements ChannelInterceptor {
 //        UserRecord user = userRepository.findUserByUid(uid);
 //        int userId = user.userId();
 //        // end
-
-//            if (command == DISCONNECT) {
-//                // 유저 offline으로 변경
-//                System.out.println("user " + "disconnected");
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

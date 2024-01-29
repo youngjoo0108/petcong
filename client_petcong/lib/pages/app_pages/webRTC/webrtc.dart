@@ -31,8 +31,8 @@ class _MainVideoCallState extends State<MainVideoCall> {
   MediaStream? _localStream;
   RTCPeerConnection? pc;
   // test
-  var myId = 1;
-  var targetId = 2;
+  var myId = 2;
+  var targetId = 1;
   var subsPrefix = "/queue/";
 
   @override
