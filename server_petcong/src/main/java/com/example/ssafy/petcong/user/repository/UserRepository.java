@@ -4,6 +4,8 @@ import com.example.ssafy.petcong.user.model.entity.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface UserRepository extends JpaRepository<User, Integer> {
     int findUserIdByUid(String uid);
     User findUserByUserId(int userId);
@@ -11,4 +13,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     User save(User user);
     int deleteUserByUserId(int userId);
     int deleteUserByUid(String uid);
+
+    List<User> findByCallableIsTrue();
 }
