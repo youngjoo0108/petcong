@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    int findUserIdByUid(String uid);
     User findUserByUserId(int userId);
     User findUserByUid(String uid);
     User save(User user);
