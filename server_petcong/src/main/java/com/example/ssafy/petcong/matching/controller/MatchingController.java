@@ -5,6 +5,7 @@ import com.example.ssafy.petcong.matching.model.entity.ProfileRecord;
 import com.example.ssafy.petcong.matching.service.MatchingConnectionService;
 import com.example.ssafy.petcong.matching.service.MatchingProfileService;
 import com.example.ssafy.petcong.util.annotation.MakeCallable;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/matchings")
 public class MatchingController {
 
@@ -32,9 +34,14 @@ public class MatchingController {
      */
     @MakeCallable
     @PostMapping("/choice")
-    public ResponseEntity<?> choice(@RequestBody ChoiceReq choiceReq) {
+    public ResponseEntity<?> choice(@RequestBody ChoiceReq choiceReq, HttpServletRequest request) {
+        System.out.println("실행은 되냐?");
+        String src = request.getHeader("x-forwarded-for");
+        String originIp = src != null ? src.split(",")[0] : request.getRemoteAddr();
+        int port = request.getRemotePort();
+
         return ResponseEntity
-                .ok(matchingConnectionService.choice(choiceReq));
+                .ok(matchingConnectionService.choice(choiceReq, originIp, port));
     }
 
     @MakeCallable

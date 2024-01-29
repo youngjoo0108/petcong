@@ -26,6 +26,7 @@
 //import org.springframework.web.socket.sockjs.client.Transport;
 //import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 //
+//import java.lang.reflect.Type;
 //import java.util.ArrayList;
 //import java.util.List;
 //import java.util.concurrent.CompletableFuture;
@@ -70,7 +71,7 @@
 //        transports.add(new RestTemplateXhrTransport());
 //
 //        SockJsClient sockJsClient = new SockJsClient(transports);
-//        sockJsClient.doHandshake(new AbstractWebSocketHandler() {
+//        sockJsClient.execute(new AbstractWebSocketHandler() {
 //            @Override
 //            public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 //                System.out.println("connection established");
@@ -80,24 +81,33 @@
 //            public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 //                System.out.println("connection closed");
 //            }
-//        }, "ws://example.com:8080/sockjs");
+//        }, "http://localhost:8080/websocket");
 //        // StompClient 초기화
 //        WebSocketClient webSocketClient = sockJsClient;
 //        WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
 //        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 //
 //        // connect
-//        String url = "ws://localhost:8080/websocket"; // endpoint
-//        StompSessionHandler sessionHandler = new StompSessionHandlerAdapter() {
-//            @Override
-//            public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-//                System.out.println("CONNECTED");
-//                int userId = 1;
-//                String subsLink = ""
-//            }
-//        };
-//        stompClient.connectAsync(url, sessionHandler).get(2, TimeUnit.SECONDS);
-//        sessionHandler.
+////        String url = "ws://localhost:8080/websocket"; // endpoint
+////        StompSessionHandler sessionHandler = new StompSessionHandlerAdapter() {
+////            @Override
+////            public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
+////                System.out.println("CONNECTED");
+////                int userId = 1;
+////                String subsLink = "/queue/1";
+////                session.subscribe(subsLink, this);
+////            }
+////        };
+////        StompSession session = stompClient.connect(url, sessionHandler).get(2, TimeUnit.SECONDS);
+//
+//        StompSessionHandler sessionHandler = new StompSessionHandlerAdapter() {};
+//        String url = "ws://localhost:8080/websocket";
+//        StompSession session = stompClient.connect(url, sessionHandler)
+//                .get(5, TimeUnit.SECONDS);
+//        // subscribe
+//        int userId = 1;
+//        String subsLink = "/queue/1";
+//        session.subscribe(subsLink, sessionHandler);
 //    }
 //
 //
@@ -180,7 +190,7 @@
 ////    }
 //
 //    private void setCallable(int userId, boolean callable) {
-//        User user = new User(userRepository.findUserByUserId(userId));
+//        User user = userRepository.findUserByUserId(userId);
 //        user.setCallable(callable);
 //        userRepository.save(user);
 //    }
