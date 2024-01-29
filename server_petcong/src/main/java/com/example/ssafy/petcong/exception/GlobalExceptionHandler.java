@@ -12,19 +12,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 //@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
-        ex.printStackTrace();
-//        log.warn(ex.getMessage());
-        return ResponseEntity
-                .internalServerError()
-                .body(ex.getMessage());
-    }
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -36,11 +29,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler({RuntimeException.class})
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
+        log.warn(ex.getMessage());
+        return ResponseEntity
+                .badRequest()
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> runtimeExceptionHandler(RuntimeException e) {
+        log.error(e.getMessage());
+        log.error(Arrays.toString(e.getStackTrace()));
         e.printStackTrace();
         return ResponseEntity
                 .badRequest()
-                .body(e.getMessage());
+                .body(e.getMessage() + Arrays.toString(e.getStackTrace()));
     }
 }

@@ -1,10 +1,10 @@
 package com.example.ssafy.petcong.matching.service;
 
-import com.example.ssafy.petcong.matching.model.*;
+import com.example.ssafy.petcong.matching.model.CallStatus;
+import com.example.ssafy.petcong.matching.model.ChoiceReq;
 import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.repository.MatchingRepository;
 import com.example.ssafy.petcong.user.model.entity.User;
-import com.example.ssafy.petcong.user.model.record.UserRecord;
 import com.example.ssafy.petcong.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +32,7 @@ public class MatchingConnectionService {
 
         // invalid userId
         if (fromUser == null || toUser == null || fromUser.getUserId() == toUser.getUserId()) {
-            System.out.println("invalid userId");
+//            System.out.println("invalid userId");
             throw new RuntimeException();
         }
 
@@ -44,7 +44,7 @@ public class MatchingConnectionService {
         }
         // 이미 matched / rejected 이면
         if (matching.getCallStatus() != CallStatus.PENDING) {
-            System.out.println("invalid status");
+//            System.out.println("invalid status");
             throw new RuntimeException();
         }
         // to matched

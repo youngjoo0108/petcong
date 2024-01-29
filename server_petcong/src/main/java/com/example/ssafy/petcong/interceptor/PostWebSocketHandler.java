@@ -1,7 +1,6 @@
 package com.example.ssafy.petcong.interceptor;
 
 import com.example.ssafy.petcong.user.model.entity.User;
-import com.example.ssafy.petcong.user.model.record.UserRecord;
 import com.example.ssafy.petcong.user.repository.UserRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -13,12 +12,10 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
-import static org.springframework.messaging.simp.stomp.StompCommand.*;
+import static org.springframework.messaging.simp.stomp.StompCommand.SEND;
 
 @Component
 public class PostWebSocketHandler implements ChannelInterceptor {

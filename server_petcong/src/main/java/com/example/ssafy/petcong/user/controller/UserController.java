@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,33 +48,47 @@ public class UserController {
             @ApiResponse(code = 202, message = "가입 기록 없음")
     })
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestBody String uid) {
-        log.info("input: " + uid);
-        UserRecord user = userService.findUserByUid(uid);
+    public ResponseEntity<?> signin(@AuthenticationPrincipal(expression = "password") String uid) {
+        UserRecord updatedUser = userService.updateCallable(uid, true);
 
-        if (user != null) {
-            UserRecord updatedUser = userService.updateCallable(user, true);
-            return ResponseEntity
-                    .ok()
-                    .body(updatedUser);
-        }
-        else {
-            return ResponseEntity
-                    .accepted()
-                    .body("No user founded.");
-        }
+        return ResponseEntity
+                .ok()
+                .body(updatedUser);
     }
 
-    @ApiOperation(value = "프로필 이미지 url 얻기", notes = "생성된 presigned url 다운로드 링크 제공")
+    @ApiOperation(value = "회원 상세 정보 조회")
+    @GetMapping("/info")
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal(expression = "password") String uid) {
+        UserRecord user = userService.findUserByUid(uid);
+
+        return ResponseEntity
+                .ok()
+                .body(user);
+    }
+
+    @ApiOperation(value = "회원 정보 수정")
+    @PatchMapping("/update")
+    public ResponseEntity<?> updateUserInfo(
+            @AuthenticationPrincipal(expression = "password") String uid,
+            @RequestBody @Valid UserRecord userRecord) {
+        UserRecord updatedUser = userService.updateUserInfo(uid, userRecord);
+
+        return ResponseEntity
+                .ok()
+                .body(updatedUser);
+    }
+
+    @ApiOperation(value = "멀티미디어 다운로드 url 얻기", notes = "생성된 presigned url 다운로드 링크 제공")
     @ApiResponses({
             @ApiResponse(code = 200, message = "url 생성 성공")
     })
     @GetMapping({"/picture", "/trick"})
     public ResponseEntity<?> getMediaUrl(String key) {
-        String url = userService.createPresignedUrl(key);
+        String createdUrl = userService.createPresignedUrl(key);
+
         return ResponseEntity
                 .ok()
-                .body(url);
+                .body(createdUrl);
     }
 
     @ApiOperation(value = "프로필 이미지 업로드", notes = "이미지 파일은 S3, 메타데이터는 MySQL에 업로드")
@@ -81,9 +96,9 @@ public class UserController {
             @ApiResponse(code = 200, message = "업로드 성공")
     })
     @PostMapping("/picture")
-    public ResponseEntity<?> postProfileImage(@RequestBody String uid, @RequestParam("file")MultipartFile file) throws IOException {
-        //String uid = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
-
+    public ResponseEntity<?> postProfileImage(
+            @AuthenticationPrincipal(expression = "password") String uid,
+            @RequestParam("file") MultipartFile file) throws IOException {
         UserRecord user = userService.findUserByUid(uid);
 
         UserImgRecord userImgRecord = userService.uploadUserImage(user, file);
@@ -98,7 +113,9 @@ public class UserController {
             @ApiResponse(code = 200, message = "업로드 성공")
     })
     @PostMapping("/trick")
-    public ResponseEntity<?> postDogTrick(@RequestBody String uid, @RequestParam("file")MultipartFile file) throws IOException {
+    public ResponseEntity<?> postDogTrick(
+            @AuthenticationPrincipal(expression = "password") String uid,
+            @RequestParam("file") MultipartFile file) throws IOException {
         UserRecord user = userService.findUserByUid(uid);
 
         SkillMultimediaRecord skillMultimediaRecord = userService.uploadSkillMultimedia(user, file);
@@ -115,22 +132,17 @@ public class UserController {
             @ApiResponse(code = 500, message = "탈퇴 실패")
     })
     @DeleteMapping("/withdraw")
-    public ResponseEntity<?> deleteUser(@RequestBody int userId) {
-        int deletedCount = userService.deleteUserByUserId(userId);
+    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal(expression = "password") String uid) {
+        int deletedCount = userService.deleteUserByUid(uid);
 
         if (deletedCount == 1) {
             return ResponseEntity
                     .ok()
                     .body("Successfully withdraw");
-        } else if (deletedCount == 0) {
+        } else {
             return ResponseEntity
-                    .accepted()
+                    .badRequest()
                     .body("Already withdraw");
-        }
-        else {
-            return ResponseEntity
-                    .internalServerError()
-                    .body("Not withdraw");
         }
     }
 }

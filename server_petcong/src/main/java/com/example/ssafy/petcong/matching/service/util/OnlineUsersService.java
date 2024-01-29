@@ -6,4 +6,6 @@ public interface OnlineUsersService {
     int removeUserIdFromQueue();
 
     int sizeOfQueue();
+
+    void buildOnlineUserQueue();
 }
