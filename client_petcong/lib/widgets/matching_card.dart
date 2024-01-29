@@ -19,30 +19,30 @@ class ExampleCandidateModel {
 const String defaultImageSrc = 'assets/src/dog.jpg';
 Image defaultImages = Image.asset(defaultImageSrc);
 
-final List<ExampleCandidateModel> candidates = [
+List<ExampleCandidateModel> candidates = [
   ExampleCandidateModel(
-    name: 'One',
+    name: '하나둘셋',
     age: 3,
     description: '내 강아지는 귀여워용',
     color: const [Color(0xFFFF3868), Color(0xFFFFB49A)],
     images: [defaultImages],
   ),
   ExampleCandidateModel(
-    name: 'Two',
+    name: '둘이둘이',
     age: 5,
     description: '내 강아지는 귀여워용',
     color: const [Color(0xFF736EFE), Color(0xFF62E4EC)],
     images: [defaultImages],
   ),
   ExampleCandidateModel(
-    name: 'Three',
-    age: 21,
+    name: '석삼이',
+    age: 32,
     description: '내 강아지는 귀여워용',
     color: const [Color(0xFF2F80ED), Color(0xFF56CCF2)],
     images: [defaultImages],
   ),
   ExampleCandidateModel(
-    name: 'Four',
+    name: '넉살이',
     age: 11,
     description: '내 강아지는 귀여워용',
     color: const [Color(0xFF0BA4E0), Color(0xFFA9E4BD)],
@@ -50,7 +50,7 @@ final List<ExampleCandidateModel> candidates = [
   ),
 ];
 
-class MatchingCard extends StatelessWidget {
+class MatchingCard extends StatefulWidget {
   final ExampleCandidateModel candidate;
 
   const MatchingCard(
@@ -58,6 +58,11 @@ class MatchingCard extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<MatchingCard> createState() => _MatchingCardState();
+}
+
+class _MatchingCardState extends State<MatchingCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -106,7 +111,7 @@ class MatchingCard extends StatelessWidget {
             left: 11,
             top: 509,
             child: Text(
-              '${candidate.name}, ${candidate.age}',
+              '${widget.candidate.name}, ${widget.candidate.age}',
               style: const TextStyle(
                 color: Color(0xFFFCFCFC),
                 fontSize: 37,
@@ -120,7 +125,7 @@ class MatchingCard extends StatelessWidget {
             left: 14,
             top: 553,
             child: Text(
-              candidate.description,
+              widget.candidate.description,
               style: const TextStyle(
                 color: Color(0xFFFCFCFC),
                 fontSize: 16,
