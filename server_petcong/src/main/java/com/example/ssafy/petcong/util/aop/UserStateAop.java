@@ -34,8 +34,9 @@ public class UserStateAop {
     private void changeCallable(boolean callable) {
         String uid = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString(); // uid
         User user = userRepository.findUserByUid(uid);
-
-        user.setCallable(callable);
-        userRepository.save(user);
+        if (user != null) {
+            user.setCallable(callable);
+            userRepository.save(user);
+        }
     }
 }

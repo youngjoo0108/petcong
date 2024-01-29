@@ -48,7 +48,7 @@ public class MatchingController {
 
     @MakeCallable
     @GetMapping("/profile")
-    public ResponseEntity<ProfileRecord> profile(@AuthenticationPrincipal String uid) {
+    public ResponseEntity<ProfileRecord> profile(@AuthenticationPrincipal(expression = "password") String uid) {
         Optional<ProfileRecord> optionalProfile = matchingProfileService.profile(uid);
         return optionalProfile.map(profile -> ResponseEntity.ok().body(profile))
                 .orElseGet(() -> ResponseEntity.noContent().build());

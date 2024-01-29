@@ -70,7 +70,7 @@ public class UserController {
     @PatchMapping("/update")
     public ResponseEntity<?> updateUserInfo(
             @AuthenticationPrincipal(expression = "password") String uid,
-            UserRecord userRecord) {
+            @RequestBody @Valid UserRecord userRecord) {
         UserRecord updatedUser = userService.updateUserInfo(uid, userRecord);
 
         return ResponseEntity
@@ -98,7 +98,7 @@ public class UserController {
     @PostMapping("/picture")
     public ResponseEntity<?> postProfileImage(
             @AuthenticationPrincipal(expression = "password") String uid,
-            @RequestParam("file")MultipartFile file) throws IOException {
+            @RequestParam("file") MultipartFile file) throws IOException {
         UserRecord user = userService.findUserByUid(uid);
 
         UserImgRecord userImgRecord = userService.uploadUserImage(user, file);
@@ -115,7 +115,7 @@ public class UserController {
     @PostMapping("/trick")
     public ResponseEntity<?> postDogTrick(
             @AuthenticationPrincipal(expression = "password") String uid,
-            @RequestParam("file")MultipartFile file) throws IOException {
+            @RequestParam("file") MultipartFile file) throws IOException {
         UserRecord user = userService.findUserByUid(uid);
 
         SkillMultimediaRecord skillMultimediaRecord = userService.uploadSkillMultimedia(user, file);

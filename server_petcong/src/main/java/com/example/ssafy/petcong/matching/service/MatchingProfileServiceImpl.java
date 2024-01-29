@@ -50,7 +50,7 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
                 break;
             }
         }
-        if (filteredUserId == 1) return Optional.empty();
+        if (filteredUserId == -1) return Optional.empty();
         List<String> urls = pictures(filteredUserId);
         User filteredUser = userRepository.findUserByUserId(filteredUserId);
 
