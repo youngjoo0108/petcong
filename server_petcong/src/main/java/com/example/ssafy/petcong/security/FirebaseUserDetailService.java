@@ -22,9 +22,9 @@ public class FirebaseUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String idToken) throws UsernameNotFoundException {
         try {
             FirebaseToken decodedToken = firebaseAuth.verifyIdToken(idToken);
-            log.info("decoded Token: " + decodedToken.toString());
+            String name = decodedToken.getName();
             String uid = decodedToken.getUid();
-            return User.withUsername(idToken).password(uid).build();
+            return User.withUsername(name).password(uid).build();
         } catch (FirebaseAuthException e) {
             throw new UsernameNotFoundException(e.getLocalizedMessage());
         }
