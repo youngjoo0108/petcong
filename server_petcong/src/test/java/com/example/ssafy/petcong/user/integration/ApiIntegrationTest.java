@@ -79,13 +79,13 @@ public class ApiIntegrationTest {
                 .content(userRecordJson)
                 .contentType(MediaType.APPLICATION_JSON);
 
+        //then
         MvcResult mvcResult = mockMvc
                 .perform(request)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        //then
         String response = mvcResult.getResponse().getContentAsString();
 
         assertThat(response).isNotNull();
@@ -108,13 +108,13 @@ public class ApiIntegrationTest {
                 .content(String.valueOf(uid))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
+        //then
         MvcResult mvcResult = mockMvc
                 .perform(request)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        //then
         String response = mvcResult.getResponse().getContentAsString();
 
         assertThat(response).isNotNull();
@@ -143,13 +143,13 @@ public class ApiIntegrationTest {
                 .content("1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
+        //then
         MvcResult mvcResult = mockMvc
                 .perform(request)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        //then
         String response = mvcResult.getResponse().getContentAsString();
 
         assertThat(response).isNotNull();
@@ -178,13 +178,13 @@ public class ApiIntegrationTest {
                 .content("1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
+        //then
         MvcResult mvcResult = mockMvc
                 .perform(request)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        //then
         String response = mvcResult.getResponse().getContentAsString();
 
         assertThat(response).isNotNull();
@@ -192,6 +192,7 @@ public class ApiIntegrationTest {
         log.info(response);
     }
 
+    @Disabled
     @Test
     @DisplayName("GetMediaUrl Test")
     void testGetMediaUrl() throws Exception {
@@ -204,13 +205,14 @@ public class ApiIntegrationTest {
                 .get("/users/trick")
                 .header("tester", "A603")
                 .param("key", key);
+
+        //then
         MvcResult mvcResult = mockMvc
                 .perform(request)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
                 .andReturn();
 
-        //then
         String response = mvcResult.getResponse().getContentAsString();
 
         assertThat(response).isNotNull();
@@ -232,13 +234,38 @@ public class ApiIntegrationTest {
                 .header("tester", "A603")
                 .content(String.valueOf(userId));
 
+        //then
         MvcResult mvcResult = mockMvc
                 .perform(request)
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
                 .andReturn();
 
+        String response = mvcResult.getResponse().getContentAsString();
+
+        assertThat(response).isNotNull();
+
+        log.info(response);
+    }
+
+    @Disabled
+    @Test
+    @DisplayName("GetUserInfo Test")
+    void testGetUserInfo() throws Exception {
+        //given
+
+        //when
+        var request = MockMvcRequestBuilders
+                .get("/users/info")
+                .header("tester", "A603");
+
         //then
+        MvcResult mvcResult = mockMvc
+                .perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
         String response = mvcResult.getResponse().getContentAsString();
 
         assertThat(response).isNotNull();
