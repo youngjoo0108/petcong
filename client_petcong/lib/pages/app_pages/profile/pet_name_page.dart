@@ -67,23 +67,23 @@ class _PetNamePageState extends State<PetNamePage> {
               SizedBox(
                 width: 300, // 원하는 너비 설정
                 child: TextField(
-                  controller: _controller,
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    decoration: TextDecoration.none,
-                    fontWeight: FontWeight.normal,
-                  ),
-                  decoration: const InputDecoration(
-                    hintText: '반려동물 이름을 입력하세요',
-                    border: InputBorder.none,
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
+                    controller: _controller,
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      decoration: TextDecoration.none,
+                      fontWeight: FontWeight.normal,
                     ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
+                    decoration: const InputDecoration(
+                      hintText: '반려동물 이름을 입력하세요',
+                      border: InputBorder.none,
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
                     ),
-                  ),
-                ),
+                    textAlign: TextAlign.center),
               ),
               const SizedBox(
                 height: 30.0,
