@@ -7,6 +7,8 @@ import com.example.ssafy.petcong.matching.repository.MatchingRepository;
 import com.example.ssafy.petcong.matching.service.util.OnlineUsersService;
 import com.example.ssafy.petcong.matching.service.util.SeenTodayService;
 import com.example.ssafy.petcong.user.model.entity.User;
+import com.example.ssafy.petcong.user.model.entity.UserImg;
+import com.example.ssafy.petcong.user.repository.UserImgRepository;
 import com.example.ssafy.petcong.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +26,13 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
     private final SeenTodayService seenToday;
     private final UserRepository userRepository;
     private final MatchingRepository matchingRepository;
+    private final UserImgRepository userImgRepository;
 
     public List<String> pictures(int userId) {
-        ArrayList<String> urls = null;
-        return urls;
+        List<UserImg> imgList =  userImgRepository.findByUserId(userId);
+        return imgList.stream()
+                .map(UserImg :: getUrl)
+                .collect(Collectors.toList());
     }
 
     @Override
