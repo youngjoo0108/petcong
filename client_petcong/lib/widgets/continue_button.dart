@@ -7,11 +7,15 @@ class ContinueButton extends StatelessWidget {
     required this.isFilled,
     required this.buttonText,
     this.onPressed,
+    this.width = 300.0, // width 속성 추가
+    this.height = 30.0, // height 속성 추가
   }) : super(key: key);
 
   final bool isFilled;
   final String buttonText;
   final VoidCallback? onPressed;
+  final double width; // width 속성 추가
+  final double height; // height 속성 추가
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +52,7 @@ class ContinueButton extends StatelessWidget {
           disabledForegroundColor: Colors.transparent.withOpacity(0.38),
           disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
           shadowColor: Colors.transparent,
-          minimumSize: const Size(300.0, 30.0),
+          minimumSize: Size(width, height), // minimumSize 수정
         ),
         onPressed: onPressed,
         child: Padding(
@@ -57,7 +61,7 @@ class ContinueButton extends StatelessWidget {
             bottom: 6,
           ),
           child: Text(
-            buttonText, // 이전에는 'Continue'였는데, 이제는 buttonText를 사용합니다.
+            buttonText,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 30,

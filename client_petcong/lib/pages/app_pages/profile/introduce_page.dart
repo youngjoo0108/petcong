@@ -64,24 +64,24 @@ class _IntroducePageState extends State<IntroducePage> {
             const Text('자기 소개 해주세요!', style: TextStyle(fontSize: 32.0)),
             const SizedBox(height: 30.0),
             SizedBox(
-              width: 300.0, // 너비를 300으로 설정
+              width: 200.0, // 너비를 300으로 설정
               child: TextField(
-                controller: _controller,
-                style: const TextStyle(
-                  fontSize: 20.0, // 텍스트 크기를 20.0으로 설정
-                  decoration: TextDecoration.none,
-                  fontWeight: FontWeight.normal,
-                ),
-                decoration: InputDecoration(
-                  hintText: '자기 소개',
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      _controller.clear();
-                    },
+                  controller: _controller,
+                  style: const TextStyle(
+                    fontSize: 20.0, // 텍스트 크기를 20.0으로 설정
+                    decoration: TextDecoration.none,
+                    fontWeight: FontWeight.normal,
                   ),
-                ),
-              ),
+                  decoration: InputDecoration(
+                    hintText: '자기 소개',
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _controller.clear();
+                      },
+                    ),
+                  ),
+                  textAlign: TextAlign.center),
             ),
             const SizedBox(height: 30.0),
             ContinueButton(
