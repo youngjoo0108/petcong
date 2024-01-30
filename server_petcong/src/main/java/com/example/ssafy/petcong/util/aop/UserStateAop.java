@@ -1,11 +1,9 @@
-//package com.example.ssafy.petcong.util.aop;
-//
-//import com.example.ssafy.petcong.user.model.entity.User;
-//import com.example.ssafy.petcong.user.repository.UserRepository;
-//import org.aspectj.lang.annotation.Aspect;
-//import org.aspectj.lang.annotation.Before;
-////import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.core.context.SecurityContextHolder;
+package com.example.ssafy.petcong.util.aop;
+
+import com.example.ssafy.petcong.user.model.entity.User;
+import com.example.ssafy.petcong.user.repository.UserRepository;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
