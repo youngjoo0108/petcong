@@ -49,9 +49,55 @@ class _MainVideoCallState extends State<MainVideoCall> {
     await joinRoom();
   }
 
+  // void onConnect(StompFrame frame) {
+  //   print("----------------------------connected------------------------");
+  //   client.subscribe(
+  //       destination: subsPrefix + myId.toString(),
+  //       callback: (frame) {
+  //         print(frame);
+  //         print("frame.body = ${frame.body!}");
+  //         print("start callback");
+
+  //         Map<String, dynamic> response = jsonDecode(frame.body!);
+  //         print('type = ' + response['type']);
+
+  //         // String value = response['value'] as String;
+  //         // print('value = ' + value);
+
+  //         String type = response['type'];
+  //         if (type == 'answer') {
+  //           print('------------------------answer!!-------------------');
+  //           print(response['value']);
+  //           print(jsonEncode(response['value']));
+  //         }
+  //         if (type == 'joined') {
+  //           _sendOffer();
+  //           return;
+  //         }
+  //         Map<String, dynamic> value = response['value'];
+  //         print('valueMap = ${jsonEncode(value)}');
+  //         print(
+  //             "--------------------------------------subscribed----------------------------");
+
+  //         if (type == 'offer') {
+  //           _gotOffer(RTCSessionDescription(value['sdp'], value['type']));
+  //           _sendAnswer();
+  //         } else if (type == 'answer') {
+  //           _gotAnswer(RTCSessionDescription(value['sdp'], value['type']));
+  //         } else if (type == 'ice') {
+  //           _gotIce(RTCIceCandidate(
+  //               value['candidate'], value['sdpMid'], value['sdpMLineIndex']));
+  //         }
+  //       });
+  //   // _sendOffer();
+  //   print("sended");
+  // }
+
   void onConnect(StompFrame frame) {
     print("----------------------------connected------------------------");
-    client.subscribe(
+    if (client.connected) {
+      // Stomp connection is open and ready
+      client.subscribe(
         destination: subsPrefix + myId.toString(),
         callback: (frame) {
           print(frame);
@@ -60,9 +106,6 @@ class _MainVideoCallState extends State<MainVideoCall> {
 
           Map<String, dynamic> response = jsonDecode(frame.body!);
           print('type = ' + response['type']);
-
-          // String value = response['value'] as String;
-          // print('value = ' + value);
 
           String type = response['type'];
           if (type == 'answer') {
@@ -88,9 +131,14 @@ class _MainVideoCallState extends State<MainVideoCall> {
             _gotIce(RTCIceCandidate(
                 value['candidate'], value['sdpMid'], value['sdpMLineIndex']));
           }
-        });
-    // _sendOffer();
-    print("sended");
+        },
+      );
+      print("sended");
+    } else {
+      print("Stomp connection is not open.");
+      // Handle accordingly, perhaps attempt to reconnect
+      _attemptReconnect();
+    }
   }
 
   void onDisconnect(StompFrame frame) {
@@ -102,26 +150,52 @@ class _MainVideoCallState extends State<MainVideoCall> {
           "info": "disconnect"
         },
         body: "");
+    _attemptReconnect();
   }
+
+  // Future connectSocket() async {
+  //   client = StompClient(
+  //     config: StompConfig.sockJS(
+  //       url: 'http://43.200.28.137:8080/websocket',
+  //       webSocketConnectHeaders: {
+  //         "transports": ["websocket"],
+  //       },
+  //       onConnect: onConnect,
+  //       beforeConnect: () async {
+  //         print('waiting to connect...');
+  //         await Future.delayed(const Duration(milliseconds: 200));
+  //         print('connecting...');
+  //       },
+  //       onWebSocketError: (dynamic error) => print(error.toString()),
+  //       onDisconnect: onDisconnect,
+  //     ),
+  //   );
+  //   client.activate();
+  // }
 
   Future connectSocket() async {
     client = StompClient(
       config: StompConfig.sockJS(
-        url: 'http://43.200.28.137:8080/websocket',
+        url: 'http://i10a603.p.ssafy.io:8080/websocket',
         webSocketConnectHeaders: {
           "transports": ["websocket"],
         },
         onConnect: onConnect,
-        beforeConnect: () async {
-          print('waiting to connect...');
-          await Future.delayed(const Duration(milliseconds: 200));
-          print('connecting...');
+        onWebSocketError: (dynamic error) {
+          print(error.toString());
+          // Handle WebSocket error, perhaps attempt to reconnect
+          _attemptReconnect();
         },
-        onWebSocketError: (dynamic error) => print(error.toString()),
         onDisconnect: onDisconnect,
       ),
     );
     client.activate();
+  }
+
+  void _attemptReconnect() {
+    Future.delayed(const Duration(seconds: 5), () {
+      connectSocket();
+    });
   }
 
   Future joinRoom() async {
@@ -131,7 +205,7 @@ class _MainVideoCallState extends State<MainVideoCall> {
       'iceServers': [
         {"url": "stun:stun.l.google.com:19302"},
         {
-          "url": "turn:43.200.28.137:3478",
+          "url": "turn:i10a603.p.ssafy.io:3478",
           "username": "ehigh",
           "credential": "1234",
         },
@@ -220,11 +294,13 @@ class _MainVideoCallState extends State<MainVideoCall> {
 
   Future _gotAnswer(RTCSessionDescription answer) async {
     print('got answer');
+    setState(() {});
     pc!.setRemoteDescription(answer);
   }
 
   Future _sendIce(RTCIceCandidate ice) async {
     print("send ice");
+    setState(() {});
     var map = {"type": "ice", "value": ice.toMap()};
     client.send(
         destination: subsPrefix + targetId.toString(),
@@ -239,6 +315,17 @@ class _MainVideoCallState extends State<MainVideoCall> {
   Future _gotIce(RTCIceCandidate ice) async {
     print("got ice");
     pc!.addCandidate(ice);
+  }
+
+  @override
+  void dispose() {
+    // Dispose of resources when the widget is disposed
+    _localRenderer.dispose();
+    _remoteRenderer.dispose();
+    _localStream?.dispose();
+    pc?.close();
+    client.deactivate();
+    super.dispose();
   }
 
   @override

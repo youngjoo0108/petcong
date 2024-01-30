@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:petcong/controller/user_controller.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:stomp_dart_client/stomp.dart';
 
@@ -11,17 +14,37 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 class SocketService extends ChangeNotifier {
   late StompClient client;
   late List msgArr = [];
-  // late final _userId;
+  String? idToken;
+
   SocketService() {
-    connectSocket();
+    initSocket();
+  }
+
+  static Future<SocketService> create() async {
+    var socketService = SocketService();
+    await socketService.init();
+    return socketService;
+  }
+
+  Future<void> init() async {
+    idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+    debugPrint(
+        '==============================$idToken=======================================');
   }
 
   void connectSocket() {
+    if (idToken == null) {
+      debugPrint('idToken is nullllllllllllllllllllllllllllll');
+      return;
+    }
+    debugPrint(
+        'I get idToken!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     // 소켓 초기화 및 연결
     client = StompClient(
         config: StompConfig.sockJS(
-            url: 'http://localhost:8080/websocket',
+            url: 'http://i10a603.p.ssafy.io:8080/websocket',
             webSocketConnectHeaders: {
+              "Petcong-id-token": idToken,
               "transports": ["websocket"],
             },
             onConnect: (StompFrame frame) {
@@ -29,7 +52,9 @@ class SocketService extends ChangeNotifier {
               debugPrint("연결됨");
               client.subscribe(
                 destination: '/queue/1/',
-                headers: {},
+                headers: {
+                  "tester": "A603",
+                },
                 callback: (frame) {
                   msgArr.add(frame.body!);
                   notifyListeners();
@@ -41,8 +66,8 @@ class SocketService extends ChangeNotifier {
     //stompConnectHeaders: {'Authorization': 'Bearer yourToken'},
     //webSocketConnectHeaders: {'Authorization': 'Bearer yourToken'},
     client.activate();
-    // debugPrint(
-    //     '---------------------------------${client.isActive}-----------------------------------------');
+    debugPrint(
+        '---------------------------------${client.isActive}-----------------------------------------');
     notifyListeners();
   }
 
