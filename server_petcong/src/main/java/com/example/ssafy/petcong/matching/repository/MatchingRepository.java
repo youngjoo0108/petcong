@@ -1,5 +1,6 @@
 package com.example.ssafy.petcong.matching.repository;
 
+import com.example.ssafy.petcong.matching.model.CallStatus;
 import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.model.ChoiceReq;
 import com.example.ssafy.petcong.user.model.entity.User;
@@ -23,4 +24,6 @@ public interface MatchingRepository extends JpaRepository<Matching, Integer>, Ma
     Matching save(Matching matching);
 
     Matching findByFromUserAndToUser(User fromUsers, User toUsers);
+
+    List<Matching> findMatchingByFromUser_UserIdOrToUser_UserIdAndCallStatus(int fromUserUserId, int toUserUserId, CallStatus callStatus);
 }

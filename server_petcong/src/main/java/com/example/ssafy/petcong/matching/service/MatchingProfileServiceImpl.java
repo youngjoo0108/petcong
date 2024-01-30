@@ -95,4 +95,8 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         return true;
     }
 
+    @Override
+    public List<Matching> findMatchingList(int fromUserId, int toUserId) {
+        return matchingRepository.findMatchingByFromUser_UserIdOrToUser_UserIdAndCallStatus(fromUserId, toUserId, CallStatus.MATCHED);
+    }
 }

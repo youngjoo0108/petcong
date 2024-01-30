@@ -30,8 +30,10 @@ public class User {
     private String nickname;
     private String email;
     private String address;
-    @Column(name =  "social_url")
-    private String socialUrl;
+    @Column(name = "instagram_id")
+    private String instagramId;
+    @Column(name = "kakao_id")
+    private String kakaoId;
     private String uid;
 
     private LocalDate birthday;
@@ -53,7 +55,8 @@ public class User {
             String nickname,
             String email,
             String address,
-            String socialUrl,
+            String instagramId,
+            String kakaoId,
             String uid,
             LocalDate birthday,
             Gender gender,
@@ -65,7 +68,8 @@ public class User {
         this.nickname = nickname;
         this.email = email;
         this.address = address;
-        this.socialUrl = socialUrl;
+        this.instagramId = instagramId;
+        this.kakaoId = kakaoId;
         this.uid = uid;
         this.birthday = birthday;
         this.gender = gender;
@@ -80,8 +84,9 @@ public class User {
         this.nickname = userRecord.nickname();
         this.email = userRecord.email();
         this.address = userRecord.address();
-        this.socialUrl = userRecord.socialUrl();
         this.uid = userRecord.uid();
+        this.instagramId = userRecord.instagramId();
+        this.kakaoId = userRecord.kakaoId();
         this.birthday = userRecord.birthday();
         this.gender = userRecord.gender();
         this.status = userRecord.status();
