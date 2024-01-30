@@ -13,12 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class MatchingConnectionService {
+public class MatchingRequestService {
 
     private final MatchingRepository matchingRepository;
     private final UserRepository userRepository;
 
-    public MatchingConnectionService(MatchingRepository matchingRepository, UserRepository userRepository) {
+    public MatchingRequestService(MatchingRepository matchingRepository, UserRepository userRepository) {
         this.matchingRepository = matchingRepository;
         this.userRepository = userRepository;
     }

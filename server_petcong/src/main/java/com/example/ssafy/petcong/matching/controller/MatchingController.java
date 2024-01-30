@@ -2,7 +2,7 @@ package com.example.ssafy.petcong.matching.controller;
 
 import com.example.ssafy.petcong.matching.model.ChoiceReq;
 import com.example.ssafy.petcong.matching.model.entity.ProfileRecord;
-import com.example.ssafy.petcong.matching.service.MatchingConnectionService;
+import com.example.ssafy.petcong.matching.service.MatchingRequestService;
 import com.example.ssafy.petcong.matching.service.MatchingProfileService;
 import com.example.ssafy.petcong.util.annotation.MakeCallable;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,11 +18,11 @@ import java.util.Optional;
 @RequestMapping("/matchings")
 public class MatchingController {
 
-    private final MatchingConnectionService matchingConnectionService;
+    private final MatchingRequestService matchingRequestService;
     private final MatchingProfileService matchingProfileService;
 
     @Autowired
-    public MatchingController(MatchingConnectionService matchingConnectionService, MatchingProfileService matchingProfileService) {        this.matchingConnectionService = matchingConnectionService;
+    public MatchingController(MatchingRequestService matchingRequestService, MatchingProfileService matchingProfileService) {        this.matchingRequestService = matchingRequestService;
         this.matchingProfileService = matchingProfileService;
     }
 
@@ -41,13 +41,13 @@ public class MatchingController {
         int port = request.getRemotePort();
 
         return ResponseEntity
-                .ok(matchingConnectionService.choice(choiceReq, originIp, port));
+                .ok(matchingRequestService.choice(choiceReq, originIp, port));
     }
 
     @MakeCallable
     @PatchMapping("/callable/{userId}")
     public ResponseEntity<?> onCallEnd(@PathVariable int userId) {
-        matchingConnectionService.changeToCallable(userId);
+        matchingRequestService.changeToCallable(userId);
         return ResponseEntity
                 .ok()
                 .build();
