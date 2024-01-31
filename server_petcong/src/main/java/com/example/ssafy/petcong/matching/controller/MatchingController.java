@@ -5,12 +5,14 @@ import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.model.entity.ProfileRecord;
 import com.example.ssafy.petcong.matching.service.MatchingConnectionService;
 import com.example.ssafy.petcong.matching.service.MatchingProfileService;
-import com.example.ssafy.petcong.user.model.record.UserRecord;
+import com.example.ssafy.petcong.user.model.dto.UserRecord;
 import com.example.ssafy.petcong.user.service.UserService;
 import com.example.ssafy.petcong.util.annotation.MakeCallable;
+
 import jakarta.servlet.http.HttpServletRequest;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -63,7 +65,7 @@ public class MatchingController {
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
-    @GetMapping("/matchinglist")
+    @GetMapping("/list")
     public ResponseEntity<?> matchingList(@AuthenticationPrincipal(expression = "password") String uid) {
         UserRecord user = userService.findUserByUid(uid);
         int myId = user.userId();
