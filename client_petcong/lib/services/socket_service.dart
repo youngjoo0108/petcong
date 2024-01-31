@@ -1,7 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:socket_io_client/socket_io_client.dart';
+import 'package:petcong/controller/user_controller.dart';
 import 'package:stomp_dart_client/stomp.dart';
 
 // stomp client
@@ -9,49 +7,94 @@ import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
 class SocketService extends ChangeNotifier {
-  late StompClient client;
+  late StompClient client = StompClient(
+    config: const StompConfig(
+      // url: 'http://i10a603.p.ssafy.io:8080/websocket',
+      url: 'http://43.200.28.137:8080/websocket',
+    ),
+  );
   late List msgArr = [];
-  // late final _userId;
+  UserController userController = UserController.instance;
+  String? uid;
+  String? idToken;
+
   SocketService() {
+    initSocket();
+  }
+
+  static Future<SocketService> create() async {
+    var socketService = SocketService();
+    await socketService.init();
+    return socketService;
+  }
+
+  Future<void> initSocket() async {
+    uid = userController.uid;
+    idToken = userController.idToken;
     connectSocket();
   }
 
-  void connectSocket() {
+  void connectSocket() async {
+    if (idToken == null) {
+      debugPrint('idToken is null');
+      return;
+    }
+    if (client.isActive) {
+      debugPrint('Socket already connected');
+      return;
+    }
+
     // 소켓 초기화 및 연결
     client = StompClient(
-        config: StompConfig.sockJS(
-            url: 'http://localhost:8080/websocket',
-            webSocketConnectHeaders: {
-              "transports": ["websocket"],
+      config: StompConfig.sockJS(
+        // url: 'http://i10a603.p.ssafy.io:8080/websocket',
+        url: 'http://43.200.28.137:8080/websocket',
+        webSocketConnectHeaders: {
+          "Petcong-id-token": idToken,
+          "transports": ["websocket"],
+        },
+        onConnect: (StompFrame frame) {
+          notifyListeners();
+          debugPrint("연결됨");
+          client.subscribe(
+            destination: '/queue/$uid',
+            headers: {
+              "uid": uid ?? "",
             },
-            onConnect: (StompFrame frame) {
+            callback: (frame) {
+              msgArr.add(frame.body!);
               notifyListeners();
-              debugPrint("연결됨");
-              client.subscribe(
-                destination: '/queue/1/',
-                headers: {},
-                callback: (frame) {
-                  msgArr.add(frame.body!);
-                  notifyListeners();
-                },
-              );
             },
-            onWebSocketError: (dynamic error) =>
-                debugPrint('websocketerror : $error')));
-    //stompConnectHeaders: {'Authorization': 'Bearer yourToken'},
-    //webSocketConnectHeaders: {'Authorization': 'Bearer yourToken'},
+          );
+        },
+        onWebSocketError: (dynamic error) =>
+            debugPrint('websocketerror : $error'),
+      ),
+    );
     client.activate();
-    // debugPrint(
-    //     '---------------------------------${client.isActive}-----------------------------------------');
     notifyListeners();
   }
 
-  void disposeSocket() {
-    // 소켓 종료 및 정리
+  // 소켓 종료 및 정리
+  void disposeSocket() async {
+    try {
+      client.send(
+        destination: '/queue/$uid',
+        headers: {
+          "content-type": "application/json",
+          "uid": uid ?? "",
+          "info": "disconnect",
+        },
+        body: "",
+      );
+    } catch (error) {
+      print("Error sending message: $error");
+    }
     client.deactivate();
-    // notifyListeners();
     debugPrint('연결끔');
   }
+
+  init() {}
 }
 
 class SocketServiceProvider extends InheritedWidget {
