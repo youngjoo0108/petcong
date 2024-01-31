@@ -2,7 +2,7 @@ package com.example.ssafy.petcong.matching.controller;
 
 import com.example.ssafy.petcong.matching.model.ChoiceReq;
 import com.example.ssafy.petcong.matching.model.entity.ProfileRecord;
-import com.example.ssafy.petcong.matching.service.MatchingConnectionService;
+import com.example.ssafy.petcong.matching.service.MatchingRequestService;
 import com.example.ssafy.petcong.matching.service.MatchingProfileService;
 import com.example.ssafy.petcong.util.annotation.MakeCallable;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,36 +18,31 @@ import java.util.Optional;
 @RequestMapping("/matchings")
 public class MatchingController {
 
-    private final MatchingConnectionService matchingConnectionService;
+    private final MatchingRequestService matchingRequestService;
     private final MatchingProfileService matchingProfileService;
 
     @Autowired
-    public MatchingController(MatchingConnectionService matchingConnectionService, MatchingProfileService matchingProfileService) {        this.matchingConnectionService = matchingConnectionService;
+    public MatchingController(MatchingRequestService matchingRequestService, MatchingProfileService matchingProfileService) {        this.matchingRequestService = matchingRequestService;
         this.matchingProfileService = matchingProfileService;
     }
 
     /**
-     * @param choiceReq
      * @return 200 & empty body when pending
      * <br> 200 & ws link when matched
      * <br> 400 when matched, rejected
      */
     @MakeCallable
     @PostMapping("/choice")
-    public ResponseEntity<?> choice(@RequestBody ChoiceReq choiceReq, HttpServletRequest request) {
-        System.out.println("실행은 되냐?");
-        String src = request.getHeader("x-forwarded-for");
-        String originIp = src != null ? src.split(",")[0] : request.getRemoteAddr();
-        int port = request.getRemotePort();
-
+    public ResponseEntity<?> choice(@AuthenticationPrincipal(expression = "password") String uid,
+                                    @RequestBody ChoiceReq choiceReq) {
         return ResponseEntity
-                .ok(matchingConnectionService.choice(choiceReq, originIp, port));
+                .ok(matchingRequestService.choice(uid, choiceReq.getPartnerUserId()));
     }
 
     @MakeCallable
     @PatchMapping("/callable/{userId}")
     public ResponseEntity<?> onCallEnd(@PathVariable int userId) {
-        matchingConnectionService.changeToCallable(userId);
+        matchingRequestService.changeToCallable(userId);
         return ResponseEntity
                 .ok()
                 .build();
