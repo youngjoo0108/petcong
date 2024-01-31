@@ -1,4 +1,4 @@
-package com.example.ssafy.petcong.user.model.record;
+package com.example.ssafy.petcong.user.model.dto;
 
 import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.model.enums.Gender;

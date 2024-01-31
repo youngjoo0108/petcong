@@ -1,9 +1,10 @@
 package com.example.ssafy.petcong.user.model.entity;
 
+import com.example.ssafy.petcong.user.model.dto.UserInfoDto;
 import com.example.ssafy.petcong.user.model.enums.Gender;
 import com.example.ssafy.petcong.user.model.enums.Preference;
 import com.example.ssafy.petcong.user.model.enums.Status;
-import com.example.ssafy.petcong.user.model.record.UserRecord;
+import com.example.ssafy.petcong.user.model.dto.UserRecord;
 
 import jakarta.persistence.*;
 
@@ -25,7 +26,7 @@ public class User {
     private int age;
 
     @Setter
-    private boolean callable;
+    private boolean callable = false;
 
     private String nickname;
     private String email;
@@ -91,6 +92,20 @@ public class User {
         this.gender = userRecord.gender();
         this.status = userRecord.status();
         this.preference = userRecord.preference();
+    }
+
+    public User(UserInfoDto userInfoDto) {
+        this.address = userInfoDto.getAddress();
+        this.birthday = userInfoDto.getBirthday();
+        this.age = userInfoDto.getAge();
+        this.gender = userInfoDto.getGender();
+        this.email = userInfoDto.getEmail();
+        this.nickname = userInfoDto.getNickname();
+        this.uid = userInfoDto.getUid();
+        this.status = userInfoDto.getStatus();
+        this.preference = userInfoDto.getPreference();
+        this.kakaoId = userInfoDto.getKakaoId();
+        this.instagramId = userInfoDto.getInstagramId();
     }
     public User(int userId) {
         this.userId = userId;

@@ -1,6 +1,6 @@
 package com.example.ssafy.petcong.user.model.entity;
 
-import com.example.ssafy.petcong.user.model.record.SkillMultimediaRecord;
+import com.example.ssafy.petcong.user.model.dto.SkillMultimediaRecord;
 
 import jakarta.persistence.*;
 

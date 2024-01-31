@@ -1,11 +1,12 @@
 package com.example.ssafy.petcong.user.service;
 
+import com.example.ssafy.petcong.user.model.dto.UserInfoDto;
 import com.example.ssafy.petcong.user.model.entity.SkillMultimedia;
 import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.model.entity.UserImg;
-import com.example.ssafy.petcong.user.model.record.SkillMultimediaRecord;
-import com.example.ssafy.petcong.user.model.record.UserImgRecord;
-import com.example.ssafy.petcong.user.model.record.UserRecord;
+import com.example.ssafy.petcong.user.model.dto.SkillMultimediaRecord;
+import com.example.ssafy.petcong.user.model.dto.UserImgRecord;
+import com.example.ssafy.petcong.user.model.dto.UserRecord;
 import com.example.ssafy.petcong.user.repository.SkillMultimediaRepository;
 import com.example.ssafy.petcong.user.repository.UserImgRepository;
 import com.example.ssafy.petcong.user.repository.UserRepository;
@@ -56,9 +57,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserRecord save(UserRecord userRecord) {
-        User userEntity = new User(userRecord);
-        User result = userRepository.save(userEntity);
+    public UserRecord save(UserInfoDto userInfoDto) {
+        User siginupUser = new User(userInfoDto);
+        User result = userRepository.save(siginupUser);
         return new UserRecord(result);
     }
 
@@ -77,9 +78,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserRecord updateUserInfo(String uid, UserRecord userRecord) {
+    public UserRecord updateUserInfo(String uid, UserInfoDto userInfo) {
         if (userRepository.findUserByUid(uid) != null) {
-            User userEntity = new User(userRecord);
+            User userEntity = new User(userInfo);
             User result = userRepository.save(userEntity);
             return new UserRecord(result);
         } else {
