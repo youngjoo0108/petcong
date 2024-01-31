@@ -19,26 +19,26 @@ Image defaultImages = Image.asset(defaultImageSrc);
 
 final List<ExampleCandidateModel> candidates = [
   ExampleCandidateModel(
-    name: '하나둘셋',
-    age: 3,
+    name: '하나',
+    age: 1,
     description: '내 강아지는 귀여워용',
     images: [defaultImages],
   ),
   ExampleCandidateModel(
-    name: '둘이둘이',
-    age: 5,
+    name: '둘이',
+    age: 2,
     description: '내 강아지는 귀여워용',
     images: [defaultImages],
   ),
   ExampleCandidateModel(
     name: '석삼이',
-    age: 32,
+    age: 3,
     description: '내 강아지는 귀여워용',
     images: [defaultImages],
   ),
   ExampleCandidateModel(
     name: '넉살이',
-    age: 11,
+    age: 4,
     description: '내 강아지는 귀여워용',
     images: [defaultImages],
   ),
