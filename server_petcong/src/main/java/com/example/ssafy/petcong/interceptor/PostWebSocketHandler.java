@@ -12,9 +12,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.messaging.simp.stomp.StompCommand.SEND;
+import static org.springframework.messaging.simp.stomp.StompCommand.SUBSCRIBE;
 
 @Component
 public class PostWebSocketHandler implements ChannelInterceptor {
@@ -29,41 +31,41 @@ public class PostWebSocketHandler implements ChannelInterceptor {
     @Transactional
     public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
         try {
-
             StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
             StompCommand command = accessor.getCommand();
 
-            if (command == SEND) {
-                MessageHeaders headers = message.getHeaders();
-                Map<String, Object> nativeHeaders = (Map<String, Object>) headers.get("nativeHeaders");
-                // 파싱
-                String connectInfo  = Arrays.asList(nativeHeaders.get("info")).get(0)
-                        .toString();
-                String userIdStr  = Arrays.asList(nativeHeaders.get("userId")).get(0)
-                        .toString();
+            if (!(command == SEND || command == SUBSCRIBE)) return;
 
-                connectInfo = connectInfo.substring(1, connectInfo.length() - 1); // [] 제거
-                userIdStr = userIdStr.substring(1, userIdStr.length() - 1);
+            MessageHeaders headers = message.getHeaders();
+            Map<String, Object> nativeHeaders = (Map<String, Object>) headers.get("nativeHeaders");
+            // 파싱
+            String uidStr = Arrays.asList(nativeHeaders.get("uid")).get(0)
+                    .toString();
+            String uid = uidStr.substring(1, uidStr.length() - 1); // [] 제거
 
-                boolean callable = connectInfo.equals("connect");
-                int userId = Integer.parseInt(userIdStr);
+            if (command == SUBSCRIBE) {
+                changeOnlineStatus(uid, true);
+                return;
+            }
+            List<Object> info = Arrays.asList(nativeHeaders.get("info"));
 
-                changeOnlineStatus(userId, callable);
+            if (info == null || info.isEmpty()) return; // disconnect 요청이 아닌 일반 메시지인 경우
+
+            String connectInfo  = info.toString();
+            connectInfo = connectInfo.substring(1, connectInfo.length() - 1);
+            if (connectInfo.equals("disconnect")) {
+                changeOnlineStatus(uid, false);
             }
 
-//        // if input userId = firebase uid
-//        String uid = headers.get("userId", String.class);
-//        UserRecord user = userRepository.findUserByUid(uid);
-//        int userId = user.userId();
-//        // end
+        // end
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Transactional
-    public void changeOnlineStatus(int userId, boolean toStatus) {
-        User user = userRepository.findUserByUserId(userId);
+    public void changeOnlineStatus(String uid, boolean toStatus) {
+        User user = userRepository.findUserByUid(uid);
         user.setCallable(toStatus);
         userRepository.save(user);
     }

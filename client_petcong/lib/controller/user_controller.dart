@@ -19,6 +19,7 @@ class UserController extends GetxController {
   }
 
   _moveToPage(User? user) {
+    // TODO: Registered user goes to match page.
     if (user == null) {
       Get.offAll(() => const SignInPage());
     } else {
@@ -30,7 +31,6 @@ class UserController extends GetxController {
 
   static Future<User?> loginWithGoogle() async {
     final googleAccount = await GoogleSignIn().signIn();
-
     final googleAuth = await googleAccount?.authentication;
 
     final credential = GoogleAuthProvider.credential(

@@ -4,6 +4,7 @@ import 'package:petcong/widgets/create_button.dart';
 import 'package:petcong/widgets/delete_button.dart';
 import 'media_page.dart';
 import 'video_page.dart';
+import 'package:get/get.dart';
 import 'dart:io';
 
 // 이미지를 선택하고 화면에 표시되는 기능
@@ -49,11 +50,8 @@ class _PhotoPageState extends State<PhotoPage> {
   late double _progress;
   final List<String> _photoPaths = []; // 선택한 이미지들의 경로를 저장하는 리스트
 
-  void navigateToMediaPage(BuildContext context) async {
-    final result = await Navigator.push<String>(
-      context,
-      MaterialPageRoute(builder: (context) => const MediaPage()),
-    );
+  void navigateToMediaPage() async {
+    final result = await Get.to<String>(const MediaPage());
     if (result != null) {
       setState(() {
         _photoPaths.add(result);
@@ -77,7 +75,7 @@ class _PhotoPageState extends State<PhotoPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pop(context, _progress);
+        Get.back(result: _progress);
         return false;
       },
       child: Scaffold(
@@ -97,21 +95,26 @@ class _PhotoPageState extends State<PhotoPage> {
               alignment: Alignment.centerLeft,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: () => Navigator.pop(context, _progress),
+                onPressed: () => Get.back(result: _progress),
               ),
             ),
             const SizedBox(height: 10.0),
             const Center(
-              child: Text('사진 첨부', style: TextStyle(fontSize: 32.0)),
+              child: Text('사진 첨부',
+                  style:
+                      TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600)),
             ),
             const SizedBox(height: 10.0),
             const Center(
               child: Text(
                 '최소 2개의 사진을 첨부해주세요',
-                style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey),
               ),
             ),
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 60.0),
             SizedBox(
               height: 250,
               child: GridView.builder(
@@ -150,7 +153,7 @@ class _PhotoPageState extends State<PhotoPage> {
                         clipBehavior: Clip.none, // 이 줄을 추가했습니다.
                         children: [
                           GridWithPlusButton(
-                            onTap: () => navigateToMediaPage(context),
+                            onTap: () => navigateToMediaPage(),
                           ),
                         ],
                       ),
@@ -169,18 +172,12 @@ class _PhotoPageState extends State<PhotoPage> {
                     buttonText: 'CONTINUE',
                     onPressed: _photoPaths.length >= 2
                         ? () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VideoPage(
-                                  progress:
-                                      _progress + 0.1, // 여기에서 1/10을 더해줍니다.
-                                ),
-                              ),
-                            );
+                            Get.to(VideoPage(
+                              progress: _progress + 0.1, // 여기에서 1/10을 더해줍니다.
+                            ));
                           }
                         : null,
-                    width: 300.0, // 원하는 가로 길이를 설정
+                    width: 240.0, // 원하는 가로 길이를 설정
                     height: 30.0, // 원하는 세로 길이를 설정
                   ),
                 ],

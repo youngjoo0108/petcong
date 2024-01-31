@@ -10,6 +10,7 @@ import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.model.entity.UserImg;
 import com.example.ssafy.petcong.user.repository.UserImgRepository;
 import com.example.ssafy.petcong.user.repository.UserRepository;
+import com.example.ssafy.petcong.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,13 +28,15 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
     private final UserRepository userRepository;
     private final MatchingRepository matchingRepository;
     private final UserImgRepository userImgRepository;
+    private final UserService userService;
 
     private final int NO_USER = -1;
 
     public List<String> pictures(int userId) {
         List<UserImg> imgList =  userImgRepository.findByUserId(userId);
         return imgList.stream()
-                .map(UserImg :: getUrl)
+                .map(UserImg::getUrl)
+                .map(userService::createPresignedUrl)
                 .collect(Collectors.toList());
     }
 
