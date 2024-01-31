@@ -79,9 +79,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserRecord updateUserInfo(String uid, UserInfoDto userInfo) {
-        if (userRepository.findUserByUid(uid) != null) {
+        User user;
+        if ((user = userRepository.findUserByUid(uid)) != null) {
+            int userId = user.getUserId();
             User userEntity = new User(userInfo);
-            User result = userRepository.save(userEntity);
+            User result = userRepository.updateUserByUserId(userEntity, userId);
             return new UserRecord(result);
         } else {
             throw new NoSuchElementException("There is no user.");
