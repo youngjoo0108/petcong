@@ -15,3 +15,17 @@ spring:
 logging:
   level:
     org.hibernate: off
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
+    path: /swagger-ui
+  cache:
+    disabled: true
+

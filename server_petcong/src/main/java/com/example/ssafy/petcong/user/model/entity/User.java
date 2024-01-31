@@ -1,9 +1,10 @@
 package com.example.ssafy.petcong.user.model.entity;
 
+import com.example.ssafy.petcong.user.model.dto.UserInfoDto;
 import com.example.ssafy.petcong.user.model.enums.Gender;
 import com.example.ssafy.petcong.user.model.enums.Preference;
 import com.example.ssafy.petcong.user.model.enums.Status;
-import com.example.ssafy.petcong.user.model.record.UserRecord;
+import com.example.ssafy.petcong.user.model.dto.UserRecord;
 
 import jakarta.persistence.*;
 
@@ -25,13 +26,15 @@ public class User {
     private int age;
 
     @Setter
-    private boolean callable;
+    private boolean callable = false;
 
     private String nickname;
     private String email;
     private String address;
-    @Column(name =  "social_url")
-    private String socialUrl;
+    @Column(name = "instagram_id")
+    private String instagramId;
+    @Column(name = "kakao_id")
+    private String kakaoId;
     private String uid;
 
     private LocalDate birthday;
@@ -53,7 +56,8 @@ public class User {
             String nickname,
             String email,
             String address,
-            String socialUrl,
+            String instagramId,
+            String kakaoId,
             String uid,
             LocalDate birthday,
             Gender gender,
@@ -65,7 +69,8 @@ public class User {
         this.nickname = nickname;
         this.email = email;
         this.address = address;
-        this.socialUrl = socialUrl;
+        this.instagramId = instagramId;
+        this.kakaoId = kakaoId;
         this.uid = uid;
         this.birthday = birthday;
         this.gender = gender;
@@ -80,12 +85,27 @@ public class User {
         this.nickname = userRecord.nickname();
         this.email = userRecord.email();
         this.address = userRecord.address();
-        this.socialUrl = userRecord.socialUrl();
         this.uid = userRecord.uid();
+        this.instagramId = userRecord.instagramId();
+        this.kakaoId = userRecord.kakaoId();
         this.birthday = userRecord.birthday();
         this.gender = userRecord.gender();
         this.status = userRecord.status();
         this.preference = userRecord.preference();
+    }
+
+    public User(UserInfoDto userInfoDto) {
+        this.address = userInfoDto.getAddress();
+        this.birthday = userInfoDto.getBirthday();
+        this.age = userInfoDto.getAge();
+        this.gender = userInfoDto.getGender();
+        this.email = userInfoDto.getEmail();
+        this.nickname = userInfoDto.getNickname();
+        this.uid = userInfoDto.getUid();
+        this.status = userInfoDto.getStatus();
+        this.preference = userInfoDto.getPreference();
+        this.kakaoId = userInfoDto.getKakaoId();
+        this.instagramId = userInfoDto.getInstagramId();
     }
     public User(int userId) {
         this.userId = userId;
