@@ -7,6 +7,8 @@ import 'package:petcong/services/socket_service.dart';
 
 class UserController extends GetxController {
   static UserController instance = Get.find();
+  String? uid;
+  String? idToken;
   late Rx<User?> _user;
   FirebaseAuth authentication = FirebaseAuth.instance;
 
@@ -30,7 +32,6 @@ class UserController extends GetxController {
 
   static Future<User?> loginWithGoogle() async {
     final googleAccount = await GoogleSignIn().signIn();
-
     final googleAuth = await googleAccount?.authentication;
 
     final credential = GoogleAuthProvider.credential(
@@ -41,12 +42,19 @@ class UserController extends GetxController {
     final userCredential = await FirebaseAuth.instance.signInWithCredential(
       credential,
     );
+
+    instance.uid = userCredential.user!.uid;
+
+    // Await the result of getIdToken
+    String? idToken = await userCredential.user!.getIdToken();
+
+    instance.idToken = idToken;
     return userCredential.user;
   }
 
   static Future<void> signOut() async {
+    SocketService().disposeSocket();
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
-    SocketService().disposeSocket();
   }
 }

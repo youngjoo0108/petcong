@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -31,6 +32,8 @@ class _MainVideoCallState extends State<MainVideoCall> {
   MediaStream? _localStream;
   RTCPeerConnection? pc;
   // test
+  String? uid = FirebaseAuth.instance.currentUser?.uid;
+
   var myId = 2;
   var targetId = 1;
   var subsPrefix = "/queue/";
@@ -98,7 +101,7 @@ class _MainVideoCallState extends State<MainVideoCall> {
     if (client.connected) {
       // Stomp connection is open and ready
       client.subscribe(
-        destination: subsPrefix + myId.toString(),
+        destination: subsPrefix + uid.toString(),
         callback: (frame) {
           print(frame);
           print("frame.body = ${frame.body!}");
@@ -143,10 +146,10 @@ class _MainVideoCallState extends State<MainVideoCall> {
 
   void onDisconnect(StompFrame frame) {
     client.send(
-        destination: subsPrefix + myId.toString(),
+        destination: subsPrefix + uid.toString(),
         headers: {
           "content-type": "application/json",
-          "userId": myId.toString(),
+          "userId": uid.toString(),
           "info": "disconnect"
         },
         body: "");
@@ -247,7 +250,7 @@ class _MainVideoCallState extends State<MainVideoCall> {
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
-          "userId": myId.toString(),
+          "userId": uid.toString(),
           "info": "connect"
         },
         body: jsonEncode({"type": "joined", "value": ""}));
@@ -263,7 +266,7 @@ class _MainVideoCallState extends State<MainVideoCall> {
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
-          "userId": myId.toString(),
+          "userId": uid.toString(),
           "info": "connect"
         },
         body: jsonEncode(map));
@@ -286,7 +289,7 @@ class _MainVideoCallState extends State<MainVideoCall> {
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
-          "userId": myId.toString(),
+          "userId": uid.toString(),
           "info": "connect"
         },
         body: jsonEncode(map));
@@ -306,7 +309,7 @@ class _MainVideoCallState extends State<MainVideoCall> {
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
-          "userId": myId.toString(),
+          "userId": uid.toString(),
           "info": "connect"
         },
         body: jsonEncode(map));
