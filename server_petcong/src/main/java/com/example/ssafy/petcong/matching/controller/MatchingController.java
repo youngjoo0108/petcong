@@ -1,6 +1,7 @@
 package com.example.ssafy.petcong.matching.controller;
 
 import com.example.ssafy.petcong.matching.model.ChoiceReq;
+import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.model.entity.ProfileRecord;
 import com.example.ssafy.petcong.matching.service.MatchingRequestService;
 import com.example.ssafy.petcong.matching.service.MatchingProfileService;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
