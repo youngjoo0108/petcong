@@ -58,7 +58,7 @@ public class MatchingRequestService {
         userRepository.save(toUser);
 
         Map<String, String> responseMap = new HashMap<>();
-        responseMap.put("targetLink", "/queue/" + toUser.getUserId());
+        responseMap.put("targetLink", "/queue/" + toUser.getUid());
 
         return responseMap;
     }
