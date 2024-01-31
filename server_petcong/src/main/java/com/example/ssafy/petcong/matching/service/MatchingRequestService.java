@@ -24,15 +24,16 @@ public class MatchingRequestService {
     }
 
     @Transactional
-    public Map<String, String> choice(ChoiceReq choiceReq, String requesterIp, int port){
+    public Map<String, String> choice(String uid, int partnerUserId){
+        User fromUser = userRepository.findUserByUid(uid);
         // DB에서 requestUserId, partnerUserId인 데이터 가져오기
-        Matching matching = matchingRepository.findByUsersId(choiceReq.getPartnerUserId(), choiceReq.getRequestUserId());
-        User fromUser = userRepository.findUserByUserId(choiceReq.getRequestUserId());
-        User toUser = userRepository.findUserByUserId(choiceReq.getPartnerUserId());
+        User toUser = userRepository.findUserByUserId(partnerUserId);
+        // 상대가 나에게 보낸 요청이 있는지 찾기
+        Matching matching = matchingRepository.findPendingByUsers(toUser, fromUser);
 
         // invalid userId
         if (fromUser == null || toUser == null || fromUser.getUserId() == toUser.getUserId()) {
-//            System.out.println("invalid userId");
+            System.out.println("invalid userId");
             throw new RuntimeException();
         }
 
@@ -44,7 +45,7 @@ public class MatchingRequestService {
         }
         // 이미 matched / rejected 이면
         if (matching.getCallStatus() != CallStatus.PENDING) {
-//            System.out.println("invalid status");
+            System.out.println("invalid status");
             throw new RuntimeException();
         }
         // to matched

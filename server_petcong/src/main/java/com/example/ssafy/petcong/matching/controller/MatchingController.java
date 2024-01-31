@@ -27,21 +27,16 @@ public class MatchingController {
     }
 
     /**
-     * @param choiceReq
      * @return 200 & empty body when pending
      * <br> 200 & ws link when matched
      * <br> 400 when matched, rejected
      */
     @MakeCallable
     @PostMapping("/choice")
-    public ResponseEntity<?> choice(@RequestBody ChoiceReq choiceReq, HttpServletRequest request) {
-        System.out.println("실행은 되냐?");
-        String src = request.getHeader("x-forwarded-for");
-        String originIp = src != null ? src.split(",")[0] : request.getRemoteAddr();
-        int port = request.getRemotePort();
-
+    public ResponseEntity<?> choice(@AuthenticationPrincipal(expression = "password") String uid,
+                                    @RequestBody ChoiceReq choiceReq) {
         return ResponseEntity
-                .ok(matchingRequestService.choice(choiceReq, originIp, port));
+                .ok(matchingRequestService.choice(uid, choiceReq.getPartnerUserId()));
     }
 
     @MakeCallable
