@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:petcong/controller/user_controller.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 
 // stomp client
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
-class SocketService extends ChangeNotifier {
-  // late StompClient client = StompClient(
-  //   config: const StompConfig(
-  //     url: 'http://i10a603.p.ssafy.io:8080/websocket',
-  //   ),
-  // );
-  late StompClient client = StompClient(config: const StompConfig(url: ''));
-  late List msgArr = [];
+class SocketService extends GetxService {
+  late StompClient client;
+  RxList<String> msgArr = <String>[].obs;
   String? uid;
   String? idToken;
 
@@ -23,12 +18,15 @@ class SocketService extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       uid = prefs.getString('uid');
       idToken = prefs.getString('idToken');
+      print('uid : $uid, idToken : $idToken');
     } catch (e) {
       print('Error retrieving values from SharedPreferences: $e');
     }
   }
 
-  SocketService() {
+  @override
+  void onInit() {
+    super.onInit();
     init();
   }
 
@@ -36,7 +34,7 @@ class SocketService extends ChangeNotifier {
     try {
       await initPrefs();
       if (idToken == null) {
-        debugPrint('idToken is null');
+        print('idToken is null');
         return;
       }
       await initSocket();
@@ -47,57 +45,41 @@ class SocketService extends ChangeNotifier {
   }
 
   Future<void> initSocket() async {
-    try {
-      if (idToken == null) {
-        debugPrint('idToken is null');
-        return;
-      }
-      if (client.isActive) {
-        debugPrint('Socket already connected');
-        return;
-      }
-      print(uid);
+    print('????????????????????????????????????????????????????????????');
 
-      // 소켓 초기화 및 연결
-      client = StompClient(
-        config: StompConfig.sockJS(
-          url: 'http://i10a603.p.ssafy.io:8080/websocket',
-          webSocketConnectHeaders: {
-            "Petcong-id-token": idToken,
-            "transports": ["websocket"],
-          },
-          onConnect: (StompFrame frame) {
-            notifyListeners();
-            debugPrint("연결됨");
-            client.subscribe(
-              destination: '/queue/$uid',
-              headers: {
-                "uid": uid ?? "",
-              },
-              callback: (frame) {
-                msgArr.add(frame.body!);
-                notifyListeners();
-              },
-            );
-          },
-          onWebSocketError: (dynamic error) =>
-              debugPrint('websocketerror : $error'),
-        ),
-      );
+    client = StompClient(
+      config: StompConfig.sockJS(
+        url: 'http://i10a603.p.ssafy.io:8080/websocket',
+        webSocketConnectHeaders: {
+          "Petcong-id-token": idToken,
+          "transports": ["websocket"],
+        },
+        onConnect: (StompFrame frame) {
+          debugPrint("연결됨");
+          client.subscribe(
+            destination: '/queue/$uid',
+            headers: {
+              "uid": uid ?? "",
+            },
+            callback: (frame) {
+              msgArr.add(frame.body!);
+            },
+          );
+        },
+        onWebSocketError: (dynamic error) =>
+            debugPrint('websocketerror : $error'),
+      ),
+    );
 
-      client.activate();
-      print(
-          '----------------------------------${client.isActive}--------------');
-      notifyListeners();
-    } catch (e) {
-      print('Error initializing socket: $e');
-    }
+    client.activate();
+    print(
+        '---------------------------------------------${client.isActive}--------------------------------------------');
   }
 
   Future<void> disposeSocket() async {
     try {
       if (client.isActive) {
-        print('before send');
+        print('Before sending message: Socket is active');
         client.send(
           destination: '/queue/$uid',
           headers: {
@@ -109,34 +91,20 @@ class SocketService extends ChangeNotifier {
         );
         print('Message sent to server');
       } else {
-        debugPrint('Socket is not active');
+        print('Before sending message: Socket is not active');
       }
 
+      // 클라이언트를 비활성화하기 전에 지연을 도입
+      await Future.delayed(const Duration(seconds: 1));
+
+      // 항상 클라이언트를 비활성화하십시오. 활성 상태 여부에 상관없이
       client.deactivate();
-      debugPrint('Is client active after deactivation? ${client.isActive}');
+      print('After deactivating: Is client active? ${client.isActive}');
       idToken = null;
-      debugPrint(idToken);
+      uid = null;
+      print(idToken);
     } catch (e) {
       print('Error disposing socket: $e');
     }
-  }
-}
-
-class SocketServiceProvider extends InheritedWidget {
-  final SocketService socketService;
-
-  const SocketServiceProvider({
-    super.key,
-    required Widget child,
-    required this.socketService,
-  }) : super(child: child);
-
-  static SocketServiceProvider? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<SocketServiceProvider>();
-  }
-
-  @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
-    return false;
   }
 }

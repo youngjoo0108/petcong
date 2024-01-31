@@ -29,7 +29,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     socketService = SocketService();
-    socketService.initSocket();
+    socketService.onInit();
+    // socketService.onConnect();
   }
 
   void _showLogoutDropdown(BuildContext context) {
