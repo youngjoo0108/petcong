@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'birthday_page.dart';
 import 'profile_page.dart'; // ProfilePage를 import 해주세요.
 import 'package:petcong/widgets/continue_button.dart';
+import 'package:get/get.dart';
 
 class NicknamePage extends StatefulWidget {
   final double progress;
@@ -60,7 +61,8 @@ class _NicknamePageState extends State<NicknamePage> {
               ),
             ),
             const SizedBox(height: 10.0),
-            const Text('내 별명은?', style: TextStyle(fontSize: 32.0)),
+            const Text('내 별명은?',
+                style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600)),
             const SizedBox(height: 30.0),
             SizedBox(
               width: 200, // 원하는 너비 설정
@@ -68,8 +70,8 @@ class _NicknamePageState extends State<NicknamePage> {
                 controller: _controller,
                 style: const TextStyle(
                   fontSize: 20.0,
+                  fontWeight: FontWeight.w400,
                   decoration: TextDecoration.none,
-                  fontWeight: FontWeight.normal,
                 ),
                 decoration: const InputDecoration(
                   hintText: '별명을 입력하세요',
@@ -90,14 +92,9 @@ class _NicknamePageState extends State<NicknamePage> {
               buttonText: 'CONTINUE',
               onPressed: !_isButtonDisabled
                   ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BirthdayPage(
-                            progress: widget.progress + 1 / 10,
-                          ),
-                        ),
-                      );
+                      Get.to(BirthdayPage(
+                        progress: widget.progress + 1 / 10,
+                      ));
                     }
                   : null,
             ),

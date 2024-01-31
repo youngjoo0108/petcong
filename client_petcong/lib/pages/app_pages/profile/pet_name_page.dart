@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'pet_birthday_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
+import 'package:get/get.dart';
+import 'gender_page.dart';
 
 class PetNamePage extends StatefulWidget {
   final double progress;
@@ -57,12 +59,14 @@ class _PetNamePageState extends State<PetNamePage> {
                 alignment: Alignment.centerLeft,
                 child: IconButton(
                   icon: const Icon(Icons.close, size: 32),
-                  onPressed: () => Navigator.pop(context, widget.progress),
+                  onPressed: () => Get.off(const GenderPage(progress: 2 / 10)),
                 ),
               ),
               const SizedBox(height: 10.0),
               const Center(
-                  child: Text('내 반려동물 이름은?', style: TextStyle(fontSize: 32.0))),
+                  child: Text('내 반려동물 이름은?',
+                      style: TextStyle(
+                          fontSize: 32.0, fontWeight: FontWeight.w600))),
               const SizedBox(height: 30.0),
               SizedBox(
                 width: 300, // 원하는 너비 설정
@@ -70,8 +74,8 @@ class _PetNamePageState extends State<PetNamePage> {
                     controller: _controller,
                     style: const TextStyle(
                       fontSize: 20.0,
+                      fontWeight: FontWeight.w400,
                       decoration: TextDecoration.none,
-                      fontWeight: FontWeight.normal,
                     ),
                     decoration: const InputDecoration(
                       hintText: '반려동물 이름을 입력하세요',
@@ -93,15 +97,10 @@ class _PetNamePageState extends State<PetNamePage> {
                 buttonText: 'CONTINUE',
                 onPressed: !_isButtonDisabled
                     ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PetBirthdayPage(
-                              petName: _controller.text,
-                              progress: widget.progress + 1 / 10,
-                            ),
-                          ),
-                        );
+                        Get.to(PetBirthdayPage(
+                          petName: _controller.text,
+                          progress: widget.progress + 1 / 10,
+                        ));
                       }
                     : null,
               ),

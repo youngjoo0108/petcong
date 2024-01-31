@@ -7,7 +7,7 @@ class ContinueButton extends StatelessWidget {
     required this.isFilled,
     required this.buttonText,
     this.onPressed,
-    this.width = 300.0, // width 속성 추가
+    this.width = 240.0, // width 속성 추가
     this.height = 30.0, // height 속성 추가
   }) : super(key: key);
 
@@ -64,7 +64,9 @@ class ContinueButton extends StatelessWidget {
             buttonText,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 30,
+              fontSize: 20,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
