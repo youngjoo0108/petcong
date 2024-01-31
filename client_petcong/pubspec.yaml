@@ -51,13 +51,8 @@ dependencies:
   flutter_card_swiper: ^6.1.0
   video_player: ^2.8.2
   camera: ^0.10.5+9
-<<<<<<< HEAD
-  flutter_native_splash: ^2.3.10
-
-=======
   logger: ^2.0.2+1
   
->>>>>>> 9f7b225c6574f6eb18173a5431a8f3f7c73db786
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:petcong/controller/user_controller.dart';
-<<<<<<< HEAD
-import 'package:petcong/pages/signin_pages/sign_in_page.dart';
-=======
+
 import 'package:petcong/pages/signin_pages/splash_screen_page.dart';
->>>>>>> 9f7b225c6574f6eb18173a5431a8f3f7c73db786
 import 'package:petcong/utils/firebase_options.dart';
 import 'package:url_strategy/url_strategy.dart';
 
