@@ -1,4 +1,4 @@
-package com.example.ssafy.petcong.user.model.record;
+package com.example.ssafy.petcong.user.model.dto;
 
 import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.model.enums.Gender;
@@ -27,11 +27,14 @@ public record UserRecord(
         @Size(max = 50)
         String address,
 
-        @Size(max = 255)
-        String socialUrl,
-
         @Size(max = 30)
         String uid,
+
+        @Size(max = 30)
+        String instagramId,
+
+        @Size(max = 30)
+        String kakaoId,
 
         @Past
         LocalDate birthday,
@@ -49,8 +52,9 @@ public record UserRecord(
                         user.getNickname(),
                         user.getEmail(),
                         user.getAddress(),
-                        user.getSocialUrl(),
                         user.getUid(),
+                        user.getInstagramId(),
+                        user.getKakaoId(),
                         user.getBirthday(),
                         user.getGender(),
                         user.getStatus(),

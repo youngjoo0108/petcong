@@ -32,6 +32,36 @@ class _HomePageState extends State<HomePage> {
     socketService.connectSocket();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Image.asset(
+            'assets/src/petcong_logo.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              _showLogoutDropdown(context);
+            },
+          ),
+        ],
+      ),
+      body: screens[currentIndex],
+      bottomNavigationBar: MyBottomNavigationBar(
+        selectedIndex: currentIndex,
+        onItemTapped: (index) => setState(() => currentIndex = index),
+      ),
+    );
+  }
+
+//TODO: Resolve overlaying problemo of this widget.
+
   void _showLogoutDropdown(BuildContext context) {
     Overlay.of(context).insert(
       _overlayEntry = OverlayEntry(
@@ -69,34 +99,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Image.asset(
-            'assets/src/petcong_logo.png',
-            fit: BoxFit.cover,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              _showLogoutDropdown(context);
-            },
-          ),
-        ],
-      ),
-      body: screens[currentIndex],
-      bottomNavigationBar: MyBottomNavigationBar(
-        selectedIndex: currentIndex,
-        onItemTapped: (index) => setState(() => currentIndex = index),
       ),
     );
   }

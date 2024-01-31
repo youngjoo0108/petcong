@@ -54,8 +54,9 @@ public class ApiIntegrationTest {
                 "nickname",
                 "smy@petcong.com",
                 "Korea",
-                "nope",
                 "1",
+                "instagramId",
+                "kakaoId",
                 LocalDate.of(1997, 1, 29),
                 Gender.MALE,
                 Status.ACTIVE,
@@ -63,7 +64,6 @@ public class ApiIntegrationTest {
         return Stream.of(Arguments.of(userRecord));
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource("provideDummySignUpUser")
     @Transactional

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'gender_page.dart';
 import 'nickname_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
+import 'package:get/get.dart';
 
 class ProgressProvider extends InheritedWidget {
   final double progress;
@@ -128,12 +129,7 @@ class _BirthdayPageState extends State<BirthdayPage> {
               alignment: Alignment.centerLeft,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NicknamePage(progress: 0),
-                  ),
-                ),
+                onPressed: () => Get.off(const NicknamePage(progress: 0)),
               ),
             ),
             Padding(
@@ -144,17 +140,20 @@ class _BirthdayPageState extends State<BirthdayPage> {
                   children: <Widget>[
                     const Text(
                       '내 생일은?',
-                      style: TextStyle(fontSize: 32.0),
+                      style: TextStyle(
+                          fontSize: 32.0, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 30.0),
                     SizedBox(
                       width: 200, // 원하는 너비 설정
                       child: TextFormField(
                           controller: _controller,
+                          keyboardType: TextInputType.number,
                           inputFormatters: [_inputFormatter],
                           decoration:
                               const InputDecoration(hintText: 'YYYY/MM/DD'),
-                          style: const TextStyle(fontSize: 20.0),
+                          style: const TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.w400),
                           onChanged: (value) {
                             setState(() {
                               _validateDate(value);
@@ -174,14 +173,9 @@ class _BirthdayPageState extends State<BirthdayPage> {
                         onPressed:
                             _controller.text.isNotEmpty && _errorMessage == null
                                 ? () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => GenderPage(
-                                          progress: widget.progress + 1 / 10,
-                                        ),
-                                      ),
-                                    );
+                                    Get.to(GenderPage(
+                                      progress: widget.progress + 1 / 10,
+                                    ));
                                   }
                                 : null,
                       ),

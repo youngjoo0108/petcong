@@ -13,26 +13,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class MatchingConnectionService {
+public class MatchingRequestService {
 
     private final MatchingRepository matchingRepository;
     private final UserRepository userRepository;
 
-    public MatchingConnectionService(MatchingRepository matchingRepository, UserRepository userRepository) {
+    public MatchingRequestService(MatchingRepository matchingRepository, UserRepository userRepository) {
         this.matchingRepository = matchingRepository;
         this.userRepository = userRepository;
     }
 
     @Transactional
-    public Map<String, String> choice(ChoiceReq choiceReq, String requesterIp, int port){
+    public Map<String, String> choice(String uid, int partnerUserId){
+        User fromUser = userRepository.findUserByUid(uid);
         // DB에서 requestUserId, partnerUserId인 데이터 가져오기
-        Matching matching = matchingRepository.findByUsersId(choiceReq.getPartnerUserId(), choiceReq.getRequestUserId());
-        User fromUser = userRepository.findUserByUserId(choiceReq.getRequestUserId());
-        User toUser = userRepository.findUserByUserId(choiceReq.getPartnerUserId());
+        User toUser = userRepository.findUserByUserId(partnerUserId);
+        // 상대가 나에게 보낸 요청이 있는지 찾기
+        Matching matching = matchingRepository.findPendingByUsers(toUser, fromUser);
 
         // invalid userId
         if (fromUser == null || toUser == null || fromUser.getUserId() == toUser.getUserId()) {
-//            System.out.println("invalid userId");
+            System.out.println("invalid userId");
             throw new RuntimeException();
         }
 
@@ -44,7 +45,7 @@ public class MatchingConnectionService {
         }
         // 이미 matched / rejected 이면
         if (matching.getCallStatus() != CallStatus.PENDING) {
-//            System.out.println("invalid status");
+            System.out.println("invalid status");
             throw new RuntimeException();
         }
         // to matched
@@ -57,7 +58,7 @@ public class MatchingConnectionService {
         userRepository.save(toUser);
 
         Map<String, String> responseMap = new HashMap<>();
-        responseMap.put("targetLink", "/queue/" + toUser.getUserId());
+        responseMap.put("targetLink", "/queue/" + toUser.getUid());
 
         return responseMap;
     }

@@ -76,6 +76,7 @@ class _SignInPageState extends State<SignInPage> {
       } else {
         await UserController.loginWithGoogle();
       }
+      debugPrint("User:  ${FirebaseAuth.instance.currentUser?.getIdToken()}");
     } catch (e) {
       debugPrint(e.toString());
     }
