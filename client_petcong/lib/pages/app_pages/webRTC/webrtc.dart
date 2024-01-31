@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:petcong/controller/user_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 // stomp client
@@ -31,10 +32,10 @@ class _MainVideoCallState extends State<MainVideoCall> {
   final _remoteRenderer = RTCVideoRenderer();
   MediaStream? _localStream;
   RTCPeerConnection? pc;
-  // test
-  String? uid = FirebaseAuth.instance.currentUser?.uid;
 
-  var myId = 2;
+  late SharedPreferences prefs;
+  String? uid;
+
   var targetId = 1;
   var subsPrefix = "/queue/";
 
@@ -42,6 +43,11 @@ class _MainVideoCallState extends State<MainVideoCall> {
   void initState() {
     init();
     super.initState();
+  }
+
+  Future<void> initPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    uid = prefs.getString('uid');
   }
 
   Future init() async {
@@ -101,7 +107,7 @@ class _MainVideoCallState extends State<MainVideoCall> {
     if (client.connected) {
       // Stomp connection is open and ready
       client.subscribe(
-        destination: subsPrefix + uid.toString(),
+        destination: subsPrefix + uid!,
         callback: (frame) {
           print(frame);
           print("frame.body = ${frame.body!}");
@@ -146,7 +152,7 @@ class _MainVideoCallState extends State<MainVideoCall> {
 
   void onDisconnect(StompFrame frame) {
     client.send(
-        destination: subsPrefix + uid.toString(),
+        destination: subsPrefix + uid!,
         headers: {
           "content-type": "application/json",
           "userId": uid.toString(),

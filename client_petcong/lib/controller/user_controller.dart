@@ -4,14 +4,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:petcong/pages/homepage.dart';
 import 'package:petcong/pages/signin_pages/sign_in_page.dart';
 import 'package:petcong/services/socket_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserController extends GetxController {
-  static UserController instance = Get.find();
-  String? uid;
-  String? idToken;
   late Rx<User?> _user;
   FirebaseAuth authentication = FirebaseAuth.instance;
-
   @override
   void onReady() {
     super.onReady();
@@ -38,23 +35,20 @@ class UserController extends GetxController {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-
     final userCredential = await FirebaseAuth.instance.signInWithCredential(
       credential,
     );
-
-    instance.uid = userCredential.user!.uid;
-
-    // Await the result of getIdToken
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('uid', userCredential.user!.uid);
     String? idToken = await userCredential.user!.getIdToken();
-
-    instance.idToken = idToken;
+    prefs.setString('idToken', idToken ?? '');
     return userCredential.user;
   }
 
   static Future<void> signOut() async {
-    SocketService().disposeSocket();
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
+    // await SocketService.init();
+    await SocketService().disposeSocket();
   }
 }
