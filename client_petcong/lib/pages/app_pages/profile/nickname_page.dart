@@ -3,6 +3,7 @@ import 'birthday_page.dart';
 import 'profile_page.dart'; // ProfilePage를 import 해주세요.
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
+import 'package:petcong/controller/user_controller.dart';
 
 class NicknamePage extends StatefulWidget {
   final double progress;
@@ -18,6 +19,7 @@ class _NicknamePageState extends State<NicknamePage> {
   bool _isButtonDisabled = true;
   double _progress = 0.0; // _progress 변수를 추가하여 초기화합니다.
 
+  final UserController userController = Get.put(UserController());
   @override
   void initState() {
     super.initState();
@@ -92,6 +94,8 @@ class _NicknamePageState extends State<NicknamePage> {
               buttonText: 'CONTINUE',
               onPressed: !_isButtonDisabled
                   ? () {
+                      // 'CONTINUE' 버튼을 누르면 UserController의 nickname을 업데이트하고, BirthdayPage로 이동합니다.
+                      userController.nickname = _controller.text.trim();
                       Get.to(BirthdayPage(
                         progress: widget.progress + 1 / 10,
                       ));

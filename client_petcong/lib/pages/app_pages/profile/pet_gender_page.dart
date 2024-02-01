@@ -102,7 +102,7 @@ class _PetGenderPageState extends State<PetGenderPage> {
                         child: Checkbox(
                           value: _gender == '중성화',
                           activeColor: const Color.fromARGB(
-                              255, 234, 64, 128), // 체크박스 컬러 변경
+                              255, 249, 113, 95), // 체크박스 컬러 변경
                           checkColor: Colors.white, // 체크 마크 컬러 변경
                           onChanged: (bool? value) {
                             setState(() {
