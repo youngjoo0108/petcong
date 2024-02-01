@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:petcong/widgets/create_button.dart';
 import 'package:petcong/widgets/delete_button.dart';
-import 'media_page.dart';
+import 'package:get/get.dart';
 import 'dart:io';
 import 'icebreak_page.dart';
 import 'package:image_picker/image_picker.dart';
@@ -54,7 +54,8 @@ class _DisplayVideoState extends State<DisplayVideo> {
     return SizedBox(
       width: double.infinity,
       height: double.infinity,
-      child: _controller.value.isInitialized
+      child: _controller.dataSource == 'file://$_currentVideoPath' &&
+              _controller.value.isInitialized
           ? ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
               child: AspectRatio(
@@ -118,7 +119,7 @@ class _VideoPageState extends State<VideoPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pop(context, _progress);
+        Get.back(result: _progress);
         return false;
       },
       child: Scaffold(
@@ -141,23 +142,20 @@ class _VideoPageState extends State<VideoPage> {
                 children: <Widget>[
                   IconButton(
                     icon: const Icon(Icons.arrow_back_ios, size: 32),
-                    onPressed: () => Navigator.pop(context, _progress),
+                    onPressed: () => Get.back(result: _progress),
                   ),
                   TextButton(
                     child: const Text(
                       '건너뛰기',
                       style: TextStyle(
-                          fontSize: 18, color: Colors.grey), // 여기에서 색상을 변경했습니다.
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey), // 여기에서 색상을 변경했습니다.
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => IcebreakPage(
-                            progress: _progress + 0.1, // 여기에서 1/10을 더해줍니다.
-                          ),
-                        ),
-                      );
+                      Get.to(IcebreakPage(
+                        progress: _progress + 0.1, // 여기에서 1/10을 더해줍니다.
+                      ));
                     },
                   ),
                 ],
@@ -184,6 +182,7 @@ class _VideoPageState extends State<VideoPage> {
                           '개 인기',
                           style: TextStyle(
                             fontSize: 32.0,
+                            fontWeight: FontWeight.w600,
                             color: Colors.white,
                           ),
                         ),
@@ -192,6 +191,7 @@ class _VideoPageState extends State<VideoPage> {
                         ' 영상 첨부',
                         style: TextStyle(
                           fontSize: 32.0,
+                          fontWeight: FontWeight.w600,
                           color: Colors.black,
                         ),
                       ),
@@ -203,13 +203,14 @@ class _VideoPageState extends State<VideoPage> {
                     '나의 반려견의 개인기 영상을 첨부해주세요',
                     style: TextStyle(
                       fontSize: 16.0,
+                      fontWeight: FontWeight.w500,
                       color: Colors.grey,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 60.0),
             SizedBox(
               height: 250,
               child: GridView.builder(
@@ -268,18 +269,12 @@ class _VideoPageState extends State<VideoPage> {
                     buttonText: 'CONTINUE',
                     onPressed: _videoPaths.length >= 2
                         ? () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => IcebreakPage(
-                                  progress:
-                                      _progress + 0.1, // 여기에서 1/10을 더해줍니다.
-                                ),
-                              ),
-                            );
+                            Get.to(IcebreakPage(
+                              progress: _progress + 0.1, // 여기에서 1/10을 더해줍니다.
+                            ));
                           }
                         : null,
-                    width: 300.0, // 원하는 가로 길이를 설정
+                    width: 240.0, // 원하는 가로 길이를 설정
                     height: 30.0, // 원하는 세로 길이를 설정
                   ),
                 ],

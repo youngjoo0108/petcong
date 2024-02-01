@@ -38,10 +38,8 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        if (request.getRequestURI().contains("/websocket")) {
-            return true;
-        }
-        if (request.getHeader("tester") != null && request.getHeader("tester").equals("A603")) {
+        if ((request.getHeader("tester") != null && request.getHeader("tester").equals("A603"))
+        || request.getRequestURI().contains("/websocket")) {
             String uid = "SA7q9H4r0WfIkvdah6OSIW7Y6XQ2";
             UserDetails userDetails = User.withUsername("test").password(uid).build();
             Authentication testAuthentication = new FirebaseAuthentication(userDetails, null, userDetails.getAuthorities());

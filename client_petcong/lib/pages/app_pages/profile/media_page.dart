@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:get/get.dart';
 
 class MediaPage extends StatefulWidget {
   const MediaPage({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class _MediaPageState extends State<MediaPage> {
     final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
     // 사진이 선택되었다면 이를 PhotoPage로 전달합니다.
     if (photo != null) {
-      Navigator.pop(context, photo.path);
+      Get.back(result: photo.path);
     }
   }
 
@@ -23,7 +24,7 @@ class _MediaPageState extends State<MediaPage> {
     final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
     // 사진이 찍혔다면 이를 PhotoPage로 전달합니다.
     if (photo != null) {
-      Navigator.pop(context, photo.path);
+      Get.back(result: photo.path);
     }
   }
 
@@ -32,10 +33,13 @@ class _MediaPageState extends State<MediaPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          padding: const EdgeInsets.only(left: 15.0),
+          padding: const EdgeInsets.only(left: 20.0),
           icon: const Text('취소',
-              style: TextStyle(color: Colors.red, fontSize: 20)),
-          onPressed: () => Navigator.pop(context),
+              style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500)),
+          onPressed: () => Get.back(),
         ),
       ),
       body: Padding(
@@ -52,7 +56,9 @@ class _MediaPageState extends State<MediaPage> {
                   children: [
                     Icon(Icons.photo_library, size: 50),
                     SizedBox(width: 25),
-                    Text('Gallery', style: TextStyle(fontSize: 20)),
+                    Text('Gallery',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),
@@ -69,7 +75,9 @@ class _MediaPageState extends State<MediaPage> {
                   children: [
                     Icon(Icons.camera_alt, size: 50),
                     SizedBox(width: 25),
-                    Text('Camera', style: TextStyle(fontSize: 20)),
+                    Text('Camera',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),

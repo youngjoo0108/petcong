@@ -50,6 +50,34 @@ class _HomePageState extends State<HomePage> {
   //   // debugPrint('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
   // }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Image.asset(
+            'assets/src/petcong_logo.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              _showLogoutDropdown(context);
+            },
+          ),
+        ],
+      ),
+      body: screens[currentIndex],
+      bottomNavigationBar: MyBottomNavigationBar(
+        selectedIndex: currentIndex,
+        onItemTapped: (index) => setState(() => currentIndex = index),
+      ),
+    );
+  }
+
   void _showLogoutDropdown(BuildContext context) {
     if (_overlayEntry != null) {
       // Remove existing overlay entry
@@ -96,33 +124,5 @@ class _HomePageState extends State<HomePage> {
         ),
       );
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Image.asset(
-            'assets/src/petcong_logo.png',
-            fit: BoxFit.cover,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              _showLogoutDropdown(context);
-            },
-          ),
-        ],
-      ),
-      body: screens[currentIndex],
-      bottomNavigationBar: MyBottomNavigationBar(
-        selectedIndex: currentIndex,
-        onItemTapped: (index) => setState(() => currentIndex = index),
-      ),
-    );
   }
 }

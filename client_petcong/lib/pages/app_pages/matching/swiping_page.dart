@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get/get.dart';
+import 'package:petcong/models/candidate.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
 import 'package:petcong/widgets/matching_card.dart';
+
+GlobalKey _key = GlobalKey();
 
 class SwipingPage extends StatefulWidget {
   const SwipingPage({super.key});
@@ -30,9 +33,11 @@ class _SwipingPageState extends State<SwipingPage> {
           children: [
             Flexible(
               child: CardSwiper(
+                key: _key,
                 controller: controller,
                 cardsCount: cards.length,
                 onSwipe: _onSwipe,
+                onSwipeDirectionChange: _onSwipeDirectionChange,
                 onUndo: _onUndo,
                 numberOfCardsDisplayed: 2,
                 backCardOffset: const Offset(0, 0),
@@ -65,6 +70,7 @@ class _SwipingPageState extends State<SwipingPage> {
     int? currentIndex,
     CardSwiperDirection direction,
   ) {
+  
     debugPrint(
       'The card $previousIndex was swiped to the ${direction.name}. Now the card $currentIndex is on top',
     );
@@ -75,6 +81,7 @@ class _SwipingPageState extends State<SwipingPage> {
     return true;
   }
 
+
   bool _onUndo(
     int? previousIndex,
     int currentIndex,
@@ -84,5 +91,11 @@ class _SwipingPageState extends State<SwipingPage> {
       'The card $currentIndex was undod from the ${direction.name}',
     );
     return true;
+  }
+
+  void _onSwipeDirectionChange(CardSwiperDirection horizontalDirection, CardSwiperDirection verticalDirection) {
+    debugPrint(
+      'The horizontal direction is $horizontalDirection and the vertical direction is $verticalDirection',
+    );
   }
 }
