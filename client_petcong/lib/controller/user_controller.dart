@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -5,6 +7,7 @@ import 'package:petcong/pages/homepage.dart';
 import 'package:petcong/pages/signin_pages/sign_in_page.dart';
 import 'package:petcong/services/socket_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stomp_dart_client/stomp.dart';
 
 class UserController extends GetxController {
   late Rx<User?> _user;
@@ -46,13 +49,9 @@ class UserController extends GetxController {
     return userCredential.user;
   }
 
-  static Future<void> signOut() async {
-    print('dddddddddddddddddddddddddddddddddddddddddddddddd');
-    await SocketService().disposeSocket();
-    print('ffffffffffffffffffffffffffffffffffffffffffffffffff');
+  static Future<void> signOut(StompClient client, String uid) async {
+    await SocketService().disposeSocket(client, uid);
     await FirebaseAuth.instance.signOut();
-    print('gggggggggggggggggggggggggggggggggggggggggggg');
     await GoogleSignIn().signOut();
-    // await SocketService.init();
   }
 }

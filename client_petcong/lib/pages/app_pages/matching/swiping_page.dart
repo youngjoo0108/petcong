@@ -57,7 +57,7 @@ class _SwipingPageState extends State<SwipingPage> {
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'call',
         onPressed: () {
-          Get.to(MainVideoCall());
+          Get.to(() => MainVideoCallWidget());
         },
         label: const Text('call'),
         icon: const Icon(Icons.call),
@@ -70,7 +70,6 @@ class _SwipingPageState extends State<SwipingPage> {
     int? currentIndex,
     CardSwiperDirection direction,
   ) {
-  
     debugPrint(
       'The card $previousIndex was swiped to the ${direction.name}. Now the card $currentIndex is on top',
     );
@@ -80,7 +79,6 @@ class _SwipingPageState extends State<SwipingPage> {
 
     return true;
   }
-
 
   bool _onUndo(
     int? previousIndex,
@@ -93,7 +91,8 @@ class _SwipingPageState extends State<SwipingPage> {
     return true;
   }
 
-  void _onSwipeDirectionChange(CardSwiperDirection horizontalDirection, CardSwiperDirection verticalDirection) {
+  void _onSwipeDirectionChange(CardSwiperDirection horizontalDirection,
+      CardSwiperDirection verticalDirection) {
     debugPrint(
       'The horizontal direction is $horizontalDirection and the vertical direction is $verticalDirection',
     );

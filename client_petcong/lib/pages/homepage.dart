@@ -5,6 +5,8 @@ import 'package:petcong/pages/app_pages/matching/swiping_page.dart';
 import 'package:petcong/widgets/navigations.dart';
 import 'package:petcong/pages/app_pages/chat/chat_page.dart';
 import 'package:petcong/pages/app_pages/profile/profile_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stomp_dart_client/stomp.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,6 +18,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   late SocketService socketService;
+  final StompClient _client = SocketService().initSocket();
+  String? uid;
   OverlayEntry? _overlayEntry;
 
   final screens = [
@@ -27,28 +31,29 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    initPrefs();
     socketService = SocketService();
     socketService.onInit();
-    socketService.init();
-    Future.delayed(const Duration(seconds: 5));
-    print(
-        '33333333333333333333333333${socketService.client}3333333333333333333');
-    print('4444444444444${socketService.client}4444444444444444444444');
-    debugPrint("instance");
-    socketService.disposeSocket();
-    print('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
-    // socketService.onConnect();
+    activateClient();
   }
 
-  // init() async {
-  //   // socketService = SocketService();
-  //   socketService.onInit();
-  //   // debugPrint(socketService.client as String?);
-  //   // debugPrint(socketService.client?.config as String?);
-  //   // debugPrint("instance");
-  //   // socketService.disposeSocket();
-  //   // debugPrint('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
-  // }
+  Future<void> initPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      uid = prefs.getString('uid');
+    } catch (e) {
+      debugPrint('Error retrieving values from SharedPreferences: $e');
+    }
+  }
+
+  void activateClient() async {
+    _client.activate();
+    // socketService.disposeSocket(_client, uid as String);
+  }
+
+  void deactivateClient() {
+    socketService.disposeSocket(_client, uid as String);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +116,8 @@ class _HomePageState extends State<HomePage> {
                     ListTile(
                       leading: const Icon(Icons.exit_to_app),
                       title: const Text('Logout'),
-                      onTap: () {
-                        UserController.signOut();
+                      onTap: () async {
+                        await UserController.signOut(_client, uid!);
                         _overlayEntry?.remove();
                       },
                     ),
