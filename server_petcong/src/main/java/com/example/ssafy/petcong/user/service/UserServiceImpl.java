@@ -83,7 +83,8 @@ public class UserServiceImpl implements UserService {
         if ((user = userRepository.findUserByUid(uid)) != null) {
             int userId = user.getUserId();
             User userEntity = new User(userInfo);
-            User result = userRepository.updateUserByUserId(userEntity, userId);
+            userEntity.updateUserId(userId);
+            User result = userRepository.save(userEntity);
             return new UserRecord(result);
         } else {
             throw new NoSuchElementException("There is no user.");
