@@ -21,7 +21,6 @@ class _HomePageState extends State<HomePage> {
   final screens = [
     const MainChatPage(),
     const SwipingPage(),
-    // const MainMatchingPage(),
     const MainProfilePage(),
   ];
 
@@ -30,48 +29,73 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     socketService = SocketService();
     socketService.onInit();
+    socketService.init();
+    Future.delayed(const Duration(seconds: 5));
+    print(
+        '33333333333333333333333333${socketService.client}3333333333333333333');
+    print('4444444444444${socketService.client}4444444444444444444444');
+    debugPrint("instance");
+    socketService.disposeSocket();
+    print('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
     // socketService.onConnect();
   }
 
+  // init() async {
+  //   // socketService = SocketService();
+  //   socketService.onInit();
+  //   // debugPrint(socketService.client as String?);
+  //   // debugPrint(socketService.client?.config as String?);
+  //   // debugPrint("instance");
+  //   // socketService.disposeSocket();
+  //   // debugPrint('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
+  // }
+
   void _showLogoutDropdown(BuildContext context) {
-    Overlay.of(context).insert(
-      _overlayEntry = OverlayEntry(
-        builder: (context) => Positioned(
-          top: 80,
-          right: 8,
-          child: Material(
-            color: Colors.transparent,
-            child: Container(
-              width: 150,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 5,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.exit_to_app),
-                    title: const Text('Logout'),
-                    onTap: () {
-                      UserController.signOut();
-                      _overlayEntry?.remove();
-                    },
-                  ),
-                ],
+    if (_overlayEntry != null) {
+      // Remove existing overlay entry
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+    } else {
+      // Create new overlay entry
+      Overlay.of(context).insert(
+        _overlayEntry = OverlayEntry(
+          builder: (context) => Positioned(
+            top: 80,
+            right: 8,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                width: 150,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.exit_to_app),
+                      title: const Text('Logout'),
+                      onTap: () {
+                        UserController.signOut();
+                        _overlayEntry?.remove();
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   @override

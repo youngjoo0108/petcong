@@ -46,9 +46,12 @@ class UserController extends GetxController {
   }
 
   static Future<void> signOut() async {
+    print('dddddddddddddddddddddddddddddddddddddddddddddddd');
+    await SocketService().disposeSocket();
+    print('ffffffffffffffffffffffffffffffffffffffffffffffffff');
     await FirebaseAuth.instance.signOut();
+    print('gggggggggggggggggggggggggggggggggggggggggggg');
     await GoogleSignIn().signOut();
     // await SocketService.init();
-    await SocketService().disposeSocket();
   }
 }

@@ -49,12 +49,13 @@ class _SwipingPageState extends State<SwipingPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.large(
+      floatingActionButton: FloatingActionButton.extended(
         heroTag: 'call',
         onPressed: () {
-          Get.to(const MainVideoCall());
+          Get.to(MainVideoCall());
         },
-        child: const Text('call'),
+        label: const Text('call'),
+        icon: const Icon(Icons.call),
       ),
     );
   }
