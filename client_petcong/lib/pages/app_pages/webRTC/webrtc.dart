@@ -10,7 +10,7 @@ import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
 class MainVideoCall extends GetxController {
-  late final StompClient client;
+  StompClient? client;
   final _localRenderer = RTCVideoRenderer();
   final _remoteRenderer = RTCVideoRenderer();
   MediaStream? _localStream;
@@ -23,7 +23,8 @@ class MainVideoCall extends GetxController {
   var subsPrefix = "/queue/";
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
+    print('start webrtc');
     super.onInit();
     init();
   }
@@ -34,6 +35,7 @@ class MainVideoCall extends GetxController {
   }
 
   Future<void> init() async {
+    print('start webrtc');
     await initPrefs();
 
     await _localRenderer.initialize();
@@ -44,7 +46,7 @@ class MainVideoCall extends GetxController {
   }
 
   void _attemptReconnect() {
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 3), () {
       connectSocket();
     });
   }
@@ -64,13 +66,14 @@ class MainVideoCall extends GetxController {
         onDisconnect: onDisconnect,
       ),
     );
-    client.activate();
+    print(client);
+    client!.activate();
   }
 
   void onConnect(StompFrame frame) {
     debugPrint("----------------------------connected------------------------");
-    if (client.connected) {
-      client.subscribe(
+    if (client!.connected) {
+      client!.subscribe(
         destination: subsPrefix + uid!,
         callback: (frame) {
           debugPrint(frame as String?);
@@ -114,11 +117,11 @@ class MainVideoCall extends GetxController {
   }
 
   void onDisconnect(StompFrame frame) {
-    client.send(
+    client!.send(
       destination: subsPrefix + uid!,
       headers: {
         "content-type": "application/json",
-        "userId": uid.toString(),
+        "userId": uid ?? "",
         "info": "disconnect"
       },
       body: "",
@@ -171,7 +174,7 @@ class MainVideoCall extends GetxController {
       _remoteRenderer.srcObject = stream;
     };
 
-    client.send(
+    client!.send(
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
@@ -187,7 +190,7 @@ class MainVideoCall extends GetxController {
     pc!.setLocalDescription(offer);
     // socket.emit('offer', jsonEncode(offer.toMap()));
     var map = {"type": "offer", "value": offer.toMap()};
-    client.send(
+    client!.send(
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
@@ -210,7 +213,7 @@ class MainVideoCall extends GetxController {
     var map = {"type": "answer", "value": answer.toMap()};
     debugPrint("before sendAnswer");
     debugPrint("map = ${jsonEncode(map)}");
-    client.send(
+    client!.send(
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
@@ -230,7 +233,7 @@ class MainVideoCall extends GetxController {
     debugPrint("send ice");
     update();
     var map = {"type": "ice", "value": ice.toMap()};
-    client.send(
+    client!.send(
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
@@ -251,10 +254,28 @@ class MainVideoCall extends GetxController {
     _remoteRenderer.dispose();
     _localStream?.dispose();
     pc?.close();
-    client.deactivate();
+    client!.deactivate();
     super.dispose();
   }
 
   RTCVideoRenderer get localRenderer => _localRenderer;
   RTCVideoRenderer get remoteRenderer => _remoteRenderer;
+}
+
+class MainVideoCallWidget extends StatelessWidget {
+  final MainVideoCall controller = Get.put(MainVideoCall());
+
+  MainVideoCallWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          Expanded(child: RTCVideoView(controller.localRenderer)),
+          Expanded(child: RTCVideoView(controller.remoteRenderer)),
+        ],
+      ),
+    );
+  }
 }
