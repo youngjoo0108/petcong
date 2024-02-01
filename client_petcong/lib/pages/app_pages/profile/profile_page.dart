@@ -134,30 +134,37 @@ class MainProfilePage extends StatelessWidget {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                width: 130,
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
+                              child: GestureDetector(
+                                // GestureDetector 위젯 추가
+                                onTap: () {
+                                  Get.to(
+                                      const MediaPage()); // 클릭 이벤트 발생 시 MediaPage로 이동
+                                },
                                 child: Container(
+                                  width: 130,
+                                  height: 150,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
                                   ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: SizedBox(
-                                      child: Image.asset(
-                                        'assets/src/test_4.jpg',
-                                        fit: BoxFit.cover,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: SizedBox(
+                                        child: Image.asset(
+                                          'assets/src/test_4.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -166,30 +173,37 @@ class MainProfilePage extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                width: 130,
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
+                              child: GestureDetector(
+                                // GestureDetector 위젯 추가
+                                onTap: () {
+                                  Get.to(
+                                      const MediaPage()); // 클릭 이벤트 발생 시 MediaPage로 이동
+                                },
                                 child: Container(
+                                  width: 130,
+                                  height: 150,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
                                   ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: SizedBox(
-                                      child: Image.asset(
-                                        'assets/src/test_5.jpg',
-                                        fit: BoxFit.cover,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: SizedBox(
+                                        child: Image.asset(
+                                          'assets/src/test_5.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -198,30 +212,37 @@ class MainProfilePage extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                width: 130,
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
+                              child: GestureDetector(
+                                // GestureDetector 위젯 추가
+                                onTap: () {
+                                  Get.to(
+                                      const MediaPage()); // 클릭 이벤트 발생 시 MediaPage로 이동
+                                },
                                 child: Container(
+                                  width: 130,
+                                  height: 150,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
                                   ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: SizedBox(
-                                      child: Image.asset(
-                                        'assets/src/test_1.jpg',
-                                        fit: BoxFit.cover,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: SizedBox(
+                                        child: Image.asset(
+                                          'assets/src/test_1.jpg',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -230,30 +251,37 @@ class MainProfilePage extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                width: 130,
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
+                              child: GestureDetector(
+                                // GestureDetector 위젯 추가
+                                onTap: () {
+                                  Get.to(
+                                      const MediaPage()); // 클릭 이벤트 발생 시 MediaPage로 이동
+                                },
                                 child: Container(
+                                  width: 130,
+                                  height: 150,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
                                   ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: SizedBox(
-                                      child: Image.asset(
-                                        'assets/src/test_3.png',
-                                        fit: BoxFit.cover,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: SizedBox(
+                                        child: Image.asset(
+                                          'assets/src/test_3.png',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -262,30 +290,37 @@ class MainProfilePage extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Container(
-                                width: 130,
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
+                              child: GestureDetector(
+                                // GestureDetector 위젯 추가
+                                onTap: () {
+                                  Get.to(
+                                      const MediaPage()); // 클릭 이벤트 발생 시 MediaPage로 이동
+                                },
                                 child: Container(
+                                  width: 130,
+                                  height: 150,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
                                   ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: SizedBox(
-                                      child: Image.asset(
-                                        'assets/src/test_2.png',
-                                        fit: BoxFit.cover,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: SizedBox(
+                                        child: Image.asset(
+                                          'assets/src/test_2.png',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -294,36 +329,43 @@ class MainProfilePage extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(5.0),
-                              child: Container(
-                                width: 130,
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ],
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      MyColor.petCongColor3,
-                                      MyColor.petCongColor4.withOpacity(0.8),
+                              child: GestureDetector(
+                                // GestureDetector 위젯 추가
+                                onTap: () {
+                                  Get.to(
+                                      const MediaPage()); // 여기를 클릭하면 MediaPage로 이동
+                                },
+                                child: Container(
+                                  width: 130,
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 3),
+                                      ),
                                     ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        MyColor.petCongColor3,
+                                        MyColor.petCongColor4.withOpacity(0.8),
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
                                   ),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    'Add Picture',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
+                                  child: const Center(
+                                    child: Text(
+                                      'Add Picture',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   ),
                                 ),
