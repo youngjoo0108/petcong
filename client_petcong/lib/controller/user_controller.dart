@@ -18,6 +18,7 @@ class UserController extends GetxController {
   }
 
   _moveToPage(User? user) {
+    // TODO: Registered user goes to match page.
     if (user == null) {
       Get.offAll(() => const SignInPage());
     } else {

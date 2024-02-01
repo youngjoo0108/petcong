@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:petcong/pages/app_pages/profile/pet_name_page.dart';
 import 'pet_gender_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
+import 'package:get/get.dart';
 
 class PetBirthdayPage extends StatefulWidget {
   final String petName;
@@ -97,12 +98,7 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
               alignment: Alignment.centerLeft,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const PetNamePage(progress: 3 / 10),
-                  ),
-                ),
+                onPressed: () => Get.off(const PetNamePage(progress: 3 / 10)),
               ),
             ),
             Padding(
@@ -111,7 +107,8 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
                 children: <Widget>[
                   Text(
                     '${widget.petName}의 생일은?',
-                    style: const TextStyle(fontSize: 32.0),
+                    style: const TextStyle(
+                        fontSize: 32.0, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 30.0),
                   SizedBox(
@@ -127,7 +124,10 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
                             borderSide: BorderSide(color: Colors.black),
                           ),
                         ),
-                        style: const TextStyle(fontSize: 20.0),
+                        style: const TextStyle(
+                            fontSize: 20.0,
+                            fontWeight:
+                                FontWeight.w400), // 여기에 fontWeight를 추가했습니다.
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(RegExp('[0-9/]')),
                           _DateInputFormatter(),
@@ -147,15 +147,10 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
                           onPressed:
                               value == null // value가 null인 경우에 버튼이 눌리도록 수정합니다.
                                   ? () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => PetGenderPage(
-                                            petName: widget.petName,
-                                            progress: widget.progress + 1 / 10,
-                                          ),
-                                        ),
-                                      );
+                                      Get.to(PetGenderPage(
+                                        petName: widget.petName,
+                                        progress: widget.progress + 1 / 10,
+                                      ));
                                     }
                                   : null,
                         ),

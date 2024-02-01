@@ -42,7 +42,8 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterAt(new FirebaseAuthenticationFilter(firebaseAuthenticationManager), UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(requests -> requests
-                    .anyRequest().permitAll())
+                    .requestMatchers("/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
+                    .anyRequest().authenticated())
             .exceptionHandling(configurer -> configurer
                     .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
         return http.build();
