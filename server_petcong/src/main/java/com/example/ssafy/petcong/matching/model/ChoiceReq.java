@@ -8,8 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ChoiceReq {
-    private int requestUserId;
     private int partnerUserId;
 }
