@@ -44,6 +44,11 @@ public class PostWebSocketHandler implements ChannelInterceptor {
             String uid = uidStr.substring(1, uidStr.length() - 1); // [] 제거
 
             if (command == SUBSCRIBE) {
+                System.out.println("---------------subscribed--------------");
+                System.out.println("uid = " + uid);
+                System.out.println("uidStr = " + uidStr);
+                System.out.println("uid.isEmpty() = " + uid.isEmpty());
+                System.out.println("uidStr.isEmpty() = " + uidStr.isEmpty());
                 changeOnlineStatus(uid, true);
                 return;
             }
@@ -54,6 +59,11 @@ public class PostWebSocketHandler implements ChannelInterceptor {
             String connectInfo  = info.toString();
             connectInfo = connectInfo.substring(1, connectInfo.length() - 1);
             if (connectInfo.equals("disconnect")) {
+                System.out.println("---------------disconnecting message accepted--------------");
+                System.out.println("uid = " + uid);
+                System.out.println("uidStr = " + uidStr);
+                System.out.println("uid.isEmpty() = " + uid.isEmpty());
+                System.out.println("uidStr.isEmpty() = " + uidStr.isEmpty());
                 changeOnlineStatus(uid, false);
             }
 
