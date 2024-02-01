@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
 import 'package:petcong/pages/app_pages/profile/nickname_page.dart';
 
@@ -52,13 +53,7 @@ class MainProfilePage extends StatelessWidget {
                     right: 5,
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const NicknamePage(progress: 0),
-                          ),
-                        );
+                        Get.to(const NicknamePage(progress: 0));
                       },
                       child: Container(
                         width: 45,

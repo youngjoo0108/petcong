@@ -1,89 +1,86 @@
 import 'package:flutter/material.dart';
-import 'package:petcong/models/candidate.dart';
 
-class MatchingCard extends StatefulWidget {
-  final ExampleCandidateModel candidate;
+class MatchingCard extends StatelessWidget {
+  const MatchingCard({
+    required this.name,
+    required this.description,
+    required this.profileImages,
+    super.key,
+  });
 
-  const MatchingCard(
-    this.candidate, {
-    Key? key,
-  }) : super(key: key);
+  final String name;
+  final String description;
+  final String profileImages;
 
-  @override
-  State<MatchingCard> createState() => _MatchingCardState();
-}
-
-class _MatchingCardState extends State<MatchingCard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        image: const DecorationImage(
-            image: AssetImage(defaultImageSrc),
-            // image: NetworkImage('https://picsum.photos/536/354'),
-            fit: BoxFit.cover),
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 3,
-            blurRadius: 7,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      alignment: Alignment.bottomLeft,
+    final theme = Theme.of(context);
+    return ClipRRect(
       child: Stack(
         children: [
-          Positioned(
-            left: 0,
-            top: 409,
-            child: Container(
-              width: 380,
-              height: 277,
-              decoration: ShapeDecoration(
-                gradient: LinearGradient(
-                  begin: const Alignment(0.00, -1.00),
-                  end: const Alignment(0, 1),
-                  colors: [Colors.black.withOpacity(0), Colors.black],
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                image: DecorationImage(
+                  image: AssetImage(profileImages),
+                  fit: BoxFit.cover,
                 ),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(11),
+                boxShadow: [
+                  BoxShadow(
+                    offset: const Offset(0, 2),
+                    blurRadius: 26,
+                    color: Colors.black.withOpacity(0.08),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 200,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(14),
+                ),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: <Color>[
+                    Colors.black12.withOpacity(0),
+                    Colors.black12.withOpacity(.4),
+                    Colors.black12.withOpacity(.82),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: theme.textTheme.titleLarge!.copyWith(
+                    color: Colors.white,
                   ),
                 ),
-              ),
-            ),
-          ),
-          Positioned(
-            left: 11,
-            top: 509,
-            child: Text(
-              '${widget.candidate.name}, ${widget.candidate.age}',
-              style: const TextStyle(
-                color: Color(0xFFFCFCFC),
-                fontSize: 37,
-                fontFamily: 'Mulish',
-                fontWeight: FontWeight.w700,
-                height: 0.01,
-              ),
-            ),
-          ),
-          Positioned(
-            left: 14,
-            top: 553,
-            child: Text(
-              widget.candidate.description,
-              style: const TextStyle(
-                color: Color(0xFFFCFCFC),
-                fontSize: 16,
-                fontFamily: 'Mulish',
-                fontWeight: FontWeight.w400,
-                height: 0.03,
-              ),
+                Text(
+                  description,
+                  style: const TextStyle(
+                    color: Color(0xFFFCFCFC),
+                    fontSize: 15,
+                    fontFamily: 'Mulish',
+                    fontWeight: FontWeight.w400,
+                    height: 1.8,
+                  ),
+                ),
+                const SizedBox(height: 40),
+              ],
             ),
           ),
         ],

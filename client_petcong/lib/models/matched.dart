@@ -1,37 +1,32 @@
 import 'package:equatable/equatable.dart';
 
 // ignore: must_be_immutable
-class User extends Equatable {
+class MatchedUser extends Equatable {
   String? key;
   String? email;
   String? userId;
   String? displayName;
   String? userName;
-  String? petName;
   String? profilePic;
   String? kakaoId;
   String? instagramId;
-  List<String>? followersList;
-  List<String>? followingList;
 
-  User(
-      {
-      this.key,
-      this.email,
+  MatchedUser(
+      {this.email,
       this.userId,
       this.displayName,
       this.profilePic,
+      this.key,
       this.kakaoId,
       this.instagramId,
       this.userName,
-      this.followersList,
-      this.followingList});
 
-  User.fromJson(Map<dynamic, dynamic>? map) {
+});
+
+  MatchedUser.fromJson(Map<dynamic, dynamic>? map) {
     if (map == null) {
       return;
     }
-    followersList ??= [];
     email = map['email'];
     userId = map['userId'];
     displayName = map['displayName'];
@@ -40,18 +35,6 @@ class User extends Equatable {
     instagramId = map['instagramId'];
     kakaoId = map['kakaoId'];
     userName = map['userName'];
-    if (map['followerList'] != null) {
-      followersList = <String>[];
-      map['followerList'].forEach((value) {
-        followersList!.add(value);
-      });
-    }
-    if (map['followingList'] != null) {
-      followingList = <String>[];
-      map['followingList'].forEach((value) {
-        followingList!.add(value);
-      });
-    }
   }
   toJson() {
     return {
@@ -63,12 +46,10 @@ class User extends Equatable {
       'kakaoId': kakaoId,
       'instagramId': instagramId,
       'userName': userName,
-      'followerList': followersList,
-      'followingList': followingList
     };
   }
 
-  User copyWith({
+  MatchedUser copyWith({
     String? email,
     String? userId,
     String? displayName,
@@ -77,10 +58,8 @@ class User extends Equatable {
     String? kakaoId,
     String? instagramId,
     String? userName,
-    List<String>? followingList,
-    List<String>? followersList,
   }) {
-    return User(
+    return MatchedUser(
       email: email ?? this.email,
       instagramId: instagramId ?? this.instagramId,
       kakaoId: kakaoId ?? this.kakaoId,
@@ -89,8 +68,6 @@ class User extends Equatable {
       profilePic: profilePic ?? this.profilePic,
       userId: userId ?? this.userId,
       userName: userName ?? this.userName,
-      followersList: followersList ?? this.followersList,
-      followingList: followingList ?? this.followingList,
     );
   }
 
@@ -104,7 +81,5 @@ class User extends Equatable {
         profilePic,
         kakaoId,
         instagramId,
-        followersList,
-        followingList
       ];
 }
