@@ -38,6 +38,16 @@ public class PostWebSocketHandler implements ChannelInterceptor {
 
             MessageHeaders headers = message.getHeaders();
             Map<String, Object> nativeHeaders = (Map<String, Object>) headers.get("nativeHeaders");
+
+            System.out.println("----------------------------headers-----------------------");
+            // test
+            for (Map.Entry<String, Object> entry : nativeHeaders.entrySet()) {
+                String key = entry.getKey();
+                String value = nativeHeaders.get(key).toString();
+                System.out.println("key = " + key);
+                System.out.println("value = " + value);
+            }
+
             // 파싱
             String uidStr = Arrays.asList(nativeHeaders.get("uid")).get(0)
                     .toString();
