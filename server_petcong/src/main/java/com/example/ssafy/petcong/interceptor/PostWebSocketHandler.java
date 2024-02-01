@@ -15,8 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.springframework.messaging.simp.stomp.StompCommand.SEND;
-import static org.springframework.messaging.simp.stomp.StompCommand.SUBSCRIBE;
+import static org.springframework.messaging.simp.stomp.StompCommand.*;
 
 @Component
 public class PostWebSocketHandler implements ChannelInterceptor {
@@ -33,7 +32,9 @@ public class PostWebSocketHandler implements ChannelInterceptor {
         try {
             StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
             StompCommand command = accessor.getCommand();
-
+            if (command == DISCONNECT) {
+                System.out.println("------------------------disconnected-----------------------");
+            }
             if (!(command == SEND || command == SUBSCRIBE)) return;
 
             MessageHeaders headers = message.getHeaders();
