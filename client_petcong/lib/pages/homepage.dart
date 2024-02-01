@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-//TODO: Resolve overlaying problemo of this widget.
+//TODO: Resolve overlaying problem of this widget.
 
   void _showLogoutDropdown(BuildContext context) {
     Overlay.of(context).insert(
