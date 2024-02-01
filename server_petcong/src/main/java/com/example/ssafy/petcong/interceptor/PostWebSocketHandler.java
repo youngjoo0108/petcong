@@ -44,8 +44,8 @@ public class PostWebSocketHandler implements ChannelInterceptor {
                     .toString();
             String uid = uidStr.substring(1, uidStr.length() - 1); // [] 제거
 
-            if (command == SUBSCRIBE) {
-                System.out.println("---------------subscribed--------------");
+            if (command == SUBSCRIBE || command == SEND) {
+                System.out.println("---------------" + command + "--------------");
                 System.out.println("uid = " + uid);
                 System.out.println("uidStr = " + uidStr);
                 System.out.println("uid.isEmpty() = " + uid.isEmpty());
