@@ -150,6 +150,24 @@ Future<void> patchPicture(List<String> keys, List<String> filePaths) async {
   }
 }
 
+Future<void> withdrawUser() async {
+  final response = await http.delete(Uri.parse('$serverUrl/users/withdraw'),
+      headers: reqHeaders);
+
+  if (response.statusCode == 200) {
+    if (kDebugMode) {
+      print("success");
+    }
+  } else {
+    if (kDebugMode) {
+      print(response.statusCode);
+      print(response.body);
+      print("error");
+    }
+    throw Exception("Failed to withdraw user");
+  }
+}
+
 Map<String, String> checkTesting() {
   return testing ? {'tester': 'A603'} : {'Petcong-id-token': idTokenString};
 }
