@@ -49,4 +49,6 @@ class UserController extends GetxController {
     await GoogleSignIn().signOut();
     SocketService().disposeSocket();
   }
+
+  static User? get currentUser => user;
 }
