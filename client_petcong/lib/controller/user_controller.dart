@@ -16,12 +16,23 @@ class UserController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance; // Firestore 인스턴스 추가
   final FirebaseStorage storage = FirebaseStorage.instance;
 
+  List<String> selectedImages = [
+    'assets/src/test_4.jpg',
+    'assets/src/test_5.jpg',
+    'assets/src/test_1.jpg',
+    'assets/src/test_3.png',
+    'assets/src/test_2.png',
+    'Add Picture', // 마지막 요소를 'Add Picture' 텍스트로 설정
+  ];
+
   // 사용자 정보를 저장할 변수들 추가
   String nickname = '';
   String birthday = '';
   String introText = 'Your Text Here';
   String photoUrl = ''; // Add this line
   int age = 0; // 만 나이를 저장할 변수 추가
+  String petHobby = ''; // 반려견 취미 저장 변수
+  String favoriteSnack = ''; // 최애 간식 저장 변수
 
   final ImagePicker _picker = ImagePicker();
 
@@ -126,5 +137,13 @@ class UserController extends GetxController {
     firestore.collection('users').doc(_user.value?.uid).update({
       'nickname': nickname,
     });
+  }
+
+  void updateSelectedImage(int index, String newImage) {
+    if (index >= 0 && index < 5) {
+      // index가 5보다 작은 경우에만 업데이트
+      selectedImages[index] = newImage;
+      update();
+    }
   }
 }
