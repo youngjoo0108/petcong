@@ -3,9 +3,11 @@ package com.example.ssafy.petcong.user.controller;
 import com.example.ssafy.petcong.AWS.service.AWSService;
 import com.example.ssafy.petcong.user.model.dto.*;
 import com.example.ssafy.petcong.user.service.PetService;
+import com.example.ssafy.petcong.user.service.UserImgService;
 import com.example.ssafy.petcong.user.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,8 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -34,10 +36,12 @@ import java.util.UUID;
 @Tag(name = "UserController API")
 public class UserController {
     private final UserService userService;
+    private final UserImgService userImgService;
     private final PetService petService;
     private final AWSService awsService;
 
     @Operation(summary = "회원가입", description = "가입 기록이 없는 유저 정보 저장",
+            parameters = @Parameter(schema = @Schema(implementation = SignupRequestDto.class)),
             responses = {
                 @ApiResponse(responseCode = "201", description = "회원가입 성공",
                         content = @Content(schema = @Schema(implementation = SignupResponseDto.class))),
@@ -45,8 +49,10 @@ public class UserController {
     })
     @PostMapping("/signup")
     public ResponseEntity<?> signup(
-        @RequestBody @Valid UserInfoDto userInfo,
-        @RequestBody @Valid PetInfoDto petInfo) {
+        @RequestBody @Valid SignupRequestDto signupRequestDto) {
+
+        UserInfoDto userInfo = signupRequestDto.getUserInfo();
+        PetInfoDto petInfo = signupRequestDto.getPetInfo();
 
         UserRecord savedUser = userService.save(userInfo);
         PetRecord savedPet = petService.save(petInfo);
@@ -135,12 +141,11 @@ public class UserController {
         @RequestParam("file") MultipartFile file) throws IOException {
 
         UserRecord user = userService.findUserByUid(uid);
-        String key = UUID.fromString(user.uid() + file.getOriginalFilename()).toString();
-        UserImgRecord userImgRecord = userService.uploadUserImage(user, key, file);
-        awsService.upload(key, file);
+
+        UserImgRecord userImgRecord = userService.uploadUserImage(user, file);
 
         return ResponseEntity
-                .created(URI.create(key))
+                .created(URI.create(userImgRecord.bucketKey()))
                 .body(userImgRecord);
     }
 
@@ -156,13 +161,29 @@ public class UserController {
         @RequestParam("file") MultipartFile file) throws IOException {
 
         UserRecord user = userService.findUserByUid(uid);
-        String key = UUID.fromString(user.uid() + file.getOriginalFilename()).toString();
-        SkillMultimediaRecord skillMultimediaRecord = userService.uploadSkillMultimedia(user, key, file);
-        awsService.upload(key, file);
+
+        SkillMultimediaRecord skillMultimediaRecord = userService.uploadSkillMultimedia(user, file);
 
         return ResponseEntity
-                .created(URI.create(key))
+                .created(URI.create(skillMultimediaRecord.bucketKey()))
                 .body(skillMultimediaRecord);
+    }
+
+    @Operation(summary = "프로필 이미지 수정", description = "이미지 파일은 S3, 메타데이터는 MySQL에 업로드",
+            responses =
+            @ApiResponse(responseCode = "200", description = "수정 성공")
+    )
+    @PatchMapping({"/picture", "/trick"})
+    public ResponseEntity<?> patchProfileImage(
+            @AuthenticationPrincipal(expression = "password") String uid,
+            @RequestParam MultipartFile[] files) throws IOException {
+        UserRecord user = userService.findUserByUid(uid);
+
+        List<UserImgRecord> userImgRecordList = userService.updateUserImage(user, files);
+
+        return ResponseEntity
+                .ok()
+                .body(userImgRecordList);
     }
 
     @Operation(summary = "회원탈퇴", description = "소프트 삭제 필요",
