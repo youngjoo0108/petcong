@@ -1,14 +1,13 @@
 package com.example.ssafy.petcong.user.service;
 
+import com.example.ssafy.petcong.AWS.service.AWSService;
 import com.example.ssafy.petcong.user.model.dto.UserInfoDto;
 import com.example.ssafy.petcong.user.model.entity.SkillMultimedia;
 import com.example.ssafy.petcong.user.model.entity.User;
-import com.example.ssafy.petcong.user.model.entity.UserImg;
 import com.example.ssafy.petcong.user.model.dto.SkillMultimediaRecord;
 import com.example.ssafy.petcong.user.model.dto.UserImgRecord;
 import com.example.ssafy.petcong.user.model.dto.UserRecord;
 import com.example.ssafy.petcong.user.repository.SkillMultimediaRepository;
-import com.example.ssafy.petcong.user.repository.UserImgRepository;
 import com.example.ssafy.petcong.user.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
@@ -19,14 +18,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private final AWSService awsService;
+    private final UserImgService userImgService;
+
     private final UserRepository userRepository;
-    private final UserImgRepository userImgRepository;
     private final SkillMultimediaRepository skillMultimediaRepository;
 
     @Override
@@ -60,8 +65,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserRecord updateUserInfo(String uid, UserInfoDto userInfo) {
-        int userId = userRepository.findUserByUid(uid).orElseThrow(() -> new NoSuchElementException(uid)).getUserId();
         User userEntity = User.fromUserInfoDto(userInfo);
+
+        int userId = userRepository.findUserByUid(uid).orElseThrow(() -> new NoSuchElementException(uid)).getUserId();
         userEntity.updateUserId(userId);
 
         User result = userRepository.save(userEntity);
@@ -71,38 +77,57 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserImgRecord uploadUserImage(UserRecord user, String key, MultipartFile file) {
-        String contentType = file.getContentType();
-        long size = file.getSize();
+    public UserImgRecord uploadUserImage(UserRecord user, MultipartFile file) throws IOException {
+        String key = UUID.fromString(user.uid() + file.getOriginalFilename()).toString();
+        UserImgRecord result = userImgService.uploadUserImage(user.userId(), key, file);
 
-        UserImg userImg = UserImg.builder()
-                .user(user.userId())
-                .url(key)
-                .contentType(contentType)
-                .length(size)
-                .build();
+        awsService.upload(key, file);
 
-        UserImg result = userImgRepository.save(userImg);
-
-        return new UserImgRecord(result);
+        return result;
     }
 
     @Override
     @Transactional
-    public SkillMultimediaRecord uploadSkillMultimedia(UserRecord user, String key, MultipartFile file) {
+    public SkillMultimediaRecord uploadSkillMultimedia(UserRecord user, MultipartFile file) throws IOException {
+        String key = UUID.fromString(user.uid() + file.getOriginalFilename()).toString();
         String contentType = file.getContentType();
         long size = file.getSize();
 
         SkillMultimedia skillMultimedia = SkillMultimedia.builder()
                 .user(user.userId())
-                .url(key)
+                .bucketKey(key)
                 .contentType(contentType)
                 .length(size)
                 .build();
 
         SkillMultimedia result = skillMultimediaRepository.save(skillMultimedia);
 
+        awsService.upload(key, file);
+
         return new SkillMultimediaRecord(result);
+    }
+
+    @Override
+    @Transactional
+    public List<UserImgRecord> updateUserImage(UserRecord user, MultipartFile[] files) throws IOException {
+        List<UserImgRecord> userImgRecordList = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            String key = file.getName();
+
+            if (key.isBlank()) { // delete previous image
+                userImgService.deleteUserImgByBucketKey(key);
+            }
+
+            userImgRecordList.add(uploadUserImage(user, file));  // save new image
+        }
+
+        return userImgRecordList;
+    }
+
+    @Override
+    public List<SkillMultimediaRecord> updateSkillMultimedia(UserRecord user, MultipartFile[] files) throws IOException {
+        return null;
     }
 
     @Override
