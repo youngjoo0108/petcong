@@ -96,6 +96,8 @@ class UserController extends GetxController {
     SocketService().disposeSocket();
   }
 
+  static User? get currentUser => user;
+
   // 사용자 정보를 Firestore에 저장하는 메서드
   Future<void> saveUserInfoToFirestore() async {
     await firestore.collection('users').doc(_user.value?.uid).set({
