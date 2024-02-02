@@ -5,44 +5,37 @@ import com.example.ssafy.petcong.user.model.enums.Gender;
 import com.example.ssafy.petcong.user.model.enums.Preference;
 import com.example.ssafy.petcong.user.model.enums.Status;
 
-import jakarta.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
 
+@Schema(name = "회원 정보")
 public record UserRecord(
+        @Schema(title = "유저 아이디")
         int userId,
-
-        @Positive
+        @Schema(title = "나이")
         int age,
-
+        @Schema(title = "온라인 상태")
         boolean callable,
-
-        @Size(max = 30)
+        @Schema(title = "닉네임")
         String nickname,
-
-        @Email
-        @Size(max = 50)
+        @Schema(title = "이메일")
         String email,
-
-        @Size(max = 50)
+        @Schema(title = "주소")
         String address,
-
-        @Size(max = 30)
+        @Schema(title = "firebase uid")
         String uid,
-
-        @Size(max = 30)
+        @Schema(title = "인스타그램 ID")
         String instagramId,
-
-        @Size(max = 30)
+        @Schema(title = "카카오 ID")
         String kakaoId,
-
-        @Past
+        @Schema(title = "생일")
         LocalDate birthday,
-
+        @Schema(title = "성별")
         Gender gender,
-
+        @Schema(title = "활성 상태")
         Status status,
-
+        @Schema(title = "선호")
         Preference preference) {
         public UserRecord(User user) {
                 this(
