@@ -13,6 +13,45 @@ String idTokenString = currentUser?.getIdToken().toString() ?? "";
 const String serverUrl = 'https://i10a603.p.ssafy.io';
 Map<String, String> reqHeaders = checkTesting();
 
+Future<void> postSignup(UserModel user) async {
+  final response = await http.post(Uri.parse('$serverUrl/users/signup'),
+      headers: reqHeaders, body: jsonEncode(user.toJson()));
+
+  if (response.statusCode == 200) {
+    if (kDebugMode) {
+      print("success");
+    }
+  } else {
+    if (kDebugMode) {
+      print(response.statusCode);
+      print(response.body);
+      print("error");
+    }
+    throw Exception("Failed to sign up");
+  }
+}
+
+// POST /users/signin
+// 가입한적이 있는 경우 true, 없는 경우 false를 반환합니다.
+Future<bool> postSignin() async {
+  final response = await http.post(Uri.parse('$serverUrl/users/signin'),
+      headers: reqHeaders, body: jsonEncode({'idToken': idTokenString}));
+
+  if (response.statusCode == 200) {
+    if (kDebugMode) {
+      print("success");
+    }
+    return true;
+  } else {
+    if (kDebugMode) {
+      print(response.statusCode);
+      print(response.body);
+      print("error");
+    }
+    return false;
+  }
+}
+
 // GET /users/info
 Future<UserModel> getUserInfo() async {
   // ---- local testing
