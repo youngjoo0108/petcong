@@ -148,7 +148,7 @@ public class UserController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "업로드 성공",
                             headers = @Header(name = "S3 Bucket Key"),
-                            content = @Content(schema = @Schema(implementation = UserImgRecord.class)))
+                            content = @Content(schema = @Schema(implementation = SkillMultimediaRecord.class)))
     })
     @PostMapping("/trick")
     public ResponseEntity<?> postDogTrick(

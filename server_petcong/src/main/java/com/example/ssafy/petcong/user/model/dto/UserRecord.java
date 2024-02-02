@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
 
-@Schema(name = "회원 정보")
+@Schema(title = "회원 정보")
 public record UserRecord(
         @Schema(title = "유저 아이디")
         int userId,
