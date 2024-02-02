@@ -54,6 +54,7 @@ dependencies:
   swipable_stack: ^2.0.0
   http: ^1.2.0
   auto_animated: ^3.2.0
+  smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
   flutter_test:
