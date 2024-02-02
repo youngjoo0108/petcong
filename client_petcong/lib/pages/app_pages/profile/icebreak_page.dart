@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:petcong/widgets/continue_button.dart';
+import 'package:get/get.dart';
+import 'package:petcong/controller/user_controller.dart';
 
 class IcebreakPage extends StatelessWidget {
   final double progress;
@@ -19,7 +21,7 @@ class IcebreakPage extends StatelessWidget {
           title: LinearProgressIndicator(
             value: progress,
             valueColor: const AlwaysStoppedAnimation<Color>(
-              Color.fromARGB(255, 234, 64, 128),
+              Color.fromARGB(255, 249, 113, 95),
             ),
           ),
         ),
@@ -37,7 +39,7 @@ class IcebreakPage extends StatelessWidget {
                   ),
                   TextButton(
                     child: const Text(
-                      '건너뛰기',
+                      '모두 건너뛰기',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
@@ -57,8 +59,8 @@ class IcebreakPage extends StatelessWidget {
               child: ShaderMask(
                 shaderCallback: (bounds) => const LinearGradient(
                   colors: [
-                    Color.fromARGB(255, 234, 64, 128),
-                    Color.fromARGB(255, 238, 128, 95),
+                    Color.fromARGB(255, 249, 113, 95),
+                    Color.fromARGB(255, 217, 90, 69)
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -106,13 +108,13 @@ class IcebreakPage extends StatelessWidget {
               color: Colors.grey,
               thickness: 0.2,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 15.0), // 원하는 여백으로 변경 가능합니다.
+            const Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: 15.0), // 원하는 여백으로 변경 가능합니다.
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     '반려견 취미',
                     style: TextStyle(
                       fontSize: 16,
@@ -121,15 +123,16 @@ class IcebreakPage extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      // 수정 버튼 눌렀을 때 동작 설정
-                    },
-                    child: const Text('수정 >',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: 'Mulish',
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black)),
+                    onPressed: showEditHobbyDialog,
+                    child: Text(
+                      '수정 >',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Mulish',
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -139,13 +142,13 @@ class IcebreakPage extends StatelessWidget {
               color: Colors.grey,
               thickness: 0.2,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 15.0), // 원하는 여백으로 변경 가능합니다.
+            const Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: 15.0), // 원하는 여백으로 변경 가능합니다.
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     '최애 간식',
                     style: TextStyle(
                       fontSize: 16,
@@ -154,15 +157,16 @@ class IcebreakPage extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      // 수정 버튼 눌렀을 때 동작 설정
-                    },
-                    child: const Text('수정 >',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: 'Mulish',
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black)),
+                    onPressed: showEditFavoriteSnackDialog,
+                    child: Text(
+                      '수정 >',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Mulish',
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -395,4 +399,56 @@ class IcebreakPage extends StatelessWidget {
       ),
     );
   }
+}
+
+void showEditHobbyDialog() async {
+  final controller = Get.find<UserController>();
+  final textController = TextEditingController(text: controller.petHobby);
+
+  await Get.dialog(
+    AlertDialog(
+      title: const Text('반려견 취미 작성'),
+      content: TextField(
+        controller: textController,
+        decoration: const InputDecoration(
+          hintText: '반려견 취미를 입력하세요',
+        ),
+      ),
+      actions: [
+        TextButton(
+          child: const Text('저장'),
+          onPressed: () {
+            controller.petHobby = textController.text;
+            Get.back();
+          },
+        ),
+      ],
+    ),
+  );
+}
+
+void showEditFavoriteSnackDialog() async {
+  final controller = Get.find<UserController>();
+  final textController = TextEditingController(text: controller.favoriteSnack);
+
+  await Get.dialog(
+    AlertDialog(
+      title: const Text('최애 간식 작성'),
+      content: TextField(
+        controller: textController,
+        decoration: const InputDecoration(
+          hintText: '최애 간식을 입력하세요',
+        ),
+      ),
+      actions: [
+        TextButton(
+          child: const Text('저장'),
+          onPressed: () {
+            controller.favoriteSnack = textController.text;
+            Get.back();
+          },
+        ),
+      ],
+    ),
+  );
 }
