@@ -62,11 +62,4 @@ public class MatchingRequestService {
 
         return responseMap;
     }
-
-    @Transactional
-    public void changeToCallable(int userId) {
-        User user = userRepository.findUserByUserId(userId);
-        user.setCallable(true);
-        userRepository.save(user);
-    }
 }

@@ -53,15 +53,6 @@ public class MatchingController {
     }
 
     @MakeCallable
-    @PatchMapping("/callable/{userId}")
-    public ResponseEntity<?> onCallEnd(@PathVariable int userId) {
-        matchingRequestService.changeToCallable(userId);
-        return ResponseEntity
-                .ok()
-                .build();
-    }
-
-    @MakeCallable
     @GetMapping("/profile")
     public ResponseEntity<ProfileRecord> profile(@AuthenticationPrincipal(expression = "password") String uid) {
         Optional<ProfileRecord> optionalProfile = matchingProfileService.profile(uid);
