@@ -75,12 +75,31 @@ Future<UserModel> getUserInfo() async {
   }
 }
 
+// PATCH /users/update
+Future<void> patchUserInfo(UserModel user) async {
+  final response = await http.patch(Uri.parse('$serverUrl/users/update'),
+      headers: reqHeaders, body: jsonEncode(user.toJson()));
+
+  if (response.statusCode == 200) {
+    if (kDebugMode) {
+      print("success");
+    }
+  } else {
+    if (kDebugMode) {
+      print(response.statusCode);
+      print(response.body);
+      print("error");
+    }
+    throw Exception("Failed to update user info");
+  }
+}
+
 Future<void> postPicture(List<String> filePaths) async {
   const String endpoint = '$serverUrl/users/picture';
   var request = http.MultipartRequest('POST', Uri.parse(endpoint));
 
   for (String filePath in filePaths) {
-    var file = await http.MultipartFile.fromPath('files', filePath);
+    var file = await http.MultipartFile.fromPath('file', filePath);
     request.files.add(file);
   }
 
@@ -103,8 +122,32 @@ Future<void> postPicture(List<String> filePaths) async {
   }
 }
 
-Future<void> patchPicture(List<String> keys) async {
-  Map<String, String> jsonBody = {'keys': keys.toString()};
+Future<void> patchPicture(List<String> keys, List<String> filePaths) async {
+  var request = http.MultipartRequest(
+      'PATCH', Uri.parse('$serverUrl/users/update/picture'));
+
+  for (int i = 0; i < filePaths.length; i++) {
+    var file = await http.MultipartFile.fromPath(keys[i], filePaths[i]);
+    request.files.add(file);
+  }
+
+  try {
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print("success");
+      }
+    } else if (kDebugMode) {
+      print("failed");
+      print(response.statusCode);
+      print(response.stream.bytesToString());
+    }
+  } catch (error) {
+    if (kDebugMode) {
+      print("error");
+      print(error.toString());
+    }
+  }
 }
 
 Map<String, String> checkTesting() {
