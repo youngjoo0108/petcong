@@ -15,3 +15,24 @@ spring:
 logging:
   level:
     org.hibernate: off
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs/json
+  swagger-ui:
+    enabled: true
+    path: /api-docs
+    tags-sorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
+  cache:
+    disabled: true
+  packages-to-scan: com.example.ssafy.petcong
+
+allowed-url:
+  urls:
+    - /users/signin
+  patterns:
+    - /api-docs/**
+    - /swagger-ui/**
