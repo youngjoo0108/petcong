@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/widgets/matched_card.dart';
+import 'package:petcong/widgets/matching_card.dart';
 
-class VerticalItem extends StatelessWidget {
-  const VerticalItem({
-    required this.title,
-    Key? key,
-  }) : super(key: key);
+const _images = [
+  'assets/src/dog.jpg',
+  'assets/src/test_1.jpg',
+  'assets/src/test_5.jpg',
+];
 
-  final String title;
-
-  @override
-  Widget build(BuildContext context) => SizedBox(
-        height: 96,
-        child: Card(
-          child: Text(
-            '$title a long title',
-            style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
-          ),
-        ),
-      );
-}
+const _names = ['하나', '둘리', '세르시'];
 
 class HorizontalItem extends StatelessWidget {
   const HorizontalItem({
@@ -32,14 +22,13 @@ class HorizontalItem extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
         width: 140,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(4),
+          // borderRadius: BorderRadius.circular(4),
           child: Material(
             // color: Colors.white,
             child: Center(
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
+              child: MatchedCard(
+                  name: _names[1],
+                  profileImages: _images[0]),
             ),
           ),
         ),
