@@ -35,7 +35,7 @@ Future<void> postSignup(UserModel user) async {
 // 가입한적이 있는 경우 true, 없는 경우 false를 반환합니다.
 Future<bool> postSignin() async {
   final response = await http.post(Uri.parse('$serverUrl/users/signin'),
-      headers: reqHeaders, body: jsonEncode({'idToken': idTokenString}));
+      headers: reqHeaders);
 
   if (response.statusCode == 200) {
     if (kDebugMode) {
@@ -168,6 +168,7 @@ Future<void> withdrawUser() async {
   }
 }
 
+// TODO: refactor to throw exception if idTokenString is null
 Map<String, String> checkTesting() {
   return testing ? {'tester': 'A603'} : {'Petcong-id-token': idTokenString};
 }
