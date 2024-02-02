@@ -1,6 +1,6 @@
 import 'package:auto_animated/auto_animated.dart';
 import 'package:flutter/material.dart';
-import 'package:petcong/utils/chat_utils.dart';
+import 'package:petcong/controller/chat_controller.dart';
 
 class MainChatPage extends StatefulWidget {
   const MainChatPage({super.key});
@@ -35,9 +35,9 @@ class _MainChatPageState extends State<MainChatPage> {
           visibleFraction: 0.001,
           itemCount: itemsCount,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 0,
-            mainAxisSpacing: 0,
+            crossAxisCount: 2,
+            crossAxisSpacing: 2,
+            mainAxisSpacing: 2,
           ),
           itemBuilder: animationItemBuilder(
               (index) => HorizontalItem(title: index.toString())),

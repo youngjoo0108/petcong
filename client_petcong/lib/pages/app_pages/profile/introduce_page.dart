@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'photo_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
+import 'package:petcong/controller/user_controller.dart';
 
 class IntroducePage extends StatefulWidget {
   final double progress;
@@ -47,7 +48,8 @@ class _IntroducePageState extends State<IntroducePage> {
         title: LinearProgressIndicator(
           value: _progress,
           valueColor: const AlwaysStoppedAnimation<Color>(
-              Color.fromARGB(255, 234, 64, 128)),
+            Color.fromARGB(255, 249, 113, 95),
+          ),
         ),
       ),
       body: Padding(
@@ -97,11 +99,14 @@ class _IntroducePageState extends State<IntroducePage> {
                       );
                     },
                   );
+
+                  // Dialog에서 반환된 텍스트(result)를 UserController의 introText에 저장하고, TextField에 표시합니다.
                   if (result != null) {
-                    // Dialog에서 반환한 텍스트를 _controller에 설정합니다.
-                    _controller.text = result;
+                    Get.find<UserController>().updateIntroText(result);
+                    _controller.text = result; // TextField에 반환된 텍스트를 표시합니다.
                   }
                 },
+
                 style: const TextStyle(
                   fontSize: 20.0,
                   decoration: TextDecoration.none,

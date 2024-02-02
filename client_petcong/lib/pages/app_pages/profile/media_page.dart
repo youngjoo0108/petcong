@@ -36,7 +36,7 @@ class _MediaPageState extends State<MediaPage> {
           padding: const EdgeInsets.only(left: 20.0),
           icon: const Text('취소',
               style: TextStyle(
-                  color: Colors.red,
+                  color: Color.fromARGB(255, 249, 113, 95),
                   fontSize: 18,
                   fontWeight: FontWeight.w500)),
           onPressed: () => Get.back(),

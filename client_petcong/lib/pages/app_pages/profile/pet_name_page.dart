@@ -48,7 +48,8 @@ class _PetNamePageState extends State<PetNamePage> {
           title: LinearProgressIndicator(
             value: widget.progress,
             valueColor: const AlwaysStoppedAnimation<Color>(
-                Color.fromARGB(255, 234, 64, 128)),
+              Color.fromARGB(255, 249, 113, 95),
+            ),
           ),
         ),
         body: Padding(
