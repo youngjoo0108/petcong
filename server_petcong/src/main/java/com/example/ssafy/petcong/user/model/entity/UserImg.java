@@ -22,15 +22,16 @@ public class UserImg {
 
     private long length;
 
-    private String url;
+    @Column(name = "bucket_key")
+    private String bucketKey;
     @Column(name = "content_type")
     private String contentType;
 
     @Builder
-    public UserImg(int imgId, int user, String url, String contentType, long length, int ordinal) {
+    public UserImg(int imgId, int user, String bucketKey, String contentType, long length, int ordinal) {
         this.imgId = imgId;
         this.userId = user;
-        this.url = url;
+        this.bucketKey = bucketKey;
         this.contentType = contentType;
         this.length = length;
         this.ordinal = ordinal;
@@ -39,7 +40,7 @@ public class UserImg {
     public UserImg(UserImgRecord userImgRecord) {
         this.imgId = userImgRecord.userId();
         this.userId = userImgRecord.userId();
-        this.url = userImgRecord.url();
+        this.bucketKey = userImgRecord.bucketKey();
         this.contentType = userImgRecord.contentType();
         this.length = userImgRecord.length();
         this.ordinal = userImgRecord.ordinal();

@@ -9,8 +9,8 @@ public record SkillMultimediaRecord(
         int multimediaId,
         @Schema(title = "유저 ID")
         int userId,
-        @Schema(title = "URL", description = "S3 버킷에 저장된 객체를 접근할 수 있는 Key")
-        String url,
+        @Schema(title = "S3 버킷 키", description = "S3 버킷에 저장된 객체를 접근할 수 있는 Key")
+        String bucketKey,
         @Schema(title = "파일 컨텐츠 타입")
         String contentType,
         @Schema(title = "파일 크기")
@@ -22,7 +22,7 @@ public record SkillMultimediaRecord(
         this(
                 skillMultimedia.getMultimediaId(),
                 skillMultimedia.getUserId(),
-                skillMultimedia.getUrl(),
+                skillMultimedia.getBucketKey(),
                 skillMultimedia.getContentType(),
                 skillMultimedia.getLength(),
                 skillMultimedia.getOrdinal()
