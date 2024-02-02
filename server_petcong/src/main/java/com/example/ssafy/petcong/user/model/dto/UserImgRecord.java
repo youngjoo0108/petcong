@@ -2,22 +2,21 @@ package com.example.ssafy.petcong.user.model.dto;
 
 import com.example.ssafy.petcong.user.model.entity.UserImg;
 
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import lombok.Builder;
-
-@Builder
+@Schema(title = "프로필 사진 정보")
 public record UserImgRecord(
+        @Schema(title = "사진 ID")
         int imgId,
+        @Schema(title = "유저 ID")
         int userId,
-        @Size(max = 255)
+        @Schema(title = "URL", description = "S3 버킷에 저장된 객체를 접근할 수 있는 Key")
         String url,
-        @Size(max = 20)
+        @Schema(title = "파일 컨텐츠 타입")
         String contentType,
-        @Positive
+        @Schema(title = "파일 크기")
         long length,
-        @Positive
+        @Schema(title = "순서", description = "여러 사진 중에서 나타낼 순서")
         int ordinal
 ) {
         public UserImgRecord(UserImg userImg) {

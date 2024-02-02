@@ -11,6 +11,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
+@Schema(title = "회원가입 Response", description = "회원가입 성공 시 받는 Response")
 public class SignupResponseDto {
     @Schema(title = "유저 정보")
     UserRecord userRecord;
