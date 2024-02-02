@@ -1,5 +1,6 @@
 package com.example.ssafy.petcong.matching.service;
 
+import com.example.ssafy.petcong.AWS.service.AWSService;
 import com.example.ssafy.petcong.matching.model.CallStatus;
 import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.model.entity.ProfileRecord;
@@ -10,12 +11,13 @@ import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.model.entity.UserImg;
 import com.example.ssafy.petcong.user.repository.UserImgRepository;
 import com.example.ssafy.petcong.user.repository.UserRepository;
-import com.example.ssafy.petcong.user.service.UserService;
+
 import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,7 +30,7 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
     private final UserRepository userRepository;
     private final MatchingRepository matchingRepository;
     private final UserImgRepository userImgRepository;
-    private final UserService userService;
+    private final AWSService awsService;
 
     private final int NO_USER = -1;
 
@@ -36,14 +38,14 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         List<UserImg> imgList =  userImgRepository.findByUserId(userId);
         return imgList.stream()
                 .map(UserImg::getUrl)
-                .map(userService::createPresignedUrl)
+                .map(awsService::createPresignedUrl)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public Optional<ProfileRecord> profile(String uid) {
-        User requestingUser = userRepository.findUserByUid(uid);
+        User requestingUser = userRepository.findUserByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
         int requestingUserId = requestingUser.getUserId();
         int filteredUserId = NO_USER;
         for (int i = 0; i < onlineUsers.sizeOfQueue(); i++) {
@@ -57,7 +59,8 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         }
         if (filteredUserId == NO_USER) return Optional.empty();
         List<String> urls = pictures(filteredUserId);
-        User filteredUser = userRepository.findUserByUserId(filteredUserId);
+        int finalFilteredUserId = filteredUserId;
+        User filteredUser = userRepository.findUserByUserId(filteredUserId).orElseThrow(() -> new NoSuchElementException(String.valueOf(finalFilteredUserId)));
 
         return Optional.of(new ProfileRecord(filteredUser, urls));
     }

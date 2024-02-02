@@ -7,16 +7,14 @@ import com.example.ssafy.petcong.user.model.dto.UserRecord;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.NoSuchElementException;
 
 public interface UserService {
     UserRecord findUserByUid(String uid);
-    UserRecord save(UserInfoDto userInfoDto);
+    UserRecord save(UserInfoDto userInfo);
     UserRecord updateCallable(String uid, boolean state);
     UserRecord updateUserInfo(String uid, UserInfoDto userInfo) throws NoSuchElementException;
-    String createPresignedUrl(String key);
-    UserImgRecord uploadUserImage(UserRecord user, MultipartFile file) throws IOException;
-    SkillMultimediaRecord uploadSkillMultimedia(UserRecord user, MultipartFile file) throws IOException;
+    UserImgRecord uploadUserImage(UserRecord user, String key, MultipartFile file);
+    SkillMultimediaRecord uploadSkillMultimedia(UserRecord user, String key, MultipartFile file);
     int deleteUserByUid(String uid);
 }

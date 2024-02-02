@@ -2,10 +2,14 @@ package com.example.ssafy.petcong.util.aop;
 
 import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.repository.UserRepository;
+
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.NoSuchElementException;
 
 @Aspect
 @Component
@@ -32,10 +36,8 @@ public class UserStateAop {
 
     private void changeCallable(boolean callable) {
         String uid = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString(); // uid
-        User user = userRepository.findUserByUid(uid);
-        if (user != null) {
-            user.setCallable(callable);
-            userRepository.save(user);
-        }
+        User user = userRepository.findUserByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
+        user.updateCallable(callable);
+        userRepository.save(user);
     }
 }
