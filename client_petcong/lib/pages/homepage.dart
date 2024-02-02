@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   late SocketService socketService;
-  final StompClient _client = SocketService().initSocket();
+  StompClient? _client;
   String? uid;
   OverlayEntry? _overlayEntry;
 
@@ -33,7 +33,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     initPrefs();
     socketService = SocketService();
-    socketService.onInit();
     activateClient();
   }
 
@@ -41,19 +40,19 @@ class _HomePageState extends State<HomePage> {
     try {
       final prefs = await SharedPreferences.getInstance();
       uid = prefs.getString('uid');
+      print(uid);
     } catch (e) {
       debugPrint('Error retrieving values from SharedPreferences: $e');
     }
   }
 
-  void activateClient() async {
-    _client.activate();
-    // socketService.disposeSocket(_client, uid as String);
+  Future<void> activateClient() async {
+    await socketService.init();
+    _client = await socketService.initSocket();
+    // _client?.activate();
   }
 
-  void deactivateClient() {
-    socketService.disposeSocket(_client, uid as String);
-  }
+  void onCallPressed() {}
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +116,8 @@ class _HomePageState extends State<HomePage> {
                       leading: const Icon(Icons.exit_to_app),
                       title: const Text('Logout'),
                       onTap: () async {
-                        await UserController.signOut(_client, uid!);
+                        // await UserController.signOut(_client, uid!);
+                        await UserController.signOut(uid!);
                         _overlayEntry?.remove();
                       },
                     ),

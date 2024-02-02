@@ -49,8 +49,8 @@ class UserController extends GetxController {
     return userCredential.user;
   }
 
-  static Future<void> signOut(StompClient client, String uid) async {
-    await SocketService().disposeSocket(client, uid);
+  static Future<void> signOut(String uid) async {
+    await SocketService().disposeSocket(uid);
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
   }

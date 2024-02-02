@@ -1,13 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
-
 import 'package:stomp_dart_client/stomp.dart';
-import 'package:stomp_dart_client/stomp_config.dart';
-import 'package:stomp_dart_client/stomp_frame.dart';
 
 class MainVideoCall extends GetxController {
   StompClient? client;
@@ -19,14 +15,16 @@ class MainVideoCall extends GetxController {
   late SharedPreferences prefs;
   String? uid;
 
-  var targetId = 1;
-  var subsPrefix = "/queue/";
+  String targetId = 'kS95PNT8RUc78Qr7TQ4uRaJmbw23';
+  String subsPrefix = "/queue/";
+
+  MainVideoCall(this.client);
 
   @override
   Future<void> onInit() async {
     print('start webrtc');
     super.onInit();
-    init();
+    // init();
   }
 
   Future<void> initPrefs() async {
@@ -37,102 +35,15 @@ class MainVideoCall extends GetxController {
   Future<void> init() async {
     print('start webrtc');
     await initPrefs();
-
+    client;
     await _localRenderer.initialize();
     await _remoteRenderer.initialize();
 
-    await connectSocket();
     await joinRoom();
-  }
-
-  void _attemptReconnect() {
-    Future.delayed(const Duration(seconds: 3), () {
-      connectSocket();
-    });
-  }
-
-  Future<void> connectSocket() async {
-    client = StompClient(
-      config: StompConfig.sockJS(
-        url: 'http://i10a603.p.ssafy.io:8081/websocket',
-        webSocketConnectHeaders: {
-          "transports": ["websocket"],
-        },
-        onConnect: onConnect,
-        onWebSocketError: (dynamic error) {
-          debugPrint(error.toString());
-          _attemptReconnect();
-        },
-        onDisconnect: onDisconnect,
-      ),
-    );
-    print(client);
-    client!.activate();
-  }
-
-  void onConnect(StompFrame frame) {
-    debugPrint("----------------------------connected------------------------");
-    if (client!.connected) {
-      client!.subscribe(
-        destination: subsPrefix + uid!,
-        callback: (frame) {
-          debugPrint(frame as String?);
-          debugPrint("frame.body = ${frame.body!}");
-          debugPrint("start callback");
-
-          Map<String, dynamic> response = jsonDecode(frame.body!);
-          print('type = ' + response['type']);
-
-          String type = response['type'];
-          if (type == 'answer') {
-            debugPrint('------------------------answer!!-------------------');
-            debugPrint(response['value']);
-            debugPrint(jsonEncode(response['value']));
-          }
-          if (type == 'joined') {
-            _sendOffer();
-            return;
-          }
-          Map<String, dynamic> value = response['value'];
-          debugPrint('valueMap = ${jsonEncode(value)}');
-          debugPrint(
-              "--------------------------------------subscribed----------------------------");
-
-          if (type == 'offer') {
-            _gotOffer(RTCSessionDescription(value['sdp'], value['type']));
-            _sendAnswer();
-          } else if (type == 'answer') {
-            _gotAnswer(RTCSessionDescription(value['sdp'], value['type']));
-          } else if (type == 'ice') {
-            _gotIce(RTCIceCandidate(
-                value['candidate'], value['sdpMid'], value['sdpMLineIndex']));
-          }
-        },
-      );
-      debugPrint("sended");
-    } else {
-      debugPrint("Stomp connection is not open.");
-      _attemptReconnect();
-    }
-  }
-
-  void onDisconnect(StompFrame frame) {
-    client!.send(
-      destination: subsPrefix + uid!,
-      headers: {
-        "content-type": "application/json",
-        "userId": uid ?? "",
-        "info": "disconnect"
-      },
-      body: "",
-    );
-    _attemptReconnect();
   }
 
   Future joinRoom() async {
     final config = {
-      // RTCPeerConnection 객체가 iceServers 배열에 등록된 객체들 중 STUN 서버를 통해 먼저 연결을 시도하고,
-      // 불가능한 경우 TURN 서버로 시도한다.
       'iceServers': [
         {"url": "stun:stun.l.google.com:19302"},
         {
@@ -167,7 +78,7 @@ class MainVideoCall extends GetxController {
     _localRenderer.srcObject = _localStream;
 
     pc!.onIceCandidate = (ice) {
-      _sendIce(ice);
+      sendIce(ice, client!);
     };
 
     pc!.onAddStream = (stream) {
@@ -184,14 +95,14 @@ class MainVideoCall extends GetxController {
         body: jsonEncode({"type": "joined", "value": ""}));
   }
 
-  Future _sendOffer() async {
+// --- webrtc - 메소드들 ---
+  Future sendOffer(StompClient client) async {
     debugPrint('send offer');
     var offer = await pc!.createOffer();
     pc!.setLocalDescription(offer);
-    // socket.emit('offer', jsonEncode(offer.toMap()));
     var map = {"type": "offer", "value": offer.toMap()};
-    client!.send(
-        destination: subsPrefix + targetId.toString(),
+    client.send(
+        destination: '/queue/$targetId',
         headers: {
           "content-type": "application/json",
           "userId": uid.toString(),
@@ -200,20 +111,20 @@ class MainVideoCall extends GetxController {
         body: jsonEncode(map));
   }
 
-  Future _gotOffer(RTCSessionDescription offer) async {
+  Future gotOffer(String sdp, String type) async {
+    RTCSessionDescription offer = RTCSessionDescription(sdp, type);
     debugPrint('got offer');
     pc!.setRemoteDescription(offer);
   }
 
-  Future _sendAnswer() async {
+  Future sendAnswer(StompClient client) async {
     debugPrint('send answer');
     var answer = await pc!.createAnswer();
     pc!.setLocalDescription(answer);
-    // socket.emit('answer', jsonEncode(answer.toMap()));
     var map = {"type": "answer", "value": answer.toMap()};
     debugPrint("before sendAnswer");
     debugPrint("map = ${jsonEncode(map)}");
-    client!.send(
+    client.send(
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
@@ -223,17 +134,18 @@ class MainVideoCall extends GetxController {
         body: jsonEncode(map));
   }
 
-  Future _gotAnswer(RTCSessionDescription answer) async {
+  Future gotAnswer(String sdp, String type) async {
+    RTCSessionDescription answer = RTCSessionDescription(sdp, type);
     debugPrint('got answer');
     update();
     pc!.setRemoteDescription(answer);
   }
 
-  Future _sendIce(RTCIceCandidate ice) async {
+  Future sendIce(RTCIceCandidate ice, StompClient client) async {
     debugPrint("send ice");
     update();
     var map = {"type": "ice", "value": ice.toMap()};
-    client!.send(
+    client.send(
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
@@ -243,7 +155,8 @@ class MainVideoCall extends GetxController {
         body: jsonEncode(map));
   }
 
-  Future _gotIce(RTCIceCandidate ice) async {
+  Future gotIce(String candidate, String sdpMid, int sdpMLineIndex) async {
+    RTCIceCandidate ice = RTCIceCandidate(candidate, sdpMid, sdpMLineIndex);
     debugPrint("got ice");
     pc!.addCandidate(ice);
   }
@@ -262,10 +175,21 @@ class MainVideoCall extends GetxController {
   RTCVideoRenderer get remoteRenderer => _remoteRenderer;
 }
 
-class MainVideoCallWidget extends StatelessWidget {
-  final MainVideoCall controller = Get.put(MainVideoCall());
+class MainVideoCallWidget extends StatefulWidget {
+  const MainVideoCallWidget({Key? key}) : super(key: key);
 
-  MainVideoCallWidget({super.key});
+  @override
+  _MainVideoCallWidgetState createState() => _MainVideoCallWidgetState();
+}
+
+class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
+  final MainVideoCall controller = Get.put(MainVideoCall(null));
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

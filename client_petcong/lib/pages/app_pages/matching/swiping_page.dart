@@ -3,12 +3,17 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:get/get.dart';
 import 'package:petcong/models/candidate.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
+import 'package:petcong/pages/homepage.dart';
 import 'package:petcong/widgets/matching_card.dart';
+import 'package:stomp_dart_client/stomp.dart';
 
 GlobalKey _key = GlobalKey();
 
 class SwipingPage extends StatefulWidget {
   const SwipingPage({super.key});
+
+  // final StompClient client;
+  // const SwipingPage({Key? key, required this.client}) : super(key: key);
 
   @override
   State<SwipingPage> createState() => _SwipingPageState();
@@ -16,8 +21,8 @@ class SwipingPage extends StatefulWidget {
 
 class _SwipingPageState extends State<SwipingPage> {
   final CardSwiperController controller = CardSwiperController();
-
   final cards = candidates.map(MatchingCard.new).toList();
+  late Function onCallPressed;
 
   @override
   void dispose() {
@@ -57,7 +62,8 @@ class _SwipingPageState extends State<SwipingPage> {
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'call',
         onPressed: () {
-          Get.to(() => MainVideoCallWidget());
+          Get.to(() => const MainVideoCallWidget());
+          // onCallPressed;
         },
         label: const Text('call'),
         icon: const Icon(Icons.call),
