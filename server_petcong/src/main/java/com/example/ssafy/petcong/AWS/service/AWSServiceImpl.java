@@ -27,7 +27,8 @@ public class AWSServiceImpl implements AWSService{
 
     @Override
     public String upload(String key, MultipartFile file) throws IOException {
-        uploadFileToS3(file, createPutObjectRequest(key, file));
+        PutObjectRequest putObjectRequest = createPutObjectRequest(key, file);
+        uploadFileToS3(file, putObjectRequest);
         return key;
     }
 
@@ -52,18 +53,26 @@ public class AWSServiceImpl implements AWSService{
 
     @Override
     public String createPresignedUrl(String key, Duration duration) {
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+        GetObjectRequest getObjectRequest = getObjectRequest(key);
+
+        GetObjectPresignRequest presignRequest = getObjectPresignRequest(getObjectRequest, duration);
+
+        String presignedUrl = s3Presigner.presignGetObject(presignRequest).url().toString();
+
+        return presignedUrl;
+    }
+
+    private GetObjectRequest getObjectRequest(String key) {
+        return GetObjectRequest.builder()
                 .bucket(bucket.name())
                 .key(key)
                 .build();
+    }
 
-        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+    private GetObjectPresignRequest getObjectPresignRequest(GetObjectRequest getObjectRequest, Duration duration) {
+        return GetObjectPresignRequest.builder()
                 .getObjectRequest(getObjectRequest)
                 .signatureDuration(duration)
                 .build();
-
-        PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
-
-        return presignedRequest.url().toString();
     }
 }
