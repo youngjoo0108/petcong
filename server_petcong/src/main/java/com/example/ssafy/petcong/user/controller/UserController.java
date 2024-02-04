@@ -2,8 +2,6 @@ package com.example.ssafy.petcong.user.controller;
 
 import com.example.ssafy.petcong.AWS.service.AWSService;
 import com.example.ssafy.petcong.user.model.dto.*;
-import com.example.ssafy.petcong.user.service.PetService;
-import com.example.ssafy.petcong.user.service.UserImgService;
 import com.example.ssafy.petcong.user.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,10 +22,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Slf4j
 @RestController
@@ -35,9 +31,10 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 @Tag(name = "UserController API")
 public class UserController {
+    private static final String UID = "username";
+    private static final String USER_ID = "password";
+
     private final UserService userService;
-    private final UserImgService userImgService;
-    private final PetService petService;
     private final AWSService awsService;
 
     @Operation(summary = "회원가입", description = "가입 기록이 없는 유저 정보 저장",
@@ -48,18 +45,11 @@ public class UserController {
                 @ApiResponse(responseCode = "400", description = "가입 시 필요한 유저 정보 누락")
     })
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(
-        @RequestBody @Valid SignupRequestDto signupRequestDto) {
-
-        UserInfoDto userInfo = signupRequestDto.getUserInfo();
-        PetInfoDto petInfo = signupRequestDto.getPetInfo();
-
-        UserRecord savedUser = userService.save(userInfo);
-        PetRecord savedPet = petService.save(petInfo);
-        SignupResponseDto signupResponseDto = new SignupResponseDto(savedUser, savedPet);
+    public ResponseEntity<?> signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
+        SignupResponseDto signupResponseDto = userService.signup(signupRequestDto);
 
         return ResponseEntity
-                .created(URI.create(String.valueOf(savedUser.userId())))
+                .created(null)
                 .body(signupResponseDto);
     }
 
@@ -70,29 +60,21 @@ public class UserController {
                     @ApiResponse(responseCode = "202", description = "가입 기록 없음")
     })
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(
-        @AuthenticationPrincipal(expression = "password") String uid) {
+    public ResponseEntity<?> signin(@AuthenticationPrincipal(expression = USER_ID) int userId) {
+        UserRecord updatedUser = userService.signin(userId, true);
 
-        try {
-            UserRecord updatedUser = userService.updateCallable(uid, true);
-            return ResponseEntity
-                    .ok()
-                    .body(updatedUser);
-        } catch (NoSuchElementException e) {
-            return ResponseEntity
-                    .accepted()
-                    .build();
-        }
+        return ResponseEntity
+                .ok()
+                .body(updatedUser);
     }
 
     @Operation(summary = "회원 상세 정보 조회",
-            responses =
-            @ApiResponse(responseCode = "200", description = "조회 성공",
+            responses = @ApiResponse(responseCode = "200", description = "조회 성공",
                     content = @Content(schema = @Schema(implementation = UserRecord.class)))
     )
     @GetMapping("/info")
-    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal(expression = "password") String uid) {
-        UserRecord user = userService.findUserByUid(uid);
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal(expression = USER_ID) int userId) {
+        UserRecord user = userService.findUserByUserId(userId);
 
         return ResponseEntity
                 .ok()
@@ -100,16 +82,15 @@ public class UserController {
     }
 
     @Operation(summary = "회원 정보 수정",
-            responses =
-            @ApiResponse(responseCode = "200", description = "수정 성공",
+            responses = @ApiResponse(responseCode = "200", description = "수정 성공",
                     content = @Content(schema = @Schema(implementation = UserRecord.class)))
     )
     @PatchMapping("/update")
     public ResponseEntity<?> updateUserInfo(
-        @AuthenticationPrincipal(expression = "password") String uid,
-        @RequestBody @Valid UserInfoDto userInfo) {
-
-        UserRecord updatedUser = userService.updateUserInfo(uid, userInfo);
+            @AuthenticationPrincipal(expression = USER_ID) int userId,
+            @RequestBody @Valid UserInfoDto userInfo
+    ) {
+        UserRecord updatedUser = userService.updateUserInfo(userId, userInfo);
 
         return ResponseEntity
                 .ok()
@@ -117,8 +98,7 @@ public class UserController {
     }
 
     @Operation(summary = "멀티미디어 다운로드 url 얻기", description = "생성된 presigned url 다운로드 링크 제공",
-            responses =
-            @ApiResponse(responseCode = "200", description = "url 생성 성공")
+            responses = @ApiResponse(responseCode = "200", description = "url 생성 성공")
     )
     @GetMapping({"/picture", "/trick"})
     public ResponseEntity<?> getMediaUrl(String key) {
@@ -137,12 +117,11 @@ public class UserController {
     })
     @PostMapping("/picture")
     public ResponseEntity<?> postProfileImage(
-        @AuthenticationPrincipal(expression = "password") String uid,
-        @RequestParam("file") MultipartFile file) throws IOException {
-
-        UserRecord user = userService.findUserByUid(uid);
-
-        UserImgRecord userImgRecord = userService.uploadUserImage(user, file);
+            @AuthenticationPrincipal(expression = USER_ID) int userId,
+            @AuthenticationPrincipal(expression = UID) String uid,
+            @RequestParam("file") MultipartFile file
+    ) {
+        UserImgRecord userImgRecord = userService.uploadUserImage(userId, uid, file);
 
         return ResponseEntity
                 .created(URI.create(userImgRecord.bucketKey()))
@@ -157,12 +136,11 @@ public class UserController {
     })
     @PostMapping("/trick")
     public ResponseEntity<?> postDogTrick(
-        @AuthenticationPrincipal(expression = "password") String uid,
-        @RequestParam("file") MultipartFile file) throws IOException {
-
-        UserRecord user = userService.findUserByUid(uid);
-
-        SkillMultimediaRecord skillMultimediaRecord = userService.uploadSkillMultimedia(user, file);
+            @AuthenticationPrincipal(expression = USER_ID) int userId,
+            @AuthenticationPrincipal(expression = UID) String uid,
+            @RequestParam("file") MultipartFile file
+    ) {
+        SkillMultimediaRecord skillMultimediaRecord = userService.uploadSkillMultimedia(userId, uid, file);
 
         return ResponseEntity
                 .created(URI.create(skillMultimediaRecord.bucketKey()))
@@ -170,20 +148,35 @@ public class UserController {
     }
 
     @Operation(summary = "프로필 이미지 수정", description = "이미지 파일은 S3, 메타데이터는 MySQL에 업로드",
-            responses =
-            @ApiResponse(responseCode = "200", description = "수정 성공")
+            responses = @ApiResponse(responseCode = "200", description = "수정 성공")
     )
     @PatchMapping({"/picture", "/trick"})
     public ResponseEntity<?> patchProfileImage(
-            @AuthenticationPrincipal(expression = "password") String uid,
-            @RequestParam MultipartFile[] files) throws IOException {
-        UserRecord user = userService.findUserByUid(uid);
-
-        List<UserImgRecord> userImgRecordList = userService.updateUserImage(user, files);
+            @AuthenticationPrincipal(expression = USER_ID) int userId,
+            @AuthenticationPrincipal(expression = UID) String uid,
+            @RequestParam MultipartFile[] files
+    ) {
+        List<UserImgRecord> userImgRecordList = userService.updateUserImage(userId, uid, files);
 
         return ResponseEntity
                 .ok()
                 .body(userImgRecordList);
+    }
+
+    @Operation(summary = "개 인기 수정", description = "멀티미디어 파일은 S3, 메타데이터는 MySQL에 업로드",
+            responses = @ApiResponse(responseCode = "200", description = "수정 성공")
+    )
+    @PatchMapping("/trick")
+    public ResponseEntity<?> patchDogTrick(
+            @AuthenticationPrincipal(expression = USER_ID) int userId,
+            @AuthenticationPrincipal(expression = UID) String uid,
+            @RequestParam MultipartFile[] files
+    ) {
+        List<SkillMultimediaRecord> skillMultimediaRecordList = userService.updateSkillMultimedia(userId, uid, files);
+
+        return ResponseEntity
+                .ok()
+                .body(skillMultimediaRecordList);
     }
 
     @Operation(summary = "회원탈퇴", description = "소프트 삭제 필요",
@@ -192,8 +185,8 @@ public class UserController {
                 @ApiResponse(responseCode = "202", description = "이미 탈퇴")
     })
     @DeleteMapping("/withdraw")
-    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal(expression = "password") String uid) {
-        if (userService.deleteUserByUid(uid) == 1) {
+    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal(expression = USER_ID) int userId) {
+        if (userService.deleteUserByUserId(userId) == 1) {
             return ResponseEntity
                     .ok()
                     .build();

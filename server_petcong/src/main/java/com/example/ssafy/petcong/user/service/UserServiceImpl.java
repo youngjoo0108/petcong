@@ -1,13 +1,9 @@
 package com.example.ssafy.petcong.user.service;
 
 import com.example.ssafy.petcong.AWS.service.AWSService;
-import com.example.ssafy.petcong.user.model.dto.UserInfoDto;
-import com.example.ssafy.petcong.user.model.entity.SkillMultimedia;
+import com.example.ssafy.petcong.exception.NotRegisterdException;
+import com.example.ssafy.petcong.user.model.dto.*;
 import com.example.ssafy.petcong.user.model.entity.User;
-import com.example.ssafy.petcong.user.model.dto.SkillMultimediaRecord;
-import com.example.ssafy.petcong.user.model.dto.UserImgRecord;
-import com.example.ssafy.petcong.user.model.dto.UserRecord;
-import com.example.ssafy.petcong.user.repository.SkillMultimediaRepository;
 import com.example.ssafy.petcong.user.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
@@ -18,26 +14,29 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final AWSService awsService;
+    private final PetService petService;
     private final UserImgService userImgService;
+    private final SkillMultimediaService skillMultimediaService;
 
     private final UserRepository userRepository;
-    private final SkillMultimediaRepository skillMultimediaRepository;
 
     @Override
     public UserRecord findUserByUid(String uid) {
         User result = userRepository.findUserByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
 
+        return new UserRecord(result);
+    }
+
+    @Override
+    public UserRecord findUserByUserId(int userId) {
+        User result = userRepository.findUserByUserId(userId).orElseThrow(() -> new NoSuchElementException(String.valueOf(userId)));
         return new UserRecord(result);
     }
 
@@ -53,8 +52,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserRecord updateCallable(String uid, boolean state) {
-        User user = userRepository.findUserByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
+    public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
+        UserInfoDto userInfo = signupRequestDto.getUserInfo();
+        PetInfoDto petInfo = signupRequestDto.getPetInfo();
+
+        UserRecord savedUser = save(userInfo);
+        PetRecord savedPet = petService.save(petInfo, savedUser.userId());
+
+        return new SignupResponseDto(savedUser, savedPet);
+    }
+
+    @Override
+    @Transactional
+    public UserRecord signin(int userId, boolean state) {
+        User user = userRepository.findUserByUserId(userId).orElseThrow(() -> new NotRegisterdException(String.valueOf(userId)));
         user.updateCallable(state);
 
         User result = userRepository.save(user);
@@ -64,10 +75,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserRecord updateUserInfo(String uid, UserInfoDto userInfo) {
+    public UserRecord updateUserInfo(int userId, UserInfoDto userInfo) {
         User userEntity = User.fromUserInfoDto(userInfo);
-
-        int userId = userRepository.findUserByUid(uid).orElseThrow(() -> new NoSuchElementException(uid)).getUserId();
         userEntity.updateUserId(userId);
 
         User result = userRepository.save(userEntity);
@@ -77,9 +86,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserImgRecord uploadUserImage(UserRecord user, MultipartFile file) throws IOException {
-        String key = UUID.fromString(user.uid() + file.getOriginalFilename()).toString();
-        UserImgRecord result = userImgService.uploadUserImage(user.userId(), key, file);
+    public UserImgRecord uploadUserImage(int userId, String uid, MultipartFile file) {
+        String key = UUID.fromString(uid + file.getOriginalFilename()).toString();
+        UserImgRecord result = userImgService.uploadUserImage(userId, key, file);
 
         awsService.upload(key, file);
 
@@ -88,52 +97,39 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public SkillMultimediaRecord uploadSkillMultimedia(UserRecord user, MultipartFile file) throws IOException {
-        String key = UUID.fromString(user.uid() + file.getOriginalFilename()).toString();
-        String contentType = file.getContentType();
-        long size = file.getSize();
-
-        SkillMultimedia skillMultimedia = SkillMultimedia.builder()
-                .user(user.userId())
-                .bucketKey(key)
-                .contentType(contentType)
-                .length(size)
-                .build();
-
-        SkillMultimedia result = skillMultimediaRepository.save(skillMultimedia);
+    public SkillMultimediaRecord uploadSkillMultimedia(int userId, String uid, MultipartFile file) {
+        String key = UUID.fromString(uid + file.getOriginalFilename()).toString();
+        SkillMultimediaRecord result = skillMultimediaService.uploadSkillMultimedia(userId, key, file);
 
         awsService.upload(key, file);
 
-        return new SkillMultimediaRecord(result);
+        return result;
     }
 
     @Override
     @Transactional
-    public List<UserImgRecord> updateUserImage(UserRecord user, MultipartFile[] files) throws IOException {
-        List<UserImgRecord> userImgRecordList = new ArrayList<>();
-
-        for (MultipartFile file : files) {
-            String key = file.getName();
-
-            if (key.isBlank()) { // delete previous image
-                userImgService.deleteUserImgByBucketKey(key);
-            }
-
-            userImgRecordList.add(uploadUserImage(user, file));  // save new image
-        }
-
-        return userImgRecordList;
-    }
-
-    @Override
-    public List<SkillMultimediaRecord> updateSkillMultimedia(UserRecord user, MultipartFile[] files) throws IOException {
-        return null;
+    public List<UserImgRecord> updateUserImage(int userId, String uid, MultipartFile[] files) {
+        UserRecord user = findUserByUserId(userId);
+        return Arrays.stream(files)
+                .peek(file -> userImgService.deleteUserImgByBucketKey(file.getName()))
+                .map(file -> uploadUserImage(user.userId(), uid, file))
+                .toList();
     }
 
     @Override
     @Transactional
-    public int deleteUserByUid(String uid) {
-        userRepository.findUserByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
-        return userRepository.deleteUserByUid(uid);
+    public List<SkillMultimediaRecord> updateSkillMultimedia(int userId, String uid, MultipartFile[] files) {
+        UserRecord user = findUserByUserId(userId);
+        return Arrays.stream(files)
+                .peek(file -> skillMultimediaService.deleteSkillMultimediaByBucketKey(file.getName()))
+                .map(file -> uploadSkillMultimedia(user.userId(), uid, file))
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public int deleteUserByUserId(int userId) {
+        userRepository.findUserByUserId(userId).orElseThrow(() -> new NoSuchElementException(String.valueOf(userId)));
+        return userRepository.deleteUserByUserId(userId);
     }
 }

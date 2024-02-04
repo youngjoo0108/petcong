@@ -4,6 +4,6 @@ import com.example.ssafy.petcong.user.model.dto.PetInfoDto;
 import com.example.ssafy.petcong.user.model.dto.PetRecord;
 
 public interface PetService {
-    PetRecord findPetByUid(String uid);
-    PetRecord save(PetInfoDto petInfoDto);
+    PetRecord findPetByUserId(int userId);
+    PetRecord save(PetInfoDto petInfoDt, int userId);
 }
