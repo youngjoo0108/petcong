@@ -73,4 +73,8 @@ public class Pet {
                 .toy(petInfoDto.getToy())
                 .build();
     }
+
+    public void updateUserId(int userId) {
+        this.userId = userId;
+    }
 }

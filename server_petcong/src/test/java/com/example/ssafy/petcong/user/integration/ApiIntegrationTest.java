@@ -1,13 +1,15 @@
 package com.example.ssafy.petcong.user.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.ssafy.petcong.user.model.dto.*;
 import com.example.ssafy.petcong.user.model.enums.Gender;
+import com.example.ssafy.petcong.user.model.enums.PetSize;
 import com.example.ssafy.petcong.user.model.enums.Preference;
 import com.example.ssafy.petcong.user.model.enums.Status;
-import com.example.ssafy.petcong.user.model.record.UserRecord;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,6 +40,7 @@ import java.time.LocalDate;
 import java.util.stream.Stream;
 
 @Slf4j
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ApiIntegrationTest {
@@ -47,30 +50,45 @@ public class ApiIntegrationTest {
     private MockMvc mockMvc;
 
     static Stream<Arguments> provideDummySignUpUser() {
-        UserRecord userRecord = new UserRecord(
-                1,
-                1,
-                false,
-                "nickname",
-                "smy@petcong.com",
-                "Korea",
-                "1",
-                "instagramId",
-                "kakaoId",
-                LocalDate.of(1997, 1, 29),
-                Gender.MALE,
-                Status.ACTIVE,
-                Preference.FEMALE);
-        return Stream.of(Arguments.of(userRecord));
+
+        UserInfoDto userInfoDto = new UserInfoDto();
+        userInfoDto.setAge(10);
+        userInfoDto.setNickname("nickname");
+        userInfoDto.setEmail("test@test.com");
+        userInfoDto.setAddress("korea");
+        userInfoDto.setUid("testuid1");
+        userInfoDto.setInstagramId("instatonid");
+        userInfoDto.setKakaoId("kakaochocolate");
+        userInfoDto.setBirthday(LocalDate.of(1997, 1, 29));
+        userInfoDto.setGender(Gender.MALE);
+        userInfoDto.setStatus(Status.ACTIVE);
+        userInfoDto.setPreference(Preference.FEMALE);
+
+        PetInfoDto petInfoDto = new PetInfoDto();
+        petInfoDto.setAge(1);
+        petInfoDto.setGender(Gender.FEMALE);
+        petInfoDto.setDbti("INFP");
+        petInfoDto.setHobby("산책");
+        petInfoDto.setBreed("골드 리트리버");
+        petInfoDto.setName("야옹이");
+        petInfoDto.setSize(PetSize.LARGE);
+        petInfoDto.setToy("원반");
+        petInfoDto.setDescription("우리 개는 물어요.");
+        petInfoDto.setNeutered(false);
+        petInfoDto.setWeight(30);
+        petInfoDto.setSnack("생닭다리");
+
+        SignupRequestDto signupRequestDto = new SignupRequestDto(userInfoDto, petInfoDto);
+        return Stream.of(Arguments.of(signupRequestDto));
     }
 
     @ParameterizedTest
     @MethodSource("provideDummySignUpUser")
-    @Transactional
     @DisplayName("SignUp Test")
-    void testSignUp(UserRecord userRecord) throws Exception {
+    void testSignUp(SignupRequestDto signupRequestDto) throws Exception {
         //given
-        String userRecordJson = objectMapper.writeValueAsString(userRecord);
+        String userRecordJson = objectMapper.writeValueAsString(signupRequestDto);
+        log.info(userRecordJson);
 
         //when
         var request = MockMvcRequestBuilders
@@ -82,11 +100,11 @@ public class ApiIntegrationTest {
         //then
         MvcResult mvcResult = mockMvc
                 .perform(request)
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        String response = mvcResult.getResponse().getContentAsString();
+        String response = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
 
         assertThat(response).isNotNull();
 
@@ -95,7 +113,6 @@ public class ApiIntegrationTest {
 
     @Disabled
     @Test
-    @Transactional
     @DisplayName("Signin Test")
     void testSignin() throws Exception {
         //given
@@ -126,70 +143,72 @@ public class ApiIntegrationTest {
     @Test
     @DisplayName("PostProfileImage Test")
     void testPostProfileImage() throws Exception {
-        //given
-        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\anya.jpg");
-        byte[] bytes = fileInputStream.readAllBytes();
-        MockMultipartFile multipartFile = new MockMultipartFile(
-                "file",
-                "anya.jpg",
-                MediaType.MULTIPART_FORM_DATA_VALUE,
-                bytes);
+        try(FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\anya.jpg")) {
+            //given
+            byte[] bytes = fileInputStream.readAllBytes();
+            MockMultipartFile multipartFile = new MockMultipartFile(
+                    "file",
+                    "anya.jpg",
+                    MediaType.MULTIPART_FORM_DATA_VALUE,
+                    bytes);
 
-        //when
-        var request = MockMvcRequestBuilders
-                .multipart(HttpMethod.POST, "/users/picture")
-                .file(multipartFile)
-                .header("tester", "A603")
-                .content("1")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+            //when
+            var request = MockMvcRequestBuilders
+                    .multipart(HttpMethod.POST, "/users/picture")
+                    .file(multipartFile)
+                    .header("tester", "A603")
+                    .content("1")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        //then
-        MvcResult mvcResult = mockMvc
-                .perform(request)
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
+            //then
+            MvcResult mvcResult = mockMvc
+                    .perform(request)
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andReturn();
 
-        String response = mvcResult.getResponse().getContentAsString();
+            String response = mvcResult.getResponse().getContentAsString();
 
-        assertThat(response).isNotNull();
+            assertThat(response).isNotNull();
 
-        log.info(response);
+            log.info(response);
+        }
     }
 
     @Disabled
     @Test
     @DisplayName("PostDogTrick Test")
     void testPostDogTrick() throws Exception {
-        //given
-        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\video_sample.mp4");
-        byte[] bytes = fileInputStream.readAllBytes();
-        MockMultipartFile multipartFile = new MockMultipartFile(
-                "file",
-                "video_sample.mp4",
-                MediaType.MULTIPART_FORM_DATA_VALUE,
-                bytes);
+        try(FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\video_sample.mp4")) {
+            //given
+            byte[] bytes = fileInputStream.readAllBytes();
+            MockMultipartFile multipartFile = new MockMultipartFile(
+                    "file",
+                    "video_sample.mp4",
+                    MediaType.MULTIPART_FORM_DATA_VALUE,
+                    bytes);
 
-        //when
-        var request = MockMvcRequestBuilders
-                .multipart(HttpMethod.POST, "/users/trick")
-                .file(multipartFile)
-                .header("tester", "A603")
-                .content("1")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+            //when
+            var request = MockMvcRequestBuilders
+                    .multipart(HttpMethod.POST, "/users/trick")
+                    .file(multipartFile)
+                    .header("tester", "A603")
+                    .content("1")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        //then
-        MvcResult mvcResult = mockMvc
-                .perform(request)
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
+            //then
+            MvcResult mvcResult = mockMvc
+                    .perform(request)
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andReturn();
 
-        String response = mvcResult.getResponse().getContentAsString();
+            String response = mvcResult.getResponse().getContentAsString();
 
-        assertThat(response).isNotNull();
+            assertThat(response).isNotNull();
 
-        log.info(response);
+            log.info(response);
+        }
     }
 
     @Disabled
@@ -222,7 +241,6 @@ public class ApiIntegrationTest {
 
     @Disabled
     @Test
-    @Transactional
     @DisplayName("DeleteUser Test")
     void testDeleteUser() throws Exception {
         //given

@@ -24,7 +24,8 @@ public class UserStateAop {
     // MakeCallable 어노테이션을 달지 않는 모든 컨트롤러 메소드 전에 callable = false로 바꾸는 로직 추가
     @Before("execution(* com.example.ssafy.petcong.*.controller.*.*(..)) && !@annotation(com.example.ssafy.petcong.util.annotation.MakeCallable)")
     public void changeToNotCallable() {
-        changeCallable(false);
+        // signup() 시 에러 발생
+        // changeCallable(false);
     }
 
 
