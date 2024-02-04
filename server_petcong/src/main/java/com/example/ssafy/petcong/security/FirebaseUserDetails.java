@@ -1,5 +1,6 @@
 package com.example.ssafy.petcong.security;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -9,6 +10,10 @@ import java.util.Collection;
 
 @RequiredArgsConstructor
 public class FirebaseUserDetails implements UserDetails {
+    public static final String UID = "uid";
+    public static final String USER_ID = "userId";
+
+    @Getter
     private final String uid;
     private final String userId;
     private final boolean status;
@@ -19,12 +24,12 @@ public class FirebaseUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userId;
+        return this.userId;
     }
 
     @Override
     public String getUsername() {
-        return uid;
+        return this.uid;
     }
 
     @Override
@@ -49,5 +54,9 @@ public class FirebaseUserDetails implements UserDetails {
 
     private boolean isLiveUser() {
         return this.status;
+    }
+
+    public int getUserId() {
+        return Integer.parseInt(this.userId);
     }
 }

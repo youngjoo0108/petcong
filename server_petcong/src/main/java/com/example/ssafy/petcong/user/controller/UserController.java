@@ -1,6 +1,7 @@
 package com.example.ssafy.petcong.user.controller;
 
 import com.example.ssafy.petcong.AWS.service.AWSService;
+import com.example.ssafy.petcong.security.FirebaseUserDetails;
 import com.example.ssafy.petcong.user.model.dto.*;
 import com.example.ssafy.petcong.user.service.UserService;
 
@@ -31,8 +32,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "UserController API")
 public class UserController {
-    private static final String UID = "username";
-    private static final String USER_ID = "password";
 
     private final UserService userService;
     private final AWSService awsService;
@@ -60,7 +59,7 @@ public class UserController {
                     @ApiResponse(responseCode = "202", description = "가입 기록 없음")
     })
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@AuthenticationPrincipal(expression = USER_ID) int userId) {
+    public ResponseEntity<?> signin(@AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int userId) {
         UserRecord updatedUser = userService.signin(userId, true);
 
         return ResponseEntity
@@ -73,7 +72,7 @@ public class UserController {
                     content = @Content(schema = @Schema(implementation = UserRecord.class)))
     )
     @GetMapping("/info")
-    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal(expression = USER_ID) int userId) {
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int userId) {
         UserRecord user = userService.findUserByUserId(userId);
 
         return ResponseEntity
@@ -87,7 +86,7 @@ public class UserController {
     )
     @PatchMapping("/update")
     public ResponseEntity<?> updateUserInfo(
-            @AuthenticationPrincipal(expression = USER_ID) int userId,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int userId,
             @RequestBody @Valid UserInfoDto userInfo
     ) {
         UserRecord updatedUser = userService.updateUserInfo(userId, userInfo);
@@ -117,8 +116,8 @@ public class UserController {
     })
     @PostMapping("/picture")
     public ResponseEntity<?> postProfileImage(
-            @AuthenticationPrincipal(expression = USER_ID) int userId,
-            @AuthenticationPrincipal(expression = UID) String uid,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int userId,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
             @RequestParam("file") MultipartFile file
     ) {
         UserImgRecord userImgRecord = userService.uploadUserImage(userId, uid, file);
@@ -136,8 +135,8 @@ public class UserController {
     })
     @PostMapping("/trick")
     public ResponseEntity<?> postDogTrick(
-            @AuthenticationPrincipal(expression = USER_ID) int userId,
-            @AuthenticationPrincipal(expression = UID) String uid,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int userId,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
             @RequestParam("file") MultipartFile file
     ) {
         SkillMultimediaRecord skillMultimediaRecord = userService.uploadSkillMultimedia(userId, uid, file);
@@ -152,8 +151,8 @@ public class UserController {
     )
     @PatchMapping({"/picture", "/trick"})
     public ResponseEntity<?> patchProfileImage(
-            @AuthenticationPrincipal(expression = USER_ID) int userId,
-            @AuthenticationPrincipal(expression = UID) String uid,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int userId,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
             @RequestParam MultipartFile[] files
     ) {
         List<UserImgRecord> userImgRecordList = userService.updateUserImage(userId, uid, files);
@@ -168,8 +167,8 @@ public class UserController {
     )
     @PatchMapping("/trick")
     public ResponseEntity<?> patchDogTrick(
-            @AuthenticationPrincipal(expression = USER_ID) int userId,
-            @AuthenticationPrincipal(expression = UID) String uid,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int userId,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
             @RequestParam MultipartFile[] files
     ) {
         List<SkillMultimediaRecord> skillMultimediaRecordList = userService.updateSkillMultimedia(userId, uid, files);
@@ -185,7 +184,7 @@ public class UserController {
                 @ApiResponse(responseCode = "202", description = "이미 탈퇴")
     })
     @DeleteMapping("/withdraw")
-    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal(expression = USER_ID) int userId) {
+    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int userId) {
         if (userService.deleteUserByUserId(userId) == 1) {
             return ResponseEntity
                     .ok()
