@@ -27,6 +27,12 @@ public class User {
 
     private int age;
 
+    /**
+     *  @Builder will ignore the initializing expression entirely.
+     *  If you want the initializing expression to serve as default, add @Builder.Default.
+     *  If it is not supposed to be settable during building, make the field final.
+     */
+    @Builder.Default
     private boolean callable = false;
 
     private String nickname;
