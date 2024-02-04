@@ -3,8 +3,9 @@ package com.example.ssafy.petcong.user.model.dto;
 import com.example.ssafy.petcong.user.model.entity.Pet;
 import com.example.ssafy.petcong.user.model.enums.Gender;
 import com.example.ssafy.petcong.user.model.enums.PetSize;
+
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 @Schema(title = "반려동물 정보")
 public record PetRecord(
