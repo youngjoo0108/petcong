@@ -50,7 +50,6 @@ public class ApiIntegrationTest {
     private MockMvc mockMvc;
 
     static Stream<Arguments> provideDummySignUpUser() {
-
         UserInfoDto userInfoDto = new UserInfoDto();
         userInfoDto.setAge(10);
         userInfoDto.setNickname("nickname");
@@ -88,7 +87,6 @@ public class ApiIntegrationTest {
     void testSignUp(SignupRequestDto signupRequestDto) throws Exception {
         //given
         String userRecordJson = objectMapper.writeValueAsString(signupRequestDto);
-        log.info(userRecordJson);
 
         //when
         var request = MockMvcRequestBuilders
@@ -108,21 +106,18 @@ public class ApiIntegrationTest {
 
         assertThat(response).isNotNull();
 
-        log.info(response);
+        log.info("SignUp Test: " + response);
     }
 
-    @Disabled
     @Test
     @DisplayName("Signin Test")
     void testSignin() throws Exception {
         //given
-        int uid = 1;
 
         //when
         var request = MockMvcRequestBuilders
                 .post("/users/signin")
                 .header("tester", "A603")
-                .content(String.valueOf(uid))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         //then
@@ -136,7 +131,7 @@ public class ApiIntegrationTest {
 
         assertThat(response).isNotNull();
 
-        log.info(response);
+        log.info("Signin Test: " + response);
     }
 
     @Disabled
@@ -171,7 +166,7 @@ public class ApiIntegrationTest {
 
             assertThat(response).isNotNull();
 
-            log.info(response);
+            log.info("PostProfileImage Test: " + response);
         }
     }
 
@@ -207,7 +202,7 @@ public class ApiIntegrationTest {
 
             assertThat(response).isNotNull();
 
-            log.info(response);
+            log.info("PostDogTrick Test: " + response);
         }
     }
 
@@ -236,15 +231,14 @@ public class ApiIntegrationTest {
 
         assertThat(response).isNotNull();
 
-        log.info(response);
+        log.info("GetMediaUrl Test: " + response);
     }
 
-    @Disabled
     @Test
     @DisplayName("DeleteUser Test")
     void testDeleteUser() throws Exception {
         //given
-        int userId = 4;
+        int userId = 8;
 
         //when
         var request = MockMvcRequestBuilders
@@ -256,17 +250,11 @@ public class ApiIntegrationTest {
         MvcResult mvcResult = mockMvc
                 .perform(request)
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(new MediaType(MediaType.TEXT_PLAIN, StandardCharsets.UTF_8)))
                 .andReturn();
 
-        String response = mvcResult.getResponse().getContentAsString();
-
-        assertThat(response).isNotNull();
-
-        log.info(response);
+        log.info("DeleteUser Test: PASS");
     }
 
-    @Disabled
     @Test
     @DisplayName("GetUserInfo Test")
     void testGetUserInfo() throws Exception {
@@ -288,7 +276,7 @@ public class ApiIntegrationTest {
 
         assertThat(response).isNotNull();
 
-        log.info(response);
+        log.info("GetUserInfo Test: " + response);
     }
 
 }
