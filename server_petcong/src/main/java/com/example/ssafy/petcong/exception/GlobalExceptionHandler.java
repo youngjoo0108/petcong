@@ -37,6 +37,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(ex.getMessage());
     }
 
+    @ExceptionHandler(NotRegisterdException.class)
+    public ResponseEntity<String> handleNotRegisterdException(NotRegisterdException ex) {
+        return ResponseEntity
+                .accepted()
+                .build();
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> runtimeExceptionHandler(RuntimeException e) {
         log.error(e.getMessage());
