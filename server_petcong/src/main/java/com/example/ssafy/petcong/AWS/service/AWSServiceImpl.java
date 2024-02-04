@@ -10,12 +10,11 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.Bucket;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
-import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Duration;
 
 @Service
@@ -26,10 +25,9 @@ public class AWSServiceImpl implements AWSService{
     private final S3Presigner s3Presigner;
 
     @Override
-    public String upload(String key, MultipartFile file) throws IOException {
+    public void upload(String key, MultipartFile file) {
         PutObjectRequest putObjectRequest = createPutObjectRequest(key, file);
         uploadFileToS3(file, putObjectRequest);
-        return key;
     }
 
     private PutObjectRequest createPutObjectRequest(String key, MultipartFile file) {
@@ -41,9 +39,13 @@ public class AWSServiceImpl implements AWSService{
                 .build();
     }
 
-    private PutObjectResponse uploadFileToS3(MultipartFile file, PutObjectRequest putObjectRequest) throws IOException {
-        RequestBody requestBody = RequestBody.fromInputStream(file.getInputStream(), file.getSize());
-        return s3Client.putObject(putObjectRequest, requestBody);
+    private void uploadFileToS3(MultipartFile file, PutObjectRequest putObjectRequest) {
+        try (InputStream is = file.getInputStream()) {
+            RequestBody requestBody = RequestBody.fromInputStream(is, file.getSize());
+            s3Client.putObject(putObjectRequest, requestBody);
+        } catch (IOException e) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
