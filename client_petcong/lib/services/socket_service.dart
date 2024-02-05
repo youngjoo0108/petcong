@@ -77,20 +77,22 @@ class SocketService extends GetxController {
 
                 String type = response['type'];
                 print('type = $type');
-                if (type == 'joined') {
-                  sendOffer(client!);
-                  return;
-                }
                 Map<String, dynamic> value = response['value'];
 
-                if (type == 'offer') {
-                  gotOffer(value['sdp'], value['type']);
-                  sendAnswer(client!);
-                } else if (type == 'answer') {
-                  gotAnswer(value['sdp'], value['type']);
-                } else if (type == 'ice') {
-                  gotIce(value['candidate'], value['sdpMid'],
-                      value['sdpMLineIndex']);
+                switch (type) {
+                  case 'matched':
+                    joinRoom(); // async 체크
+                    break;
+                  case 'offer':
+                    gotOffer(value['sdp'], value['type']);
+                    sendAnswer(client!);
+                    break;
+                  case 'answer':
+                    gotAnswer(value['sdp'], value['type']);
+                    break;
+                  case 'ice':
+                    gotIce(value['candidate'], value['sdpMid'],
+                        value['sdpMLineIndex']);
                 }
               },
             );
@@ -214,15 +216,33 @@ class SocketService extends GetxController {
       _remoteRenderer.srcObject = stream;
     };
 
-    client!.send(
-        // destination: subsPrefix + targetId.toString(),
-        destination: subsPrefix + targetId.toString(),
-        headers: {
-          "content-type": "application/json",
-          "uid": uid!.toString(),
-          "info": "connect"
-        },
-        body: jsonEncode({"type": "joined", "value": ""}));
+    // client!.send(
+    //     // destination: subsPrefix + targetId.toString(),
+    //     destination: subsPrefix + targetId.toString(),
+    //     headers: {
+    //       "content-type": "application/json",
+    //       "uid": uid!.toString(),
+    //       "info": "connect"
+    //     },
+    //     body: jsonEncode({"type": "joined", "value": ""}));
+  }
+
+  Future<void> startCamera() async {
+    if (pc != null) {
+      final mediaConstraints = {
+        'audio': true,
+        'video': {'facingMode': 'user'}
+      };
+      _localStream = await Helper.openCamera(mediaConstraints);
+
+      // 스트림의 트랙(카메라 정보가 들어오는 연결)을 peerConnection(정보를 전송할 connection)에 추가
+      _localStream!.getTracks().forEach((track) {
+        pc!.addTrack(track, _localStream!);
+      });
+
+      // (화면에 띄울) localRenderer의 데이터 소스를 내 localStream으로 설정
+      _localRenderer.srcObject = _localStream;
+    }
   }
 
 // --- webrtc - 메소드들 ---
