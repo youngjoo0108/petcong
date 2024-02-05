@@ -7,6 +7,7 @@ import 'dart:io';
 import 'icebreak_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
+import 'package:petcong/pages/homepage.dart';
 
 // 이미지를 선택하고 화면에 표시되는 기능
 class DisplayVideo extends StatefulWidget {
@@ -150,12 +151,10 @@ class _VideoPageState extends State<VideoPage> {
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: Colors.grey), // 여기에서 색상을 변경했습니다.
+                          color: Colors.grey),
                     ),
                     onPressed: () {
-                      Get.to(IcebreakPage(
-                        progress: _progress + 0.1, // 여기에서 1/10을 더해줍니다.
-                      ));
+                      Get.to(const HomePage());
                     },
                   ),
                 ],
