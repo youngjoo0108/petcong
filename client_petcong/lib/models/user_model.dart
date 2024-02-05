@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 // ignore: must_be_immutable
-class User extends Equatable {
+class UserModel extends Equatable {
   String? key;
   String? email;
   String? userId;
@@ -14,9 +14,8 @@ class User extends Equatable {
   List<String>? followersList;
   List<String>? followingList;
 
-  User(
-      {
-      this.key,
+  UserModel(
+      {this.key,
       this.email,
       this.userId,
       this.displayName,
@@ -27,7 +26,7 @@ class User extends Equatable {
       this.followersList,
       this.followingList});
 
-  User.fromJson(Map<dynamic, dynamic>? map) {
+  UserModel.fromJson(Map<dynamic, dynamic>? map) {
     if (map == null) {
       return;
     }
@@ -68,7 +67,7 @@ class User extends Equatable {
     };
   }
 
-  User copyWith({
+  UserModel copyWith({
     String? email,
     String? userId,
     String? displayName,
@@ -80,7 +79,7 @@ class User extends Equatable {
     List<String>? followingList,
     List<String>? followersList,
   }) {
-    return User(
+    return UserModel(
       email: email ?? this.email,
       instagramId: instagramId ?? this.instagramId,
       kakaoId: kakaoId ?? this.kakaoId,
