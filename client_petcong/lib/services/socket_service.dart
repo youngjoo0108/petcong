@@ -51,7 +51,7 @@ class SocketService extends GetxController {
       if (onInitComplete != null) {
         onInitComplete!();
       }
-      debugPrint('!!!!!!!!!!!!!!!!!!!!!I get IdToken!!!!!!!!!!!!!!');
+      debugPrint('!!!!!!!!!!!!!!!!!!!!!I get IdToken$uid!!!!!!!!!!!!!!');
     } catch (e) {
       debugPrint('Error during initialization: $e');
     }
@@ -214,6 +214,7 @@ class SocketService extends GetxController {
     };
 
     client!.send(
+        // destination: subsPrefix + targetId.toString(),
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
