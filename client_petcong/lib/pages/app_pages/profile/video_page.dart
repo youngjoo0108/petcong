@@ -7,6 +7,7 @@ import 'dart:io';
 import 'icebreak_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
+import 'package:petcong/pages/homepage.dart';
 
 // 이미지를 선택하고 화면에 표시되는 기능
 class DisplayVideo extends StatefulWidget {
@@ -128,7 +129,7 @@ class _VideoPageState extends State<VideoPage> {
           title: LinearProgressIndicator(
             value: _progress,
             valueColor: const AlwaysStoppedAnimation<Color>(
-              Color.fromARGB(255, 234, 64, 128),
+              Color.fromARGB(255, 249, 113, 95),
             ),
           ),
         ),
@@ -146,16 +147,14 @@ class _VideoPageState extends State<VideoPage> {
                   ),
                   TextButton(
                     child: const Text(
-                      '건너뛰기',
+                      '모두 건너뛰기',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: Colors.grey), // 여기에서 색상을 변경했습니다.
+                          color: Colors.grey),
                     ),
                     onPressed: () {
-                      Get.to(IcebreakPage(
-                        progress: _progress + 0.1, // 여기에서 1/10을 더해줍니다.
-                      ));
+                      Get.to(const HomePage());
                     },
                   ),
                 ],
@@ -172,8 +171,8 @@ class _VideoPageState extends State<VideoPage> {
                       ShaderMask(
                         shaderCallback: (bounds) => const LinearGradient(
                           colors: [
-                            Color.fromARGB(255, 234, 64, 128),
-                            Color.fromARGB(255, 238, 128, 95)
+                            Color.fromARGB(255, 249, 113, 95),
+                            Color.fromARGB(255, 217, 90, 69)
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -264,16 +263,14 @@ class _VideoPageState extends State<VideoPage> {
                 children: [
                   const SizedBox(height: 30.0), // 원하는 간격을 추가합니다.
                   ContinueButton(
-                    isFilled:
-                        _videoPaths.length >= 2, // 사진이 두 장 이상 추가되었는지 확인합니다.
+                    isFilled: true, // 버튼이 항상 채워져 있도록 합니다.
                     buttonText: 'CONTINUE',
-                    onPressed: _videoPaths.length >= 2
-                        ? () {
-                            Get.to(IcebreakPage(
-                              progress: _progress + 0.1, // 여기에서 1/10을 더해줍니다.
-                            ));
-                          }
-                        : null,
+                    onPressed: () {
+                      // 조건문 없이 바로 다음 페이지로 이동하도록 설정합니다.
+                      Get.to(IcebreakPage(
+                        progress: _progress + 0.1, // 여기에서 1/10을 더해줍니다.
+                      ));
+                    },
                     width: 240.0, // 원하는 가로 길이를 설정
                     height: 30.0, // 원하는 세로 길이를 설정
                   ),

@@ -47,7 +47,7 @@ class _IntroducePageState extends State<IntroducePage> {
         title: LinearProgressIndicator(
           value: _progress,
           valueColor: const AlwaysStoppedAnimation<Color>(
-              Color.fromARGB(255, 234, 64, 128)),
+              Color.fromARGB(255, 249, 113, 95)),
         ),
       ),
       body: Padding(
