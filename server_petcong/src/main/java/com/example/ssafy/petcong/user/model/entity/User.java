@@ -16,6 +16,8 @@ import java.time.LocalDate;
 @Table(name = "users")
 @Getter
 @ToString
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @Id
@@ -25,7 +27,12 @@ public class User {
 
     private int age;
 
-    @Setter
+    /**
+     *  @Builder will ignore the initializing expression entirely.
+     *  If you want the initializing expression to serve as default, add @Builder.Default.
+     *  If it is not supposed to be settable during building, make the field final.
+     */
+    @Builder.Default
     private boolean callable = false;
 
     private String nickname;
@@ -48,67 +55,38 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Preference preference;
 
-    @Builder
-    public User(
-            int userId,
-            int age,
-            boolean callable,
-            String nickname,
-            String email,
-            String address,
-            String instagramId,
-            String kakaoId,
-            String uid,
-            LocalDate birthday,
-            Gender gender,
-            Status status,
-            Preference preference) {
-        this.userId = userId;
-        this.age = age;
-        this.callable = callable;
-        this.nickname = nickname;
-        this.email = email;
-        this.address = address;
-        this.instagramId = instagramId;
-        this.kakaoId = kakaoId;
-        this.uid = uid;
-        this.birthday = birthday;
-        this.gender = gender;
-        this.status = status;
-        this.preference = preference;
+    public static User fromUserRecord(UserRecord userRecord) {
+        return User.builder()
+                .userId(userRecord.userId())
+                .age(userRecord.age())
+                .callable(userRecord.callable())
+                .nickname(userRecord.nickname())
+                .email(userRecord.email())
+                .address(userRecord.address())
+                .uid(userRecord.uid())
+                .instagramId(userRecord.instagramId())
+                .kakaoId(userRecord.kakaoId())
+                .birthday(userRecord.birthday())
+                .gender(userRecord.gender())
+                .status(userRecord.status())
+                .preference(userRecord.preference())
+                .build();
     }
 
-    public User(UserRecord userRecord) {
-        this.userId = userRecord.userId();
-        this.age = userRecord.age();
-        this.callable = userRecord.callable();
-        this.nickname = userRecord.nickname();
-        this.email = userRecord.email();
-        this.address = userRecord.address();
-        this.uid = userRecord.uid();
-        this.instagramId = userRecord.instagramId();
-        this.kakaoId = userRecord.kakaoId();
-        this.birthday = userRecord.birthday();
-        this.gender = userRecord.gender();
-        this.status = userRecord.status();
-        this.preference = userRecord.preference();
-    }
-
-    public User(UserInfoDto userInfoDto) {
-        this.address = userInfoDto.getAddress();
-        this.birthday = userInfoDto.getBirthday();
-        this.age = userInfoDto.getAge();
-        this.gender = userInfoDto.getGender();
-        this.email = userInfoDto.getEmail();
-        this.nickname = userInfoDto.getNickname();
-        this.uid = userInfoDto.getUid();
-        this.status = userInfoDto.getStatus();
-        this.preference = userInfoDto.getPreference();
-        this.kakaoId = userInfoDto.getKakaoId();
-        this.instagramId = userInfoDto.getInstagramId();
-    }
-    public User(int userId) {
-        this.userId = userId;
+    public static User fromUserInfoDto(UserInfoDto userInfoDto) {
+        return User.builder()
+                .age(userInfoDto.getAge())
+                .nickname(userInfoDto.getNickname())
+                .email(userInfoDto.getEmail())
+                .address(userInfoDto.getAddress())
+                .uid(userInfoDto.getUid())
+                .instagramId(userInfoDto.getInstagramId())
+                .kakaoId(userInfoDto.getKakaoId())
+                .birthday(userInfoDto.getBirthday())
+                .gender(userInfoDto.getGender())
+                .status(userInfoDto.getStatus())
+                .preference(userInfoDto.getPreference())
+                .build();
     }
 
     public void updateCallable(boolean callable) {

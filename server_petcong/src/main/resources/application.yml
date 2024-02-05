@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
   datasource:
     hikari:
@@ -14,7 +17,9 @@ spring:
 
 logging:
   level:
+    web: off
     org.hibernate: off
+    org.springframework.security.: off
 
 springdoc:
   api-docs:
@@ -36,3 +41,4 @@ allowed-url:
   patterns:
     - /api-docs/**
     - /swagger-ui/**
+    - /websocket/**

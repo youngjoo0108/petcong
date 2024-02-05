@@ -1,4 +1,4 @@
-package com.example.ssafy.petcong.Properties;
+package com.example.ssafy.petcong.properties;
 
 import lombok.Getter;
 import lombok.Setter;

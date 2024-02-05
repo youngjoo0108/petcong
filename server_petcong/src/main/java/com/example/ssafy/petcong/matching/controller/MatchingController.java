@@ -9,15 +9,21 @@ import com.example.ssafy.petcong.user.model.dto.UserRecord;
 import com.example.ssafy.petcong.user.service.UserService;
 import com.example.ssafy.petcong.util.annotation.MakeCallable;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+@Tag(name = "matchings", description = "매칭 API")
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/matchings")
@@ -28,27 +34,22 @@ public class MatchingController {
     private final MatchingRequestService matchingRequestService;
     private final MatchingProfileService matchingProfileService;
 
-    /**
-     * @param choiceReq
-     * @return 200 & empty body when pending
-     * <br> 200 & ws link when matched
-     * <br> 400 when matched, rejected
-     */
+    @Operation(summary = "매칭 요청", description = "상태에 따라 pending / matched 처리",
+            responses = {
+                @ApiResponse(responseCode = "200", description = "matched되었을 때, 상대 웹소켓 링크 반환"),
+                @ApiResponse(responseCode = "204", description = "pending처리"),
+                @ApiResponse(responseCode = "400", description = "이미 matched / rejected 상태 or 잘못된 uid/id")
+    })
     @MakeCallable
     @PostMapping("/choice")
     public ResponseEntity<?> choice(@AuthenticationPrincipal(expression = "password") String uid,
                                     @RequestBody ChoiceReq choiceReq) {
-        return ResponseEntity
-                .ok(matchingRequestService.choice(uid, choiceReq.getPartnerUserId()));
-    }
-
-    @MakeCallable
-    @PatchMapping("/callable/{userId}")
-    public ResponseEntity<?> onCallEnd(@PathVariable int userId) {
-        matchingRequestService.changeToCallable(userId);
-        return ResponseEntity
-                .ok()
-                .build();
+        Map<String, String> res = matchingRequestService.choice(uid, choiceReq.getPartnerUserId());
+        if (res != null) {
+            return ResponseEntity.ok(res);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @MakeCallable
