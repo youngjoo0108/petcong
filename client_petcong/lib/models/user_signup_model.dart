@@ -9,8 +9,8 @@ class UserSignupModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['userInfoModel'] = userInfoModel.toJson();
-    data['petInfoModel'] = petInfoModel.toJson();
+    data['userInfoDto'] = userInfoModel.toJson();
+    data['petInfoDto'] = petInfoModel.toJson();
     return data;
   }
 }
