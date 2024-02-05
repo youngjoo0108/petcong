@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
-import 'package:petcong/pages/app_pages/matching/swiping_page.dart';
 import 'package:petcong/services/socket_service.dart';
 
 class MainVideoCallWidget extends StatefulWidget {

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
+import 'package:petcong/services/socket_service.dart';
 import 'package:petcong/widgets/card_overlay.dart';
 import 'package:petcong/widgets/matching_card.dart';
 import 'package:swipable_stack/swipable_stack.dart';
@@ -41,6 +42,9 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       ..removeListener(_listenController)
       ..dispose();
   }
+
+  // late Function onCallPressed;
+  final SocketService socketService = SocketService();
 
   @override
   Widget build(BuildContext context) {
@@ -87,12 +91,13 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.large(
+      floatingActionButton: FloatingActionButton.extended(
         heroTag: 'call',
         onPressed: () {
-          Get.to(const MainVideoCall());
+          socketService.onCallPressed('on');
         },
-        child: const Text('call'),
+        label: const Text('call'),
+        icon: const Icon(Icons.call),
       ),
     );
   }

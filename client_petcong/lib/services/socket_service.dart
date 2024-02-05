@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:petcong/pages/app_pages/matching/swiping_page.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
 import 'package:petcong/pages/homepage.dart';
 import 'package:stomp_dart_client/stomp.dart';
@@ -25,7 +24,7 @@ class SocketService extends GetxController {
   // RTC 변수
   // late MainVideoCall webrtc;
   RTCPeerConnection? pc;
-  String targetId = '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3';
+  String targetId = 'kS95PNT8RUc78Qr7TQ4uRaJmbw23';
   String subsPrefix = "/queue/";
   final _localRenderer = RTCVideoRenderer();
   final _remoteRenderer = RTCVideoRenderer();
