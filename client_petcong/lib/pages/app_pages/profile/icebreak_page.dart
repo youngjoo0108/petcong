@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
 import 'package:petcong/controller/user_controller.dart';
+import 'package:petcong/pages/homepage.dart';
 
 class IcebreakPage extends StatelessWidget {
   final double progress;
@@ -43,12 +44,10 @@ class IcebreakPage extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
-                          color: Colors.grey), // 여기에서 색상을 변경했습니다.
+                          color: Colors.grey),
                     ),
                     onPressed: () {
-                      // 다른 페이지로 이동하도록 수정해야 합니다.
-                      // 예를 들어, 다음 페이지가 'NextPage'라면:
-                      // Navigator.push(context, MaterialPageRoute(builder: (context) => NextPage()));
+                      Get.to(const HomePage());
                     },
                   ),
                 ],
@@ -387,7 +386,9 @@ class IcebreakPage extends StatelessWidget {
                   ContinueButton(
                     isFilled: true,
                     buttonText: 'CONTINUE',
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(const HomePage());
+                    },
                     width: 240.0, // 원하는 가로 길이를 설정
                     height: 30.0, // 원하는 세로 길이를 설정
                   ),
