@@ -110,10 +110,12 @@ public class User {
     public User(int userId) {
         this.userId = userId;
     }
-    public User updateCallable(boolean callable) {
+
+    public void updateCallable(boolean callable) {
         this.callable = callable;
-        return this;
     }
 
-
+    public void updateUserId(int userId) {
+        this.userId = userId;
+    }
 }

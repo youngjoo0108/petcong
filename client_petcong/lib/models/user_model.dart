@@ -1,43 +1,32 @@
 import 'package:equatable/equatable.dart';
 
 // ignore: must_be_immutable
-class User extends Equatable {
+class UserModel extends Equatable {
   String? key;
   String? email;
   String? userId;
   String? displayName;
   String? userName;
+  String? petName;
   String? profilePic;
-  String? contact;
-  String? bio;
-  String? location;
-  String? createdAt;
-  bool? isVerified;
-  int? followers;
-  int? following;
-  String? fcmToken;
+  String? kakaoId;
+  String? instagramId;
   List<String>? followersList;
   List<String>? followingList;
 
-  User(
-      {this.email,
+  UserModel(
+      {this.key,
+      this.email,
       this.userId,
       this.displayName,
       this.profilePic,
-      this.key,
-      this.contact,
-      this.bio,
-      this.location,
-      this.createdAt,
+      this.kakaoId,
+      this.instagramId,
       this.userName,
-      this.followers,
-      this.following,
-      this.isVerified,
-      this.fcmToken,
       this.followersList,
       this.followingList});
 
-  User.fromJson(Map<dynamic, dynamic>? map) {
+  UserModel.fromJson(Map<dynamic, dynamic>? map) {
     if (map == null) {
       return;
     }
@@ -47,29 +36,21 @@ class User extends Equatable {
     displayName = map['displayName'];
     profilePic = map['profilePic'];
     key = map['key'];
-    bio = map['bio'];
-    location = map['location'];
-    contact = map['contact'];
-    createdAt = map['createdAt'];
-    followers = map['followers'];
-    following = map['following'];
+    instagramId = map['instagramId'];
+    kakaoId = map['kakaoId'];
     userName = map['userName'];
-    fcmToken = map['fcmToken'];
-    isVerified = map['isVerified'] ?? false;
     if (map['followerList'] != null) {
       followersList = <String>[];
       map['followerList'].forEach((value) {
         followersList!.add(value);
       });
     }
-    followers = followersList?.length;
     if (map['followingList'] != null) {
       followingList = <String>[];
       map['followingList'].forEach((value) {
         followingList!.add(value);
       });
     }
-    following = followingList?.length;
   }
   toJson() {
     return {
@@ -78,67 +59,38 @@ class User extends Equatable {
       "email": email,
       'displayName': displayName,
       'profilePic': profilePic,
-      'contact': contact,
-      'bio': bio,
-      'location': location,
-      'createdAt': createdAt,
-      'followers': followersList?.length,
-      'following': followingList?.length,
+      'kakaoId': kakaoId,
+      'instagramId': instagramId,
       'userName': userName,
-      'isVerified': isVerified ?? false,
-      'fcmToken': fcmToken,
       'followerList': followersList,
       'followingList': followingList
     };
   }
 
-  User copyWith({
+  UserModel copyWith({
     String? email,
     String? userId,
     String? displayName,
     String? profilePic,
     String? key,
-    String? contact,
-    String? bio,
-    String? dob,
-    String? bannerImage,
-    String? location,
-    String? createdAt,
+    String? kakaoId,
+    String? instagramId,
     String? userName,
-    int? followers,
-    int? following,
-    String? webSite,
-    bool? isVerified,
-    String? fcmToken,
     List<String>? followingList,
     List<String>? followersList,
   }) {
-    return User(
+    return UserModel(
       email: email ?? this.email,
-      bio: bio ?? this.bio,
-      contact: contact ?? this.contact,
-      createdAt: createdAt ?? this.createdAt,
+      instagramId: instagramId ?? this.instagramId,
+      kakaoId: kakaoId ?? this.kakaoId,
       displayName: displayName ?? this.displayName,
-      followers: followers ?? this.followers,
-      following: following ?? this.following,
-      isVerified: isVerified ?? this.isVerified,
       key: key ?? this.key,
-      location: location ?? this.location,
       profilePic: profilePic ?? this.profilePic,
       userId: userId ?? this.userId,
       userName: userName ?? this.userName,
-      fcmToken: fcmToken ?? this.fcmToken,
       followersList: followersList ?? this.followersList,
       followingList: followingList ?? this.followingList,
     );
-  }
-
-  String get getFollower {
-    return '${followers ?? 0}';
-  }
-
-  String get getFollowing {
-    return '${following ?? 0}';
   }
 
   @override
@@ -149,14 +101,8 @@ class User extends Equatable {
         displayName,
         userName,
         profilePic,
-        contact,
-        bio,
-        location,
-        createdAt,
-        isVerified,
-        followers,
-        following,
-        fcmToken,
+        kakaoId,
+        instagramId,
         followersList,
         followingList
       ];

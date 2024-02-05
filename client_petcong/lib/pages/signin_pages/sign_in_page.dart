@@ -80,19 +80,5 @@ class _SignInPageState extends State<SignInPage> {
     } catch (e) {
       debugPrint(e.toString());
     }
-
-    // User? user = await FirebaseAuth.instance.authStateChanges().first;
-    // try {
-    //   if (user == null) {
-    //     if (kIsWeb) {
-    //       GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-    //       await FirebaseAuth.instance.signInWithPopup(googleAuthProvider);
-    //     } else {
-    //       await UserController.loginWithGoogle();
-    //     }
-    //   }
-    // } catch (e) {
-    //   debugPrint(e.toString());
-    // }
   }
 }
