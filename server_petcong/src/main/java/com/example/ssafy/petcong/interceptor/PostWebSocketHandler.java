@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import static org.springframework.messaging.simp.stomp.StompCommand.SEND;
-import static org.springframework.messaging.simp.stomp.StompCommand.SUBSCRIBE;
+import static org.springframework.messaging.simp.stomp.StompCommand.*;
 
 @Component
 public class PostWebSocketHandler implements ChannelInterceptor {
@@ -35,30 +34,42 @@ public class PostWebSocketHandler implements ChannelInterceptor {
         try {
             StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
             StompCommand command = accessor.getCommand();
-
+            if (command == DISCONNECT) {
+                System.out.println("------------------------disconnected-----------------------");
+            }
             if (!(command == SEND || command == SUBSCRIBE)) return;
 
             MessageHeaders headers = message.getHeaders();
             Map<String, Object> nativeHeaders = (Map<String, Object>) headers.get("nativeHeaders");
+
+            System.out.println("----------------------------headers-----------------------");
+            // test
+            for (Map.Entry<String, Object> entry : nativeHeaders.entrySet()) {
+                String key = entry.getKey();
+                String value = nativeHeaders.get(key).toString();
+                System.out.println("key = " + key);
+                System.out.println("value = " + value);
+            }
+
             // 파싱
             String uidStr = Arrays.asList(nativeHeaders.get("uid")).get(0)
                     .toString();
             String uid = uidStr.substring(1, uidStr.length() - 1); // [] 제거
 
-            if (command == SUBSCRIBE) {
-                changeOnlineStatus(uid, true);
-                return;
-            }
+            System.out.println("---------------" + command + "--------------");
+
+            changeOnlineStatus(uid, true);
+
             List<Object> info = Arrays.asList(nativeHeaders.get("info"));
 
-            if (info == null || info.isEmpty()) return; // disconnect 요청이 아닌 일반 메시지인 경우
-
-            String connectInfo  = info.toString();
-            connectInfo = connectInfo.substring(1, connectInfo.length() - 1);
-            if (connectInfo.equals("disconnect")) {
-                changeOnlineStatus(uid, false);
+            if (command == SEND || info == null || info.isEmpty()) {
+                String connectInfo  = info.toString();
+                connectInfo = connectInfo.substring(1, connectInfo.length() - 1);
+                if (connectInfo.equals("disconnect")) {
+                System.out.println("---------------disconnecting message accepted--------------");
+                    changeOnlineStatus(uid, false);
+                }
             }
-
         // end
         } catch (Exception e) {
             e.printStackTrace();
