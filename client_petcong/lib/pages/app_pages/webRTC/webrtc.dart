@@ -18,6 +18,8 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   double localVideoLeft = 200.0;
   double localVideoTop = 50.0;
   double localVideoScale = 0.5;
+  double videoWidth = 200;
+  double videoHeight = 400;
 
   @override
   void initState() {
@@ -50,9 +52,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
               ),
             ),
             // Local Video
-            Positioned(
-              // left: localVideoLeft,
-              // top: localVideoTop,
+            Positioned.fill(
               child: InteractiveViewer(
                 boundaryMargin: const EdgeInsets.all(double.infinity),
                 minScale: 0.3,
@@ -63,14 +63,16 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                     localVideoLeft = details.localFocalPoint.dx;
                     localVideoTop = details.localFocalPoint.dy;
                     localVideoScale = details.scale;
+                    videoWidth = 200 * localVideoScale;
+                    videoHeight = 400 * localVideoScale;
                   });
                 },
                 child: SizedBox(
-                  width: 200 * localVideoScale,
-                  height: 400 * localVideoScale,
+                  // width: 200 * localVideoScale,
+                  // height: 400 * localVideoScale,
+                  width: videoWidth,
+                  height: videoHeight,
                   child: Positioned(
-                    left: localVideoLeft,
-                    top: localVideoTop,
                     child: RTCVideoView(
                       widget.localRenderer,
                       mirror: true,
