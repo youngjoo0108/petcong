@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:petcong/models/choice_res.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
 import 'package:petcong/services/socket_service.dart';
+import 'package:petcong/services/matching_service.dart';
 import 'package:petcong/widgets/card_overlay.dart';
 import 'package:petcong/widgets/matching_card.dart';
 import 'package:swipable_stack/swipable_stack.dart';
@@ -45,6 +47,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
 
   // late Function onCallPressed;
   final SocketService socketService = SocketService();
+  final MatchingService matchingService = MatchingService();
 
   @override
   Widget build(BuildContext context) {
@@ -106,5 +109,25 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     if (kDebugMode) {
       print('$index, $direction');
     }
+  }
+
+  /**
+   * targetId = int
+   */
+  Future<void> onLike(int targetId) async {
+    ChoiceRes? choiceRes;
+    try {
+      choiceRes = await matchingService.postMatching(targetId);
+    } catch (exception) {
+      // print("exception = " + exception.toString());
+      print("alert: 잘못된 요청");
+      return;
+    }
+    if (choiceRes == null) {
+      print("pending처리됨");
+      return;
+    }
+    // matched
+    // -> 전화 오는 화면으로
   }
 }
