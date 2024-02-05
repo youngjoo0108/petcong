@@ -1,16 +1,17 @@
 package com.example.ssafy.petcong.matching.service;
 
 import com.example.ssafy.petcong.matching.model.CallStatus;
-import com.example.ssafy.petcong.matching.model.ChoiceReq;
 import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.repository.MatchingRepository;
 import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.repository.UserRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Service
 public class MatchingRequestService {
@@ -25,9 +26,9 @@ public class MatchingRequestService {
 
     @Transactional
     public Map<String, String> choice(String uid, int partnerUserId){
-        User fromUser = userRepository.findUserByUid(uid);
+        User fromUser = userRepository.findUserByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
         // DB에서 requestUserId, partnerUserId인 데이터 가져오기
-        User toUser = userRepository.findUserByUserId(partnerUserId);
+        User toUser = userRepository.findUserByUserId(partnerUserId).orElseThrow(() -> new NoSuchElementException(String.valueOf(partnerUserId)));
         // 상대가 나에게 보낸 요청이 있는지 찾기
         Matching matching = matchingRepository.findPendingByUsers(toUser, fromUser);
 
@@ -52,8 +53,8 @@ public class MatchingRequestService {
         matching.setCallStatus(CallStatus.MATCHED);
 
         // update users to not callable
-        fromUser.setCallable(false);
-        toUser.setCallable(false);
+        fromUser.updateCallable(false);
+        toUser.updateCallable(false);
         userRepository.save(fromUser);
         userRepository.save(toUser);
 
@@ -61,5 +62,12 @@ public class MatchingRequestService {
         responseMap.put("targetLink", "/queue/" + toUser.getUid());
 
         return responseMap;
+    }
+
+    @Transactional
+    public void changeToCallable(int userId) {
+        User user = userRepository.findUserByUserId(userId).orElseThrow(() -> new NoSuchElementException(String.valueOf(userId)));
+        user.updateCallable(true);
+        userRepository.save(user);
     }
 }

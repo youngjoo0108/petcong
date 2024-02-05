@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 
@@ -22,7 +23,8 @@ import org.springframework.context.annotation.Configuration;
                 name = "신문영",
                 email = "ztrl@naver.com"
         )
-    )
+    ),
+    servers = @Server(url = "/", description = "Default Server URL")
 )
 public class SpringdocConfig {
     @Bean

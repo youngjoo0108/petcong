@@ -22,15 +22,16 @@ public class SkillMultimedia {
 
     private long length;
 
-    private String url;
+    @Column(name = "bucket_key")
+    private String bucketKey;
     @Column(name = "content_type")
     private String contentType;
 
     @Builder
-    public SkillMultimedia(int multimediaId, int user, String url, String contentType, long length, int ordinal) {
+    public SkillMultimedia(int multimediaId, int user, String bucketKey, String contentType, long length, int ordinal) {
         this.multimediaId = multimediaId;
         this.userId = user;
-        this.url = url;
+        this.bucketKey = bucketKey;
         this.contentType = contentType;
         this.length = length;
         this.ordinal = ordinal;
@@ -39,7 +40,7 @@ public class SkillMultimedia {
     public SkillMultimedia(SkillMultimediaRecord skillMultimediaRecord) {
         this.multimediaId = skillMultimediaRecord.multimediaId();
         this.userId = skillMultimediaRecord.userId();
-        this.url = skillMultimediaRecord.url();
+        this.bucketKey = skillMultimediaRecord.bucketKey();
         this.contentType = skillMultimediaRecord.contentType();
         this.length = skillMultimediaRecord.length();
         this.ordinal = skillMultimediaRecord.ordinal();
