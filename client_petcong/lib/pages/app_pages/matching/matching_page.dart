@@ -128,6 +128,10 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       return;
     }
     // matched
-    // -> 전화 오는 화면으로
+    // 전화 오는 화면으로
+
+    // 화면 띄워주면서, rtc 연결 시작
+    await socketService.joinRoom();
+    socketService.sendOffer(await socketService.initSocket()); // 바꾸기
   }
 }
