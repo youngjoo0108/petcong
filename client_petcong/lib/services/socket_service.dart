@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
-import 'package:petcong/pages/homepage.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
@@ -112,13 +110,12 @@ class SocketService extends GetxController {
   }
 
   Future<void> onCallPressed(call) async {
-    await initSocket();
-
     await _localRenderer.initialize();
     await _remoteRenderer.initialize();
     if (call == 'on') {
+      await initSocket();
       await joinRoom();
-      print(client);
+
       Get.to(
         MainVideoCallWidget(
           localRenderer: _localRenderer,
@@ -126,14 +123,20 @@ class SocketService extends GetxController {
         ),
       );
     } else {
-      if (_localStream != null) {
-        _localStream!.getTracks().forEach((track) {
-          track.stop();
-        });
-      }
-      await _localRenderer.dispose();
-      await _remoteRenderer.dispose();
-      Get.to(const HomePage());
+      // // if (_localStream != null) {
+      // //   print('here!!!!!!!!!!!!!!!!');
+      // //   _localStream!.getTracks().forEach((track) {
+      // //     track.stop();
+      // //   });
+      // // }
+
+      // print(
+      //     '??????????????????????????$_localStream, ${localRenderer.srcObject}');
+      // print(_localStream?.getAudioTracks());
+      // print(_localStream?.getVideoTracks());
+      // await _localRenderer.dispose();
+      // await _remoteRenderer.dispose();
+      // Get.to(const HomePage());
     }
   }
 
@@ -201,7 +204,6 @@ class SocketService extends GetxController {
     _localStream!.getTracks().forEach((track) {
       pc!.addTrack(track, _localStream!);
     });
-
     _localRenderer.srcObject = _localStream;
 
     pc!.onIceCandidate = (ice) {
