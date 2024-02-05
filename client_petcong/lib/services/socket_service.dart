@@ -217,7 +217,7 @@ class SocketService extends GetxController {
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
-          "userId": uid.toString(),
+          "uid": uid!.toString(),
           "info": "connect"
         },
         body: jsonEncode({"type": "joined", "value": ""}));
@@ -233,7 +233,7 @@ class SocketService extends GetxController {
         destination: '/queue/$targetId',
         headers: {
           "content-type": "application/json",
-          "userId": uid.toString(),
+          "uid": uid.toString(),
           "info": "connect"
         },
         body: jsonEncode(map));
@@ -256,7 +256,7 @@ class SocketService extends GetxController {
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
-          "userId": uid.toString(),
+          "uid": uid.toString(),
           "info": "connect"
         },
         body: jsonEncode(map));
@@ -277,7 +277,7 @@ class SocketService extends GetxController {
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
-          "userId": uid.toString(),
+          "uid": uid.toString(),
           "info": "connect"
         },
         body: jsonEncode(map));
