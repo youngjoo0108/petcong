@@ -7,6 +7,7 @@ class ProfileModel {
   late String petGender;
   late int petAge;
   String? description;
+  List<String>? pictureUrls;
 
   ProfileModel(
       {required this.userId,
@@ -16,7 +17,8 @@ class ProfileModel {
       required this.petName,
       required this.petGender,
       required this.petAge,
-      this.description});
+      this.description,
+      this.pictureUrls});
 
   ProfileModel.fromJson(Map<String, dynamic> map) {
     userId = map['userId'];
@@ -27,8 +29,18 @@ class ProfileModel {
     petGender = map['petGender'];
     petAge = map['petAge'];
     description = description != null ? map['description'] : '';
+    pictureUrls = pictureUrls != null ? map['pictureUrls'] : [];
   }
 
-  List<Object?> get props =>
-      [userId, age, nickname, gender, petName, petGender, petAge, description];
+  List<Object?> get props => [
+        userId,
+        age,
+        nickname,
+        gender,
+        petName,
+        petGender,
+        petAge,
+        description,
+        pictureUrls
+      ];
 }
