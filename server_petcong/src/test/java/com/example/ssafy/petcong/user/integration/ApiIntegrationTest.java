@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.ssafy.petcong.security.UserRole;
 import com.example.ssafy.petcong.user.model.dto.*;
 import com.example.ssafy.petcong.user.model.enums.Gender;
 import com.example.ssafy.petcong.user.model.enums.PetSize;
@@ -152,13 +153,12 @@ public class ApiIntegrationTest {
                     .multipart(HttpMethod.POST, "/users/picture")
                     .file(multipartFile)
                     .header("tester", "A603")
-                    .content("1")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
             //then
             MvcResult mvcResult = mockMvc
                     .perform(request)
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andReturn();
 
@@ -188,13 +188,12 @@ public class ApiIntegrationTest {
                     .multipart(HttpMethod.POST, "/users/trick")
                     .file(multipartFile)
                     .header("tester", "A603")
-                    .content("1")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
             //then
             MvcResult mvcResult = mockMvc
                     .perform(request)
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andReturn();
 
@@ -206,13 +205,12 @@ public class ApiIntegrationTest {
         }
     }
 
-    @Disabled
     @Test
     @DisplayName("GetMediaUrl Test")
     void testGetMediaUrl() throws Exception {
         //given
-        //String key = "1-anya.jpg";
-        String key = "1-video_sample.mp4";
+//        String key = UserRole.ANONYMOUS.getUid() + "/" + "anya.jpg";
+        String key = UserRole.ANONYMOUS.getUid() + "/" + "video_sample.mp4";
 
         //when
         var request = MockMvcRequestBuilders
