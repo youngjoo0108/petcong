@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-class MatchingCard extends StatelessWidget {
-  const MatchingCard({
+class MatchedCard extends StatelessWidget {
+  const MatchedCard({
     required this.name,
-    required this.description,
     required this.profileImages,
     super.key,
   });
 
   final String name;
-  final String description;
   final String profileImages;
 
   @override
@@ -21,7 +19,7 @@ class MatchingCard extends StatelessWidget {
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
+                // borderRadius: BorderRadius.circular(14),
                 image: DecorationImage(
                   image: AssetImage(profileImages),
                   fit: BoxFit.cover,
@@ -51,7 +49,7 @@ class MatchingCard extends StatelessWidget {
                   colors: <Color>[
                     Colors.black12.withOpacity(0),
                     Colors.black12.withOpacity(.4),
-                    Colors.black12.withOpacity(.82),
+                    Colors.black12.withOpacity(.62),
                   ],
                 ),
               ),
@@ -69,17 +67,7 @@ class MatchingCard extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                Text(
-                  description,
-                  style: const TextStyle(
-                    color: Color(0xFFFCFCFC),
-                    fontSize: 15,
-                    fontFamily: 'Mulish',
-                    fontWeight: FontWeight.w400,
-                    height: 1.8,
-                  ),
-                ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
               ],
             ),
           ),
