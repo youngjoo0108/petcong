@@ -15,8 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.springframework.messaging.simp.stomp.StompCommand.SEND;
-import static org.springframework.messaging.simp.stomp.StompCommand.SUBSCRIBE;
+import static org.springframework.messaging.simp.stomp.StompCommand.*;
 
 @Component
 public class PostWebSocketHandler implements ChannelInterceptor {
@@ -33,7 +32,9 @@ public class PostWebSocketHandler implements ChannelInterceptor {
         try {
             StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
             StompCommand command = accessor.getCommand();
-
+            if (command == DISCONNECT) {
+                System.out.println("------------------------disconnected-----------------------");
+            }
             if (!(command == SEND || command == SUBSCRIBE)) return;
 
             MessageHeaders headers = message.getHeaders();
@@ -53,20 +54,20 @@ public class PostWebSocketHandler implements ChannelInterceptor {
                     .toString();
             String uid = uidStr.substring(1, uidStr.length() - 1); // [] 제거
 
-            if (command == SUBSCRIBE) {
-                changeOnlineStatus(uid, true);
-                return;
-            }
+            System.out.println("---------------" + command + "--------------");
+
+            changeOnlineStatus(uid, true);
+
             List<Object> info = Arrays.asList(nativeHeaders.get("info"));
 
-            if (info == null || info.isEmpty()) return; // disconnect 요청이 아닌 일반 메시지인 경우
-
-            String connectInfo  = info.toString();
-            connectInfo = connectInfo.substring(1, connectInfo.length() - 1);
-            if (connectInfo.equals("disconnect")) {
-                changeOnlineStatus(uid, false);
+            if (command == SEND || info == null || info.isEmpty()) {
+                String connectInfo  = info.toString();
+                connectInfo = connectInfo.substring(1, connectInfo.length() - 1);
+                if (connectInfo.equals("disconnect")) {
+                System.out.println("---------------disconnecting message accepted--------------");
+                    changeOnlineStatus(uid, false);
+                }
             }
-
         // end
         } catch (Exception e) {
             e.printStackTrace();
