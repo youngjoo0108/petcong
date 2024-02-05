@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 // import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,9 +10,10 @@ import 'package:petcong/pages/signin_pages/sign_in_page.dart';
 import 'package:petcong/services/socket_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stomp_dart_client/stomp.dart';
 
 class UserController extends GetxController {
-  static UserController instance = Get.find();
   late Rx<User?> _user;
   FirebaseAuth authentication = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance; // Firestore 인스턴스 추가
@@ -83,17 +86,20 @@ class UserController extends GetxController {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-
     final userCredential = await FirebaseAuth.instance.signInWithCredential(
       credential,
     );
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('uid', userCredential.user!.uid);
+    String? idToken = await userCredential.user!.getIdToken();
+    prefs.setString('idToken', idToken ?? '');
     return userCredential.user;
   }
 
-  static Future<void> signOut() async {
+  static Future<void> signOut(String uid) async {
+    await SocketService().disposeSocket(uid);
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
-    SocketService().disposeSocket();
   }
 
   static User? get currentUser => user;
