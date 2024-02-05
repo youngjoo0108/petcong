@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
 //TODO: Resolve overlaying problem of this widget.
 
   void _showLogoutDropdown(BuildContext context) {
-    Overlay.of(context).insert(
+    if (_overlayEntry == null) {
       _overlayEntry = OverlayEntry(
         builder: (context) => Positioned(
           top: 80,
@@ -91,6 +91,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       UserController.signOut();
                       _overlayEntry?.remove();
+                      _overlayEntry = null;
                     },
                   ),
                 ],
@@ -98,7 +99,11 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-      ),
-    );
+      );
+      Overlay.of(context).insert(_overlayEntry!);
+    } else {
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+    }
   }
 }

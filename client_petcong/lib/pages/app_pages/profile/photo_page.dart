@@ -84,7 +84,7 @@ class _PhotoPageState extends State<PhotoPage> {
           title: LinearProgressIndicator(
             value: _progress,
             valueColor: const AlwaysStoppedAnimation<Color>(
-              Color.fromARGB(255, 249, 113, 95),
+              Color.fromARGB(255, 234, 64, 128),
             ),
           ),
         ),
