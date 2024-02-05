@@ -6,11 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    User findUserByUserId(int userId);
-    User findUserByUid(String uid);
+    Optional<User> findUserByUserId(int userId);
+    Optional<User> findUserByUid(String uid);
     User save(User user);
     int deleteUserByUserId(int userId);
     int deleteUserByUid(String uid);
