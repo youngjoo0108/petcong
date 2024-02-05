@@ -87,7 +87,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserImgRecord uploadUserImage(int userId, String uid, MultipartFile file) {
-        String key = UUID.fromString(uid + file.getOriginalFilename()).toString();
+//        String key = UUID.fromString(uid + file.getOriginalFilename()).toString();
+        String key = uid +"/" + file.getOriginalFilename();
         UserImgRecord result = userImgService.uploadUserImage(userId, key, file);
 
         awsService.upload(key, file);
@@ -98,7 +99,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public SkillMultimediaRecord uploadSkillMultimedia(int userId, String uid, MultipartFile file) {
-        String key = UUID.fromString(uid + file.getOriginalFilename()).toString();
+//        String key = UUID.fromString(uid + file.getOriginalFilename()).toString();
+        String key = uid +"/" + file.getOriginalFilename();
         SkillMultimediaRecord result = skillMultimediaService.uploadSkillMultimedia(userId, key, file);
 
         awsService.upload(key, file);
