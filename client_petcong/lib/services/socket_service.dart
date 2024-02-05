@@ -24,7 +24,7 @@ class SocketService extends GetxController {
   // RTC 변수
   // late MainVideoCall webrtc;
   RTCPeerConnection? pc;
-  String targetId = 'kS95PNT8RUc78Qr7TQ4uRaJmbw23';
+  String targetId = '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3';
   String subsPrefix = "/queue/";
   final _localRenderer = RTCVideoRenderer();
   final _remoteRenderer = RTCVideoRenderer();
@@ -50,7 +50,7 @@ class SocketService extends GetxController {
       if (onInitComplete != null) {
         onInitComplete!();
       }
-      debugPrint('!!!!!!!!!!!!!!!!!!!!!I get IdToken!!!!!!!!!!!!!!');
+      debugPrint('!!!!!!!!!!!!!!!!!!!!!I get IdToken$uid!!!!!!!!!!!!!!');
     } catch (e) {
       debugPrint('Error during initialization: $e');
     }
@@ -213,6 +213,7 @@ class SocketService extends GetxController {
     };
 
     client!.send(
+        // destination: subsPrefix + targetId.toString(),
         destination: subsPrefix + targetId.toString(),
         headers: {
           "content-type": "application/json",
