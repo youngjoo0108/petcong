@@ -1,7 +1,5 @@
-class UserModel {
-  int? userId;
+class UserInfoModel {
   int? age;
-  bool? callable;
   String? nickname;
   String? email;
   String? address;
@@ -13,10 +11,8 @@ class UserModel {
   String? status;
   String? preference;
 
-  UserModel(
-      {this.userId,
-      this.age,
-      this.callable,
+  UserInfoModel(
+      {this.age,
       this.nickname,
       this.email,
       this.address,
@@ -28,10 +24,8 @@ class UserModel {
       this.status,
       this.preference});
 
-  UserModel.fromJson(Map<String, dynamic> json) {
-    userId = json['userId'];
+  UserInfoModel.fromJson(Map<String, dynamic> json) {
     age = json['age'];
-    callable = json['callable'];
     nickname = json['nickname'];
     email = json['email'];
     address = json['address'];
@@ -46,9 +40,7 @@ class UserModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userId'] = this.userId;
     data['age'] = this.age;
-    data['callable'] = this.callable;
     data['nickname'] = this.nickname;
     data['email'] = this.email;
     data['address'] = this.address;
