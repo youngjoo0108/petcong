@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petcong/models/choice_res.dart';
+import 'package:petcong/pages/app_pages/matching/call_waiting_page.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
 import 'package:petcong/services/socket_service.dart';
 import 'package:petcong/services/matching_service.dart';
@@ -97,7 +98,9 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'call',
         onPressed: () {
-          socketService.onCallPressed('on');
+          // socketService.onCallPressed('on');
+          Get.to(const CallWaiting());
+          // onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2');
         },
         label: const Text('call'),
         icon: const Icon(Icons.call),
@@ -111,10 +114,8 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     }
   }
 
-  /**
-   * targetId = int
-   */
-  Future<void> onLike(int targetId) async {
+  /// targetId = int
+  Future<void> onLike(String targetId) async {
     ChoiceRes? choiceRes;
     try {
       choiceRes = await matchingService.postMatching(targetId);
@@ -129,9 +130,11 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     }
     // matched
     // 전화 오는 화면으로
-
+    Get.to(const CallWaiting());
+    // 화면 띄워주면서, rtc 연결 시작
     // 화면 띄워주면서, rtc 연결 시작
     await socketService.joinRoom();
-    socketService.sendOffer(await socketService.initSocket()); // 바꾸기
+    socketService.sendOffer(
+        await socketService.initSocket(), choiceRes.targetUid!); // 바꾸기// 바꾸기
   }
 }

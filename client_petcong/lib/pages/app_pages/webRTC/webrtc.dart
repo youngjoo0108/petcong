@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
@@ -15,9 +16,7 @@ class MainVideoCallWidget extends StatefulWidget {
 }
 
 class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
-  double localVideoLeft = 200.0;
-  double localVideoTop = 50.0;
-  double localVideoScale = 0.5;
+  double localVideoScale = 1;
   late double videoWidth = MediaQuery.of(context).size.width * localVideoScale;
   late double videoHeight =
       MediaQuery.of(context).size.height * localVideoScale;
@@ -41,68 +40,53 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Center(
-          child: Stack(
-            children: [
-              // Remote Video
-              Positioned.fill(
+    return Scaffold(
+      body: Stack(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
                 child: RTCVideoView(
                   widget.remoteRenderer,
                   mirror: false,
                 ),
               ),
-
-              SizedBox(
-                // width: MediaQuery.of(context).size.width * localVideoScale,
-                // height: MediaQuery.of(context).size.height * localVideoScale,
-                child: InteractiveViewer(
-                  // width: videoWidth,
-                  // height: videoHeight,
-                  boundaryMargin: const EdgeInsets.all(double.infinity),
-                  minScale: 0.3,
-                  maxScale: 0.5,
-                  scaleEnabled: true,
-                  onInteractionUpdate: (details) {
-                    setState(() {
-                      localVideoLeft = details.localFocalPoint.dx;
-                      localVideoTop = details.localFocalPoint.dy;
-                      videoWidth =
-                          MediaQuery.of(context).size.width * localVideoScale;
-
-                      videoHeight =
-                          MediaQuery.of(context).size.height * localVideoScale;
-                      localVideoScale = details.scale;
-                    });
-                  },
-
-                  // width: videoWidth,
-                  // height: videoHeight,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: RTCVideoView(
-                      widget.localRenderer,
-                      objectFit:
-                          RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-                      mirror: true,
-                    ),
+            ),
+          ),
+          Positioned(
+            left: MediaQuery.of(context).size.width * (5 / 8),
+            top: MediaQuery.of(context).size.height / 25,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width / 3,
+              height: MediaQuery.of(context).size.height / 3,
+              child: Positioned(
+                left: MediaQuery.of(context).size.width,
+                top: MediaQuery.of(context).size.height / 100,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: RTCVideoView(
+                    widget.localRenderer,
+                    objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                    mirror: true,
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            widget.localRenderer.srcObject!.getTracks().forEach((track) {
-              track.stop();
-            });
-            await Future.delayed(const Duration(seconds: 2));
-            Get.offAll(const HomePage());
-          },
-          child: const Icon(Icons.call_end),
-        ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          widget.localRenderer.srcObject!.getTracks().forEach((track) {
+            track.stop();
+          });
+          await Future.delayed(const Duration(seconds: 2));
+          Get.offAll(const HomePage());
+        },
+        child: const Icon(Icons.call_end),
       ),
     );
   }

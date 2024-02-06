@@ -56,7 +56,8 @@ dependencies:
   swipable_stack: ^2.0.0
   http: ^1.2.0
   auto_animated: ^3.2.0
-
+  getwidget: ^4.0.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

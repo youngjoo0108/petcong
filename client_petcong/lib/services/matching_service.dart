@@ -26,10 +26,10 @@ class MatchingService extends GetxController {
     reqHeaders = {'tester': 'A603'};
   }
 
-  Future<dynamic> postMatching(int targetUserId) async {
+  Future<dynamic> postMatching(String targetUid) async {
     String endpoint = '$serverUrl/matchings/choice';
     final response = await http.post(Uri.parse(endpoint),
-        headers: reqHeaders, body: jsonEncode({'partnerUserId': targetUserId}));
+        headers: reqHeaders, body: jsonEncode({'partnerUserUid': targetUid}));
 
     if (response.statusCode == 200) {
       return ChoiceRes.fromJson(jsonDecode(response.body));
@@ -37,8 +37,8 @@ class MatchingService extends GetxController {
       return;
     } else {
       if (kDebugMode) {
-        print('code = ' + response.statusCode.toString());
-        print('errMsg = ' + response.body);
+        print('code = ${response.statusCode}');
+        print('errMsg = ${response.body}');
       } else {
         throw Exception("invalid matching request");
       }

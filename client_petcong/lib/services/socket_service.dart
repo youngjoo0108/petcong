@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:petcong/pages/app_pages/matching/matching_page.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +19,6 @@ class SocketService extends GetxController {
   String? uid;
   String? idToken;
   VoidCallback? onInitComplete;
-
   // RTC 변수
   // late MainVideoCall webrtc;
   RTCPeerConnection? pc;
@@ -81,7 +81,7 @@ class SocketService extends GetxController {
 
                 switch (type) {
                   case 'matched':
-                    joinRoom(); // async 체크
+                    // async 체크
                     break;
                   case 'offer':
                     gotOffer(value['sdp'], value['type']);
@@ -112,12 +112,12 @@ class SocketService extends GetxController {
   }
 
   Future<void> onCallPressed(call) async {
-    await _localRenderer.initialize();
-    await _remoteRenderer.initialize();
     if (call == 'on') {
-      await initSocket();
-      await joinRoom();
+      await _localRenderer.initialize();
+      await _remoteRenderer.initialize();
+      //
 
+      // 마이크 카메라 끄
       Get.to(
         MainVideoCallWidget(
           localRenderer: _localRenderer,
@@ -125,6 +125,7 @@ class SocketService extends GetxController {
         ),
       );
     } else {
+      // 키
       // // if (_localStream != null) {
       // //   print('here!!!!!!!!!!!!!!!!');
       // //   _localStream!.getTracks().forEach((track) {
@@ -175,6 +176,8 @@ class SocketService extends GetxController {
   // webRTC
 
   Future joinRoom() async {
+    await initSocket();
+
     final config = {
       'iceServers': [
         {"url": "stun:stun.l.google.com:19302"},
@@ -228,6 +231,9 @@ class SocketService extends GetxController {
   }
 
   Future<void> startCamera() async {
+    await _localRenderer.initialize();
+    await _remoteRenderer.initialize();
+
     if (pc != null) {
       final mediaConstraints = {
         'audio': true,
@@ -243,16 +249,23 @@ class SocketService extends GetxController {
       // (화면에 띄울) localRenderer의 데이터 소스를 내 localStream으로 설정
       _localRenderer.srcObject = _localStream;
     }
+    // 마이크 카메라 끄
+    Get.to(
+      MainVideoCallWidget(
+        localRenderer: _localRenderer,
+        remoteRenderer: _remoteRenderer,
+      ),
+    );
   }
 
 // --- webrtc - 메소드들 ---
-  Future sendOffer(StompClient client) async {
+  Future sendOffer(StompClient client, String targetUid) async {
     debugPrint('send offer');
     var offer = await pc!.createOffer();
     pc!.setLocalDescription(offer);
     var map = {"type": "offer", "value": offer.toMap()};
     client.send(
-        destination: '/queue/$targetId',
+        destination: '/queue/$targetUid',
         headers: {
           "content-type": "application/json",
           "uid": uid.toString(),
