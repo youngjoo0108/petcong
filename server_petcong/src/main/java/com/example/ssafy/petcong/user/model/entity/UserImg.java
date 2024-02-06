@@ -2,6 +2,7 @@ package com.example.ssafy.petcong.user.model.entity;
 
 import com.example.ssafy.petcong.user.model.dto.UserImgRecord;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -9,6 +10,7 @@ import lombok.*;
 @Entity
 @Table(name = "user_imgs")
 @Getter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserImg {
     @Id
@@ -18,6 +20,8 @@ public class UserImg {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
+    @JsonBackReference
     private User user;
 
     private int ordinal;

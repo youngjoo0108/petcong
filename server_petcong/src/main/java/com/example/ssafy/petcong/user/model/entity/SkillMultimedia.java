@@ -2,6 +2,7 @@ package com.example.ssafy.petcong.user.model.entity;
 
 import com.example.ssafy.petcong.user.model.dto.SkillMultimediaRecord;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -18,6 +19,8 @@ public class SkillMultimedia {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
+    @JsonBackReference
     private User user;
 
     private int ordinal;

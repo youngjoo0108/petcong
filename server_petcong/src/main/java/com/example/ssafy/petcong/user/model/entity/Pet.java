@@ -5,6 +5,7 @@ import com.example.ssafy.petcong.user.model.dto.PetRecord;
 import com.example.ssafy.petcong.user.model.enums.Gender;
 import com.example.ssafy.petcong.user.model.enums.PetSize;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -22,6 +23,8 @@ public class Pet {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    @JsonBackReference
     private User user;
 
     private String name;

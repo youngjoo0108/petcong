@@ -17,6 +17,7 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
