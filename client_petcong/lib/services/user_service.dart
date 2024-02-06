@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:petcong/controller/user_controller.dart';
+import 'package:petcong/models/user_info_model.dart';
 import 'package:petcong/models/user_model.dart';
+import 'package:petcong/models/user_signup_model.dart';
 
 const bool testing = true;
 
@@ -13,7 +15,8 @@ String idTokenString = currentUser?.getIdToken().toString() ?? "";
 const String serverUrl = 'https://i10a603.p.ssafy.io';
 Map<String, String> reqHeaders = checkTesting();
 
-Future<void> postSignup(UserModel user) async {
+// POST /users/signup
+Future<void> postSignup(UserSignupModel user) async {
   final response = await http.post(Uri.parse('$serverUrl/users/signup'),
       headers: reqHeaders, body: jsonEncode(user.toJson()));
 
@@ -35,7 +38,7 @@ Future<void> postSignup(UserModel user) async {
 // 가입한적이 있는 경우 true, 없는 경우 false를 반환합니다.
 Future<bool> postSignin() async {
   final response = await http.post(Uri.parse('$serverUrl/users/signin'),
-      headers: reqHeaders, body: jsonEncode({'idToken': idTokenString}));
+      headers: reqHeaders);
 
   if (response.statusCode == 200) {
     if (kDebugMode) {
@@ -76,7 +79,7 @@ Future<UserModel> getUserInfo() async {
 }
 
 // PATCH /users/update
-Future<void> patchUserInfo(UserModel user) async {
+Future<void> patchUserInfo(UserInfoModel user) async {
   final response = await http.patch(Uri.parse('$serverUrl/users/update'),
       headers: reqHeaders, body: jsonEncode(user.toJson()));
 
@@ -168,6 +171,7 @@ Future<void> withdrawUser() async {
   }
 }
 
+// TODO: refactor to throw exception if idTokenString is null
 Map<String, String> checkTesting() {
   return testing ? {'tester': 'A603'} : {'Petcong-id-token': idTokenString};
 }
