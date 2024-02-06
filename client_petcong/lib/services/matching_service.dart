@@ -43,3 +43,18 @@ Future<ProfileModel> getProfile() async {
     throw Exception("getProfile request failed");
   }
 }
+
+// GET /matchings/matchList
+Future<List<ProfileModel>> getMatchList() async {
+  final response = await http.get(Uri.parse('$serverUrl/matchings/list'),
+      headers: reqHeaders);
+
+  if (response.statusCode == 200) {
+    if (kDebugMode) print(jsonDecode(response.body));
+    return (jsonDecode(response.body) as List)
+        .map((e) => ProfileModel.fromJson(e))
+        .toList();
+  } else {
+    throw Exception("getMatchList request failed");
+  }
+}
