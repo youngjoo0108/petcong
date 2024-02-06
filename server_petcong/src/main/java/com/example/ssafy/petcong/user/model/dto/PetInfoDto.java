@@ -12,12 +12,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Schema(title = "반려동물 정보", description = "user_id와 pet_id 값은 저장하지 않음")
 public class PetInfoDto {
@@ -68,4 +68,21 @@ public class PetInfoDto {
     @Size(max = 25, message = "max length is 25")
     @Schema(title = "좋아하는 장난감")
     private String toy;
+
+    public static PetInfoDto fromPetRecord(PetRecord petRecord) {
+        return new PetInfoDto(
+                petRecord.name(),
+                petRecord.breed(),
+                petRecord.age(),
+                petRecord.gender(),
+                petRecord.neutered(),
+                petRecord.size(),
+                petRecord.petId(),
+                petRecord.description(),
+                petRecord.dbti(),
+                petRecord.hobby(),
+                petRecord.snack(),
+                petRecord.toy()
+        );
+    }
 }

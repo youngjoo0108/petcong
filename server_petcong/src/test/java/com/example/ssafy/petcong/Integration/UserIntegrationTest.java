@@ -1,4 +1,4 @@
-package com.example.ssafy.petcong.user.integration;
+package com.example.ssafy.petcong.Integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,8 +13,6 @@ import com.example.ssafy.petcong.user.model.enums.Preference;
 import com.example.ssafy.petcong.user.model.enums.Status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import jakarta.transaction.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,10 +39,10 @@ import java.time.LocalDate;
 import java.util.stream.Stream;
 
 @Slf4j
-@Transactional
+//@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ApiIntegrationTest {
+public class UserIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -54,9 +52,9 @@ public class ApiIntegrationTest {
         UserInfoDto userInfoDto = new UserInfoDto();
         userInfoDto.setAge(10);
         userInfoDto.setNickname("nickname");
-        userInfoDto.setEmail("test@test.com");
+        userInfoDto.setEmail("signuptest@signuptest.com");
         userInfoDto.setAddress("korea");
-        userInfoDto.setUid("testuid1");
+        userInfoDto.setUid("signuptest");
         userInfoDto.setInstagramId("instatonid");
         userInfoDto.setKakaoId("kakaochocolate");
         userInfoDto.setBirthday(LocalDate.of(1997, 1, 29));
@@ -135,7 +133,6 @@ public class ApiIntegrationTest {
         log.info("Signin Test: " + response);
     }
 
-    @Disabled
     @Test
     @DisplayName("PostProfileImage Test")
     void testPostProfileImage() throws Exception {
@@ -143,7 +140,7 @@ public class ApiIntegrationTest {
             //given
             byte[] bytes = fileInputStream.readAllBytes();
             MockMultipartFile multipartFile = new MockMultipartFile(
-                    "file",
+                    "files",
                     "anya.jpg",
                     MediaType.MULTIPART_FORM_DATA_VALUE,
                     bytes);
@@ -170,7 +167,6 @@ public class ApiIntegrationTest {
         }
     }
 
-    @Disabled
     @Test
     @DisplayName("PostDogTrick Test")
     void testPostDogTrick() throws Exception {
@@ -178,7 +174,7 @@ public class ApiIntegrationTest {
             //given
             byte[] bytes = fileInputStream.readAllBytes();
             MockMultipartFile multipartFile = new MockMultipartFile(
-                    "file",
+                    "files",
                     "video_sample.mp4",
                     MediaType.MULTIPART_FORM_DATA_VALUE,
                     bytes);
@@ -270,11 +266,10 @@ public class ApiIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        String response = mvcResult.getResponse().getContentAsString();
+        String response = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
 
         assertThat(response).isNotNull();
 
         log.info("GetUserInfo Test: " + response);
     }
-
 }

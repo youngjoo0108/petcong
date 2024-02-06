@@ -37,8 +37,9 @@ public record UserRecord(
         Status status,
         @Schema(title = "선호")
         Preference preference) {
-        public UserRecord(User user) {
-                this(
+
+        public static UserRecord fromUserEntity(User user) {
+                return new UserRecord(
                         user.getUserId(),
                         user.getAge(),
                         user.isCallable(),

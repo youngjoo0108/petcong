@@ -23,7 +23,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URI;
 import java.util.List;
 
 @Slf4j
@@ -32,9 +31,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "UserController API")
 public class UserController {
-
-    private final UserService userService;
     private final AWSService awsService;
+    private final UserService userService;
 
     @Operation(summary = "회원가입", description = "가입 기록이 없는 유저 정보 저장",
             parameters = @Parameter(schema = @Schema(implementation = SignupRequestDto.class)),
@@ -69,15 +67,15 @@ public class UserController {
 
     @Operation(summary = "회원 상세 정보 조회",
             responses = @ApiResponse(responseCode = "200", description = "조회 성공",
-                    content = @Content(schema = @Schema(implementation = UserRecord.class)))
+                    content = @Content(schema = @Schema(implementation = ProfileDto.class)))
     )
     @GetMapping("/info")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int userId) {
-        UserRecord user = userService.findUserByUserId(userId);
+        ProfileDto profile = userService.getProfile(userId);
 
         return ResponseEntity
                 .ok()
-                .body(user);
+                .body(profile);
     }
 
     @Operation(summary = "회원 정보 수정",
@@ -118,12 +116,12 @@ public class UserController {
     public ResponseEntity<?> postProfileImage(
             @AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int userId,
             @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
-            @RequestParam("file") MultipartFile file
+            @RequestParam MultipartFile[] files
     ) {
-        UserImgRecord userImgRecord = userService.uploadUserImage(userId, uid, file);
+        List<UserImgRecord> userImgRecord = userService.uploadUserImage(userId, uid, files);
 
         return ResponseEntity
-                .created(URI.create(userImgRecord.bucketKey()))
+                .created(null)
                 .body(userImgRecord);
     }
 
@@ -137,12 +135,12 @@ public class UserController {
     public ResponseEntity<?> postDogTrick(
             @AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int userId,
             @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
-            @RequestParam("file") MultipartFile file
+            @RequestParam MultipartFile[] files
     ) {
-        SkillMultimediaRecord skillMultimediaRecord = userService.uploadSkillMultimedia(userId, uid, file);
+        List<SkillMultimediaRecord> skillMultimediaRecord = userService.uploadSkillMultimedia(userId, uid, files);
 
         return ResponseEntity
-                .created(URI.create(skillMultimediaRecord.bucketKey()))
+                .created(null)
                 .body(skillMultimediaRecord);
     }
 

@@ -1,6 +1,7 @@
 package com.example.ssafy.petcong.matching.service;
 
 
+import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.model.entity.UserImg;
 import com.example.ssafy.petcong.user.repository.UserImgRepository;
 
@@ -31,13 +32,14 @@ public class ImageUrlServiceTest {
     public void testGetUrlsById() {
 
         int userId = 1;
+        User user = User.builder().userId(userId).build();
         List<UserImg> userImgList = Arrays.asList(
-                UserImg.builder().imgId(1).user(userId).bucketKey("url1").build(),
-                UserImg.builder().imgId(2).user(userId).bucketKey("url2").build(),
-                UserImg.builder().imgId(3).user(userId).bucketKey("url3").build()
+                UserImg.builder().imgId(1).user(user).bucketKey("url1").build(),
+                UserImg.builder().imgId(2).user(user).bucketKey("url2").build(),
+                UserImg.builder().imgId(3).user(user).bucketKey("url3").build()
         );
 
-        when(imageRepository.findByUserId(userId)).thenReturn(userImgList);
+        when(imageRepository.findUserImgByUser_UserId(userId)).thenReturn(userImgList);
 
         List<String> urls = profileService.pictures(userId);
         List<String> expectedUrls = Arrays.asList("url1", "url2", "url3");

@@ -35,7 +35,7 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
     private final int NO_USER = -1;
 
     public List<String> pictures(int userId) {
-        List<UserImg> imgList =  userImgRepository.findByUserId(userId);
+        List<UserImg> imgList =  userImgRepository.findUserImgByUser_UserId(userId);
         return imgList.stream()
                 .map(UserImg::getBucketKey)
                 .map(awsService::createPresignedUrl)

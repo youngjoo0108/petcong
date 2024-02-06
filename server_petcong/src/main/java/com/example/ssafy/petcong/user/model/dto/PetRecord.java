@@ -11,8 +11,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record PetRecord(
         @Schema(title = "펫 아이디")
         int petId,
-        @Schema(title = "유저 아이디")
-        int userId,
+        @Schema(title = "유저 record")
+        UserRecord user,
         @Schema(title = "이름")
         String name,
         @Schema(title = "종")
@@ -38,10 +38,11 @@ public record PetRecord(
         @Schema(title = "좋아하는 장난감")
         String toy
 ) {
-    public PetRecord(Pet pet) {
-        this(
+
+    public static PetRecord fromPetEntity(Pet pet) {
+        return new PetRecord(
                 pet.getPetId(),
-                pet.getUserId(),
+                UserRecord.fromUserEntity(pet.getUser()),
                 pet.getName(),
                 pet.getBreed(),
                 pet.getAge(),
