@@ -44,7 +44,7 @@ class NicknamePageState extends State<NicknamePage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
             Align(

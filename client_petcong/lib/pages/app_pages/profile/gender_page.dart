@@ -50,7 +50,10 @@ class GenderPageState extends State<GenderPage> {
                 ),
               ),
               const SizedBox(height: 10.0),
-              const Center(child: Text('저는', style: TextStyle(fontSize: 32.0))),
+              const Center(
+                  child: Text('저는',
+                      style: TextStyle(
+                          fontSize: 32.0, fontWeight: FontWeight.w600))),
               const SizedBox(height: 30.0),
               Center(
                 child: SizedBox(

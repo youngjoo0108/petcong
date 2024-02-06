@@ -50,6 +50,7 @@ class PetGenderPageState extends State<PetGenderPage> {
                   onPressed: () => Get.back(),
                 ),
               ),
+              const SizedBox(height: 10.0),
               Text('${widget.petName}의 성별은?',
                   style: const TextStyle(
                       fontSize: 32.0, fontWeight: FontWeight.w600)),

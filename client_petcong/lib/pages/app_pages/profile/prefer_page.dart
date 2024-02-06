@@ -50,7 +50,9 @@ class PreferPageState extends State<PreferPage> {
               ),
               const SizedBox(height: 10.0),
               const Center(
-                  child: Text('추천 상대!', style: TextStyle(fontSize: 32.0))),
+                  child: Text('추천 상대!',
+                      style: TextStyle(
+                          fontSize: 32.0, fontWeight: FontWeight.w600))),
               const SizedBox(height: 30.0),
               Center(
                 child: SizedBox(

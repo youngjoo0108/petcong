@@ -7,6 +7,9 @@ import 'video_page.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
+import 'package:http_parser/http_parser.dart';
 
 // 이미지를 선택하고 화면에 표시되는 기능
 class DisplayImage extends StatelessWidget {

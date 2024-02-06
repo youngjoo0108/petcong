@@ -103,7 +103,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(0.0),
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
                   Text(
