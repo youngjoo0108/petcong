@@ -18,8 +18,9 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   double localVideoLeft = 200.0;
   double localVideoTop = 50.0;
   double localVideoScale = 0.5;
-  double videoWidth = 200;
-  double videoHeight = 400;
+  late double videoWidth = MediaQuery.of(context).size.width * localVideoScale;
+  late double videoHeight =
+      MediaQuery.of(context).size.height * localVideoScale;
 
   @override
   void initState() {
@@ -40,59 +41,68 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Stack(
-          children: [
-            // Remote Video
-            Positioned.fill(
-              child: RTCVideoView(
-                widget.remoteRenderer,
-                mirror: false,
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: Stack(
+            children: [
+              // Remote Video
+              Positioned.fill(
+                child: RTCVideoView(
+                  widget.remoteRenderer,
+                  mirror: false,
+                ),
               ),
-            ),
-            // Local Video
-            Positioned.fill(
-              child: InteractiveViewer(
-                boundaryMargin: const EdgeInsets.all(double.infinity),
-                minScale: 0.3,
-                maxScale: 0.5,
-                scaleEnabled: true,
-                onInteractionUpdate: (details) {
-                  setState(() {
-                    localVideoLeft = details.localFocalPoint.dx;
-                    localVideoTop = details.localFocalPoint.dy;
-                    localVideoScale = details.scale;
-                    videoWidth = 200 * localVideoScale;
-                    videoHeight = 400 * localVideoScale;
-                  });
-                },
-                child: SizedBox(
-                  // width: 200 * localVideoScale,
-                  // height: 400 * localVideoScale,
-                  width: videoWidth,
-                  height: videoHeight,
-                  child: Positioned(
+
+              SizedBox(
+                // width: MediaQuery.of(context).size.width * localVideoScale,
+                // height: MediaQuery.of(context).size.height * localVideoScale,
+                child: InteractiveViewer(
+                  // width: videoWidth,
+                  // height: videoHeight,
+                  boundaryMargin: const EdgeInsets.all(double.infinity),
+                  minScale: 0.3,
+                  maxScale: 0.5,
+                  scaleEnabled: true,
+                  onInteractionUpdate: (details) {
+                    setState(() {
+                      localVideoLeft = details.localFocalPoint.dx;
+                      localVideoTop = details.localFocalPoint.dy;
+                      videoWidth =
+                          MediaQuery.of(context).size.width * localVideoScale;
+
+                      videoHeight =
+                          MediaQuery.of(context).size.height * localVideoScale;
+                      localVideoScale = details.scale;
+                    });
+                  },
+
+                  // width: videoWidth,
+                  // height: videoHeight,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
                     child: RTCVideoView(
                       widget.localRenderer,
+                      objectFit:
+                          RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
                       mirror: true,
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          widget.localRenderer.srcObject!.getTracks().forEach((track) {
-            track.stop();
-          });
-          await Future.delayed(const Duration(seconds: 2));
-          Get.offAll(const HomePage());
-        },
-        child: const Icon(Icons.call_end),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            widget.localRenderer.srcObject!.getTracks().forEach((track) {
+              track.stop();
+            });
+            await Future.delayed(const Duration(seconds: 2));
+            Get.offAll(const HomePage());
+          },
+          child: const Icon(Icons.call_end),
+        ),
       ),
     );
   }
