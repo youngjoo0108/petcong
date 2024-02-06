@@ -97,7 +97,7 @@ class _NicknamePageState extends State<NicknamePage> {
                       // 'CONTINUE' 버튼을 누르면 UserController의 nickname을 업데이트하고, BirthdayPage로 이동합니다.
                       userController.nickname = _controller.text.trim();
                       Get.to(BirthdayPage(
-                        progress: widget.progress + 1 / 10,
+                        progress: widget.progress + 1 / 12,
                       ));
                     }
                   : null,

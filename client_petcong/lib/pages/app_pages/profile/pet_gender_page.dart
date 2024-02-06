@@ -125,7 +125,7 @@ class _PetGenderPageState extends State<PetGenderPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => IntroducePage(
-                              progress: widget.progress + 1 / 10,
+                              progress: widget.progress + 1 / 12,
                             ),
                           ),
                         );

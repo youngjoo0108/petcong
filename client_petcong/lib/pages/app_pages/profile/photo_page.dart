@@ -6,6 +6,7 @@ import 'media_page.dart';
 import 'video_page.dart';
 import 'package:get/get.dart';
 import 'dart:io';
+import 'package:flutter_svg/flutter_svg.dart';
 
 // 이미지를 선택하고 화면에 표시되는 기능
 class DisplayImage extends StatelessWidget {
@@ -100,18 +101,20 @@ class _PhotoPageState extends State<PhotoPage> {
             ),
             const SizedBox(height: 10.0),
             const Center(
-              child: Text('사진 첨부',
-                  style:
-                      TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600)),
+              child: Text(
+                '사진 첨부',
+                style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600),
+              ),
             ),
             const SizedBox(height: 10.0),
             const Center(
               child: Text(
                 '최소 2개의 사진을 첨부해주세요',
                 style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey),
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
+                ),
               ),
             ),
             const SizedBox(height: 60.0),
@@ -120,20 +123,29 @@ class _PhotoPageState extends State<PhotoPage> {
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  crossAxisSpacing: 0.0, // 간격을 증가시켰습니다.
-                  mainAxisSpacing: 0.0, // 간격을 증가시켰습니다.
+                  crossAxisSpacing: 0.0,
+                  mainAxisSpacing: 0.0,
                 ),
                 itemCount: 6,
                 itemBuilder: (context, index) {
                   if (index < _photoPaths.length) {
-                    // 이미지가 선택되었다면 해당 이미지를 표시하고 '-' 버튼을 추가합니다.
                     return Padding(
-                      padding:
-                          const EdgeInsets.all(10.0), // 각 그리드 아이템에 패딩을 추가합니다.
+                      padding: const EdgeInsets.all(10.0),
                       child: Stack(
-                        clipBehavior: Clip.none, // 이 줄을 추가했습니다.
+                        clipBehavior: Clip.none,
                         children: [
                           DisplayImage(imagePath: _photoPaths[index]),
+                          if (index == 0) // 첫 번째 그리드일 때만 아이콘을 표시합니다.
+                            Positioned(
+                              top: -55,
+                              left: 15,
+                              child: SvgPicture.asset(
+                                'assets/src/crown.svg',
+                                width: 60,
+                                height: 50,
+                                color: const Color.fromARGB(255, 249, 113, 95),
+                              ),
+                            ),
                           Positioned(
                             bottom: -8,
                             right: -8,
@@ -145,12 +157,10 @@ class _PhotoPageState extends State<PhotoPage> {
                       ),
                     );
                   } else {
-                    // 아직 이미지가 선택되지 않았다면 '+' 버튼을 표시합니다.
                     return Padding(
-                      padding:
-                          const EdgeInsets.all(10.0), // 각 그리드 아이템에 패딩을 추가합니다.
+                      padding: const EdgeInsets.all(10.0),
                       child: Stack(
-                        clipBehavior: Clip.none, // 이 줄을 추가했습니다.
+                        clipBehavior: Clip.none,
                         children: [
                           GridWithPlusButton(
                             onTap: () => navigateToMediaPage(),
@@ -165,20 +175,21 @@ class _PhotoPageState extends State<PhotoPage> {
             Center(
               child: Column(
                 children: [
-                  const SizedBox(height: 30.0), // 원하는 간격을 추가합니다.
+                  const SizedBox(height: 30.0),
                   ContinueButton(
-                    isFilled:
-                        _photoPaths.length >= 2, // 사진이 두 장 이상 추가되었는지 확인합니다.
+                    isFilled: _photoPaths.length >= 2,
                     buttonText: 'CONTINUE',
                     onPressed: _photoPaths.length >= 2
                         ? () {
-                            Get.to(VideoPage(
-                              progress: _progress + 0.1, // 여기에서 1/10을 더해줍니다.
-                            ));
+                            Get.to(
+                              VideoPage(
+                                progress: _progress + 1 / 12,
+                              ),
+                            );
                           }
                         : null,
-                    width: 240.0, // 원하는 가로 길이를 설정
-                    height: 30.0, // 원하는 세로 길이를 설정
+                    width: 240.0,
+                    height: 30.0,
                   ),
                 ],
               ),

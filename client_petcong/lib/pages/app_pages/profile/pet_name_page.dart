@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'pet_birthday_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
-import 'gender_page.dart';
+import 'prefer_page.dart';
 
 class PetNamePage extends StatefulWidget {
   final double progress;
@@ -60,7 +60,7 @@ class _PetNamePageState extends State<PetNamePage> {
                 alignment: Alignment.centerLeft,
                 child: IconButton(
                   icon: const Icon(Icons.close, size: 32),
-                  onPressed: () => Get.off(const GenderPage(progress: 2 / 10)),
+                  onPressed: () => Get.off(const PreferPage(progress: 4 / 12)),
                 ),
               ),
               const SizedBox(height: 10.0),
@@ -100,7 +100,7 @@ class _PetNamePageState extends State<PetNamePage> {
                     ? () {
                         Get.to(PetBirthdayPage(
                           petName: _controller.text,
-                          progress: widget.progress + 1 / 10,
+                          progress: widget.progress + 1 / 12,
                         ));
                       }
                     : null,
