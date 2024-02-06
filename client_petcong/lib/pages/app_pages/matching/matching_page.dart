@@ -99,8 +99,8 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
         heroTag: 'call',
         onPressed: () {
           // socketService.onCallPressed('on');
-          Get.to(const CallWaiting());
-          // onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2');
+          // Get.to(const CallWaiting());
+          onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2');
         },
         label: const Text('call'),
         icon: const Icon(Icons.call),
@@ -115,10 +115,10 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   }
 
   /// targetId = int
-  Future<void> onLike(String targetId) async {
+  Future<void> onLike(String targetUId) async {
     ChoiceRes? choiceRes;
     try {
-      choiceRes = await matchingService.postMatching(targetId);
+      choiceRes = await matchingService.postMatching(targetUId);
     } catch (exception) {
       // print("exception = " + exception.toString());
       print("alert: 잘못된 요청");
@@ -133,7 +133,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     Get.to(const CallWaiting());
     // 화면 띄워주면서, rtc 연결 시작
     // 화면 띄워주면서, rtc 연결 시작
-    await socketService.joinRoom();
+    await socketService.joinRoom(targetUId);
     socketService.sendOffer(
         await socketService.initSocket(), choiceRes.targetUid!); // 바꾸기// 바꾸기
   }

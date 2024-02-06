@@ -22,7 +22,7 @@ class SocketService extends GetxController {
   // RTC 변수
   // late MainVideoCall webrtc;
   RTCPeerConnection? pc;
-  String targetId = 'kS95PNT8RUc78Qr7TQ4uRaJmbw23';
+  // String targetId = 'kS95PNT8RUc78Qr7TQ4uRaJmbw23';
   String subsPrefix = "/queue/";
   final _localRenderer = RTCVideoRenderer();
   final _remoteRenderer = RTCVideoRenderer();
@@ -85,7 +85,7 @@ class SocketService extends GetxController {
                     break;
                   case 'offer':
                     gotOffer(value['sdp'], value['type']);
-                    sendAnswer(client!);
+                    sendAnswer(client!, uid!);
                     break;
                   case 'answer':
                     gotAnswer(value['sdp'], value['type']);
@@ -115,9 +115,7 @@ class SocketService extends GetxController {
     if (call == 'on') {
       await _localRenderer.initialize();
       await _remoteRenderer.initialize();
-      //
 
-      // 마이크 카메라 끄
       Get.to(
         MainVideoCallWidget(
           localRenderer: _localRenderer,
@@ -175,7 +173,7 @@ class SocketService extends GetxController {
 
   // webRTC
 
-  Future joinRoom() async {
+  Future joinRoom(String targetUId) async {
     await initSocket();
 
     final config = {
@@ -212,7 +210,7 @@ class SocketService extends GetxController {
     _localRenderer.srcObject = _localStream;
 
     pc!.onIceCandidate = (ice) {
-      sendIce(ice, client!);
+      sendIce(ice, client!, targetUId);
     };
 
     pc!.onAddStream = (stream) {
@@ -280,7 +278,7 @@ class SocketService extends GetxController {
     pc!.setRemoteDescription(offer);
   }
 
-  Future sendAnswer(StompClient client) async {
+  Future sendAnswer(StompClient client, String targetUid) async {
     debugPrint('send answer');
     var answer = await pc!.createAnswer();
     pc!.setLocalDescription(answer);
@@ -288,7 +286,7 @@ class SocketService extends GetxController {
     debugPrint("before sendAnswer");
     debugPrint("map = ${jsonEncode(map)}");
     client.send(
-        destination: subsPrefix + targetId.toString(),
+        destination: subsPrefix + targetUid.toString(),
         headers: {
           "content-type": "application/json",
           "uid": uid.toString(),
@@ -304,12 +302,13 @@ class SocketService extends GetxController {
     pc!.setRemoteDescription(answer);
   }
 
-  Future sendIce(RTCIceCandidate ice, StompClient client) async {
+  Future sendIce(
+      RTCIceCandidate ice, StompClient client, String targetUid) async {
     debugPrint("send ice");
     update();
     var map = {"type": "ice", "value": ice.toMap()};
     client.send(
-        destination: subsPrefix + targetId.toString(),
+        destination: subsPrefix + targetUid.toString(),
         headers: {
           "content-type": "application/json",
           "uid": uid.toString(),
