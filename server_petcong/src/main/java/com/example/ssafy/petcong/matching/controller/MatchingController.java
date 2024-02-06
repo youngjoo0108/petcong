@@ -45,7 +45,7 @@ public class MatchingController {
     @PostMapping("/choice")
     public ResponseEntity<?> choice(@AuthenticationPrincipal(expression = "password") String uid,
                                     @RequestBody ChoiceReq choiceReq) {
-        ChoiceRes res = matchingRequestService.choice(uid, choiceReq.getPartnerUserId());
+        ChoiceRes res = matchingRequestService.choice(uid, choiceReq.getPartnerUserUid());
         if (res != null) {
             return ResponseEntity.ok(res);
         } else {

@@ -28,10 +28,10 @@ public class MatchingRequestService {
     }
 
     @Transactional
-    public ChoiceRes choice(String uid, int partnerUserId){
+    public ChoiceRes choice(String uid, String partnerUserUid){
         User fromUser = userRepository.findUserByUid(uid);
         // DB에서 requestUserId, partnerUserId인 데이터 가져오기
-        User toUser = userRepository.findUserByUserId(partnerUserId);
+        User toUser = userRepository.findUserByUid(partnerUserUid);
         // 상대가 나에게 보낸 요청이 있는지 찾기
         Matching matching = matchingRepository.findPendingByUsers(toUser, fromUser);
 
