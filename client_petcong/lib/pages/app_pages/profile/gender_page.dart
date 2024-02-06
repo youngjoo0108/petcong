@@ -93,7 +93,7 @@ class GenderPageState extends State<GenderPage> {
                     ? () {
                         Get.to(PreferPage(
                           progress: widget.progress + 1 / 12,
-                        ));
+                        ), transition: Transition.noTransition);
                       }
                     : null,
               ),

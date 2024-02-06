@@ -138,7 +138,7 @@ class IntroducePageState extends State<IntroducePage> {
                   ? () {
                       Get.to(SocialPage(
                         progress: widget.progress + 1 / 12,
-                      ));
+                      ), transition: Transition.noTransition);
                     }
                   : null,
             ),

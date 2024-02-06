@@ -121,14 +121,8 @@ class PetGenderPageState extends State<PetGenderPage> {
                 buttonText: 'CONTINUE',
                 onPressed: !_isButtonDisabled
                     ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => IntroducePage(
-                              progress: widget.progress + 1 / 12,
-                            ),
-                          ),
-                        );
+                        Get.to(const IntroducePage(progress: 0.65),
+                            transition: Transition.noTransition);
                       }
                     : null,
               ),
