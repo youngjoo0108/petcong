@@ -104,25 +104,7 @@ class UserController extends GetxController {
 
   static User? get currentUser => user;
 
-  // 사용자 정보를 Firestore에 저장하는 메서드
-  Future<void> saveUserInfoToFirestore() async {
-    await firestore.collection('users').doc(_user.value?.uid).set({
-      'nickname': nickname,
-      'birthday': birthday,
-      'introText': introText,
-    });
-  }
-
-  // 사용자 정보를 Firestore에서 가져오는 메서드
-  Future<void> loadUserInfoFromFirestore() async {
-    final doc = await firestore.collection('users').doc(_user.value?.uid).get();
-    if (doc.exists) {
-      nickname = doc.data()?['nickname'];
-      birthday = doc.data()?['birthday'];
-      introText = doc.data()?['introText'];
-      update();
-    }
-  }
+  
 
   Future<void> pickImageFromGallery() async {
     final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);

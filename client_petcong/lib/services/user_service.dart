@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/user_info_model.dart';
@@ -14,6 +15,11 @@ User? currentUser = UserController.currentUser;
 String idTokenString = currentUser?.getIdToken().toString() ?? "";
 const String serverUrl = 'https://i10a603.p.ssafy.io';
 Map<String, String> reqHeaders = checkTesting();
+
+
+
+
+
 
 // POST /users/signup
 Future<void> postSignup(UserSignupModel user) async {
