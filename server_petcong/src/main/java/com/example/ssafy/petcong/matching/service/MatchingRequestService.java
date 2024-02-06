@@ -71,7 +71,7 @@ public class MatchingRequestService {
                                 .profile(null) // 상대 프로필? 넣기
                                 .questions(null) // 질문 리스트 넣기
                                 .build();
-        responseMap2.put("body", choiceRes);
+        responseMap2.put("value", choiceRes);
 
         sendingOperations.convertAndSend("/queue/" + toUser.getUid(), responseMap2);
 

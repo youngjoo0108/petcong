@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:petcong/pages/app_pages/matching/call_waiting_page.dart';
 import 'package:petcong/pages/app_pages/matching/matching_page.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
 import 'package:stomp_dart_client/stomp.dart';
@@ -22,7 +23,7 @@ class SocketService extends GetxController {
   // RTC 변수
   // late MainVideoCall webrtc;
   RTCPeerConnection? pc;
-  // String targetId = 'kS95PNT8RUc78Qr7TQ4uRaJmbw23';
+  late String targetUid;
   String subsPrefix = "/queue/";
   final _localRenderer = RTCVideoRenderer();
   final _remoteRenderer = RTCVideoRenderer();
@@ -81,11 +82,14 @@ class SocketService extends GetxController {
 
                 switch (type) {
                   case 'matched':
-                    // async 체크
+                    // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
+                    targetUid = value['targetUid'];
+                    makeCall(targetUid);
+
                     break;
                   case 'offer':
                     gotOffer(value['sdp'], value['type']);
-                    sendAnswer(client!, uid!);
+                    sendAnswer(client!);
                     break;
                   case 'answer':
                     gotAnswer(value['sdp'], value['type']);
@@ -105,6 +109,15 @@ class SocketService extends GetxController {
       await Future.delayed(const Duration(milliseconds: 250));
     }
     return client!;
+  }
+
+  void makeCall(String targetUid) async {
+    // matched
+    // 전화 오는 화면으로
+    Get.to(const CallWaiting());
+    // 화면 띄워주면서, rtc 연결 시작
+    // 화면 띄워주면서, rtc 연결 시작
+    await joinRoom();
   }
 
   Future<void> activateSocket(StompClient client) async {
@@ -173,7 +186,7 @@ class SocketService extends GetxController {
 
   // webRTC
 
-  Future joinRoom(String targetUId) async {
+  Future joinRoom() async {
     await initSocket();
 
     final config = {
@@ -197,20 +210,20 @@ class SocketService extends GetxController {
 
     pc = await createPeerConnection(config, sdpConstraints);
 
-    final mediaConstraints = {
-      'audio': true,
-      'video': {'facingMode': 'user'}
-    };
+    // final mediaConstraints = {
+    //   'audio': true,
+    //   'video': {'facingMode': 'user'}
+    // };
 
-    _localStream = await Helper.openCamera(mediaConstraints);
+    // _localStream = await Helper.openCamera(mediaConstraints);
 
-    _localStream!.getTracks().forEach((track) {
-      pc!.addTrack(track, _localStream!);
-    });
-    _localRenderer.srcObject = _localStream;
+    // _localStream!.getTracks().forEach((track) {
+    //   pc!.addTrack(track, _localStream!);
+    // });
+    // _localRenderer.srcObject = _localStream;
 
     pc!.onIceCandidate = (ice) {
-      sendIce(ice, client!, targetUId);
+      sendIce(ice, client!);
     };
 
     pc!.onAddStream = (stream) {
@@ -218,8 +231,8 @@ class SocketService extends GetxController {
     };
 
     // client!.send(
-    //     // destination: subsPrefix + targetId.toString(),
-    //     destination: subsPrefix + targetId.toString(),
+    //     // destination: subsPrefix + targetUid.toString(),
+    //     destination: subsPrefix + targetUid.toString(),
     //     headers: {
     //       "content-type": "application/json",
     //       "uid": uid!.toString(),
@@ -258,6 +271,8 @@ class SocketService extends GetxController {
 
 // --- webrtc - 메소드들 ---
   Future sendOffer(StompClient client, String targetUid) async {
+    this.targetUid = targetUid;
+
     debugPrint('send offer');
     var offer = await pc!.createOffer();
     pc!.setLocalDescription(offer);
@@ -278,7 +293,7 @@ class SocketService extends GetxController {
     pc!.setRemoteDescription(offer);
   }
 
-  Future sendAnswer(StompClient client, String targetUid) async {
+  Future sendAnswer(StompClient client) async {
     debugPrint('send answer');
     var answer = await pc!.createAnswer();
     pc!.setLocalDescription(answer);
@@ -302,8 +317,7 @@ class SocketService extends GetxController {
     pc!.setRemoteDescription(answer);
   }
 
-  Future sendIce(
-      RTCIceCandidate ice, StompClient client, String targetUid) async {
+  Future sendIce(RTCIceCandidate ice, StompClient client) async {
     debugPrint("send ice");
     update();
     var map = {"type": "ice", "value": ice.toMap()};

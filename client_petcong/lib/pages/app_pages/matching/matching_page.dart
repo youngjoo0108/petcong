@@ -115,10 +115,11 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   }
 
   /// targetId = int
-  Future<void> onLike(String targetUId) async {
+
+  Future<void> onLike(String targetUid) async {
     ChoiceRes? choiceRes;
     try {
-      choiceRes = await matchingService.postMatching(targetUId);
+      choiceRes = await matchingService.postMatching(targetUid);
     } catch (exception) {
       // print("exception = " + exception.toString());
       print("alert: 잘못된 요청");
@@ -128,13 +129,9 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       print("pending처리됨");
       return;
     }
-    // matched
-    // 전화 오는 화면으로
-    Get.to(const CallWaiting());
-    // 화면 띄워주면서, rtc 연결 시작
-    // 화면 띄워주면서, rtc 연결 시작
-    await socketService.joinRoom(targetUId);
+    // when matched
+    socketService.makeCall(choiceRes.targetUid!);
     socketService.sendOffer(
-        await socketService.initSocket(), choiceRes.targetUid!); // 바꾸기// 바꾸기
+        await socketService.initSocket(), choiceRes.targetUid!);
   }
 }
