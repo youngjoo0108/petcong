@@ -128,6 +128,9 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       print("pending처리됨");
       return;
     }
-    socketService.makeCall(targetUid);
+    // when matched
+    socketService.makeCall(choiceRes.targetUid!);
+    socketService.sendOffer(
+        await socketService.initSocket(), choiceRes.targetUid!);
   }
 }

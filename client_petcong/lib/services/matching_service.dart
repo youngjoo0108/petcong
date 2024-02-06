@@ -30,6 +30,7 @@ class MatchingService extends GetxController {
     String endpoint = '$serverUrl/matchings/choice';
     final response = await http.post(Uri.parse(endpoint),
         headers: reqHeaders, body: jsonEncode({'partnerUserUid': targetUid}));
+    print("body === " + jsonDecode(response.body));
 
     if (response.statusCode == 200) {
       return ChoiceRes.fromJson(jsonDecode(response.body));
