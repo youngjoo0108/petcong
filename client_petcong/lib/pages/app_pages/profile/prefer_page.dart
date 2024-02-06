@@ -112,7 +112,7 @@ class PreferPageState extends State<PreferPage> {
                     ? () {
                         Get.to(PetNamePage(
                           progress: widget.progress + 1 / 12,
-                        ));
+                        ), transition: Transition.noTransition);
                       }
                     : null,
               ),

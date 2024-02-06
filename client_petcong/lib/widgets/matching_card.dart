@@ -1,20 +1,39 @@
 import 'package:flutter/material.dart';
 
-class MatchingCard extends StatelessWidget {
+class MatchingCard extends StatefulWidget {
   const MatchingCard({
-    required this.name,
+    required this.nickname,
     required this.description,
     required this.profileImages,
+    required this.age,
+    required this.petName,
+    required this.petAge,
     super.key,
   });
 
-  final String name;
+  final String nickname;
+  final int age;
+  final String petName;
+  final int petAge;
   final String description;
   final String profileImages;
 
   @override
+  State<MatchingCard> createState() => _MatchingCardState();
+}
+
+class _MatchingCardState extends State<MatchingCard> {
+  bool isPet = true;
+
+  void onTap() {
+    isPet = !isPet;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final String humanProfile = "${widget.nickname}, ${widget.age}";
+    final String petProfile = "${widget.petName}, ${widget.petAge}";
     return ClipRRect(
       child: Stack(
         children: [
@@ -23,7 +42,7 @@ class MatchingCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
                 image: DecorationImage(
-                  image: AssetImage(profileImages),
+                  image: AssetImage(widget.profileImages),
                   fit: BoxFit.cover,
                 ),
                 boxShadow: [
@@ -57,30 +76,36 @@ class MatchingCard extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: theme.textTheme.titleLarge!.copyWith(
-                    color: Colors.white,
+          GestureDetector(
+            onTap: () => setState(() {
+              onTap();
+            }),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isPet ? humanProfile : petProfile,
+                    style: theme.textTheme.titleLarge!.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                Text(
-                  description,
-                  style: const TextStyle(
-                    color: Color(0xFFFCFCFC),
-                    fontSize: 15,
-                    fontFamily: 'Mulish',
-                    fontWeight: FontWeight.w400,
-                    height: 1.8,
+                  const SizedBox(height: 10),
+                  Text(
+                    widget.description,
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 191, 190, 190),
+                      fontSize: 15,
+                      fontFamily: 'Mulish',
+                      fontWeight: FontWeight.w400,
+                      height: 1.2,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 40),
-              ],
+                  const SizedBox(height: 35),
+                ],
+              ),
             ),
           ),
         ],

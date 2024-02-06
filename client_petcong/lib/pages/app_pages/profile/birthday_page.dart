@@ -190,9 +190,11 @@ class BirthdayPageState extends State<BirthdayPage> {
                                 }
 
                                 // 그 후에 GenderPage로 이동합니다.
-                                Get.to(GenderPage(
-                                  progress: widget.progress + 1 / 12,
-                                ));
+                                Get.to(
+                                    GenderPage(
+                                      progress: widget.progress + 1 / 12,
+                                    ),
+                                    transition: Transition.noTransition);
                               }
                             : null,
                       ),
