@@ -1,6 +1,7 @@
 package com.example.ssafy.petcong.user.service;
 
 import com.example.ssafy.petcong.user.model.dto.UserImgRecord;
+import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.model.entity.UserImg;
 import com.example.ssafy.petcong.user.repository.UserImgRepository;
 
@@ -11,10 +12,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserImgServiceImpl implements UserImgService{
     private final UserImgRepository userImgRepository;
+
+    @Override
+    public List<UserImgRecord> getUserImageList(int userId) {
+        return userImgRepository
+                .findUserImgByUser_UserId(userId).stream()
+                .map(UserImgRecord::fromUserImgEntity)
+                .toList();
+    }
 
     @Override
     @Transactional
@@ -23,7 +34,7 @@ public class UserImgServiceImpl implements UserImgService{
         long size = file.getSize();
 
         UserImg userImg = UserImg.builder()
-                .user(userId)
+                .user(User.builder().userId(userId).build())
                 .bucketKey(key)
                 .contentType(contentType)
                 .length(size)
@@ -31,7 +42,7 @@ public class UserImgServiceImpl implements UserImgService{
 
         UserImg result = userImgRepository.save(userImg);
 
-        return new UserImgRecord(result);
+        return UserImgRecord.fromUserImgEntity(result);
     }
 
     @Override

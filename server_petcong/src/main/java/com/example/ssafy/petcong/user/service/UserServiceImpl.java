@@ -6,6 +6,7 @@ import com.example.ssafy.petcong.user.model.dto.*;
 import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.repository.UserRepository;
 
+import com.example.ssafy.petcong.util.S3KeyGenerator;
 import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -31,13 +32,14 @@ public class UserServiceImpl implements UserService {
     public UserRecord findUserByUid(String uid) {
         User result = userRepository.findUserByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
 
-        return new UserRecord(result);
+        return UserRecord.fromUserEntity(result);
     }
 
     @Override
     public UserRecord findUserByUserId(int userId) {
         User result = userRepository.findUserByUserId(userId).orElseThrow(() -> new NoSuchElementException(String.valueOf(userId)));
-        return new UserRecord(result);
+
+        return UserRecord.fromUserEntity(result);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
         User result = userRepository.save(siginupUser);
 
-        return new UserRecord(result);
+        return UserRecord.fromUserEntity(result);
     }
 
     @Override
@@ -57,6 +59,7 @@ public class UserServiceImpl implements UserService {
         PetInfoDto petInfo = signupRequestDto.getPetInfo();
 
         UserRecord savedUser = save(userInfo);
+
         PetRecord savedPet = petService.save(petInfo, savedUser.userId());
 
         return new SignupResponseDto(savedUser, savedPet);
@@ -70,7 +73,38 @@ public class UserServiceImpl implements UserService {
 
         User result = userRepository.save(user);
 
-        return new UserRecord(result);
+        return UserRecord.fromUserEntity(result);
+    }
+
+    @Override
+    @Transactional
+    public ProfileDto getProfile(int userId) {
+        UserRecord userRecord = findUserByUserId(userId);
+        UserInfoDto userInfo = UserInfoDto.fromUserRecord(userRecord);
+        List<UserImgInfoDto> userImgInfoList = getUserImageList(userId)
+                .stream()
+                .map(UserImgInfoDto::fromUserImgRecord)
+                .peek(UserImg -> UserImg.setBucketKey(awsService.createPresignedUrl(UserImg.getBucketKey())))
+                .toList();
+
+        PetRecord petRecord = petService.findPetByUserId(userId);
+        PetInfoDto petInfo = PetInfoDto.fromPetRecord(petRecord);
+        List<SkillMultimediaInfoDto> skillMultimediaInfoList = getSkillMultimediaList(userId)
+                .stream()
+                .map(SkillMultimediaInfoDto::fromSkillMultimediaRecord)
+                .peek(SkillMultimedia -> SkillMultimedia.setBucketKey(awsService.createPresignedUrl(SkillMultimedia.getBucketKey())))
+                .toList();
+
+        ProfileDto profileDto = ProfileDto.builder()
+                .userProfile(UserProfileDto.builder()
+                        .userInfo(userInfo)
+                        .userImgInfosList(userImgInfoList).build())
+                .petProfile(PetProfileDto.builder()
+                        .petInfo(petInfo)
+                        .skillMultimediaInfoList(skillMultimediaInfoList).build())
+                .build();
+
+        return profileDto;
     }
 
     @Override
@@ -81,57 +115,66 @@ public class UserServiceImpl implements UserService {
 
         User result = userRepository.save(userEntity);
 
-        return new UserRecord(result);
+        return UserRecord.fromUserEntity(result);
+    }
+
+    @Override
+    public List<UserImgRecord> getUserImageList(int userId) {
+        return userImgService.getUserImageList(userId);
+    }
+
+    @Override
+    public List<SkillMultimediaRecord> getSkillMultimediaList(int userId) {
+        return skillMultimediaService.getSkillMultimediaList(userId);
     }
 
     @Override
     @Transactional
-    public UserImgRecord uploadUserImage(int userId, String uid, MultipartFile file) {
-//        String key = UUID.fromString(uid + file.getOriginalFilename()).toString();
-        String key = uid +"/" + file.getOriginalFilename();
-        UserImgRecord result = userImgService.uploadUserImage(userId, key, file);
+    public List<UserImgRecord> uploadUserImage(int userId, String uid, MultipartFile[] files) {
+        List<UserImgRecord> resultList = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String key = S3KeyGenerator.generate(uid, file);
+            resultList.add(userImgService.uploadUserImage(userId, key, file));
+            awsService.upload(key, file);
+        }
 
-        awsService.upload(key, file);
-
-        return result;
+        return resultList;
     }
 
     @Override
     @Transactional
-    public SkillMultimediaRecord uploadSkillMultimedia(int userId, String uid, MultipartFile file) {
-//        String key = UUID.fromString(uid + file.getOriginalFilename()).toString();
-        String key = uid +"/" + file.getOriginalFilename();
-        SkillMultimediaRecord result = skillMultimediaService.uploadSkillMultimedia(userId, key, file);
+    public List<SkillMultimediaRecord> uploadSkillMultimedia(int userId, String uid, MultipartFile[] files) {
+        List<SkillMultimediaRecord> resultList = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String key = S3KeyGenerator.generate(uid, file);
+            resultList.add(skillMultimediaService.uploadSkillMultimedia(userId, key, file));
+            awsService.upload(key, file);
+        }
 
-        awsService.upload(key, file);
-
-        return result;
+        return resultList;
     }
 
     @Override
     @Transactional
     public List<UserImgRecord> updateUserImage(int userId, String uid, MultipartFile[] files) {
-        UserRecord user = findUserByUserId(userId);
-        return Arrays.stream(files)
-                .peek(file -> userImgService.deleteUserImgByBucketKey(file.getName()))
-                .map(file -> uploadUserImage(user.userId(), uid, file))
-                .toList();
+        Arrays.stream(files).forEach(file -> userImgService.deleteUserImgByBucketKey(file.getName()));
+
+        return uploadUserImage(userId, uid, files);
     }
 
     @Override
     @Transactional
     public List<SkillMultimediaRecord> updateSkillMultimedia(int userId, String uid, MultipartFile[] files) {
-        UserRecord user = findUserByUserId(userId);
-        return Arrays.stream(files)
-                .peek(file -> skillMultimediaService.deleteSkillMultimediaByBucketKey(file.getName()))
-                .map(file -> uploadSkillMultimedia(user.userId(), uid, file))
-                .toList();
+        Arrays.stream(files).forEach(file -> skillMultimediaService.deleteSkillMultimediaByBucketKey(file.getName()));
+
+        return uploadSkillMultimedia(userId, uid, files);
     }
 
     @Override
     @Transactional
     public int deleteUserByUserId(int userId) {
         userRepository.findUserByUserId(userId).orElseThrow(() -> new NoSuchElementException(String.valueOf(userId)));
+
         return userRepository.deleteUserByUserId(userId);
     }
 }

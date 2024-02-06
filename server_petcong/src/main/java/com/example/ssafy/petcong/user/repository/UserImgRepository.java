@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface UserImgRepository extends JpaRepository<UserImg, Integer> {
     UserImg save(UserImg userImg);
-    List<UserImg> findByUserId(Integer userId);
+    List<UserImg> findUserImgByUser_UserId(int userId);
     int deleteUserImgByBucketKey(String bucketKey);
 }

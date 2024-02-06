@@ -12,9 +12,12 @@ public interface UserService {
     UserRecord save(UserInfoDto userInfo);
     SignupResponseDto signup(SignupRequestDto signupRequestDto);
     UserRecord signin(int userId, boolean state);
+    ProfileDto getProfile(int userId);
     UserRecord updateUserInfo(int userId, UserInfoDto userInfo);
-    UserImgRecord uploadUserImage(int userId, String uid, MultipartFile file);
-    SkillMultimediaRecord uploadSkillMultimedia(int userId, String uid, MultipartFile file);
+    List<UserImgRecord> getUserImageList(int userId);
+    List<SkillMultimediaRecord> getSkillMultimediaList(int userId);
+    List<UserImgRecord> uploadUserImage(int userId, String uid, MultipartFile[] files);
+    List<SkillMultimediaRecord> uploadSkillMultimedia(int userId, String uid, MultipartFile[] files);
     List<UserImgRecord> updateUserImage(int userId, String uid, MultipartFile[] files);
     List<SkillMultimediaRecord> updateSkillMultimedia(int userId, String uid, MultipartFile[] files);
     int deleteUserByUserId(int userId);

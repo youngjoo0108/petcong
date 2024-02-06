@@ -1,11 +1,11 @@
 server:
-  port: 8081
+  port: 8080
 
 spring:
   datasource:
     hikari:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://i10a603.p.ssafy.io:3306/petcongdb?serverTimezone=UTC
+      jdbc-url: jdbc:mysql://i10a603.p.ssafy.io:3306/petcongdb?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
       username: ssafy
       password: ssafy
   jpa:

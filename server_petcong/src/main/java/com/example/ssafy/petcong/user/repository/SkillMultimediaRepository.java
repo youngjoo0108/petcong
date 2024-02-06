@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface SkillMultimediaRepository extends JpaRepository<SkillMultimedia, Integer> {
     SkillMultimedia save(SkillMultimedia skillMultimedia);
-    List<SkillMultimedia> findByUserId(Integer userId);
+    List<SkillMultimedia> findSkillMultimediaByUser_UserId(Integer userId);
     int deleteByBucketKey(String bucketKey);
 }
