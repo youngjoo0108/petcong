@@ -143,9 +143,11 @@ class SocialPageState extends State<SocialPage> {
                   buttonText: 'CONTINUE',
                   onPressed: !_isButtonDisabled
                       ? () {
-                          Get.to(PhotoPage(
-                            progress: widget.progress + 1 / 12,
-                          ));
+                          Get.to(
+                              PhotoPage(
+                                progress: widget.progress + 1 / 12,
+                              ),
+                              transition: Transition.noTransition);
                         }
                       : null,
                 ),

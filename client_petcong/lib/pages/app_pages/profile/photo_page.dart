@@ -182,10 +182,10 @@ class PhotoPageState extends State<PhotoPage> {
                     onPressed: _photoPaths.length >= 2
                         ? () {
                             Get.to(
-                              VideoPage(
-                                progress: _progress + 1 / 12,
-                              ),
-                            );
+                                VideoPage(
+                                  progress: _progress + 1 / 12,
+                                ),
+                                transition: Transition.noTransition);
                           }
                         : null,
                     width: 240.0,

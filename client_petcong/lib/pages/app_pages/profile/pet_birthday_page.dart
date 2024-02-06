@@ -151,7 +151,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
                                       Get.to(PetGenderPage(
                                         petName: widget.petName,
                                         progress: widget.progress + 1 / 12,
-                                      ));
+                                      ), transition: Transition.noTransition);
                                     }
                                   : null,
                         ),
