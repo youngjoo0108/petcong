@@ -44,10 +44,10 @@ class PhotoPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PhotoPageState createState() => _PhotoPageState();
+  PhotoPageState createState() => PhotoPageState();
 }
 
-class _PhotoPageState extends State<PhotoPage> {
+class PhotoPageState extends State<PhotoPage> {
   late double _progress;
   final List<String> _photoPaths = []; // 선택한 이미지들의 경로를 저장하는 리스트
 
@@ -137,12 +137,12 @@ class _PhotoPageState extends State<PhotoPage> {
                           DisplayImage(imagePath: _photoPaths[index]),
                           if (index == 0) // 첫 번째 그리드일 때만 아이콘을 표시합니다.
                             Positioned(
-                              top: -55,
-                              left: 15,
+                              top: -45,
+                              left: 22.5,
                               child: SvgPicture.asset(
                                 'assets/src/crown.svg',
-                                width: 60,
-                                height: 50,
+                                width: 40,
+                                height: 40,
                                 color: const Color.fromARGB(255, 249, 113, 95),
                               ),
                             ),

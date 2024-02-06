@@ -10,10 +10,10 @@ class SocialPage extends StatefulWidget {
   const SocialPage({Key? key, required this.progress}) : super(key: key);
 
   @override
-  _SocialPageState createState() => _SocialPageState();
+  SocialPageState createState() => SocialPageState();
 }
 
-class _SocialPageState extends State<SocialPage> {
+class SocialPageState extends State<SocialPage> {
   final TextEditingController _controller1 = TextEditingController();
   final TextEditingController _controller2 = TextEditingController();
   bool _isButtonDisabled = true;

@@ -10,10 +10,10 @@ class GenderPage extends StatefulWidget {
   const GenderPage({Key? key, required this.progress}) : super(key: key);
 
   @override
-  _GenderPageState createState() => _GenderPageState();
+  GenderPageState createState() => GenderPageState();
 }
 
-class _GenderPageState extends State<GenderPage> {
+class GenderPageState extends State<GenderPage> {
   String _gender = '';
   double _progress = 0.0;
   bool _isButtonDisabled = true; // _isButtonDisabled 변수 선언

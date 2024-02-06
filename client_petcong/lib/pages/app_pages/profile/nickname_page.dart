@@ -11,10 +11,10 @@ class NicknamePage extends StatefulWidget {
   const NicknamePage({Key? key, required this.progress}) : super(key: key);
 
   @override
-  _NicknamePageState createState() => _NicknamePageState();
+  NicknamePageState createState() => NicknamePageState();
 }
 
-class _NicknamePageState extends State<NicknamePage> {
+class NicknamePageState extends State<NicknamePage> {
   final _controller = TextEditingController();
   bool _isButtonDisabled = true;
   double _progress = 0.0; // _progress 변수를 추가하여 초기화합니다.

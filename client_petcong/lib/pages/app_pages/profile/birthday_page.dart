@@ -31,10 +31,10 @@ class BirthdayPage extends StatefulWidget {
   const BirthdayPage({Key? key, required this.progress}) : super(key: key);
 
   @override
-  _BirthdayPageState createState() => _BirthdayPageState();
+  BirthdayPageState createState() => BirthdayPageState();
 }
 
-class _BirthdayPageState extends State<BirthdayPage> {
+class BirthdayPageState extends State<BirthdayPage> {
   final _formKey = GlobalKey<FormState>();
   final _controller = TextEditingController();
   String? _errorMessage;

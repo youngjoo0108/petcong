@@ -83,10 +83,10 @@ class VideoPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _VideoPageState createState() => _VideoPageState();
+  VideoPageState createState() => VideoPageState();
 }
 
-class _VideoPageState extends State<VideoPage> {
+class VideoPageState extends State<VideoPage> {
   late double _progress;
   final List<String> _videoPaths = []; // 선택한 비디오들의 경로를 저장하는 리스트
 

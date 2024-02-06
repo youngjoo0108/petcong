@@ -12,10 +12,10 @@ class IntroducePage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _IntroducePageState createState() => _IntroducePageState();
+  IntroducePageState createState() => IntroducePageState();
 }
 
-class _IntroducePageState extends State<IntroducePage> {
+class IntroducePageState extends State<IntroducePage> {
   final _controller = TextEditingController();
   bool _isButtonDisabled = true;
   late double _progress;

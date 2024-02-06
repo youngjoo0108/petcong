@@ -16,10 +16,10 @@ class PetBirthdayPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PetBirthdayPageState createState() => _PetBirthdayPageState();
+  PetBirthdayPageState createState() => PetBirthdayPageState();
 }
 
-class _PetBirthdayPageState extends State<PetBirthdayPage> {
+class PetBirthdayPageState extends State<PetBirthdayPage> {
   final _controller = TextEditingController();
   final _dateValidator = ValueNotifier<String?>('Initial value');
   final double _progress = 6 / 12;

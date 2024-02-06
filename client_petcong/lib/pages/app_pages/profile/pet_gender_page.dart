@@ -11,10 +11,10 @@ class PetGenderPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _PetGenderPageState createState() => _PetGenderPageState();
+  PetGenderPageState createState() => PetGenderPageState();
 }
 
-class _PetGenderPageState extends State<PetGenderPage> {
+class PetGenderPageState extends State<PetGenderPage> {
   String _gender = '';
   bool _isNeutered = false;
   late double _progress; // _progress를 late로 선언

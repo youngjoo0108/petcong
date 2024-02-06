@@ -10,10 +10,10 @@ class PetNamePage extends StatefulWidget {
   const PetNamePage({Key? key, required this.progress}) : super(key: key);
 
   @override
-  _PetNamePageState createState() => _PetNamePageState();
+  PetNamePageState createState() => PetNamePageState();
 }
 
-class _PetNamePageState extends State<PetNamePage> {
+class PetNamePageState extends State<PetNamePage> {
   final _controller = TextEditingController();
   bool _isButtonDisabled = true;
   @override

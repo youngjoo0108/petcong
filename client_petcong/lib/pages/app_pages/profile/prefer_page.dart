@@ -10,10 +10,10 @@ class PreferPage extends StatefulWidget {
   const PreferPage({Key? key, required this.progress}) : super(key: key);
 
   @override
-  _PreferPageState createState() => _PreferPageState();
+  PreferPageState createState() => PreferPageState();
 }
 
-class _PreferPageState extends State<PreferPage> {
+class PreferPageState extends State<PreferPage> {
   String _prefer = '';
   double _progress = 0.0;
   bool _isButtonDisabled = true; // _isButtonDisabled 변수 선언
