@@ -5,6 +5,7 @@ import com.example.ssafy.petcong.user.model.enums.Preference;
 import com.example.ssafy.petcong.user.model.enums.Status;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import jakarta.validation.constraints.*;
 
 import lombok.*;
@@ -13,6 +14,8 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Schema(title = "유저 정보", description = "user_id 값은 저장하지 않음")
 public class UserInfoDto {
@@ -62,4 +65,20 @@ public class UserInfoDto {
     @NotNull(message = "preference is mandatory")
     @Schema(implementation = Preference.class, title = "선호 상대")
     private Preference preference;
+
+    public static UserInfoDto fromUserRecord(UserRecord user) {
+        return new UserInfoDto(
+                user.age(),
+                user.nickname(),
+                user.email(),
+                user.address(),
+                user.uid(),
+                user.instagramId(),
+                user.kakaoId(),
+                user.birthday(),
+                user.gender(),
+                user.status(),
+                user.preference()
+        );
+    }
 }
