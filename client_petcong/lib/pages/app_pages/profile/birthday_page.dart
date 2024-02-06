@@ -31,10 +31,10 @@ class BirthdayPage extends StatefulWidget {
   const BirthdayPage({Key? key, required this.progress}) : super(key: key);
 
   @override
-  _BirthdayPageState createState() => _BirthdayPageState();
+  BirthdayPageState createState() => BirthdayPageState();
 }
 
-class _BirthdayPageState extends State<BirthdayPage> {
+class BirthdayPageState extends State<BirthdayPage> {
   final _formKey = GlobalKey<FormState>();
   final _controller = TextEditingController();
   String? _errorMessage;
@@ -111,7 +111,7 @@ class _BirthdayPageState extends State<BirthdayPage> {
 
   @override
   Widget build(BuildContext context) {
-    double progress = 0.1;
+    double progress = 2 / 12;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -130,7 +130,7 @@ class _BirthdayPageState extends State<BirthdayPage> {
               alignment: Alignment.centerLeft,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: () => Get.off(const NicknamePage(progress: 0)),
+                onPressed: () => Get.off(const NicknamePage(progress: 1 / 12)),
               ),
             ),
             Padding(
@@ -156,7 +156,6 @@ class _BirthdayPageState extends State<BirthdayPage> {
                         style: const TextStyle(
                             fontSize: 20.0, fontWeight: FontWeight.w400),
                         onChanged: (value) {
-                          print("onChanged event triggered");
                           // 상태 업데이트 및 에러 메시지 초기화
                           setState(() {
                             _validateDate(value);
@@ -192,7 +191,7 @@ class _BirthdayPageState extends State<BirthdayPage> {
 
                                 // 그 후에 GenderPage로 이동합니다.
                                 Get.to(GenderPage(
-                                  progress: widget.progress + 1 / 10,
+                                  progress: widget.progress + 1 / 12,
                                 ));
                               }
                             : null,
@@ -214,7 +213,6 @@ DateTime? _convertToDate(String input) {
     List<String> dateParts = input.split('/');
     return DateTime.parse('${dateParts[0]}-${dateParts[1]}-${dateParts[2]}');
   } catch (e) {
-    print("Error in _convertToDate: $e"); // 변환 중 에러가 발생했음을 출력
     return null;
   }
 }

@@ -1,68 +1,157 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:petcong/widgets/continue_button.dart';
+import 'package:get/get.dart';
+import 'photo_page.dart';
+import 'introduce_page.dart';
 
 class SocialPage extends StatefulWidget {
-  const SocialPage({super.key});
+  final double progress;
+
+  const SocialPage({Key? key, required this.progress}) : super(key: key);
 
   @override
-  _SocialPageState createState() => _SocialPageState();
+  SocialPageState createState() => SocialPageState();
 }
 
-class _SocialPageState extends State<SocialPage> {
-  final _formKey = GlobalKey<FormState>();
-  String? _kakaoTalkId;
-  String? _instagramId;
+class SocialPageState extends State<SocialPage> {
+  final TextEditingController _controller1 = TextEditingController();
+  final TextEditingController _controller2 = TextEditingController();
+  bool _isButtonDisabled = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller1.addListener(_updateButtonState);
+    _controller2.addListener(_updateButtonState);
+  }
+
+  @override
+  void dispose() {
+    _controller1.dispose();
+    _controller2.dispose();
+    super.dispose();
+  }
+
+  void _updateButtonState() {
+    setState(() {
+      _isButtonDisabled =
+          _controller1.text.isEmpty && _controller2.text.isEmpty;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Social Page'),
-      ),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: <Widget>[
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'KakaoTalk ID'),
-              validator: (value) {
-                if ((value == null || value.isEmpty) &&
-                    (_instagramId == null || _instagramId!.isEmpty)) {
-                  return 'Please enter at least one ID';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                _kakaoTalkId = value;
-              },
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, widget.progress);
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: LinearProgressIndicator(
+            value: widget.progress,
+            valueColor: const AlwaysStoppedAnimation<Color>(
+              Color.fromARGB(255, 249, 113, 95),
             ),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Instagram ID'),
-              validator: (value) {
-                if ((value == null || value.isEmpty) &&
-                    (_kakaoTalkId == null || _kakaoTalkId!.isEmpty)) {
-                  return 'Please enter at least one ID';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                _instagramId = value;
-              },
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.close, size: 32),
+                        onPressed: () =>
+                            Get.off(const IntroducePage(progress: 8 / 12)),
+                      ),
+                      TextButton(
+                        child: const Text(
+                          '건너뛰기',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey),
+                        ),
+                        onPressed: () {
+                          Get.to(const PhotoPage(
+                            progress: 10 / 12,
+                          ));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+                const Center(
+                    child: Text('SNS',
+                        style: TextStyle(
+                            fontSize: 32.0, fontWeight: FontWeight.w600))),
+                const SizedBox(height: 30.0),
+                SizedBox(
+                  width: 300,
+                  child: TextField(
+                      controller: _controller1,
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w400,
+                        decoration: TextDecoration.none,
+                      ),
+                      decoration: const InputDecoration(
+                        hintText: '카카오톡 아이디를 입력하세요',
+                        border: InputBorder.none,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                      ),
+                      textAlign: TextAlign.center),
+                ),
+                const SizedBox(height: 30.0),
+                SizedBox(
+                  width: 300,
+                  child: TextField(
+                      controller: _controller2,
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w400,
+                        decoration: TextDecoration.none,
+                      ),
+                      decoration: const InputDecoration(
+                        hintText: '인스타그램 아이디를 입력하세요',
+                        border: InputBorder.none,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                      ),
+                      textAlign: TextAlign.center),
+                ),
+                const SizedBox(height: 50.0),
+                ContinueButton(
+                  isFilled: !_isButtonDisabled,
+                  buttonText: 'CONTINUE',
+                  onPressed: !_isButtonDisabled
+                      ? () {
+                          Get.to(PhotoPage(
+                            progress: widget.progress + 1 / 12,
+                          ));
+                        }
+                      : null,
+                ),
+              ],
             ),
-            ContinueButton(
-              isFilled: _kakaoTalkId != null && _kakaoTalkId!.isNotEmpty ||
-                  _instagramId != null && _instagramId!.isNotEmpty,
-              buttonText: 'CONTINUE',
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  _formKey.currentState!.save();
-                  print(
-                      'KakaoTalk ID: $_kakaoTalkId, Instagram ID: $_instagramId');
-                }
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

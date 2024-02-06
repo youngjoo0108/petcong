@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'photo_page.dart';
+import 'social_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
 
@@ -12,21 +12,13 @@ class IntroducePage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _IntroducePageState createState() => _IntroducePageState();
+  IntroducePageState createState() => IntroducePageState();
 }
 
-class _IntroducePageState extends State<IntroducePage> {
+class IntroducePageState extends State<IntroducePage> {
   final _controller = TextEditingController();
   bool _isButtonDisabled = true;
   late double _progress;
-
-  void _decreaseProgress() {
-    setState(() {
-      if (_progress > 0) {
-        _progress -= 1 / 10;
-      }
-    });
-  }
 
   @override
   void initState() {
@@ -55,10 +47,29 @@ class _IntroducePageState extends State<IntroducePage> {
         child: Column(
           children: <Widget>[
             Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                icon: const Icon(Icons.close, size: 32),
-                onPressed: () => Get.back(),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 32),
+                    onPressed: () => Get.back(result: _progress),
+                  ),
+                  TextButton(
+                    child: const Text(
+                      '건너뛰기',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey),
+                    ),
+                    onPressed: () {
+                      Get.to(const SocialPage(
+                        progress: 9 / 12,
+                      ));
+                    },
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 10.0),
@@ -125,8 +136,8 @@ class _IntroducePageState extends State<IntroducePage> {
               buttonText: 'CONTINUE',
               onPressed: !_isButtonDisabled
                   ? () {
-                      Get.to(PhotoPage(
-                        progress: widget.progress + 1 / 10,
+                      Get.to(SocialPage(
+                        progress: widget.progress + 1 / 12,
                       ));
                     }
                   : null,

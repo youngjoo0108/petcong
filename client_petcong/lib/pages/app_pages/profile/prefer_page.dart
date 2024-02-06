@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'birthday_page.dart';
-import 'prefer_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
+import 'gender_page.dart';
+import 'pet_name_page.dart';
 
-class GenderPage extends StatefulWidget {
+class PreferPage extends StatefulWidget {
   final double progress;
 
-  const GenderPage({Key? key, required this.progress}) : super(key: key);
+  const PreferPage({Key? key, required this.progress}) : super(key: key);
 
   @override
-  GenderPageState createState() => GenderPageState();
+  PreferPageState createState() => PreferPageState();
 }
 
-class GenderPageState extends State<GenderPage> {
-  String _gender = '';
+class PreferPageState extends State<PreferPage> {
+  String _prefer = '';
   double _progress = 0.0;
   bool _isButtonDisabled = true; // _isButtonDisabled 변수 선언
 
@@ -45,23 +45,23 @@ class GenderPageState extends State<GenderPage> {
                 alignment: Alignment.centerLeft,
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back_ios, size: 32),
-                  onPressed: () =>
-                      Get.off(const BirthdayPage(progress: 2 / 12)),
+                  onPressed: () => Get.off(const GenderPage(progress: 3 / 12)),
                 ),
               ),
               const SizedBox(height: 10.0),
-              const Center(child: Text('저는', style: TextStyle(fontSize: 32.0))),
+              const Center(
+                  child: Text('추천 상대!', style: TextStyle(fontSize: 32.0))),
               const SizedBox(height: 30.0),
               Center(
                 child: SizedBox(
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _gender == '여자',
-                    buttonText: '여자예요!', // 이제 이 부분을 수정하여 버튼의 텍스트를 변경할 수 있습니다.
+                    isFilled: _prefer == '선호1',
+                    buttonText: '여자예요!',
                     onPressed: () {
                       setState(() {
-                        _gender = '여자';
+                        _prefer = '선호1';
                         _isButtonDisabled = false;
                       });
                     },
@@ -74,24 +74,41 @@ class GenderPageState extends State<GenderPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _gender == '남자',
-                    buttonText: '남자예요!', // 이제 이 부분을 수정하여 버튼의 텍스트를 변경할 수 있습니다.
+                    isFilled: _prefer == '선호2',
+                    buttonText: '남자예요!',
                     onPressed: () {
                       setState(() {
-                        _gender = '남자';
+                        _prefer = '선호2';
                         _isButtonDisabled = false;
                       });
                     },
                   ),
                 ),
               ),
-              const SizedBox(height: 90.0),
+              const SizedBox(height: 20.0),
+              Center(
+                child: SizedBox(
+                  width: 240.0,
+                  height: 50.0,
+                  child: ContinueButton(
+                    isFilled: _prefer == '선호3',
+                    buttonText: '상관 없어요!',
+                    onPressed: () {
+                      setState(() {
+                        _prefer = '선호3';
+                        _isButtonDisabled = false;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 70.0),
               ContinueButton(
                 isFilled: !_isButtonDisabled,
                 buttonText: 'CONTINUE',
                 onPressed: !_isButtonDisabled
                     ? () {
-                        Get.to(PreferPage(
+                        Get.to(PetNamePage(
                           progress: widget.progress + 1 / 12,
                         ));
                       }

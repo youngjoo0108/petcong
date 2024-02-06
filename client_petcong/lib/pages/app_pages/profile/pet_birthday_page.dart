@@ -16,13 +16,13 @@ class PetBirthdayPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PetBirthdayPageState createState() => _PetBirthdayPageState();
+  PetBirthdayPageState createState() => PetBirthdayPageState();
 }
 
-class _PetBirthdayPageState extends State<PetBirthdayPage> {
+class PetBirthdayPageState extends State<PetBirthdayPage> {
   final _controller = TextEditingController();
   final _dateValidator = ValueNotifier<String?>('Initial value');
-  final double _progress = 0.4;
+  final double _progress = 6 / 12;
 
   @override
   void initState() {
@@ -99,7 +99,7 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
               alignment: Alignment.centerLeft,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: () => Get.off(const PetNamePage(progress: 3 / 10)),
+                onPressed: () => Get.off(const PetNamePage(progress: 5 / 12)),
               ),
             ),
             Padding(
@@ -150,7 +150,7 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
                                   ? () {
                                       Get.to(PetGenderPage(
                                         petName: widget.petName,
-                                        progress: widget.progress + 1 / 10,
+                                        progress: widget.progress + 1 / 12,
                                       ));
                                     }
                                   : null,
