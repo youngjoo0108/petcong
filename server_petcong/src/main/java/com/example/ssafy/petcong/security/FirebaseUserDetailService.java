@@ -20,7 +20,7 @@ public class FirebaseUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String uid) throws UsernameNotFoundException {
         User user = userRepository.findUserByUid(uid).orElseThrow(() -> new UsernameNotFoundException(uid));
-        UserRecord userRecord = new UserRecord(user);
+        UserRecord userRecord = UserRecord.fromUserEntity(user);
         String presentedUid = userRecord.uid();
         String presentedUserId = String.valueOf(userRecord.userId());
         boolean presentedStatus = userRecord.status().isStatus();
