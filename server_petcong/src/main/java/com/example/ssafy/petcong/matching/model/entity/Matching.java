@@ -2,10 +2,12 @@ package com.example.ssafy.petcong.matching.model.entity;
 
 import com.example.ssafy.petcong.matching.model.CallStatus;
 import com.example.ssafy.petcong.user.model.entity.User;
+
 import jakarta.persistence.*;
+
 import lombok.*;
 
-@ToString // 테스트용
+@ToString
 @Entity(name = "matchings")
 @NoArgsConstructor
 @Getter
