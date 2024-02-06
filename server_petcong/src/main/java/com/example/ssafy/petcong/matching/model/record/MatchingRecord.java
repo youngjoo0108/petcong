@@ -8,10 +8,10 @@ public record MatchingRecord(
         int matchingId,
 
         @NotNull
-        int fromUserId,
+        int fromMemberId,
 
         @NotNull
-        int toUserId,
+        int toMemberId,
 
         CallStatus callStatus
 ) {

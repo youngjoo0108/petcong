@@ -1,8 +1,8 @@
 package com.example.ssafy.petcong.security;
 
-import com.example.ssafy.petcong.user.model.dto.UserRecord;
-import com.example.ssafy.petcong.user.model.entity.User;
-import com.example.ssafy.petcong.user.repository.UserRepository;
+import com.example.ssafy.petcong.member.model.dto.MemberRecord;
+import com.example.ssafy.petcong.member.model.entity.Member;
+import com.example.ssafy.petcong.member.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
 @Service("firebaseUserDetailService")
 @RequiredArgsConstructor
 public class FirebaseUserDetailService implements UserDetailsService {
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     @Override
     public UserDetails loadUserByUsername(String uid) throws UsernameNotFoundException {
-        User user = userRepository.findUserByUid(uid).orElseThrow(() -> new UsernameNotFoundException(uid));
-        UserRecord userRecord = UserRecord.fromUserEntity(user);
-        String presentedUid = userRecord.uid();
-        String presentedUserId = String.valueOf(userRecord.userId());
-        boolean presentedStatus = userRecord.status().isStatus();
+        Member member = memberRepository.findMemberByUid(uid).orElseThrow(() -> new UsernameNotFoundException(uid));
+        MemberRecord memberRecord = MemberRecord.fromMemberEntity(member);
+        String presentedUid = memberRecord.uid();
+        String presentedUserId = String.valueOf(memberRecord.memberId());
+        boolean presentedStatus = memberRecord.status().isStatus();
         return new FirebaseUserDetails(presentedUid, presentedUserId, presentedStatus);
     }
 }

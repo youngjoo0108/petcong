@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface MatchingProfileService {
     Optional<ProfileRecord> profile(String uid);
-    List<Matching> findMatchingList(int fromUserId, int toUserId);
+    List<Matching> findMatchingList(int fromMemberId, int toMemberId);
 }

@@ -5,9 +5,9 @@ import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.model.entity.ProfileRecord;
 import com.example.ssafy.petcong.matching.service.MatchingRequestService;
 import com.example.ssafy.petcong.matching.service.MatchingProfileService;
+import com.example.ssafy.petcong.member.service.MemberService;
+import com.example.ssafy.petcong.member.model.dto.MemberRecord;
 import com.example.ssafy.petcong.security.FirebaseUserDetails;
-import com.example.ssafy.petcong.user.model.dto.UserRecord;
-import com.example.ssafy.petcong.user.service.UserService;
 import com.example.ssafy.petcong.util.annotation.MakeCallable;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +33,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MatchingController {
 
-    private final UserService userService;
+    private final MemberService memberService;
     private final MatchingRequestService matchingRequestService;
     private final MatchingProfileService matchingProfileService;
 
@@ -47,7 +47,7 @@ public class MatchingController {
     @PostMapping("/choice")
     public ResponseEntity<?> choice(@AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
                                     @RequestBody ChoiceReq choiceReq) {
-        Map<String, String> res = matchingRequestService.choice(uid, choiceReq.getPartnerUserId());
+        Map<String, String> res = matchingRequestService.choice(uid, choiceReq.getPartnerMemberId());
         if (res != null) {
             return ResponseEntity.ok(res);
         } else {
@@ -65,8 +65,8 @@ public class MatchingController {
 
     @GetMapping("/list")
     public ResponseEntity<?> matchingList(@AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid) {
-        UserRecord user = userService.findUserByUid(uid);
-        int myId = user.userId();
+        MemberRecord member = memberService.findMemberByUid(uid);
+        int myId = member.memberId();
         List<Matching> matchings = matchingProfileService.findMatchingList(myId, myId);
 
         return ResponseEntity

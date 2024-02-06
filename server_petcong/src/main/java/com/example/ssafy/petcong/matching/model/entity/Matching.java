@@ -1,7 +1,7 @@
 package com.example.ssafy.petcong.matching.model.entity;
 
 import com.example.ssafy.petcong.matching.model.CallStatus;
-import com.example.ssafy.petcong.user.model.entity.User;
+import com.example.ssafy.petcong.member.model.entity.Member;
 
 import jakarta.persistence.*;
 
@@ -13,15 +13,15 @@ import lombok.*;
 @Getter
 public class Matching {
 
-    public Matching(User fromUser, User toUser) {
-        this.fromUser = fromUser;
-        this.toUser = toUser;
+    public Matching(Member fromMember, Member toMember) {
+        this.fromMember = fromMember;
+        this.toMember = toMember;
         this.callStatus = CallStatus.PENDING;
     }
 
-    public Matching(User fromUser, User toUser, CallStatus callStatus) {
-        this.fromUser = fromUser;
-        this.toUser = toUser;
+    public Matching(Member fromMember, Member toMember, CallStatus callStatus) {
+        this.fromMember = fromMember;
+        this.toMember = toMember;
         this.callStatus = callStatus;
     }
 
@@ -31,12 +31,12 @@ public class Matching {
     private int id;
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "user_id", name = "from_user_id")
-    private User fromUser;
+    @JoinColumn(referencedColumnName = "member_id", name = "from_member_id")
+    private Member fromMember;
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "user_id", name = "to_user_id")
-    private User toUser;
+    @JoinColumn(referencedColumnName = "member_id", name = "to_member_id")
+    private Member toMember;
 
     @Setter
     @Enumerated(EnumType.STRING)

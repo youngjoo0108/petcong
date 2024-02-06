@@ -22,6 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.nio.charset.StandardCharsets;
+
 @Slf4j
 @Transactional
 @SpringBootTest
@@ -48,7 +50,7 @@ public class MatchingIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        String response = mvcResult.getResponse().getContentAsString();
+        String response = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
 
         assertThat(response).isNotNull();
 

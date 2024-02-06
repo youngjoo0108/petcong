@@ -3,9 +3,9 @@ package com.example.ssafy.petcong.matching.service.util;
 import java.util.Set;
 
 public interface SeenTodayService {
-    void addSeen(int userId, int profileId);
+    void addSeen(int memberId, int profileId);
 
-    Set<Integer> getProfilesSeenByUser(int userId);
+    Set<Integer> getProfilesSeenByMember(int memberId);
 
-    boolean hasSeen(int userId, int profileId);
+    boolean hasSeen(int memberId, int profileId);
 }
