@@ -81,16 +81,14 @@ public class MemberServiceImpl implements MemberService {
     public ProfileDto getProfile(int memberId) {
         MemberRecord memberRecord = findMemberByMemberId(memberId);
         MemberInfoDto memberInfo = MemberInfoDto.fromMemberRecord(memberRecord);
-        List<MemberImgInfoDto> memberImgInfoList = getMemberImageList(memberId)
-                .stream()
+        List<MemberImgInfoDto> memberImgInfoList = getMemberImageList(memberId).stream()
                 .map(MemberImgInfoDto::fromMemberImgRecord)
                 .peek(MemberImg -> MemberImg.setBucketKey(awsService.createPresignedUrl(MemberImg.getBucketKey())))
                 .toList();
 
         PetRecord petRecord = petService.findPetByMemberId(memberId);
         PetInfoDto petInfo = PetInfoDto.fromPetRecord(petRecord);
-        List<SkillMultimediaInfoDto> skillMultimediaInfoList = getSkillMultimediaList(memberId)
-                .stream()
+        List<SkillMultimediaInfoDto> skillMultimediaInfoList = getSkillMultimediaList(memberId).stream()
                 .map(SkillMultimediaInfoDto::fromSkillMultimediaRecord)
                 .peek(SkillMultimedia -> SkillMultimedia.setBucketKey(awsService.createPresignedUrl(SkillMultimedia.getBucketKey())))
                 .toList();
@@ -133,7 +131,7 @@ public class MemberServiceImpl implements MemberService {
     public List<MemberImgRecord> uploadMemberImage(int memberId, String uid, MultipartFile[] files) {
         List<MemberImgRecord> resultList = new ArrayList<>();
         for (MultipartFile file : files) {
-            String key = S3KeyGenerator.generate(uid, file);
+            String key = S3KeyGenerator.generateKey(uid, file);
             resultList.add(memberImgService.uploadMemberImage(memberId, key, file));
             awsService.upload(key, file);
         }
@@ -146,7 +144,7 @@ public class MemberServiceImpl implements MemberService {
     public List<SkillMultimediaRecord> uploadSkillMultimedia(int memberId, String uid, MultipartFile[] files) {
         List<SkillMultimediaRecord> resultList = new ArrayList<>();
         for (MultipartFile file : files) {
-            String key = S3KeyGenerator.generate(uid, file);
+            String key = S3KeyGenerator.generateKey(uid, file);
             resultList.add(skillMultimediaService.uploadSkillMultimedia(memberId, key, file));
             awsService.upload(key, file);
         }
@@ -157,7 +155,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public List<MemberImgRecord> updateMemberImage(int memberId, String uid, MultipartFile[] files) {
-        Arrays.stream(files).forEach(file -> memberImgService.deleteMemberImgByBucketKey(file.getName()));
+        for (MultipartFile file : files) {
+            String key = S3KeyGenerator.generateKey(uid, file);
+            memberImgService.deleteMemberImgByBucketKey(key);
+        }
 
         return uploadMemberImage(memberId, uid, files);
     }
@@ -165,7 +166,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public List<SkillMultimediaRecord> updateSkillMultimedia(int memberId, String uid, MultipartFile[] files) {
-        Arrays.stream(files).forEach(file -> skillMultimediaService.deleteSkillMultimediaByBucketKey(file.getName()));
+        for (MultipartFile file : files) {
+            String key = S3KeyGenerator.generateKey(uid, file);
+            skillMultimediaService.deleteSkillMultimediaByBucketKey(key);
+        }
 
         return uploadSkillMultimedia(memberId, uid, files);
     }

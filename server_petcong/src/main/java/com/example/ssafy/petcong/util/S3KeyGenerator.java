@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class S3KeyGenerator {
-    public static String generate(String uid, MultipartFile file) {
+    public static String generateKey(String uid, MultipartFile file) {
         String fileName = file.getOriginalFilename();
         int lastDotIndex = fileName.lastIndexOf('.');
         if (lastDotIndex > 0) {
