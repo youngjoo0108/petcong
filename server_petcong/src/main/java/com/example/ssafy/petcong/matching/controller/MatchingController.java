@@ -1,6 +1,7 @@
 package com.example.ssafy.petcong.matching.controller;
 
 import com.example.ssafy.petcong.matching.model.ChoiceReq;
+import com.example.ssafy.petcong.matching.model.ChoiceRes;
 import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.model.entity.ProfileRecord;
 import com.example.ssafy.petcong.matching.service.MatchingRequestService;
@@ -44,7 +45,7 @@ public class MatchingController {
     @PostMapping("/choice")
     public ResponseEntity<?> choice(@AuthenticationPrincipal(expression = "password") String uid,
                                     @RequestBody ChoiceReq choiceReq) {
-        Map<String, String> res = matchingRequestService.choice(uid, choiceReq.getPartnerUserId());
+        ChoiceRes res = matchingRequestService.choice(uid, choiceReq.getPartnerUserId());
         if (res != null) {
             return ResponseEntity.ok(res);
         } else {

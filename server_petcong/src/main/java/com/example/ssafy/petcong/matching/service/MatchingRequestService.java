@@ -28,7 +28,7 @@ public class MatchingRequestService {
     }
 
     @Transactional
-    public Map<String, String> choice(String uid, int partnerUserId){
+    public ChoiceRes choice(String uid, int partnerUserId){
         User fromUser = userRepository.findUserByUid(uid);
         // DB에서 requestUserId, partnerUserId인 데이터 가져오기
         User toUser = userRepository.findUserByUserId(partnerUserId);
@@ -61,14 +61,13 @@ public class MatchingRequestService {
         userRepository.save(fromUser);
         userRepository.save(toUser);
 
-        Map<String, String> responseMap = new HashMap<>();
-        responseMap.put("targetLink", "/queue/" + toUser.getUid());
+
 
         // 상대쪽에도 전송
         Map<String, Object> responseMap2 = new HashMap<>();
         responseMap2.put("type", "matched");
         ChoiceRes choiceRes = ChoiceRes.builder()
-                                .targetLink("/queue/" + fromUser.getUid())
+                                .targetUid(fromUser.getUid())
                                 .profile(null) // 상대 프로필? 넣기
                                 .questions(null) // 질문 리스트 넣기
                                 .build();
@@ -76,6 +75,8 @@ public class MatchingRequestService {
 
         sendingOperations.convertAndSend("/queue/" + toUser.getUid(), responseMap2);
 
-        return responseMap;
+        return ChoiceRes.builder()
+                .targetUid(toUser.getUid())
+                .build();
     }
 }
