@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:petcong/pages/app_pages/matching/call_waiting_page.dart';
 import 'package:petcong/pages/app_pages/matching/matching_page.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
 import 'package:stomp_dart_client/stomp.dart';
@@ -81,7 +82,6 @@ class SocketService extends GetxController {
 
                 switch (type) {
                   case 'matched':
-                    // async 체크
                     break;
                   case 'offer':
                     gotOffer(value['sdp'], value['type']);
@@ -105,6 +105,16 @@ class SocketService extends GetxController {
       await Future.delayed(const Duration(milliseconds: 250));
     }
     return client!;
+  }
+
+  void makeCall(String targetUid) async {
+    // matched
+    // 전화 오는 화면으로
+    Get.to(const CallWaiting());
+    // 화면 띄워주면서, rtc 연결 시작
+    // 화면 띄워주면서, rtc 연결 시작
+    await joinRoom();
+    sendOffer(await initSocket(), targetUid); // 바꾸기// 바꾸기
   }
 
   Future<void> activateSocket(StompClient client) async {
