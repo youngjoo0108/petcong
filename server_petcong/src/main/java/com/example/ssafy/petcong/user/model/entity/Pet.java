@@ -12,36 +12,48 @@ import lombok.*;
 @Entity
 @Table(name = "pets")
 @Getter
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Pet {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pet_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int petId;
-    @Column(name = "user_id")
-    int userId;
-    String name;
-    String breed;
-    int age;
+    private int petId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    private String name;
+
+    private String breed;
+
+    private int age;
+
     @Enumerated(EnumType.STRING)
-    Gender gender;
-    boolean neutered;
+    private Gender gender;
+
+    private boolean neutered;
+
     @Enumerated(EnumType.STRING)
-    PetSize size;
-    int weight;
-    String description;
-    String dbti;
-    String hobby;
-    String snack;
-    String toy;
+    private PetSize size;
+
+    private int weight;
+
+    private String description;
+
+    private String dbti;
+
+    private String hobby;
+
+    private String snack;
+
+    private String toy;
 
     public static Pet fromPetRecord(PetRecord petRecord) {
         return Pet.builder()
                 .petId(petRecord.petId())
-                .userId(petRecord.userId())
+                .user(User.fromUserRecord(petRecord.user()))
                 .name(petRecord.name())
                 .breed(petRecord.breed())
                 .age(petRecord.age())
@@ -74,7 +86,7 @@ public class Pet {
                 .build();
     }
 
-    public void updateUserId(int userId) {
-        this.userId = userId;
+    public void updateUser(User user) {
+        this.user = user;
     }
 }

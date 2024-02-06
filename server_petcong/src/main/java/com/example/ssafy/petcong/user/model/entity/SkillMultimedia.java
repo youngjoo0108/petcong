@@ -9,28 +9,31 @@ import lombok.*;
 @Entity
 @Table(name = "skill_multimedias")
 @Getter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SkillMultimedia {
     @Id
     @Column(name = "multimedia_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int multimediaId;
-    @Column(name = "user_id")
-    private int userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     private int ordinal;
 
     private long length;
 
     @Column(name = "bucket_key")
     private String bucketKey;
+
     @Column(name = "content_type")
     private String contentType;
 
     @Builder
-    public SkillMultimedia(int multimediaId, int user, String bucketKey, String contentType, long length, int ordinal) {
+    public SkillMultimedia(int multimediaId, User user, String bucketKey, String contentType, long length, int ordinal) {
         this.multimediaId = multimediaId;
-        this.userId = user;
+        this.user = user;
         this.bucketKey = bucketKey;
         this.contentType = contentType;
         this.length = length;
@@ -39,7 +42,7 @@ public class SkillMultimedia {
 
     public SkillMultimedia(SkillMultimediaRecord skillMultimediaRecord) {
         this.multimediaId = skillMultimediaRecord.multimediaId();
-        this.userId = skillMultimediaRecord.userId();
+        this.user = User.fromUserRecord(skillMultimediaRecord.user());
         this.bucketKey = skillMultimediaRecord.bucketKey();
         this.contentType = skillMultimediaRecord.contentType();
         this.length = skillMultimediaRecord.length();

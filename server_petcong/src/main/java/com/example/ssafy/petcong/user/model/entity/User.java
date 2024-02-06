@@ -11,18 +11,17 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
 @Getter
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
     private int age;
@@ -54,6 +53,15 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Preference preference;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<UserImg> userImgList;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<SkillMultimedia> skillMultimediaList;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Pet pet;
 
     public static User fromUserRecord(UserRecord userRecord) {
         return User.builder()
