@@ -210,7 +210,7 @@ class SignupController extends GetxController {
 
     PetInfoModel petModel = PetInfoModel(
       name: petName,
-      breed: "breed",
+      breed: breed,
       gender: petGender,
       size: size,
       description: description,
@@ -219,7 +219,7 @@ class SignupController extends GetxController {
       snack: snack,
       toy: toy,
       neutered: neutered,
-      weight: 1,
+      weight: weight,
       age: petAge,
     );
 
