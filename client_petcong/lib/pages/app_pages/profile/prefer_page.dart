@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
 import 'gender_page.dart';
@@ -57,11 +58,11 @@ class PreferPageState extends State<PreferPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _prefer == '선호1',
+                    isFilled: _prefer == 'female',
                     buttonText: '여자예요!',
                     onPressed: () {
                       setState(() {
-                        _prefer = '선호1';
+                        _prefer = 'female';
                         _isButtonDisabled = false;
                       });
                     },
@@ -74,11 +75,11 @@ class PreferPageState extends State<PreferPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _prefer == '선호2',
+                    isFilled: _prefer == 'male',
                     buttonText: '남자예요!',
                     onPressed: () {
                       setState(() {
-                        _prefer = '선호2';
+                        _prefer = 'male';
                         _isButtonDisabled = false;
                       });
                     },
@@ -91,11 +92,11 @@ class PreferPageState extends State<PreferPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _prefer == '선호3',
+                    isFilled: _prefer == 'nomatter',
                     buttonText: '상관 없어요!',
                     onPressed: () {
                       setState(() {
-                        _prefer = '선호3';
+                        _prefer = 'nomatter';
                         _isButtonDisabled = false;
                       });
                     },
@@ -108,9 +109,12 @@ class PreferPageState extends State<PreferPage> {
                 buttonText: 'CONTINUE',
                 onPressed: !_isButtonDisabled
                     ? () {
-                        Get.to(PetNamePage(
-                          progress: widget.progress + 1 / 12,
-                        ), transition: Transition.noTransition);
+                        SignupController.to.addPreference(_prefer);
+                        Get.to(
+                            PetNamePage(
+                              progress: widget.progress + 1 / 12,
+                            ),
+                            transition: Transition.noTransition);
                       }
                     : null,
               ),

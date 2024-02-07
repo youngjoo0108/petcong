@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'birthday_page.dart';
 import 'prefer_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
@@ -14,6 +15,7 @@ class GenderPage extends StatefulWidget {
 }
 
 class GenderPageState extends State<GenderPage> {
+  final SignupController signupController = Get.put(SignupController());
   String _gender = '';
   double _progress = 0.0;
   bool _isButtonDisabled = true; // _isButtonDisabled 변수 선언
@@ -57,11 +59,11 @@ class GenderPageState extends State<GenderPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _gender == '여자',
+                    isFilled: _gender == 'female',
                     buttonText: '여자예요!', // 이제 이 부분을 수정하여 버튼의 텍스트를 변경할 수 있습니다.
                     onPressed: () {
                       setState(() {
-                        _gender = '여자';
+                        _gender = 'female';
                         _isButtonDisabled = false;
                       });
                     },
@@ -74,11 +76,11 @@ class GenderPageState extends State<GenderPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _gender == '남자',
+                    isFilled: _gender == 'male',
                     buttonText: '남자예요!', // 이제 이 부분을 수정하여 버튼의 텍스트를 변경할 수 있습니다.
                     onPressed: () {
                       setState(() {
-                        _gender = '남자';
+                        _gender = 'male';
                         _isButtonDisabled = false;
                       });
                     },
@@ -91,9 +93,13 @@ class GenderPageState extends State<GenderPage> {
                 buttonText: 'CONTINUE',
                 onPressed: !_isButtonDisabled
                     ? () {
-                        Get.to(PreferPage(
-                          progress: widget.progress + 1 / 12,
-                        ), transition: Transition.noTransition);
+                        SignupController.to.addGender(_gender);
+                        SignupController.to.signUpUser(context);
+                        Get.to(
+                            PreferPage(
+                              progress: widget.progress + 1 / 12,
+                            ),
+                            transition: Transition.noTransition);
                       }
                     : null,
               ),

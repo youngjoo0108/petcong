@@ -16,11 +16,6 @@ String idTokenString = currentUser?.getIdToken().toString() ?? "";
 const String serverUrl = 'https://i10a603.p.ssafy.io';
 Map<String, String> reqHeaders = checkTesting();
 
-
-
-
-
-
 // POST /users/signup
 Future<void> postSignup(UserSignupModel user) async {
   final response = await http.post(Uri.parse('$serverUrl/users/signup'),

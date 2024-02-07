@@ -1,72 +1,238 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:petcong/models/pet_info_model.dart';
 import 'package:petcong/models/user_info_model.dart';
 import 'package:petcong/models/user_signup_model.dart';
-import 'package:petcong/pages/signin_pages/sign_in_page.dart';
-import 'package:uuid/uuid.dart';
+import 'package:petcong/services/user_service.dart';
 
 class SignupController extends GetxController {
   static SignupController get to => Get.find();
 
-// =============      breederinfo      =============
+  FirebaseAuth authentication = FirebaseAuth.instance;
 
-  int? _age;
-  String? _nickname;
-  String? _email;
-  String? _address;
-  String? _uid;
-  String? _instagramId;
-  String? _kakaoId;
-  String? _birthday;
-  String? _gender;
-  String? _status;
-  String? _preference;
+// =============      breederinfo      =============
+  String? nickname;
+  String? birthday;
+  int? age;
+  String? gender;
+  String? preference;
+  String? email;
+  String? address;
+  String? uid;
+  String? instagramId;
+  String? kakaoId;
+  String? status;
 
 // =============      petinfo      =============
 
-  String? _petName;
-  String? _breed;
-  String? _petGender;
-  String? _size;
-  String? _description;
-  String? _dbti;
-  String? _hobby;
-  String? _snack;
-  String? _toy;
-  bool? _neutered;
-  int? _weight;
-  int? _petAge;
+  String? petName;
+  String? breed;
+  String? petGender;
+  String? size;
+  String? description;
+  String? dbti;
+  String? hobby;
+  String? snack;
+  String? toy;
+  bool neutered = false;
+  int? weight;
+  int? petAge;
 
+//TODO: this function has to be refactored
+  addCommon() {
+    uid = authentication.currentUser?.uid;
+    email = authentication.currentUser?.email;
+  }
 
-
-  addNickName(String nickname) {
-    _nickname = nickname;
+  addNickName(String nickName) {
+    nickname = nickName;
     update();
   }
 
-  addBirthday(String birthday) {
-    _birthday = birthday;
+  addBirthdayAndAge(String userBirthday) {
+    birthday = userBirthday;
+    final birthDate = _convertToDate(userBirthday);
+    final today = DateTime.now();
+    int userAge = today.year - birthDate!.year;
+    if (today.month < birthDate.month ||
+        (today.month == birthDate.month && today.day < birthDate.day)) {
+      userAge--;
+    }
+    age = userAge;
     update();
   }
 
-  addAge(int age) {
-    _age = age;
+  addGender(String userGender) {
+    gender = userGender;
     update();
   }
 
-  addGender(String gender) {
-    _gender = gender;
+  addInstagram(String nickName) {
+    nickname = nickName;
     update();
   }
 
+  addBirthday(String userBirthday) {
+    birthday = userBirthday;
+    update();
+  }
 
+  addPetAge(int petage) {
+    petAge = petage;
+    update();
+  }
 
+  addPreference(String userPreference) {
+    preference = userPreference;
+    update();
+  }
 
-  signUPUser(BuildContext context) async {
-    var uuid = const Uuid();
-    String userId = uuid.v4();
+  // addAddress(String userAddress) {
+  //   address = userAddress;
+  //   update();
+  // }
+
+  addKakaoId(String userKakaoId) {
+    kakaoId = userKakaoId;
+    update();
+  }
+
+  addInstagramId(String userInstagramId) {
+    instagramId = userInstagramId;
+    update();
+  }
+
+  // addStatus(String userStatus) {
+  //   status = userStatus;
+  //   update();
+  // }
+
+  // addHobby(String petHobby) {
+  //   hobby = petHobby;
+  //   update();
+  // }
+
+  // addSnack(String petSnack) {
+  //   snack = petSnack;
+  //   update();
+  // }
+
+  // addToy(String petToy) {
+  //   toy = petToy;
+  //   update();
+  // }
+
+  // addWeight(int userWeight) {
+  //   weight = userWeight;
+  //   update();
+  // }
+
+  addDescription(String userDescription) {
+    description = userDescription;
+    update();
+  }
+
+  // addDbti(String petDbti) {
+  //   dbti = petDbti;
+  //   update();
+  // }
+
+  addPetName(String userPetName) {
+    petName = userPetName;
+    update();
+  }
+
+  // addBreed(String petBreed) {
+  //   breed = petBreed;
+  //   update();
+  // }
+
+  addPetGender(String userPetGender) {
+    petGender = userPetGender;
+    update();
+  }
+
+  addSize(String petSize) {
+    size = petSize;
+    update();
+  }
+
+  addNeutered(bool userNeutered) {
+    neutered = userNeutered;
+    update();
+  }
+
+  printUser() {
+    addCommon();
+    debugPrint(nickname);
+    debugPrint(birthday);
+    debugPrint(age.toString());
+    debugPrint(gender);
+    debugPrint(preference);
+    debugPrint(email);
+    debugPrint(address);
+    debugPrint(uid);
+    debugPrint(instagramId);
+    debugPrint(kakaoId);
+    debugPrint(status);
+    debugPrint(petName);
+    debugPrint(breed);
+    debugPrint(petGender);
+    debugPrint(size);
+    debugPrint(description);
+    debugPrint(dbti);
+    debugPrint(hobby);
+    debugPrint(snack);
+    debugPrint(toy);
+    debugPrint(neutered.toString());
+    debugPrint(weight.toString());
+    debugPrint(petAge.toString());
+  }
+
+  signUpUser(BuildContext context) async {
+    UserInfoModel userModel = UserInfoModel(
+      nickname: nickname,
+      birthday: birthday,
+      age: age,
+      gender: gender,
+      preference: preference,
+      email: email,
+      address: address,
+      uid: uid,
+      instagramId: instagramId,
+      kakaoId: kakaoId,
+      status: status,
+    );
+
+    PetInfoModel petModel = PetInfoModel(
+      name: petName,
+      breed: breed,
+      gender: petGender,
+      size: size,
+      description: description,
+      dbti: dbti,
+      hobby: hobby,
+      snack: snack,
+      toy: toy,
+      neutered: neutered,
+      weight: weight,
+      age: petAge,
+    );
+
+    UserSignupModel model =
+        UserSignupModel(userInfoModel: userModel, petInfoModel: petModel);
+    debugPrint(model.toString());
+
+    postSignup(model);
+  }
+
+  DateTime? _convertToDate(String input) {
+    try {
+      List<String> dateParts = input.split('/');
+      return DateTime.parse('${dateParts[0]}-${dateParts[1]}-${dateParts[2]}');
+    } catch (e) {
+      return null;
+    }
   }
 }

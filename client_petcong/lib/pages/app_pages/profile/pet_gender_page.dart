@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'introduce_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
@@ -121,6 +122,7 @@ class PetGenderPageState extends State<PetGenderPage> {
                 buttonText: 'CONTINUE',
                 onPressed: !_isButtonDisabled
                     ? () {
+                        SignupController.to.addPetGender(_gender);
                         Get.to(const IntroducePage(progress: 0.65),
                             transition: Transition.noTransition);
                       }

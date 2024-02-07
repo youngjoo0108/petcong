@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'pet_birthday_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
@@ -93,6 +94,7 @@ class PetNamePageState extends State<PetNamePage> {
               buttonText: 'CONTINUE',
               onPressed: !_isButtonDisabled
                   ? () {
+                      SignupController.to.addPetName(_controller.text.trim());
                       Get.to(
                           PetBirthdayPage(
                             petName: _controller.text,
