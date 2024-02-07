@@ -266,6 +266,7 @@ class SocketService extends GetxController {
 
 // --- webrtc - 메소드들 ---
   Future sendOffer(StompClient client, String targetUid) async {
+    await joinRoom();
     this.targetUid = targetUid;
 
     debugPrint('send offer');
@@ -289,6 +290,7 @@ class SocketService extends GetxController {
   }
 
   Future sendAnswer(StompClient client) async {
+    await joinRoom();
     debugPrint('send answer');
     var answer = await pc!.createAnswer();
     pc!.setLocalDescription(answer);
@@ -313,6 +315,7 @@ class SocketService extends GetxController {
   }
 
   Future sendIce(RTCIceCandidate ice, StompClient client) async {
+    await joinRoom();
     debugPrint("send ice");
     update();
     var map = {"type": "ice", "value": ice.toMap()};

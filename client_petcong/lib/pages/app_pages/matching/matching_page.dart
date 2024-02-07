@@ -105,9 +105,10 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
         heroTag: 'call',
         onPressed: () {
           // socketService.onCallPressed('on');
-          Get.to(const CallWaiting());
-          SocketService().joinRoom();
-          // onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2');
+          // Get.to(const CallWaiting());
+          // SocketService().joinRoom();
+          // onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2'); // 패드
+          onLike('4GtzqrsSDBVSC1FkOWXXJ2i7CfA3'); // 영주폰
         },
         label: const Text('call'),
         icon: const Icon(Icons.call),
