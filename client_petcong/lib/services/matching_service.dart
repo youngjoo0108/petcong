@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/choice_res.dart';
-import 'package:petcong/models/user_model.dart';
 import 'package:get/get.dart';
 import 'package:petcong/models/profile_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,10 +34,9 @@ class MatchingService extends GetxController {
     try {
       final prefs = await SharedPreferences.getInstance();
       idTokenString = prefs.getString('idToken');
-      Future.delayed(Duration(seconds: 2));
-      print("idtokenString = " +
-          idTokenString! +
-          "==============================================");
+      Future.delayed(const Duration(seconds: 2));
+      print(
+          "idtokenString = ${idTokenString!}==============================================");
       reqHeaders = {
         "Petcong-id-token": idTokenString!,
         "Content-Type": "application/json"
@@ -56,7 +54,7 @@ class MatchingService extends GetxController {
         headers: reqHeaders, body: jsonEncode({'partnerUid': targetUid}));
 
     if (response.statusCode == 200) {
-      print("response = " + response.body);
+      print("response = ${response.body.toString()}");
       print("body === " + jsonDecode(response.body));
       return ChoiceRes.fromJson(jsonDecode(response.body));
     } else if (response.statusCode == 204) {
@@ -69,17 +67,12 @@ class MatchingService extends GetxController {
         throw Exception("invalid matching request");
       }
     }
-// import 'package:petcong/controller/user_controller.dart';
-// import 'package:petcong/services/user_service.dart';
-// import 'package:http/http.dart' as http;
 
     const bool testing = true;
 
-    User? currentUser = UserController.currentUser;
-    String idTokenString = currentUser?.getIdToken().toString() ?? "";
     // Map<String, String> reqHeaders = checkTesting();
 
-// POST /matchings/choice
+    // POST /matchings/choice
     Future<Map<String, String>?> postChoice(String partnerUserId) async {
       final response = await http.post(Uri.parse('$serverUrl/matchings/choice'),
           headers: reqHeaders, body: jsonEncode({"partnerId": partnerUserId}));
