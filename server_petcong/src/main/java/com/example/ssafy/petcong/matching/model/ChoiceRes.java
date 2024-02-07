@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ChoiceRes {
     private String targetUid;
-    private ProfileRecord profile;
+    private List<String> skillUrlList;
+    private List<String> profileImgUrlList;
     private List<Icebreaking> icebreakingList;
 }
