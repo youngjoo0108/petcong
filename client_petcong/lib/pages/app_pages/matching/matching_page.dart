@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:petcong/models/choice_res.dart';
 import 'package:petcong/services/socket_service.dart';
+import 'package:petcong/services/matching_service.dart';
 import 'package:petcong/widgets/card_overlay.dart';
 import 'package:petcong/widgets/matching_card.dart';
 import 'package:swipable_stack/swipable_stack.dart';
@@ -46,6 +48,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
 
   // late Function onCallPressed;
   final SocketService socketService = SocketService();
+  final MatchingService matchingService = MatchingService();
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +102,9 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       floatingActionButton: FloatingActionButton.extended(
         heroTag: 'call',
         onPressed: () {
-          socketService.onCallPressed('on');
+          // socketService.onCallPressed('on');
+          // Get.to(const CallWaiting());
+          onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2');
         },
         label: const Text('call'),
         icon: const Icon(Icons.call),
@@ -111,5 +116,27 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     if (kDebugMode) {
       print('$index, $direction');
     }
+  }
+
+  /// targetId = int
+
+  Future<void> onLike(String targetUid) async {
+    ChoiceRes? choiceRes;
+    try {
+      print('asdfasdf');
+      choiceRes = await matchingService.postMatching(targetUid);
+    } catch (exception) {
+      print("exception = $exception");
+      print("alert: 잘못된 요청");
+      return;
+    }
+    if (choiceRes == null) {
+      print("pending처리됨");
+      return;
+    }
+    // when matched
+    socketService.makeCall(choiceRes.targetUid!);
+    socketService.sendOffer(
+        await socketService.initSocket(), choiceRes.targetUid!);
   }
 }

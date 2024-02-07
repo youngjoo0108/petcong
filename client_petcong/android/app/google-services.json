@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "55237249346-0c36k3ik4d0g6r8b9q5dhb6ocj68pqch.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.petcong",
+            "certificate_hash": "d8e1b8570c0b84abee740c9586612d29de77d5b3"
+          }
+        },
+        {
           "client_id": "55237249346-fi30ntpg2lccamkkm0sp0ihctm4eshs4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -27,6 +35,14 @@
           "android_info": {
             "package_name": "com.example.petcong",
             "certificate_hash": "a2b1e61d54e790d05d833789111025b8070698ad"
+          }
+        },
+        {
+          "client_id": "55237249346-ls5adqnhvotshaoh52tfnpgaf01frmur.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.petcong",
+            "certificate_hash": "b30e443a82a2a418ff125394a76a23f3f0b6edea"
           }
         },
         {
