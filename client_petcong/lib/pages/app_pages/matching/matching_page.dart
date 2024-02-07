@@ -7,6 +7,7 @@ import 'package:petcong/services/socket_service.dart';
 import 'package:petcong/services/matching_service.dart';
 import 'package:petcong/widgets/card_overlay.dart';
 import 'package:petcong/widgets/matching_card.dart';
+import 'package:stomp_dart_client/stomp.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
 const _images = [
@@ -30,6 +31,11 @@ class MainMatchingPage extends StatefulWidget {
 class _MainMatchingPageState extends State<MainMatchingPage> {
   late final SwipableStackController _controller;
 
+  // late Function onCallPressed;
+  final SocketService socketService = SocketService();
+  final MatchingService matchingService = MatchingService();
+  late StompClient client;
+
   void _listenController() {
     setState(() {});
   }
@@ -38,6 +44,12 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   void initState() {
     super.initState();
     _controller = SwipableStackController()..addListener(_listenController);
+    initClient();
+  }
+
+  void initClient() async {
+    client = await socketService.initSocket();
+    print(client);
   }
 
   @override
@@ -47,10 +59,6 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       ..removeListener(_listenController)
       ..dispose();
   }
-
-  // late Function onCallPressed;
-  final SocketService socketService = SocketService();
-  final MatchingService matchingService = MatchingService();
 
   @override
   Widget build(BuildContext context) {
@@ -140,8 +148,8 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       return;
     }
     // when matched
+    print(client);
     socketService.makeCall(choiceRes.targetUid!);
-    socketService.sendOffer(
-        await socketService.initSocket(), choiceRes.targetUid!);
+    socketService.sendOffer(client, choiceRes.targetUid!);
   }
 }

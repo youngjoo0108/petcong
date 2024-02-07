@@ -88,6 +88,9 @@ class SocketService extends GetxController {
                       makeCall(targetUid);
                       break;
                     case 'offer':
+                      value.forEach((key, value) {
+                        print('Key: $key, Value: $value');
+                      });
                       gotOffer(value['sdp'], value['type']);
                       sendAnswer(client!);
                       break;
@@ -188,39 +191,44 @@ class SocketService extends GetxController {
   // webRTC
 
   Future joinRoom() async {
-    if (pc == null) {
-      await initSocket();
+    try {
+      if (pc == null) {
+        await initSocket();
 
-      final config = {
-        'iceServers': [
-          {"url": "stun:stun.l.google.com:19302"},
-          {
-            "url": "turn:i10a603.p.ssafy.io:3478",
-            "username": "ehigh",
-            "credential": "1234",
+        final config = {
+          'iceServers': [
+            {"url": "stun:stun.l.google.com:19302"},
+            {
+              "url": "turn:i10a603.p.ssafy.io:3478",
+              "username": "ehigh",
+              "credential": "1234",
+            },
+          ],
+        };
+
+        final sdpConstraints = {
+          'mandatory': {
+            'OfferToReceiveAudio': true,
+            'OfferToReceiveVideo': true,
           },
-        ],
-      };
+          'optional': []
+        };
 
-      final sdpConstraints = {
-        'mandatory': {
-          'OfferToReceiveAudio': true,
-          'OfferToReceiveVideo': true,
-        },
-        'optional': []
-      };
+        pc = await createPeerConnection(config, sdpConstraints);
+        print('11111111111111$pc');
+        pc!.onIceCandidate = (ice) {
+          sendIce(ice, client!);
+        };
 
-      pc = await createPeerConnection(config, sdpConstraints);
-      print('11111111111111$pc');
-      pc!.onIceCandidate = (ice) {
-        sendIce(ice, client!);
-      };
-
-      pc!.onAddStream = (stream) {
-        _remoteRenderer.srcObject = stream;
-      };
-    } else {
-      return pc;
+        pc!.onAddStream = (stream) {
+          _remoteRenderer.srcObject = stream;
+        };
+        Future.delayed(Duration(seconds: 1));
+      } else {
+        return pc;
+      }
+    } catch (exception) {
+      print(exception);
     }
 
     // client!.send(
@@ -265,15 +273,19 @@ class SocketService extends GetxController {
   }
 
 // --- webrtc - 메소드들 ---
-  Future sendOffer(StompClient client, String targetUid) async {
+  Future sendOffer(StompClient client2, String targetUid) async {
+    client2 = await initSocket();
+
     await joinRoom();
     this.targetUid = targetUid;
 
     debugPrint('send offer');
+    await Future.delayed(const Duration(milliseconds: 1000));
+
     var offer = await pc!.createOffer();
     pc!.setLocalDescription(offer);
     var map = {"type": "offer", "value": offer.toMap()};
-    client.send(
+    client2.send(
         destination: '/queue/$targetUid',
         headers: {
           "content-type": "application/json",
@@ -284,12 +296,14 @@ class SocketService extends GetxController {
   }
 
   Future gotOffer(String sdp, String type) async {
+    await joinRoom();
     RTCSessionDescription offer = RTCSessionDescription(sdp, type);
     debugPrint('got offer');
     pc!.setRemoteDescription(offer);
   }
 
-  Future sendAnswer(StompClient client) async {
+  Future sendAnswer(StompClient client2) async {
+    client2 = await initSocket();
     await joinRoom();
     debugPrint('send answer');
     var answer = await pc!.createAnswer();
@@ -297,7 +311,7 @@ class SocketService extends GetxController {
     var map = {"type": "answer", "value": answer.toMap()};
     debugPrint("before sendAnswer");
     debugPrint("map = ${jsonEncode(map)}");
-    client.send(
+    client2.send(
         destination: subsPrefix + targetUid.toString(),
         headers: {
           "content-type": "application/json",
@@ -308,18 +322,20 @@ class SocketService extends GetxController {
   }
 
   Future gotAnswer(String sdp, String type) async {
+    await joinRoom();
     RTCSessionDescription answer = RTCSessionDescription(sdp, type);
     debugPrint('got answer');
     update();
     pc!.setRemoteDescription(answer);
   }
 
-  Future sendIce(RTCIceCandidate ice, StompClient client) async {
+  Future sendIce(RTCIceCandidate ice, StompClient client2) async {
+    client2 = await initSocket();
     await joinRoom();
     debugPrint("send ice");
     update();
     var map = {"type": "ice", "value": ice.toMap()};
-    client.send(
+    client2.send(
         destination: subsPrefix + targetUid.toString(),
         headers: {
           "content-type": "application/json",
@@ -330,6 +346,7 @@ class SocketService extends GetxController {
   }
 
   Future gotIce(String candidate, String sdpMid, int sdpMLineIndex) async {
+    await joinRoom();
     RTCIceCandidate ice = RTCIceCandidate(candidate, sdpMid, sdpMLineIndex);
     debugPrint("got ice");
     pc!.addCandidate(ice);
