@@ -266,7 +266,7 @@ class SocketService extends GetxController {
 
 // --- webrtc - 메소드들 ---
   Future sendOffer(StompClient client, String targetUid) async {
-    await initSocket();
+    client = await initSocket();
     await joinRoom();
     this.targetUid = targetUid;
 
