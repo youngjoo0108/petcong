@@ -56,7 +56,7 @@ public class FirebaseUserDetails implements UserDetails {
         return this.status;
     }
 
-    public int getUserId() {
+    public int getMemberId() {
         return Integer.parseInt(this.memberId);
     }
 }
