@@ -41,10 +41,10 @@ public class MatchingRequestService {
     }
 
     @Transactional
-    public ChoiceRes choice(String uid, int partnerMemberId){
+    public ChoiceRes choice(String uid, String partnerUid){
         Member fromMember = memberRepository.findMemberByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
         // DB에서 requestMemberId, partnerMemberId인 데이터 가져오기
-        Member toMember = memberRepository.findMemberByMemberId(partnerMemberId).orElseThrow(() -> new NoSuchElementException(String.valueOf(partnerMemberId)));
+        Member toMember = memberRepository.findMemberByUid(partnerUid).orElseThrow(() -> new NoSuchElementException(partnerUid));
         // 상대가 나에게 보낸 요청이 있는지 찾기
         Matching matching = matchingRepository.findPendingByMembers(toMember, fromMember);
 
