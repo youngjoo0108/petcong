@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   datasource:
@@ -31,7 +31,7 @@ springdoc:
 
 allowed-url:
   urls:
-    - /users/signin
+    - /members/signin
   patterns:
     - /api-docs/**
     - /swagger-ui/**
