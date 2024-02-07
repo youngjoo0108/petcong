@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'photo_page.dart';
+import 'social_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
-import 'package:petcong/controller/user_controller.dart';
 
 class IntroducePage extends StatefulWidget {
   final double progress;
@@ -13,21 +12,13 @@ class IntroducePage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _IntroducePageState createState() => _IntroducePageState();
+  IntroducePageState createState() => IntroducePageState();
 }
 
-class _IntroducePageState extends State<IntroducePage> {
+class IntroducePageState extends State<IntroducePage> {
   final _controller = TextEditingController();
   bool _isButtonDisabled = true;
   late double _progress;
-
-  void _decreaseProgress() {
-    setState(() {
-      if (_progress > 0) {
-        _progress -= 1 / 10;
-      }
-    });
-  }
 
   @override
   void initState() {
@@ -48,8 +39,7 @@ class _IntroducePageState extends State<IntroducePage> {
         title: LinearProgressIndicator(
           value: _progress,
           valueColor: const AlwaysStoppedAnimation<Color>(
-            Color.fromARGB(255, 249, 113, 95),
-          ),
+              Color.fromARGB(255, 249, 113, 95)),
         ),
       ),
       body: Padding(
@@ -57,10 +47,29 @@ class _IntroducePageState extends State<IntroducePage> {
         child: Column(
           children: <Widget>[
             Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                icon: const Icon(Icons.close, size: 32),
-                onPressed: () => Get.back(),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 32),
+                    onPressed: () => Get.back(result: _progress),
+                  ),
+                  TextButton(
+                    child: const Text(
+                      '건너뛰기',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey),
+                    ),
+                    onPressed: () {
+                      Get.to(const SocialPage(
+                        progress: 9 / 12,
+                      ));
+                    },
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 10.0),
@@ -99,14 +108,11 @@ class _IntroducePageState extends State<IntroducePage> {
                       );
                     },
                   );
-
-                  // Dialog에서 반환된 텍스트(result)를 UserController의 introText에 저장하고, TextField에 표시합니다.
                   if (result != null) {
-                    Get.find<UserController>().updateIntroText(result);
-                    _controller.text = result; // TextField에 반환된 텍스트를 표시합니다.
+                    // Dialog에서 반환한 텍스트를 _controller에 설정합니다.
+                    _controller.text = result;
                   }
                 },
-
                 style: const TextStyle(
                   fontSize: 20.0,
                   decoration: TextDecoration.none,
@@ -130,9 +136,9 @@ class _IntroducePageState extends State<IntroducePage> {
               buttonText: 'CONTINUE',
               onPressed: !_isButtonDisabled
                   ? () {
-                      Get.to(PhotoPage(
-                        progress: widget.progress + 1 / 10,
-                      ));
+                      Get.to(SocialPage(
+                        progress: widget.progress + 1 / 12,
+                      ), transition: Transition.noTransition);
                     }
                   : null,
             ),

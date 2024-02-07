@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'pet_birthday_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
-import 'gender_page.dart';
+import 'prefer_page.dart';
 
 class PetNamePage extends StatefulWidget {
   final double progress;
@@ -10,10 +10,10 @@ class PetNamePage extends StatefulWidget {
   const PetNamePage({Key? key, required this.progress}) : super(key: key);
 
   @override
-  _PetNamePageState createState() => _PetNamePageState();
+  PetNamePageState createState() => PetNamePageState();
 }
 
-class _PetNamePageState extends State<PetNamePage> {
+class PetNamePageState extends State<PetNamePage> {
   final _controller = TextEditingController();
   bool _isButtonDisabled = true;
   @override
@@ -37,76 +37,72 @@ class _PetNamePageState extends State<PetNamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.pop(context, widget.progress);
-        return false;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: LinearProgressIndicator(
-            value: widget.progress,
-            valueColor: const AlwaysStoppedAnimation<Color>(
-              Color.fromARGB(255, 249, 113, 95),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: LinearProgressIndicator(
+          value: widget.progress,
+          valueColor: const AlwaysStoppedAnimation<Color>(
+            Color.fromARGB(255, 249, 113, 95),
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  icon: const Icon(Icons.close, size: 32),
-                  onPressed: () => Get.off(const GenderPage(progress: 2 / 10)),
-                ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                icon: const Icon(Icons.close, size: 32),
+                onPressed: () => Get.off(const PreferPage(progress: 4 / 12)),
               ),
-              const SizedBox(height: 10.0),
-              const Center(
-                  child: Text('내 반려동물 이름은?',
-                      style: TextStyle(
-                          fontSize: 32.0, fontWeight: FontWeight.w600))),
-              const SizedBox(height: 30.0),
-              SizedBox(
-                width: 300, // 원하는 너비 설정
-                child: TextField(
-                    controller: _controller,
-                    style: const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w400,
-                      decoration: TextDecoration.none,
+            ),
+            const SizedBox(height: 10.0),
+            const Center(
+                child: Text('내 반려동물 이름은?',
+                    style: TextStyle(
+                        fontSize: 32.0, fontWeight: FontWeight.w600))),
+            const SizedBox(height: 30.0),
+            SizedBox(
+              width: 300, // 원하는 너비 설정
+              child: TextField(
+                  controller: _controller,
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w400,
+                    decoration: TextDecoration.none,
+                  ),
+                  decoration: const InputDecoration(
+                    hintText: '반려동물 이름을 입력하세요',
+                    border: InputBorder.none,
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
                     ),
-                    decoration: const InputDecoration(
-                      hintText: '반려동물 이름을 입력하세요',
-                      border: InputBorder.none,
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
                     ),
-                    textAlign: TextAlign.center),
-              ),
-              const SizedBox(
-                height: 30.0,
-              ), // TextField 위젯과 ElevatedButton 위젯 사이에 100픽셀의 공간을 만듭니다.
-              ContinueButton(
-                isFilled: !_isButtonDisabled,
-                buttonText: 'CONTINUE',
-                onPressed: !_isButtonDisabled
-                    ? () {
-                        Get.to(PetBirthdayPage(
-                          petName: _controller.text,
-                          progress: widget.progress + 1 / 10,
-                        ));
-                      }
-                    : null,
-              ),
-            ],
-          ),
+                  ),
+                  textAlign: TextAlign.center),
+            ),
+            const SizedBox(
+              height: 30.0,
+            ), // TextField 위젯과 ElevatedButton 위젯 사이에 100픽셀의 공간을 만듭니다.
+            ContinueButton(
+              isFilled: !_isButtonDisabled,
+              buttonText: 'CONTINUE',
+              onPressed: !_isButtonDisabled
+                  ? () {
+                      Get.to(
+                          PetBirthdayPage(
+                            petName: _controller.text,
+                            progress: widget.progress + 1 / 12,
+                          ),
+                          transition: Transition.noTransition);
+                    }
+                  : null,
+            ),
+          ],
         ),
       ),
     );

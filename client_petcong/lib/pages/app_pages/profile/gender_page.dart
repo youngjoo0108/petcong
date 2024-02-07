@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'birthday_page.dart';
-import 'pet_name_page.dart';
+import 'prefer_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
 
@@ -10,10 +10,10 @@ class GenderPage extends StatefulWidget {
   const GenderPage({Key? key, required this.progress}) : super(key: key);
 
   @override
-  _GenderPageState createState() => _GenderPageState();
+  GenderPageState createState() => GenderPageState();
 }
 
-class _GenderPageState extends State<GenderPage> {
+class GenderPageState extends State<GenderPage> {
   String _gender = '';
   double _progress = 0.0;
   bool _isButtonDisabled = true; // _isButtonDisabled 변수 선언
@@ -22,12 +22,6 @@ class _GenderPageState extends State<GenderPage> {
   void initState() {
     super.initState();
     _progress = widget.progress;
-  }
-
-  void _increaseProgress() {
-    setState(() {
-      _progress += 1 / 10;
-    });
   }
 
   @override
@@ -52,7 +46,7 @@ class _GenderPageState extends State<GenderPage> {
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back_ios, size: 32),
                   onPressed: () =>
-                      Get.off(const BirthdayPage(progress: 1 / 10)),
+                      Get.off(const BirthdayPage(progress: 2 / 12)),
                 ),
               ),
               const SizedBox(height: 10.0),
@@ -91,15 +85,15 @@ class _GenderPageState extends State<GenderPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 70.0),
+              const SizedBox(height: 90.0),
               ContinueButton(
                 isFilled: !_isButtonDisabled,
                 buttonText: 'CONTINUE',
                 onPressed: !_isButtonDisabled
                     ? () {
-                        Get.to(PetNamePage(
-                          progress: widget.progress + 1 / 10,
-                        ));
+                        Get.to(PreferPage(
+                          progress: widget.progress + 1 / 12,
+                        ), transition: Transition.noTransition);
                       }
                     : null,
               ),

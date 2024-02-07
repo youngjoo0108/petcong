@@ -2,6 +2,7 @@ package com.example.ssafy.petcong.interceptor;
 
 import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.repository.UserRepository;
+
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHeaders;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import static org.springframework.messaging.simp.stomp.StompCommand.*;
 
@@ -76,8 +78,8 @@ public class PostWebSocketHandler implements ChannelInterceptor {
 
     @Transactional
     public void changeOnlineStatus(String uid, boolean toStatus) {
-        User user = userRepository.findUserByUid(uid);
-        user.setCallable(toStatus);
+        User user = userRepository.findUserByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
+        user.updateCallable(toStatus);
         userRepository.save(user);
     }
 }
