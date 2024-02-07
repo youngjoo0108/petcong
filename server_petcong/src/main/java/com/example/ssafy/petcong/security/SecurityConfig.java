@@ -1,7 +1,7 @@
 package com.example.ssafy.petcong.security;
 
-import com.example.ssafy.petcong.filter.ExclusiveFilter;
-import com.example.ssafy.petcong.filter.FirebaseAuthenticationFilter;
+import com.example.ssafy.petcong.security.filter.ExclusiveFilter;
+import com.example.ssafy.petcong.security.filter.FirebaseAuthenticationFilter;
 import com.example.ssafy.petcong.properties.AllowedUrlProperties;
 
 import org.springframework.context.annotation.Bean;

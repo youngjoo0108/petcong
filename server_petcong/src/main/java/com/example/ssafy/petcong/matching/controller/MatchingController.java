@@ -1,26 +1,27 @@
 package com.example.ssafy.petcong.matching.controller;
 
 import com.example.ssafy.petcong.matching.model.ChoiceReq;
+import com.example.ssafy.petcong.matching.model.ChoiceRes;
 import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.model.entity.ProfileRecord;
 import com.example.ssafy.petcong.matching.service.MatchingRequestService;
 import com.example.ssafy.petcong.matching.service.MatchingProfileService;
-import com.example.ssafy.petcong.user.model.dto.UserRecord;
-import com.example.ssafy.petcong.user.service.UserService;
+import com.example.ssafy.petcong.member.service.MemberService;
+import com.example.ssafy.petcong.member.model.dto.MemberRecord;
+import com.example.ssafy.petcong.security.FirebaseUserDetails;
 import com.example.ssafy.petcong.util.annotation.MakeCallable;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Tag(name = "matchings", description = "매칭 API")
@@ -30,7 +31,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MatchingController {
 
-    private final UserService userService;
+    private final MemberService memberService;
     private final MatchingRequestService matchingRequestService;
     private final MatchingProfileService matchingProfileService;
 
@@ -42,9 +43,9 @@ public class MatchingController {
     })
     @MakeCallable
     @PostMapping("/choice")
-    public ResponseEntity<?> choice(@AuthenticationPrincipal(expression = "password") String uid,
+    public ResponseEntity<?> choice(@AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
                                     @RequestBody ChoiceReq choiceReq) {
-        Map<String, String> res = matchingRequestService.choice(uid, choiceReq.getPartnerUserId());
+        ChoiceRes res = matchingRequestService.choice(uid, choiceReq.getPartnerMemberId());
         if (res != null) {
             return ResponseEntity.ok(res);
         } else {
@@ -54,16 +55,16 @@ public class MatchingController {
 
     @MakeCallable
     @GetMapping("/profile")
-    public ResponseEntity<ProfileRecord> profile(@AuthenticationPrincipal(expression = "password") String uid) {
+    public ResponseEntity<ProfileRecord> profile(@AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid) {
         Optional<ProfileRecord> optionalProfile = matchingProfileService.profile(uid);
         return optionalProfile.map(profile -> ResponseEntity.ok().body(profile))
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> matchingList(@AuthenticationPrincipal(expression = "password") String uid) {
-        UserRecord user = userService.findUserByUid(uid);
-        int myId = user.userId();
+    public ResponseEntity<?> matchingList(@AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid) {
+        MemberRecord member = memberService.findMemberByUid(uid);
+        int myId = member.memberId();
         List<Matching> matchings = matchingProfileService.findMatchingList(myId, myId);
 
         return ResponseEntity

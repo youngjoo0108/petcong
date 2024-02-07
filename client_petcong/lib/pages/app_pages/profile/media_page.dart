@@ -6,10 +6,10 @@ class MediaPage extends StatefulWidget {
   const MediaPage({Key? key}) : super(key: key);
 
   @override
-  _MediaPageState createState() => _MediaPageState();
+  MediaPageState createState() => MediaPageState();
 }
 
-class _MediaPageState extends State<MediaPage> {
+class MediaPageState extends State<MediaPage> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImageFromGallery() async {

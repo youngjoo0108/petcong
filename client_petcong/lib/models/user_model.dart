@@ -1,109 +1,64 @@
-import 'package:equatable/equatable.dart';
-
-// ignore: must_be_immutable
-class UserModel extends Equatable {
-  String? key;
+class UserModel {
+  int? userId;
+  int? age;
+  bool? callable;
+  String? nickname;
   String? email;
-  String? userId;
-  String? displayName;
-  String? userName;
-  String? petName;
-  String? profilePic;
-  String? kakaoId;
+  String? address;
+  String? uid;
   String? instagramId;
-  List<String>? followersList;
-  List<String>? followingList;
+  String? kakaoId;
+  String? birthday;
+  String? gender;
+  String? status;
+  String? preference;
 
   UserModel(
-      {this.key,
+      {this.userId,
+      this.age,
+      this.callable,
+      this.nickname,
       this.email,
-      this.userId,
-      this.displayName,
-      this.profilePic,
-      this.kakaoId,
+      this.address,
+      this.uid,
       this.instagramId,
-      this.userName,
-      this.followersList,
-      this.followingList});
+      this.kakaoId,
+      this.birthday,
+      this.gender,
+      this.status,
+      this.preference});
 
-  UserModel.fromJson(Map<dynamic, dynamic>? map) {
-    if (map == null) {
-      return;
-    }
-    followersList ??= [];
-    email = map['email'];
-    userId = map['userId'];
-    displayName = map['displayName'];
-    profilePic = map['profilePic'];
-    key = map['key'];
-    instagramId = map['instagramId'];
-    kakaoId = map['kakaoId'];
-    userName = map['userName'];
-    if (map['followerList'] != null) {
-      followersList = <String>[];
-      map['followerList'].forEach((value) {
-        followersList!.add(value);
-      });
-    }
-    if (map['followingList'] != null) {
-      followingList = <String>[];
-      map['followingList'].forEach((value) {
-        followingList!.add(value);
-      });
-    }
-  }
-  toJson() {
-    return {
-      'key': key,
-      "userId": userId,
-      "email": email,
-      'displayName': displayName,
-      'profilePic': profilePic,
-      'kakaoId': kakaoId,
-      'instagramId': instagramId,
-      'userName': userName,
-      'followerList': followersList,
-      'followingList': followingList
-    };
+  UserModel.fromJson(Map<String, dynamic> json) {
+    userId = json['userId'];
+    age = json['age'];
+    callable = json['callable'];
+    nickname = json['nickname'];
+    email = json['email'];
+    address = json['address'];
+    uid = json['uid'];
+    instagramId = json['instagramId'];
+    kakaoId = json['kakaoId'];
+    birthday = json['birthday'];
+    gender = json['gender'];
+    status = json['status'];
+    preference = json['preference'];
   }
 
-  UserModel copyWith({
-    String? email,
-    String? userId,
-    String? displayName,
-    String? profilePic,
-    String? key,
-    String? kakaoId,
-    String? instagramId,
-    String? userName,
-    List<String>? followingList,
-    List<String>? followersList,
-  }) {
-    return UserModel(
-      email: email ?? this.email,
-      instagramId: instagramId ?? this.instagramId,
-      kakaoId: kakaoId ?? this.kakaoId,
-      displayName: displayName ?? this.displayName,
-      key: key ?? this.key,
-      profilePic: profilePic ?? this.profilePic,
-      userId: userId ?? this.userId,
-      userName: userName ?? this.userName,
-      followersList: followersList ?? this.followersList,
-      followingList: followingList ?? this.followingList,
-    );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['userId'] = this.userId;
+    data['age'] = this.age;
+    data['callable'] = this.callable;
+    data['nickname'] = this.nickname;
+    data['email'] = this.email;
+    data['address'] = this.address;
+    data['uid'] = this.uid;
+    data['instagramId'] = this.instagramId;
+    data['kakaoId'] = this.kakaoId;
+    data['birthday'] = this.birthday;
+    data['gender'] = this.gender;
+    data['status'] = this.status;
+    data['preference'] = this.preference;
+    return data;
   }
-
-  @override
-  List<Object?> get props => [
-        key,
-        email,
-        userId,
-        displayName,
-        userName,
-        profilePic,
-        kakaoId,
-        instagramId,
-        followersList,
-        followingList
-      ];
 }

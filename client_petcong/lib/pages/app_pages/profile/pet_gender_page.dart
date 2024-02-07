@@ -11,10 +11,10 @@ class PetGenderPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _PetGenderPageState createState() => _PetGenderPageState();
+  PetGenderPageState createState() => PetGenderPageState();
 }
 
-class _PetGenderPageState extends State<PetGenderPage> {
+class PetGenderPageState extends State<PetGenderPage> {
   String _gender = '';
   bool _isNeutered = false;
   late double _progress; // _progress를 late로 선언
@@ -121,14 +121,8 @@ class _PetGenderPageState extends State<PetGenderPage> {
                 buttonText: 'CONTINUE',
                 onPressed: !_isButtonDisabled
                     ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => IntroducePage(
-                              progress: widget.progress + 1 / 10,
-                            ),
-                          ),
-                        );
+                        Get.to(const IntroducePage(progress: 0.65),
+                            transition: Transition.noTransition);
                       }
                     : null,
               ),
