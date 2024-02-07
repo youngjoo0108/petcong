@@ -1,4 +1,4 @@
-package com.example.ssafy.petcong.filter;
+package com.example.ssafy.petcong.security.filter;
 
 import com.example.ssafy.petcong.security.FirebaseAuthenticationToken;
 import com.example.ssafy.petcong.security.FirebaseUserDetails;
@@ -50,7 +50,7 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
         Authentication authentication;
 
         if (role.equals(UserRole.ANONYMOUS)) { // anonymous request
-            UserDetails anonymousUserDetails = new FirebaseUserDetails(role.getUid(), role.getUserId(), role.isStatus());
+            UserDetails anonymousUserDetails = new FirebaseUserDetails(role.getUid(), role.getMemberId(), role.isStatus());
             AbstractAuthenticationToken authenticatedToken = FirebaseAuthenticationToken.authenticated(anonymousUserDetails, anonymousUserDetails.getPassword(), null);
             authenticatedToken.setDetails(anonymousUserDetails);
             return authenticatedToken;

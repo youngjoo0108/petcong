@@ -1,4 +1,4 @@
-package com.example.ssafy.petcong.filter;
+package com.example.ssafy.petcong.security.filter;
 
 import com.example.ssafy.petcong.properties.AllowedUrlProperties;
 import com.example.ssafy.petcong.security.UserRole;
