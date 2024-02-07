@@ -2,7 +2,9 @@ package com.example.ssafy.petcong.matching.service;
 
 import com.example.ssafy.petcong.matching.model.CallStatus;
 import com.example.ssafy.petcong.matching.model.ChoiceRes;
+import com.example.ssafy.petcong.matching.model.entity.Icebreaking;
 import com.example.ssafy.petcong.matching.model.entity.Matching;
+import com.example.ssafy.petcong.matching.repository.IcebreakingRepository;
 import com.example.ssafy.petcong.matching.repository.MatchingRepository;
 import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.repository.UserRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -19,11 +22,13 @@ public class MatchingRequestService {
 
     private final MatchingRepository matchingRepository;
     private final UserRepository userRepository;
+    private final IcebreakingRepository icebreakingRepository;
     private final SimpMessageSendingOperations sendingOperations;
 
-    public MatchingRequestService(MatchingRepository matchingRepository, UserRepository userRepository, SimpMessageSendingOperations sendingOperations) {
+    public MatchingRequestService(MatchingRepository matchingRepository, UserRepository userRepository, IcebreakingRepository icebreakingRepository, SimpMessageSendingOperations sendingOperations) {
         this.matchingRepository = matchingRepository;
         this.userRepository = userRepository;
+        this.icebreakingRepository = icebreakingRepository;
         this.sendingOperations = sendingOperations;
     }
 
@@ -61,7 +66,8 @@ public class MatchingRequestService {
         userRepository.save(fromUser);
         userRepository.save(toUser);
 
-
+        // 퀴즈, 미션 가져오기
+        List<Icebreaking> icebreakingList = icebreakingRepository.findAll();
 
         // 상대쪽에도 전송
         Map<String, Object> responseMap2 = new HashMap<>();
@@ -69,7 +75,7 @@ public class MatchingRequestService {
         ChoiceRes choiceRes = ChoiceRes.builder()
                                 .targetUid(fromUser.getUid())
                                 .profile(null) // 상대 프로필? 넣기
-                                .questions(null) // 질문 리스트 넣기
+                                .icebreakingList(icebreakingList) // 질문 리스트 넣기
                                 .build();
         responseMap2.put("value", choiceRes);
 
@@ -77,6 +83,7 @@ public class MatchingRequestService {
 
         return ChoiceRes.builder()
                 .targetUid(toUser.getUid())
+                .icebreakingList(icebreakingList)
                 .build();
     }
 
