@@ -11,12 +11,8 @@ import com.example.ssafy.petcong.member.model.entity.Member;
 import com.example.ssafy.petcong.member.model.entity.MemberImg;
 import com.example.ssafy.petcong.member.repository.MemberImgRepository;
 import com.example.ssafy.petcong.member.repository.MemberRepository;
-import com.example.ssafy.petcong.user.model.entity.User;
-import com.example.ssafy.petcong.user.model.entity.UserImg;
-import com.example.ssafy.petcong.user.model.enums.Gender;
-import com.example.ssafy.petcong.user.model.enums.Preference;
-import com.example.ssafy.petcong.user.repository.UserImgRepository;
-import com.example.ssafy.petcong.user.repository.UserRepository;
+import com.example.ssafy.petcong.member.model.enums.Gender;
+import com.example.ssafy.petcong.member.model.enums.Preference;
 
 import jakarta.transaction.Transactional;
 
@@ -81,13 +77,13 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         return memberid;
     }
 
-    private boolean isPreferred(User requestingUser, User potentialUser) {
-        Preference requestingUserPreference = requestingUser.getPreference();
-        Gender potentialUserGender = potentialUser.getGender();
+    private boolean isPreferred(Member requestingMember, Member potentialMember) {
+        Preference requestingMemberPreference = requestingMember.getPreference();
+        Gender potentialMemberGender = potentialMember.getGender();
 
-        return requestingUserPreference == Preference.BOTH
-                || requestingUserPreference == Preference.MALE && potentialUserGender == Gender.MALE
-                || requestingUserPreference == Preference.FEMALE && potentialUserGender == Gender.FEMALE;
+        return requestingMemberPreference == Preference.BOTH
+                || requestingMemberPreference == Preference.MALE && potentialMemberGender == Gender.MALE
+                || requestingMemberPreference == Preference.FEMALE && potentialMemberGender == Gender.FEMALE;
     }
 
     @Transactional
@@ -103,7 +99,7 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         if (!potentialMember.isCallable()) return false;
 
         // 2.5. 선호 상대 확인
-        if (!isPreferred(requestingUser, potentialUser)) return false;
+        if (!isPreferred(requestingMember, potentialMember)) return false;
 
         // 3. matching table에서 서로 매치한적 있는지 또는 거절 받은 유저인지 확인
         Matching matchingSentByRequesting = matchingRepository.findByFromMemberAndToMember(requestingMember, potentialMember);
