@@ -288,6 +288,7 @@ class SocketService extends GetxController {
   }
 
   Future gotOffer(String sdp, String type) async {
+    await joinRoom();
     RTCSessionDescription offer = RTCSessionDescription(sdp, type);
     debugPrint('got offer');
     pc!.setRemoteDescription(offer);
@@ -313,6 +314,7 @@ class SocketService extends GetxController {
   }
 
   Future gotAnswer(String sdp, String type) async {
+    await joinRoom();
     RTCSessionDescription answer = RTCSessionDescription(sdp, type);
     debugPrint('got answer');
     update();
@@ -336,6 +338,7 @@ class SocketService extends GetxController {
   }
 
   Future gotIce(String candidate, String sdpMid, int sdpMLineIndex) async {
+    await joinRoom();
     RTCIceCandidate ice = RTCIceCandidate(candidate, sdpMid, sdpMLineIndex);
     debugPrint("got ice");
     pc!.addCandidate(ice);
