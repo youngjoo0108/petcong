@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @ToString
-@Entity(name = "matchings")
 @NoArgsConstructor
 @Getter
 public class Matching {
