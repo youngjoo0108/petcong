@@ -30,7 +30,7 @@ class CallWaiting extends StatelessWidget {
             left: MediaQuery.of(context).size.width / 4,
             child: FloatingActionButton(
               heroTag: 'call_button',
-              onPressed: () {
+              onPressed: () async {
                 SocketService().startCamera();
               },
               shape: const CircleBorder(eccentricity: 0),
@@ -44,7 +44,7 @@ class CallWaiting extends StatelessWidget {
               heroTag: 'call_reject_button',
               onPressed: () {},
               shape: const CircleBorder(eccentricity: 0),
-              backgroundColor: MyColor.petCongColor4.withOpacity(0.8),
+              backgroundColor: MyColor.petCongColor4,
               child: const Icon(Icons.call_end),
             ),
           ),

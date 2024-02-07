@@ -73,29 +73,31 @@ class SocketService extends GetxController {
                 "uid": uid!,
               },
               callback: (frame) {
-                msgArr.add(frame.body!);
-                Map<String, dynamic> response = jsonDecode(frame.body!);
+                if (frame.body!.isNotEmpty) {
+                  msgArr.add(frame.body!);
+                  Map<String, dynamic> response = jsonDecode(frame.body!);
 
-                String type = response['type'];
-                print('type = $type');
-                Map<String, dynamic> value = response['value'];
+                  String type = response['type'];
+                  print('type = $type');
+                  Map<String, dynamic> value = response['value'];
 
-                switch (type) {
-                  case 'matched':
-                    // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
-                    targetUid = value['targetUid'];
-                    makeCall(targetUid);
-                    break;
-                  case 'offer':
-                    gotOffer(value['sdp'], value['type']);
-                    sendAnswer(client!);
-                    break;
-                  case 'answer':
-                    gotAnswer(value['sdp'], value['type']);
-                    break;
-                  case 'ice':
-                    gotIce(value['candidate'], value['sdpMid'],
-                        value['sdpMLineIndex']);
+                  switch (type) {
+                    case 'matched':
+                      // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
+                      targetUid = value['targetUid'];
+                      makeCall(targetUid);
+                      break;
+                    case 'offer':
+                      gotOffer(value['sdp'], value['type']);
+                      sendAnswer(client!);
+                      break;
+                    case 'answer':
+                      gotAnswer(value['sdp'], value['type']);
+                      break;
+                    case 'ice':
+                      gotIce(value['candidate'], value['sdpMid'],
+                          value['sdpMLineIndex']);
+                  }
                 }
               },
             );
@@ -186,48 +188,40 @@ class SocketService extends GetxController {
   // webRTC
 
   Future joinRoom() async {
-    await initSocket();
+    if (pc == null) {
+      await initSocket();
 
-    final config = {
-      'iceServers': [
-        {"url": "stun:stun.l.google.com:19302"},
-        {
-          "url": "turn:i10a603.p.ssafy.io:3478",
-          "username": "ehigh",
-          "credential": "1234",
+      final config = {
+        'iceServers': [
+          {"url": "stun:stun.l.google.com:19302"},
+          {
+            "url": "turn:i10a603.p.ssafy.io:3478",
+            "username": "ehigh",
+            "credential": "1234",
+          },
+        ],
+      };
+
+      final sdpConstraints = {
+        'mandatory': {
+          'OfferToReceiveAudio': true,
+          'OfferToReceiveVideo': true,
         },
-      ],
-    };
+        'optional': []
+      };
 
-    final sdpConstraints = {
-      'mandatory': {
-        'OfferToReceiveAudio': true,
-        'OfferToReceiveVideo': true,
-      },
-      'optional': []
-    };
+      pc = await createPeerConnection(config, sdpConstraints);
+      print('11111111111111$pc');
+      pc!.onIceCandidate = (ice) {
+        sendIce(ice, client!);
+      };
 
-    pc = await createPeerConnection(config, sdpConstraints);
-
-    // final mediaConstraints = {
-    //   'audio': true,
-    //   'video': {'facingMode': 'user'}
-    // };
-
-    // _localStream = await Helper.openCamera(mediaConstraints);
-
-    // _localStream!.getTracks().forEach((track) {
-    //   pc!.addTrack(track, _localStream!);
-    // });
-    // _localRenderer.srcObject = _localStream;
-
-    pc!.onIceCandidate = (ice) {
-      sendIce(ice, client!);
-    };
-
-    pc!.onAddStream = (stream) {
-      _remoteRenderer.srcObject = stream;
-    };
+      pc!.onAddStream = (stream) {
+        _remoteRenderer.srcObject = stream;
+      };
+    } else {
+      return pc;
+    }
 
     // client!.send(
     //     // destination: subsPrefix + targetUid.toString(),
@@ -241,10 +235,12 @@ class SocketService extends GetxController {
   }
 
   Future<void> startCamera() async {
+    await joinRoom();
     await _localRenderer.initialize();
     await _remoteRenderer.initialize();
-
+    print(pc);
     if (pc != null) {
+      print('11111111111');
       final mediaConstraints = {
         'audio': true,
         'video': {'facingMode': 'user'}

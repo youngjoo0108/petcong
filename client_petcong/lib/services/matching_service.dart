@@ -17,7 +17,7 @@ class MatchingService extends GetxController {
   // String idTokenString = currentUser?.getIdToken().toString() ?? "";
   User? currentUser;
   String? idTokenString;
-  final String serverUrl = 'https://i10a603.p.ssafy.io:8081';
+  final String serverUrl = 'http://i10a603.p.ssafy.io:8081';
   Map<String, String>? reqHeaders;
 
   @override
