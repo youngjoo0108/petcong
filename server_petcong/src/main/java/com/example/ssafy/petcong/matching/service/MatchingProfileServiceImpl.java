@@ -9,6 +9,8 @@ import com.example.ssafy.petcong.matching.service.util.OnlineUsersService;
 import com.example.ssafy.petcong.matching.service.util.SeenTodayService;
 import com.example.ssafy.petcong.user.model.entity.User;
 import com.example.ssafy.petcong.user.model.entity.UserImg;
+import com.example.ssafy.petcong.user.model.enums.Gender;
+import com.example.ssafy.petcong.user.model.enums.Preference;
 import com.example.ssafy.petcong.user.repository.UserImgRepository;
 import com.example.ssafy.petcong.user.repository.UserRepository;
 
@@ -34,6 +36,7 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
 
     private final int NO_USER = -1;
 
+    @Override
     public List<String> pictures(int userId) {
         List<UserImg> imgList =  userImgRepository.findByUserId(userId);
         return imgList.stream()
@@ -76,6 +79,15 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         return userid;
     }
 
+    private boolean isPreferred(User requestingUser, User potentialUser) {
+        Preference requestingUserPreference = requestingUser.getPreference();
+        Gender potentialUserGender = potentialUser.getGender();
+
+        return requestingUserPreference == Preference.BOTH
+                || requestingUserPreference == Preference.MALE && potentialUserGender == Gender.MALE
+                || requestingUserPreference == Preference.FEMALE && potentialUserGender == Gender.FEMALE;
+    }
+
     @Transactional
     protected boolean isPotentialUser(int requestingUserId, int potentialUserId) {
         Optional<User> optionalPotentialUser = userRepository.findById(potentialUserId);
@@ -87,6 +99,9 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         if (requestingUserId == potentialUserId) return false;
         // 2. 온라인 유저인지 확인
         if (!potentialUser.isCallable()) return false;
+
+        // 2.5. 선호 상대 확인
+        if (!isPreferred(requestingUser, potentialUser)) return false;
 
         // 3. matching table에서 서로 매치한적 있는지 또는 거절 받은 유저인지 확인
         Matching matchingSentByRequesting = matchingRepository.findByFromUserAndToUser(requestingUser, potentialUser);
@@ -105,4 +120,6 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
     public List<Matching> findMatchingList(int fromUserId, int toUserId) {
         return matchingRepository.findMatchingByFromUser_UserIdOrToUser_UserIdAndCallStatus(fromUserId, toUserId, CallStatus.MATCHED);
     }
+
+
 }
