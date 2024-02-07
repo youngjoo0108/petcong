@@ -33,6 +33,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InvalidPathException.class)
     public ResponseEntity<String> handleInvalidPathException(InvalidPathException ex) {
         log.warn(ex.getMessage());
+        ex.printStackTrace();
         return ResponseEntity
                 .badRequest()
                 .body(ex.getMessage());
@@ -41,6 +42,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
         log.warn(ex.getMessage());
+        ex.printStackTrace();
         return ResponseEntity
                 .badRequest()
                 .body(ex.getMessage());
@@ -48,6 +50,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotRegisterdException.class)
     public ResponseEntity<String> handleNotRegisterdException(NotRegisterdException ex) {
+        ex.printStackTrace();
         return ResponseEntity
                 .accepted()
                 .build();
