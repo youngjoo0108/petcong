@@ -17,6 +17,7 @@ class IntroducePage extends StatefulWidget {
 }
 
 class IntroducePageState extends State<IntroducePage> {
+  final SignupController signupController = Get.put(SignupController());
   final _controller = TextEditingController();
   bool _isButtonDisabled = true;
   late double _progress;

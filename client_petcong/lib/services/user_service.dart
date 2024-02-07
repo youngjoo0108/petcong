@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/user_info_model.dart';
@@ -18,10 +17,13 @@ Map<String, String> reqHeaders = checkTesting();
 
 // POST /users/signup
 Future<void> postSignup(UserSignupModel user) async {
-  final response = await http.post(Uri.parse('$serverUrl/users/signup'),
-      headers: reqHeaders, body: jsonEncode(user.toJson()));
+  print(user.toJson());
 
-  if (response.statusCode == 200) {
+  final response = await http.post(Uri.parse('$serverUrl/members/signup'),
+      headers: {'tester': 'A603', 'Content-Type': 'application/json',},
+      body: jsonEncode(user.toJson()));
+  
+  if (response.statusCode == 201) {
     if (kDebugMode) {
       print("success");
     }

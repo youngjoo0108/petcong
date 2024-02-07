@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:petcong/widgets/create_button.dart';
 import 'package:petcong/widgets/delete_button.dart';
@@ -89,6 +90,7 @@ class VideoPage extends StatefulWidget {
 class VideoPageState extends State<VideoPage> {
   late double _progress;
   final List<String> _videoPaths = []; // 선택한 비디오들의 경로를 저장하는 리스트
+  final SignupController signupController = Get.put(SignupController());
 
   @override
   void initState() {
@@ -260,8 +262,9 @@ class VideoPageState extends State<VideoPage> {
                     isFilled: true, // 버튼이 항상 채워져 있도록 합니다.
                     buttonText: 'CONTINUE',
                     onPressed: () {
+                      SignupController.to.signUpUser(context);
                       // 조건문 없이 바로 다음 페이지로 이동하도록 설정합니다.
-                      Get.to(const HomePage(), transition: Transition.zoom);
+                      Get.offAll(const HomePage(), transition: Transition.zoom);
                     },
                     width: 240.0, // 원하는 가로 길이를 설정
                     height: 30.0, // 원하는 세로 길이를 설정

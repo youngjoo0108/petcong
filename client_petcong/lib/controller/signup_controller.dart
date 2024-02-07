@@ -1,6 +1,8 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/pet_info_model.dart';
 import 'package:petcong/models/user_info_model.dart';
 import 'package:petcong/models/user_signup_model.dart';
@@ -197,17 +199,18 @@ class SignupController extends GetxController {
       age: age,
       gender: gender,
       preference: preference,
-      email: email,
+      email: UserController.currentUser?.email,
       address: address,
-      uid: uid,
+      // uid: UserController.currentUser?.uid,
+      uid: "currentUser?.uid",
       instagramId: instagramId,
       kakaoId: kakaoId,
-      status: status,
+      status: "ACTIVE",
     );
 
     PetInfoModel petModel = PetInfoModel(
       name: petName,
-      breed: breed,
+      breed: "breed",
       gender: petGender,
       size: size,
       description: description,
@@ -216,7 +219,7 @@ class SignupController extends GetxController {
       snack: snack,
       toy: toy,
       neutered: neutered,
-      weight: weight,
+      weight: 1,
       age: petAge,
     );
 
@@ -229,7 +232,7 @@ class SignupController extends GetxController {
 
   DateTime? _convertToDate(String input) {
     try {
-      List<String> dateParts = input.split('/');
+      List<String> dateParts = input.split('-');
       return DateTime.parse('${dateParts[0]}-${dateParts[1]}-${dateParts[2]}');
     } catch (e) {
       return null;

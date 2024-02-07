@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:petcong/services/socket_service.dart';
 
 class CallWaiting extends StatelessWidget {

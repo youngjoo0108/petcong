@@ -2,11 +2,9 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/choice_res.dart';
-import 'package:petcong/models/user_model.dart';
 import 'package:get/get.dart';
 import 'package:petcong/models/profile_model.dart';
 
@@ -28,7 +26,7 @@ class MatchingService extends GetxController {
   }
 
   Future<dynamic> postMatching(String targetUid) async {
-    String endpoint = serverUrl + '/matchings/choice';
+    String endpoint = '$serverUrl/matchings/choice';
     final response = await http.post(Uri.parse(endpoint),
         headers: reqHeaders, body: jsonEncode({'partnerUserUid': targetUid}));
     print("body === " + jsonDecode(response.body));

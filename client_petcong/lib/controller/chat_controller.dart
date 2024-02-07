@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:petcong/widgets/matched_card.dart';
-import 'package:petcong/widgets/matching_card.dart';
 
 const _images = [
   'assets/src/dog.jpg',

@@ -16,6 +16,7 @@ class PetGenderPage extends StatefulWidget {
 }
 
 class PetGenderPageState extends State<PetGenderPage> {
+  final SignupController signupController = Get.put(SignupController());
   String _gender = '';
   bool _isNeutered = false;
   late double _progress; // _progress를 late로 선언
@@ -60,11 +61,11 @@ class PetGenderPageState extends State<PetGenderPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _gender == '여자',
+                    isFilled: _gender == 'FEMALE',
                     buttonText: 'FEMALE',
                     onPressed: () {
                       setState(() {
-                        _gender = '여자';
+                        _gender = 'FEMALE';
                         _isButtonDisabled = false;
                       });
                     },
@@ -77,11 +78,11 @@ class PetGenderPageState extends State<PetGenderPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _gender == '남자',
+                    isFilled: _gender == 'MALE',
                     buttonText: 'MALE',
                     onPressed: () {
                       setState(() {
-                        _gender = '남자';
+                        _gender = 'MALE';
                         _isButtonDisabled = false;
                       });
                     },
@@ -123,7 +124,8 @@ class PetGenderPageState extends State<PetGenderPage> {
                 onPressed: !_isButtonDisabled
                     ? () {
                         SignupController.to.addPetGender(_gender);
-                        Get.to(const IntroducePage(progress: 0.65),
+                        SignupController.to.addNeutered(_isNeutered);
+                        Get.to(() => (const IntroducePage(progress: 0.65)),
                             transition: Transition.noTransition);
                       }
                     : null,

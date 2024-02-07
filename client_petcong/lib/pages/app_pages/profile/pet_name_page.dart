@@ -15,7 +15,9 @@ class PetNamePage extends StatefulWidget {
 }
 
 class PetNamePageState extends State<PetNamePage> {
+  final SignupController signupController = Get.put(SignupController());
   final _controller = TextEditingController();
+
   bool _isButtonDisabled = true;
   @override
   void initState() {

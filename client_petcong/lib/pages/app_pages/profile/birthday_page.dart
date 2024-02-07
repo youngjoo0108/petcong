@@ -42,11 +42,11 @@ class BirthdayPageState extends State<BirthdayPage> {
   String? _errorMessage;
 
   final _inputFormatter = TextInputFormatter.withFunction((oldValue, newValue) {
-    // 새로운 값이 기존 값보다 짧고, 새로운 값의 마지막 문자가 '/'가 아닌 경우
+    // 새로운 값이 기존 값보다 짧고, 새로운 값의 마지막 문자가 '-'가 아닌 경우
     if (newValue.text.length < oldValue.text.length &&
-        !newValue.text.endsWith('/')) {
-      // 기존 값의 마지막 문자가 '/'인 경우
-      if (oldValue.text.endsWith('/')) {
+        !newValue.text.endsWith('-')) {
+      // 기존 값의 마지막 문자가 '-'인 경우
+      if (oldValue.text.endsWith('-')) {
         return TextEditingValue(
           text: newValue.text.substring(0, newValue.text.length - 1),
           selection: TextSelection.collapsed(offset: newValue.text.length - 1),
@@ -55,9 +55,9 @@ class BirthdayPageState extends State<BirthdayPage> {
     }
 
     if (newValue.text.length == 4 || newValue.text.length == 7) {
-      if (!newValue.text.endsWith('/')) {
+      if (!newValue.text.endsWith('-')) {
         return TextEditingValue(
-          text: '${newValue.text}/',
+          text: '${newValue.text}-',
           selection: TextSelection.collapsed(offset: newValue.text.length + 1),
         );
       }
@@ -70,10 +70,10 @@ class BirthdayPageState extends State<BirthdayPage> {
       _errorMessage = '생년월일을 입력해주세요!';
       return _errorMessage;
     }
-    const datePattern = r'^(\d{4})\/(\d{2})\/(\d{2})$';
+    const datePattern = r'^(\d{4})\-(\d{2})\-(\d{2})$';
     final match = RegExp(datePattern).firstMatch(value);
     if (match == null) {
-      _errorMessage = '유효한 날짜 형식이 아닙니다 (YYYY/MM/DD)';
+      _errorMessage = '유효한 날짜 형식이 아닙니다 (YYYY-MM-DD)';
       return _errorMessage;
     }
 
@@ -197,14 +197,5 @@ class BirthdayPageState extends State<BirthdayPage> {
         ),
       ),
     );
-  }
-}
-
-DateTime? _convertToDate(String input) {
-  try {
-    List<String> dateParts = input.split('/');
-    return DateTime.parse('${dateParts[0]}-${dateParts[1]}-${dateParts[2]}');
-  } catch (e) {
-    return null;
   }
 }

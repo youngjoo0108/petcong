@@ -15,6 +15,7 @@ class SocialPage extends StatefulWidget {
 }
 
 class SocialPageState extends State<SocialPage> {
+  final SignupController signupController = Get.put(SignupController());
   final TextEditingController _controller1 = TextEditingController();
   final TextEditingController _controller2 = TextEditingController();
   bool _isButtonDisabled = true;
@@ -141,7 +142,6 @@ class SocialPageState extends State<SocialPage> {
                     ? () {
                         SignupController.to.addKakaoId(_controller1.text);
                         SignupController.to.addInstagramId(_controller2.text);
-                        SignupController.to.signUpUser(context);
                         Get.to(
                             PhotoPage(
                               progress: widget.progress + 1 / 12,

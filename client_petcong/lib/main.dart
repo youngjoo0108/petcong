@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'package:petcong/controller/user_controller.dart';
 
 import 'package:petcong/pages/signin_pages/splash_screen_page.dart';

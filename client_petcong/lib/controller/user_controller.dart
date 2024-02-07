@@ -11,7 +11,6 @@ import 'package:petcong/services/socket_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stomp_dart_client/stomp.dart';
 
 class UserController extends GetxController {
   late Rx<User?> _user;
