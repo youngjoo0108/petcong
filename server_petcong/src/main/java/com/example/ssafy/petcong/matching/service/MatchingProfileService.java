@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MatchingProfileService {
+    List<String> pictures(int memberId);
     Optional<ProfileRecord> profile(String uid);
-    List<Matching> findMatchingList(int fromUserId, int toUserId);
+    List<Matching> findMatchingList(int fromMemberId, int toMemberId);
 }

@@ -9,30 +9,30 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 @Service
 public class SeenTodayServiceImpl implements  SeenTodayService {
-    private final ConcurrentHashMap<Integer, Set<Integer>> userProfileMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, Set<Integer>> memberProfileMap = new ConcurrentHashMap<>();
 
-    // Method to track a profile seen by a user
+    // Method to track a profile seen by a member
     @Override
-    public void addSeen(int userId, int profileId) {
+    public void addSeen(int memberId, int profileId) {
         // Using computeIfAbsent to ensure that the set is created if it doesn't exist
-        userProfileMap.computeIfAbsent(userId, k -> new ConcurrentSkipListSet<>()).add(profileId);
+        memberProfileMap.computeIfAbsent(memberId, k -> new ConcurrentSkipListSet<>()).add(profileId);
     }
 
-    // Method to get profiles seen by a user
+    // Method to get profiles seen by a member
     @Override
-    public Set<Integer> getProfilesSeenByUser(int userId) {
-        return userProfileMap.getOrDefault(userId, new ConcurrentSkipListSet<>());
+    public Set<Integer> getProfilesSeenByMember(int memberId) {
+        return memberProfileMap.getOrDefault(memberId, new ConcurrentSkipListSet<>());
     }
 
     @Override
-    public boolean hasSeen(int userId, int profileId) {
-        return userProfileMap.getOrDefault(userId, new ConcurrentSkipListSet<>()).contains(profileId);
+    public boolean hasSeen(int memberId, int profileId) {
+        return memberProfileMap.getOrDefault(memberId, new ConcurrentSkipListSet<>()).contains(profileId);
     }
 
     // Method to clear the map every 24 hours
     @Scheduled(fixedRate = 1000 * 60 * 60 * 24)
     public void clearMap() {
-        userProfileMap.clear();
+        memberProfileMap.clear();
     }
 
 }

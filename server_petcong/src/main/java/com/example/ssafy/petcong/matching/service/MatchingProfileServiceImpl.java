@@ -5,12 +5,14 @@ import com.example.ssafy.petcong.matching.model.CallStatus;
 import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.model.entity.ProfileRecord;
 import com.example.ssafy.petcong.matching.repository.MatchingRepository;
-import com.example.ssafy.petcong.matching.service.util.OnlineUsersService;
+import com.example.ssafy.petcong.matching.service.util.OnlineMembersService;
 import com.example.ssafy.petcong.matching.service.util.SeenTodayService;
-import com.example.ssafy.petcong.user.model.entity.User;
-import com.example.ssafy.petcong.user.model.entity.UserImg;
-import com.example.ssafy.petcong.user.repository.UserImgRepository;
-import com.example.ssafy.petcong.user.repository.UserRepository;
+import com.example.ssafy.petcong.member.model.entity.Member;
+import com.example.ssafy.petcong.member.model.entity.MemberImg;
+import com.example.ssafy.petcong.member.repository.MemberImgRepository;
+import com.example.ssafy.petcong.member.repository.MemberRepository;
+import com.example.ssafy.petcong.member.model.enums.Gender;
+import com.example.ssafy.petcong.member.model.enums.Preference;
 
 import jakarta.transaction.Transactional;
 
@@ -24,20 +26,19 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MatchingProfileServiceImpl implements MatchingProfileService {
-
-    private final OnlineUsersService onlineUsers;
+    private final OnlineMembersService onlineMembers;
     private final SeenTodayService seenToday;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final MatchingRepository matchingRepository;
-    private final UserImgRepository userImgRepository;
+    private final MemberImgRepository memberImgRepository;
     private final AWSService awsService;
 
-    private final int NO_USER = -1;
+    private final int NO_MEMBER = -1;
 
-    public List<String> pictures(int userId) {
-        List<UserImg> imgList =  userImgRepository.findByUserId(userId);
+    public List<String> pictures(int memberId) {
+        List<MemberImg> imgList =  memberImgRepository.findMemberImgByMember_MemberId(memberId);
         return imgList.stream()
-                .map(UserImg::getBucketKey)
+                .map(MemberImg::getBucketKey)
                 .map(awsService::createPresignedUrl)
                 .collect(Collectors.toList());
     }
@@ -45,64 +46,76 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
     @Override
     @Transactional
     public Optional<ProfileRecord> profile(String uid) {
-        User requestingUser = userRepository.findUserByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
-        int requestingUserId = requestingUser.getUserId();
-        int filteredUserId = NO_USER;
-        for (int i = 0; i < onlineUsers.sizeOfQueue(); i++) {
-            int potentialUserId = nextOnlineUser();
-            if (potentialUserId == NO_USER) {
+        Member requestingMember = memberRepository.findMemberByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
+        int requestingMemberId = requestingMember.getMemberId();
+        int filteredMemberId = NO_MEMBER;
+        for (int i = 0; i < onlineMembers.sizeOfQueue(); i++) {
+            int potentialMemberId = nextOnlineMember();
+            if (potentialMemberId == NO_MEMBER) {
                 break;
-            } else if (isPotentialUser(requestingUserId, potentialUserId)) {
-                filteredUserId = potentialUserId;
+            } else if (isPotentialMember(requestingMemberId, potentialMemberId)) {
+                filteredMemberId = potentialMemberId;
                 break;
             }
         }
-        if (filteredUserId == NO_USER) return Optional.empty();
-        List<String> urls = pictures(filteredUserId);
-        int finalFilteredUserId = filteredUserId;
-        User filteredUser = userRepository.findUserByUserId(filteredUserId).orElseThrow(() -> new NoSuchElementException(String.valueOf(finalFilteredUserId)));
+        if (filteredMemberId == NO_MEMBER) return Optional.empty();
+        List<String> urls = pictures(filteredMemberId);
+        int finalFilteredMemberId = filteredMemberId;
+        Member filteredMember = memberRepository.findMemberByMemberId(filteredMemberId).orElseThrow(() -> new NoSuchElementException(String.valueOf(finalFilteredMemberId)));
 
-        return Optional.of(new ProfileRecord(filteredUser, urls));
+        return Optional.of(new ProfileRecord(filteredMember, urls));
     }
 
-    private int nextOnlineUser() {
+    private int nextOnlineMember() {
         // if linkedblockingqueue is empty, return "empty"
-        if (onlineUsers.sizeOfQueue() == 0) {
-            return NO_USER;
+        if (onlineMembers.sizeOfQueue() == 0) {
+            return NO_MEMBER;
         }
-        int userid = onlineUsers.removeUserIdFromQueue();
-        onlineUsers.addUserIdToQueue(userid);
+        int memberid = onlineMembers.removeMemberIdFromQueue();
+        onlineMembers.addMemberIdToQueue(memberid);
 
-        return userid;
+        return memberid;
+    }
+
+    private boolean isPreferred(Member requestingMember, Member potentialMember) {
+        Preference requestingMemberPreference = requestingMember.getPreference();
+        Gender potentialMemberGender = potentialMember.getGender();
+
+        return requestingMemberPreference == Preference.BOTH
+                || requestingMemberPreference == Preference.MALE && potentialMemberGender == Gender.MALE
+                || requestingMemberPreference == Preference.FEMALE && potentialMemberGender == Gender.FEMALE;
     }
 
     @Transactional
-    protected boolean isPotentialUser(int requestingUserId, int potentialUserId) {
-        Optional<User> optionalPotentialUser = userRepository.findById(potentialUserId);
-        Optional<User> optionalRequestingUser = userRepository.findById(potentialUserId);
-        User requestingUser = optionalRequestingUser.orElseThrow();
-        User potentialUser = optionalPotentialUser.orElseThrow();
+    protected boolean isPotentialMember(int requestingMemberId, int potentialMemberId) {
+        Optional<Member> optionalPotentialMember = memberRepository.findById(potentialMemberId);
+        Optional<Member> optionalRequestingMember = memberRepository.findById(potentialMemberId);
+        Member requestingMember = optionalRequestingMember.orElseThrow();
+        Member potentialMember = optionalPotentialMember.orElseThrow();
 
         // 1. 본인인지 확인
-        if (requestingUserId == potentialUserId) return false;
+        if (requestingMemberId == potentialMemberId) return false;
         // 2. 온라인 유저인지 확인
-        if (!potentialUser.isCallable()) return false;
+        if (!potentialMember.isCallable()) return false;
+
+        // 2.5. 선호 상대 확인
+        if (!isPreferred(requestingMember, potentialMember)) return false;
 
         // 3. matching table에서 서로 매치한적 있는지 또는 거절 받은 유저인지 확인
-        Matching matchingSentByRequesting = matchingRepository.findByFromUserAndToUser(requestingUser, potentialUser);
+        Matching matchingSentByRequesting = matchingRepository.findByFromMemberAndToMember(requestingMember, potentialMember);
         if (matchingSentByRequesting != null) return false;
-        Matching matchingSentByPotential = matchingRepository.findByFromUserAndToUser(potentialUser, requestingUser);
+        Matching matchingSentByPotential = matchingRepository.findByFromMemberAndToMember(potentialMember, requestingMember);
         if (matchingSentByPotential != null && matchingSentByPotential.getCallStatus() != CallStatus.PENDING) return false;
 
         // 4. 오늘 본적 있는지
-        if (!seenToday.hasSeen(requestingUserId, potentialUserId)) return false;
-        seenToday.addSeen(requestingUserId, potentialUserId);
+        if (!seenToday.hasSeen(requestingMemberId, potentialMemberId)) return false;
+        seenToday.addSeen(requestingMemberId, potentialMemberId);
 
         return true;
     }
 
     @Override
-    public List<Matching> findMatchingList(int fromUserId, int toUserId) {
-        return matchingRepository.findMatchingByFromUser_UserIdOrToUser_UserIdAndCallStatus(fromUserId, toUserId, CallStatus.MATCHED);
+    public List<Matching> findMatchingList(int fromMemberId, int toMemberId) {
+        return matchingRepository.findMatchingByFromMember_MemberIdOrToMember_MemberIdAndCallStatus(fromMemberId, toMemberId, CallStatus.MATCHED);
     }
 }
