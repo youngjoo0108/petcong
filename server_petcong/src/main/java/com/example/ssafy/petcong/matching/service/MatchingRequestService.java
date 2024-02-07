@@ -1,10 +1,12 @@
 package com.example.ssafy.petcong.matching.service;
 
 import com.example.ssafy.petcong.matching.model.CallStatus;
+import com.example.ssafy.petcong.matching.model.ChoiceRes;
 import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.repository.MatchingRepository;
 import com.example.ssafy.petcong.member.model.entity.Member;
 import com.example.ssafy.petcong.member.repository.MemberRepository;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,15 +19,17 @@ import java.util.NoSuchElementException;
 public class MatchingRequestService {
 
     private final MatchingRepository matchingRepository;
+    private final SimpMessageSendingOperations sendingOperations;
     private final MemberRepository memberRepository;
 
-    public MatchingRequestService(MatchingRepository matchingRepository, MemberRepository memberRepository) {
+    public MatchingRequestService(MatchingRepository matchingRepository, MemberRepository memberRepository, SimpMessageSendingOperations sendingOperations) {
         this.matchingRepository = matchingRepository;
+        this.sendingOperations = sendingOperations;
         this.memberRepository = memberRepository;
     }
 
     @Transactional
-    public Map<String, String> choice(String uid, int partnerMemberId){
+    public ChoiceRes choice(String uid, int partnerMemberId){
         Member fromMember = memberRepository.findMemberByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
         // DB에서 requestMemberId, partnerMemberId인 데이터 가져오기
         Member toMember = memberRepository.findMemberByMemberId(partnerMemberId).orElseThrow(() -> new NoSuchElementException(String.valueOf(partnerMemberId)));
@@ -61,7 +65,22 @@ public class MatchingRequestService {
         Map<String, String> responseMap = new HashMap<>();
         responseMap.put("targetLink", "/queue/" + toMember.getUid());
 
-        return responseMap;
+
+        // 상대쪽에도 전송
+        Map<String, Object> responseMap2 = new HashMap<>();
+        responseMap2.put("type", "matched");
+        ChoiceRes choiceRes = ChoiceRes.builder()
+                                .targetUid(fromMember.getUid())
+                                .profile(null) // 상대 프로필? 넣기
+                                .questions(null) // 질문 리스트 넣기
+                                .build();
+        responseMap2.put("value", choiceRes);
+
+        sendingOperations.convertAndSend("/queue/" + toMember.getUid(), responseMap2);
+
+        return ChoiceRes.builder()
+                .targetUid(toMember.getUid())
+                .build();
     }
 
     @Transactional

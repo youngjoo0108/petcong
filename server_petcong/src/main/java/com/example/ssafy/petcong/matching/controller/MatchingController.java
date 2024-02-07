@@ -1,6 +1,7 @@
 package com.example.ssafy.petcong.matching.controller;
 
 import com.example.ssafy.petcong.matching.model.ChoiceReq;
+import com.example.ssafy.petcong.matching.model.ChoiceRes;
 import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.model.entity.ProfileRecord;
 import com.example.ssafy.petcong.matching.service.MatchingRequestService;
@@ -15,17 +16,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-@Slf4j
 @Tag(name = "matchings", description = "매칭 API")
 @RestController
 @CrossOrigin("*")
@@ -47,7 +45,7 @@ public class MatchingController {
     @PostMapping("/choice")
     public ResponseEntity<?> choice(@AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
                                     @RequestBody ChoiceReq choiceReq) {
-        Map<String, String> res = matchingRequestService.choice(uid, choiceReq.getPartnerMemberId());
+        ChoiceRes res = matchingRequestService.choice(uid, choiceReq.getPartnerMemberId());
         if (res != null) {
             return ResponseEntity.ok(res);
         } else {
