@@ -57,7 +57,7 @@ public class MemberController {
                     @ApiResponse(responseCode = "202", description = "가입 기록 없음")
     })
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int memberId) {
+    public ResponseEntity<?> signin(@AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId) {
         MemberRecord updatedUser = memberService.signin(memberId, true);
 
         return ResponseEntity
@@ -70,7 +70,7 @@ public class MemberController {
                     content = @Content(schema = @Schema(implementation = ProfileDto.class)))
     )
     @GetMapping("/info")
-    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int memberId) {
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId) {
         ProfileDto profile = memberService.getProfile(memberId);
 
         return ResponseEntity
@@ -84,7 +84,7 @@ public class MemberController {
     )
     @PatchMapping("/update")
     public ResponseEntity<?> updateUserInfo(
-            @AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int memberId,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId,
             @RequestBody @Valid MemberInfoDto memberInfo
     ) {
         MemberRecord updatedUser = memberService.updateMemberInfo(memberId, memberInfo);
@@ -114,7 +114,7 @@ public class MemberController {
     })
     @PostMapping("/picture")
     public ResponseEntity<?> postProfileImage(
-            @AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int memberId,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId,
             @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
             @RequestParam MultipartFile[] files
     ) {
@@ -133,7 +133,7 @@ public class MemberController {
     })
     @PostMapping("/trick")
     public ResponseEntity<?> postDogTrick(
-            @AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int memberId,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId,
             @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
             @RequestParam MultipartFile[] files
     ) {
@@ -149,7 +149,7 @@ public class MemberController {
     )
     @PatchMapping({"/picture", "/trick"})
     public ResponseEntity<?> patchProfileImage(
-            @AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int memberId,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId,
             @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
             @RequestParam MultipartFile[] files
     ) {
@@ -165,7 +165,7 @@ public class MemberController {
     )
     @PatchMapping("/trick")
     public ResponseEntity<?> patchDogTrick(
-            @AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int memberId,
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId,
             @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
             @RequestParam MultipartFile[] files
     ) {
@@ -182,7 +182,7 @@ public class MemberController {
                 @ApiResponse(responseCode = "202", description = "이미 탈퇴")
     })
     @DeleteMapping("/withdraw")
-    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal(expression = FirebaseUserDetails.USER_ID) int memberId) {
+    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId) {
         if (memberService.deleteMemberByMemberId(memberId) == 1) {
             return ResponseEntity
                     .ok()

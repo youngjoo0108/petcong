@@ -22,8 +22,8 @@ public class FirebaseUserDetailService implements UserDetailsService {
         Member member = memberRepository.findMemberByUid(uid).orElseThrow(() -> new UsernameNotFoundException(uid));
         MemberRecord memberRecord = MemberRecord.fromMemberEntity(member);
         String presentedUid = memberRecord.uid();
-        String presentedUserId = String.valueOf(memberRecord.memberId());
+        String presentedMemberId = String.valueOf(memberRecord.memberId());
         boolean presentedStatus = memberRecord.status().isStatus();
-        return new FirebaseUserDetails(presentedUid, presentedUserId, presentedStatus);
+        return new FirebaseUserDetails(presentedUid, presentedMemberId, presentedStatus);
     }
 }
