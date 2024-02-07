@@ -3,6 +3,7 @@ package com.example.ssafy.petcong.util.aop;
 import com.example.ssafy.petcong.member.model.entity.Member;
 import com.example.ssafy.petcong.member.repository.MemberRepository;
 
+import com.example.ssafy.petcong.security.FirebaseUserDetails;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 
@@ -36,7 +37,8 @@ public class MemberStateAop {
     }
 
     private void changeCallable(boolean callable) {
-        String uid = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString(); // uid
+        FirebaseUserDetails userDetails = (FirebaseUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // uid
+        String uid = userDetails.getUid();
         Member member = memberRepository.findMemberByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
         member.updateCallable(callable);
         memberRepository.save(member);
