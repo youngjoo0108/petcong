@@ -265,16 +265,19 @@ class SocketService extends GetxController {
   }
 
 // --- webrtc - 메소드들 ---
-  Future sendOffer(StompClient client, String targetUid) async {
-    client = await initSocket();
+  Future sendOffer(StompClient client2, String targetUid) async {
+    client2 = await initSocket();
+
     await joinRoom();
     this.targetUid = targetUid;
 
     debugPrint('send offer');
+    await Future.delayed(const Duration(milliseconds: 1000));
+
     var offer = await pc!.createOffer();
     pc!.setLocalDescription(offer);
     var map = {"type": "offer", "value": offer.toMap()};
-    client.send(
+    client2.send(
         destination: '/queue/$targetUid',
         headers: {
           "content-type": "application/json",
@@ -290,8 +293,8 @@ class SocketService extends GetxController {
     pc!.setRemoteDescription(offer);
   }
 
-  Future sendAnswer(StompClient client) async {
-    await initSocket();
+  Future sendAnswer(StompClient client2) async {
+    client2 = await initSocket();
     await joinRoom();
     debugPrint('send answer');
     var answer = await pc!.createAnswer();
@@ -299,7 +302,7 @@ class SocketService extends GetxController {
     var map = {"type": "answer", "value": answer.toMap()};
     debugPrint("before sendAnswer");
     debugPrint("map = ${jsonEncode(map)}");
-    client.send(
+    client2.send(
         destination: subsPrefix + targetUid.toString(),
         headers: {
           "content-type": "application/json",
@@ -316,13 +319,13 @@ class SocketService extends GetxController {
     pc!.setRemoteDescription(answer);
   }
 
-  Future sendIce(RTCIceCandidate ice, StompClient client) async {
-    await initSocket();
+  Future sendIce(RTCIceCandidate ice, StompClient client2) async {
+    client2 = await initSocket();
     await joinRoom();
     debugPrint("send ice");
     update();
     var map = {"type": "ice", "value": ice.toMap()};
-    client.send(
+    client2.send(
         destination: subsPrefix + targetUid.toString(),
         headers: {
           "content-type": "application/json",
