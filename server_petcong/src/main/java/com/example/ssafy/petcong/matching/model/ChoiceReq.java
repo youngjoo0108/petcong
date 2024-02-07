@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ChoiceReq {
-    private String partnerUserUid;
+    private int partnerMemberId;
 }
