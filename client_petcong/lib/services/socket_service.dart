@@ -88,6 +88,9 @@ class SocketService extends GetxController {
                       makeCall(targetUid);
                       break;
                     case 'offer':
+                      value.forEach((key, value) {
+                        print('Key: $key, Value: $value');
+                      });
                       gotOffer(value['sdp'], value['type']);
                       sendAnswer(client!);
                       break;
@@ -188,39 +191,44 @@ class SocketService extends GetxController {
   // webRTC
 
   Future joinRoom() async {
-    if (pc == null) {
-      await initSocket();
+    try {
+      if (pc == null) {
+        await initSocket();
 
-      final config = {
-        'iceServers': [
-          {"url": "stun:stun.l.google.com:19302"},
-          {
-            "url": "turn:i10a603.p.ssafy.io:3478",
-            "username": "ehigh",
-            "credential": "1234",
+        final config = {
+          'iceServers': [
+            {"url": "stun:stun.l.google.com:19302"},
+            {
+              "url": "turn:i10a603.p.ssafy.io:3478",
+              "username": "ehigh",
+              "credential": "1234",
+            },
+          ],
+        };
+
+        final sdpConstraints = {
+          'mandatory': {
+            'OfferToReceiveAudio': true,
+            'OfferToReceiveVideo': true,
           },
-        ],
-      };
+          'optional': []
+        };
 
-      final sdpConstraints = {
-        'mandatory': {
-          'OfferToReceiveAudio': true,
-          'OfferToReceiveVideo': true,
-        },
-        'optional': []
-      };
+        pc = await createPeerConnection(config, sdpConstraints);
+        print('11111111111111$pc');
+        pc!.onIceCandidate = (ice) {
+          sendIce(ice, client!);
+        };
 
-      pc = await createPeerConnection(config, sdpConstraints);
-      print('11111111111111$pc');
-      pc!.onIceCandidate = (ice) {
-        sendIce(ice, client!);
-      };
-
-      pc!.onAddStream = (stream) {
-        _remoteRenderer.srcObject = stream;
-      };
-    } else {
-      return pc;
+        pc!.onAddStream = (stream) {
+          _remoteRenderer.srcObject = stream;
+        };
+        Future.delayed(Duration(seconds: 1));
+      } else {
+        return pc;
+      }
+    } catch (exception) {
+      print(exception);
     }
 
     // client!.send(
