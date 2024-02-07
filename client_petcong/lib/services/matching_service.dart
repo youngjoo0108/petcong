@@ -34,8 +34,10 @@ class MatchingService extends GetxController {
     print("body === " + jsonDecode(response.body));
 
     if (response.statusCode == 200) {
+      print('1111111');
       return ChoiceRes.fromJson(jsonDecode(response.body));
     } else if (response.statusCode == 204) {
+      print('222222');
       return;
     } else {
       if (kDebugMode) {
