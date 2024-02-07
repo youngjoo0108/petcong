@@ -11,6 +11,12 @@ import com.example.ssafy.petcong.member.model.entity.Member;
 import com.example.ssafy.petcong.member.model.entity.MemberImg;
 import com.example.ssafy.petcong.member.repository.MemberImgRepository;
 import com.example.ssafy.petcong.member.repository.MemberRepository;
+import com.example.ssafy.petcong.user.model.entity.User;
+import com.example.ssafy.petcong.user.model.entity.UserImg;
+import com.example.ssafy.petcong.user.model.enums.Gender;
+import com.example.ssafy.petcong.user.model.enums.Preference;
+import com.example.ssafy.petcong.user.repository.UserImgRepository;
+import com.example.ssafy.petcong.user.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -75,6 +81,15 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         return memberid;
     }
 
+    private boolean isPreferred(User requestingUser, User potentialUser) {
+        Preference requestingUserPreference = requestingUser.getPreference();
+        Gender potentialUserGender = potentialUser.getGender();
+
+        return requestingUserPreference == Preference.BOTH
+                || requestingUserPreference == Preference.MALE && potentialUserGender == Gender.MALE
+                || requestingUserPreference == Preference.FEMALE && potentialUserGender == Gender.FEMALE;
+    }
+
     @Transactional
     protected boolean isPotentialMember(int requestingMemberId, int potentialMemberId) {
         Optional<Member> optionalPotentialMember = memberRepository.findById(potentialMemberId);
@@ -86,6 +101,9 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         if (requestingMemberId == potentialMemberId) return false;
         // 2. 온라인 유저인지 확인
         if (!potentialMember.isCallable()) return false;
+
+        // 2.5. 선호 상대 확인
+        if (!isPreferred(requestingUser, potentialUser)) return false;
 
         // 3. matching table에서 서로 매치한적 있는지 또는 거절 받은 유저인지 확인
         Matching matchingSentByRequesting = matchingRepository.findByFromMemberAndToMember(requestingMember, potentialMember);
