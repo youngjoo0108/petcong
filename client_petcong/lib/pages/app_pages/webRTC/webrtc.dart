@@ -1,9 +1,8 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
+import 'package:petcong/constants/style.dart';
 import 'package:petcong/pages/homepage.dart';
-import 'package:petcong/services/socket_service.dart';
 
 class MainVideoCallWidget extends StatefulWidget {
   final RTCVideoRenderer localRenderer;
@@ -16,10 +15,8 @@ class MainVideoCallWidget extends StatefulWidget {
 }
 
 class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
-  double localVideoScale = 1;
-  late double videoWidth = MediaQuery.of(context).size.width * localVideoScale;
-  late double videoHeight =
-      MediaQuery.of(context).size.height * localVideoScale;
+  late double videoWidth = MediaQuery.of(context).size.width;
+  late double videoHeight = MediaQuery.of(context).size.height;
 
   @override
   void initState() {
@@ -40,33 +37,34 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final TransformationController controller = TransformationController();
+    controller.value = Matrix4.identity()..scale(0.5);
     return Scaffold(
       body: Stack(
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Positioned.fill(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: RTCVideoView(
-                  widget.remoteRenderer,
-                  mirror: false,
-                ),
+        children: <Widget>[
+          // 상대방 화면
+          SizedBox.expand(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: RTCVideoView(
+                widget.remoteRenderer,
+                mirror: false,
               ),
             ),
           ),
-          Positioned(
-            left: MediaQuery.of(context).size.width * (5 / 8),
-            top: MediaQuery.of(context).size.height / 25,
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width / 3,
-              height: MediaQuery.of(context).size.height / 3,
-              child: Positioned(
-                left: MediaQuery.of(context).size.width,
-                top: MediaQuery.of(context).size.height / 100,
+          //  내 화면
+          ClipRect(
+            child: InteractiveViewer(
+              transformationController: controller,
+              minScale: 0.3,
+              maxScale: 0.5,
+              constrained: true,
+              boundaryMargin: const EdgeInsets.all(double.infinity),
+              child: SizedBox(
+                width: videoWidth,
+                height: videoHeight,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(20),
                   child: RTCVideoView(
                     widget.localRenderer,
                     objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
@@ -78,6 +76,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           ),
         ],
       ),
+      // 통화 종료 버튼
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           widget.localRenderer.srcObject!.getTracks().forEach((track) {
@@ -86,8 +85,11 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           await Future.delayed(const Duration(seconds: 2));
           Get.offAll(const HomePage());
         },
+        shape: const CircleBorder(eccentricity: 0),
+        backgroundColor: MyColor.petCongColor4,
         child: const Icon(Icons.call_end),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
