@@ -9,6 +9,7 @@ import 'package:petcong/models/choice_res.dart';
 import 'package:petcong/models/user_model.dart';
 import 'package:get/get.dart';
 import 'package:petcong/models/profile_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MatchingService extends GetxController {
   final bool testing = true;
@@ -17,23 +18,46 @@ class MatchingService extends GetxController {
   // String idTokenString = currentUser?.getIdToken().toString() ?? "";
   User? currentUser;
   String? idTokenString;
-  final String serverUrl = 'https://i10a603.p.ssafy.io:8081';
+  final String serverUrl = 'http://i10a603.p.ssafy.io:8081';
   Map<String, String>? reqHeaders;
 
   @override
   void initState() {
+    print("initState 실행됨");
     currentUser = UserController.currentUser;
-    idTokenString = currentUser?.getIdToken().toString() ?? "";
-    reqHeaders = {'tester': 'A603'};
+    // idTokenString = currentUser?.getIdToken().toString() ?? "";
+    // reqHeaders = {'tester': 'A603'};
+    initPrefs();
+  }
+
+  Future<void> initPrefs() async {
+    print("initPrefs 실행됨");
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      idTokenString = prefs.getString('idToken');
+      Future.delayed(Duration(seconds: 2));
+      print("idtokenString = " +
+          idTokenString! +
+          "==============================================");
+      reqHeaders = {
+        "Petcong-id-token": idTokenString!,
+        "Content-Type": "application/json"
+      };
+    } catch (e) {
+      debugPrint('Error retrieving values from SharedPreferences: $e');
+    }
   }
 
   Future<dynamic> postMatching(String targetUid) async {
+    print("postMatching 실행됨");
+    await initPrefs();
     String endpoint = '$serverUrl/matchings/choice';
     final response = await http.post(Uri.parse(endpoint),
-        headers: reqHeaders, body: jsonEncode({'partnerUserUid': targetUid}));
-    print("body === " + jsonDecode(response.body));
+        headers: reqHeaders, body: jsonEncode({'partnerUid': targetUid}));
 
     if (response.statusCode == 200) {
+      print("response = " + response.body);
+      print("body === " + jsonDecode(response.body));
       return ChoiceRes.fromJson(jsonDecode(response.body));
     } else if (response.statusCode == 204) {
       return;
