@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'package:petcong/pages/app_pages/profile/pet_name_page.dart';
 import 'pet_gender_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
@@ -21,6 +22,7 @@ class PetBirthdayPage extends StatefulWidget {
 
 class PetBirthdayPageState extends State<PetBirthdayPage> {
   final _controller = TextEditingController();
+  final SignupController signupController = Get.put(SignupController());
   final _dateValidator = ValueNotifier<String?>('Initial value');
   final double _progress = 6 / 12;
 
@@ -79,6 +81,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
     return null;
   }
 
+//TODO: change to age
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,10 +151,13 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
                           onPressed:
                               value == null // value가 null인 경우에 버튼이 눌리도록 수정합니다.
                                   ? () {
-                                      Get.to(PetGenderPage(
-                                        petName: widget.petName,
-                                        progress: widget.progress + 1 / 12,
-                                      ), transition: Transition.noTransition);
+                                      SignupController.to.addPetAge(10);
+                                      Get.to(
+                                          PetGenderPage(
+                                            petName: widget.petName,
+                                            progress: widget.progress + 1 / 12,
+                                          ),
+                                          transition: Transition.noTransition);
                                     }
                                   : null,
                         ),

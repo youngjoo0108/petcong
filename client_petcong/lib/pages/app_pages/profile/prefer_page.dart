@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
 import 'gender_page.dart';
@@ -14,6 +15,7 @@ class PreferPage extends StatefulWidget {
 }
 
 class PreferPageState extends State<PreferPage> {
+  final SignupController signupController = Get.put(SignupController());
   String _prefer = '';
   double _progress = 0.0;
   bool _isButtonDisabled = true; // _isButtonDisabled 변수 선언
@@ -57,11 +59,11 @@ class PreferPageState extends State<PreferPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _prefer == '선호1',
+                    isFilled: _prefer == 'FEMALE',
                     buttonText: '여자예요!',
                     onPressed: () {
                       setState(() {
-                        _prefer = '선호1';
+                        _prefer = 'FEMALE';
                         _isButtonDisabled = false;
                       });
                     },
@@ -74,11 +76,11 @@ class PreferPageState extends State<PreferPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _prefer == '선호2',
+                    isFilled: _prefer == 'MALE',
                     buttonText: '남자예요!',
                     onPressed: () {
                       setState(() {
-                        _prefer = '선호2';
+                        _prefer = 'MALE';
                         _isButtonDisabled = false;
                       });
                     },
@@ -91,11 +93,11 @@ class PreferPageState extends State<PreferPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _prefer == '선호3',
+                    isFilled: _prefer == 'BOTH',
                     buttonText: '상관 없어요!',
                     onPressed: () {
                       setState(() {
-                        _prefer = '선호3';
+                        _prefer = 'BOTH';
                         _isButtonDisabled = false;
                       });
                     },
@@ -108,9 +110,12 @@ class PreferPageState extends State<PreferPage> {
                 buttonText: 'CONTINUE',
                 onPressed: !_isButtonDisabled
                     ? () {
-                        Get.to(PetNamePage(
-                          progress: widget.progress + 1 / 12,
-                        ), transition: Transition.noTransition);
+                        SignupController.to.addPreference(_prefer);
+                        Get.to(
+                            PetNamePage(
+                              progress: widget.progress + 1 / 12,
+                            ),
+                            transition: Transition.noTransition);
                       }
                     : null,
               ),
