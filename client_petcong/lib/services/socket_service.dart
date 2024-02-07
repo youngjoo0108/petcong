@@ -85,7 +85,6 @@ class SocketService extends GetxController {
                     // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
                     targetUid = value['targetUid'];
                     makeCall(targetUid);
-
                     break;
                   case 'offer':
                     gotOffer(value['sdp'], value['type']);

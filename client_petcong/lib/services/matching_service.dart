@@ -17,7 +17,7 @@ class MatchingService extends GetxController {
   // String idTokenString = currentUser?.getIdToken().toString() ?? "";
   User? currentUser;
   String? idTokenString;
-  final String serverUrl = 'https://i10a603.p.ssafy.io';
+  final String serverUrl = 'https://i10a603.p.ssafy.io:8081';
   Map<String, String>? reqHeaders;
 
   @override
@@ -28,16 +28,14 @@ class MatchingService extends GetxController {
   }
 
   Future<dynamic> postMatching(String targetUid) async {
-    String endpoint = serverUrl + '/matchings/choice';
+    String endpoint = '$serverUrl/matchings/choice';
     final response = await http.post(Uri.parse(endpoint),
         headers: reqHeaders, body: jsonEncode({'partnerUserUid': targetUid}));
     print("body === " + jsonDecode(response.body));
 
     if (response.statusCode == 200) {
-      print('1111111');
       return ChoiceRes.fromJson(jsonDecode(response.body));
     } else if (response.statusCode == 204) {
-      print('222222');
       return;
     } else {
       if (kDebugMode) {

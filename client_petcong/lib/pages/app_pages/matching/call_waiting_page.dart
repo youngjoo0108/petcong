@@ -7,35 +7,49 @@ class CallWaiting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        // body: Center(
-        //   child: ElevatedButton(
-        //     onPressed: () {
-        //       SocketService().startCamera();
-        //     },
-        //     child: const Text('call'),
-        //   ),
-        // ),
-        // bottomNavigationBar: ClipRRect(
-        //   borderRadius: const BorderRadius.only(
-        //       topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-        //   child: BottomNavigationBar(
-        //     showSelectedLabels: false,
-        //     showUnselectedLabels: false,
-        //     backgroundColor: MyColor.myColor4.withOpacity(0.8),
-        //     items: const <BottomNavigationBarItem>[
-        //       BottomNavigationBarItem(
-        //         icon: Icon(Icons.call),
-        //         label: 'call',
-        //       ),
-        //       BottomNavigationBarItem(
-        //         icon: Icon(Icons.call_end),
-        //         label: 'reject',
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        // body: FloatingActionButtonLocation.startDocked,
-        );
+    return Scaffold(
+      // body: Center(
+      //   child: ElevatedButton(
+      //     onPressed: () {
+      //       SocketService().startCamera();
+      //     },
+      //     child: const Text('call'),
+      //   ),
+      // ),
+      body: Center(
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: Image.asset(
+              'assets/src/fatdog-dog-unscreen.gif',
+            )),
+      ),
+      floatingActionButton: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Positioned(
+            left: MediaQuery.of(context).size.width / 4,
+            child: FloatingActionButton(
+              heroTag: 'call_button',
+              onPressed: () {
+                SocketService().startCamera();
+              },
+              shape: const CircleBorder(eccentricity: 0),
+              backgroundColor: MyColor.myColor1,
+              child: const Icon(Icons.call),
+            ),
+          ),
+          Positioned(
+            right: MediaQuery.of(context).size.width / 5,
+            child: FloatingActionButton(
+              heroTag: 'call_reject_button',
+              onPressed: () {},
+              shape: const CircleBorder(eccentricity: 0),
+              backgroundColor: MyColor.petCongColor4.withOpacity(0.8),
+              child: const Icon(Icons.call_end),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
