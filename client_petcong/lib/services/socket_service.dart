@@ -88,6 +88,9 @@ class SocketService extends GetxController {
   }
 
   Future<void> initSocket() async {
+    if (client != null) {
+      return;
+    }
     initPrefs();
 
     client = StompClient(
@@ -197,7 +200,6 @@ class SocketService extends GetxController {
   }
 
   Future<void> disposeSocket(myuid) async {
-    await initSocket();
     String stringUid = myuid as String;
     try {
       if (client.isActive == true) {
