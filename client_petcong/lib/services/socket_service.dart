@@ -241,9 +241,9 @@ class SocketService extends GetxController {
         pc!.onAddStream = (stream) {
           _remoteRenderer.srcObject = stream;
         };
-        Future.delayed(Duration(seconds: 1));
+        await Future.delayed(Duration(seconds: 1));
       } else {
-        return pc;
+        // return pc;
       }
     } catch (exception) {
       print(exception);
