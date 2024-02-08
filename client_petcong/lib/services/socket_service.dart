@@ -68,8 +68,73 @@ class SocketService extends GetxController {
 
   Future<void> initSocket() async {
     initPrefs();
-    print('before initsocket check if client ${client.hashCode}');
-    // return client!;
+    if (client == null) {
+      client = StompClient(
+        config: StompConfig.sockJS(
+          url: 'http://i10a603.p.ssafy.io:8081/websocket',
+          webSocketConnectHeaders: {
+            // "Petcong-id-token": idToken,
+            "transports": ["websocket"],
+          },
+          onConnect: (StompFrame frame) {
+            debugPrint("연결됨");
+            client!.subscribe(
+              destination: '/queue/$uid',
+              headers: {
+                "uid": uid!,
+              },
+              callback: (frame) {
+                if (frame.body!.isNotEmpty) {
+                  msgArr.add(frame.body!);
+                  Map<String, dynamic> response = jsonDecode(frame.body!);
+
+                  String type = response['type'];
+                  print('type = $type');
+                  Map<String, dynamic> value = response['value'];
+
+                  switch (type) {
+                    case 'matched':
+                      // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
+                      targetUid = value['targetUid'];
+                      makeCall(targetUid);
+                      break;
+                    case 'offer':
+                      print(
+                          "gotOffer============client ====================================" +
+                              client.hashCode.toString());
+                      value.forEach((key, value) {
+                        print('Key: $key, Value: $value');
+                      });
+                      gotOffer(value['sdp'], value['type']);
+                      sendAnswer(client!);
+                      break;
+                    case 'answer':
+                      print(
+                          "gotAnswer============client ====================================" +
+                              client.hashCode.toString());
+                      gotAnswer(value['sdp'], value['type']);
+                      break;
+                    case 'ice':
+                      print(
+                          "gotIce============client ====================================" +
+                              client.hashCode.toString());
+                      gotIce(value['candidate'], value['sdpMid'],
+                          value['sdpMLineIndex']);
+                  }
+                }
+              },
+            );
+          },
+          onWebSocketError: (dynamic error) =>
+              debugPrint('websocketerror : $error'),
+        ),
+      );
+      await activateSocket(client!);
+      await Future.delayed(const Duration(milliseconds: 250));
+    }
+    print(
+        "========================in socketService.initSocket, client.hashCode() = " +
+            client.hashCode.toString());
 
     // return client!;
   }
