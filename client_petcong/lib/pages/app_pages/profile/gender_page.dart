@@ -39,7 +39,7 @@ class GenderPageState extends State<GenderPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -51,8 +51,11 @@ class GenderPageState extends State<GenderPage> {
                       Get.off(const BirthdayPage(progress: 2 / 12)),
                 ),
               ),
-              const SizedBox(height: 10.0),
-              const Center(child: Text('저는', style: TextStyle(fontSize: 32.0))),
+              const SizedBox(height: 5.0),
+              const Center(
+                  child: Text('저는',
+                      style: TextStyle(
+                          fontSize: 32.0, fontWeight: FontWeight.w600))),
               const SizedBox(height: 30.0),
               Center(
                 child: SizedBox(

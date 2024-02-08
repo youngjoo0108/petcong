@@ -125,7 +125,7 @@ class BirthdayPageState extends State<BirthdayPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: Column(
           children: <Widget>[
             Align(
@@ -136,7 +136,7 @@ class BirthdayPageState extends State<BirthdayPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(0.0),
+              padding: const EdgeInsets.all(5.0),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -154,7 +154,7 @@ class BirthdayPageState extends State<BirthdayPage> {
                         keyboardType: TextInputType.number,
                         inputFormatters: [_inputFormatter],
                         decoration:
-                            const InputDecoration(hintText: 'YYYY/MM/DD'),
+                            const InputDecoration(hintText: 'YYYY-MM-DD'),
                         style: const TextStyle(
                             fontSize: 20.0, fontWeight: FontWeight.w400),
                         onChanged: (value) {

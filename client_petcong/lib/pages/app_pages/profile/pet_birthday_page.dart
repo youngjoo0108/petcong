@@ -95,7 +95,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: Column(
           children: <Widget>[
             Align(
@@ -106,7 +106,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(0.0),
+              padding: const EdgeInsets.all(5.0),
               child: Column(
                 children: <Widget>[
                   Text(
