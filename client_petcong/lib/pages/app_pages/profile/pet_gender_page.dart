@@ -41,7 +41,7 @@ class PetGenderPageState extends State<PetGenderPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -52,6 +52,7 @@ class PetGenderPageState extends State<PetGenderPage> {
                   onPressed: () => Get.back(),
                 ),
               ),
+              const SizedBox(height: 5.0),
               Text('${widget.petName}의 성별은?',
                   style: const TextStyle(
                       fontSize: 32.0, fontWeight: FontWeight.w600)),
