@@ -116,10 +116,7 @@ class SocketService extends GetxController {
   }
 
   void makeCall(String targetUid) async {
-    // matched
-    // 전화 오는 화면으로
     Get.to(const CallWaiting());
-    // 화면 띄워주면서, rtc 연결 시작
     // 화면 띄워주면서, rtc 연결 시작
     await joinRoom();
   }
@@ -157,8 +154,6 @@ class SocketService extends GetxController {
       // Get.to(const HomePage());
     }
   }
-
-  // Future<void> offCallPressed() async {}
 
   Future<void> disposeSocket(myuid) async {
     await initSocket();
@@ -223,7 +218,7 @@ class SocketService extends GetxController {
         pc!.onAddStream = (stream) {
           _remoteRenderer.srcObject = stream;
         };
-        Future.delayed(Duration(seconds: 1));
+        Future.delayed(const Duration(seconds: 1));
       } else {
         return pc;
       }
