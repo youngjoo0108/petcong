@@ -43,11 +43,14 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   @override
   void initState() {
     super.initState();
+
     _controller = SwipableStackController()..addListener(_listenController);
     initClient();
   }
 
   void initClient() async {
+    await socketService.init();
+    print("------------------socketService.init() complete");
     client = socketService.getClient();
     print(
         "========================in matchingPage.initClient, client.hashCode() = ${client.hashCode}");
