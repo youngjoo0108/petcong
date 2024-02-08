@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:http/http.dart';
 import 'package:petcong/pages/app_pages/matching/call_waiting_page.dart';
 import 'package:petcong/pages/app_pages/matching/matching_page.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
@@ -15,7 +16,7 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 
 class SocketService extends GetxController {
   // Socket 변수
-  StompClient? client;
+  late final StompClient client;
   RxList<String> msgArr = <String>[].obs;
   String? uid;
   String? idToken;
@@ -28,6 +29,12 @@ class SocketService extends GetxController {
   final _localRenderer = RTCVideoRenderer();
   final _remoteRenderer = RTCVideoRenderer();
   MediaStream? _localStream;
+
+  @override
+  void onInit() {
+    super.onInit();
+    initSocket();
+  }
 
   Future<void> initPrefs() async {
     try {
@@ -55,73 +62,16 @@ class SocketService extends GetxController {
     }
   }
 
-  Future<StompClient> initSocket() async {
+  StompClient getClient() {
+    return client;
+  }
+
+  Future<void> initSocket() async {
     initPrefs();
-    print('before initsocket check if client ${client?.hashCode}');
-    if (client == null) {
-      client = StompClient(
-        config: StompConfig.sockJS(
-          url: 'http://i10a603.p.ssafy.io:8081/websocket',
-          webSocketConnectHeaders: {
-            // "Petcong-id-token": idToken,
-            "transports": ["websocket"],
-          },
-          onConnect: (StompFrame frame) {
-            debugPrint("연결됨");
-            client!.subscribe(
-              destination: '/queue/$uid',
-              headers: {
-                "uid": uid!,
-              },
-              callback: (frame) {
-                if (frame.body!.isNotEmpty) {
-                  msgArr.add(frame.body!);
-                  Map<String, dynamic> response = jsonDecode(frame.body!);
+    print('before initsocket check if client ${client.hashCode}');
+    // return client!;
 
-                  String type = response['type'];
-                  print('type = $type');
-                  Map<String, dynamic> value = response['value'];
-
-                  switch (type) {
-                    case 'matched':
-                      // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
-                      targetUid = value['targetUid'];
-                      makeCall(targetUid);
-                      break;
-                    case 'offer':
-                      print(
-                          "gotOffer============client ====================================${client.hashCode}");
-                      value.forEach((key, value) {
-                        print('Key: $key, Value: $value');
-                      });
-                      gotOffer(value['sdp'], value['type']);
-                      sendAnswer(client!);
-                      break;
-                    case 'answer':
-                      print(
-                          "gotAnswer============client ====================================${client.hashCode}");
-                      gotAnswer(value['sdp'], value['type']);
-                      break;
-                    case 'ice':
-                      print(
-                          "gotIce============client ====================================${client.hashCode}");
-                      gotIce(value['candidate'], value['sdpMid'],
-                          value['sdpMLineIndex']);
-                  }
-                }
-              },
-            );
-          },
-          onWebSocketError: (dynamic error) =>
-              debugPrint('websocketerror : $error'),
-        ),
-      );
-      await activateSocket(client!);
-      await Future.delayed(const Duration(milliseconds: 250));
-      print(
-          "========================in socketService.initSocket, client.hashCode() = ${client.hashCode}");
-    }
-    return client!;
+    // return client!;
   }
 
   void makeCall(String targetUid) async {
@@ -168,9 +118,9 @@ class SocketService extends GetxController {
     await initSocket();
     String stringUid = myuid as String;
     try {
-      if (client!.isActive == true) {
+      if (client.isActive == true) {
         debugPrint('Before sending message: Socket is active');
-        client!.send(
+        client.send(
           destination: '/queue/$stringUid',
           headers: {
             "content-type": "application/json",
@@ -184,9 +134,9 @@ class SocketService extends GetxController {
         debugPrint('Before sending message: Socket is not active');
       }
       // dispose();
-      client!.deactivate();
+      client.deactivate();
       debugPrint('연결끔');
-      debugPrint('After deactivating: Is client active? ${client?.isActive}');
+      debugPrint('After deactivating: Is client active? ${client.isActive}');
     } catch (e) {
       debugPrint('Error disposing socket: $e');
     }
@@ -221,7 +171,7 @@ class SocketService extends GetxController {
         pc = await createPeerConnection(config, sdpConstraints);
         print('11111111111111$pc');
         pc!.onIceCandidate = (ice) {
-          sendIce(ice, client!);
+          sendIce(ice, client);
         };
 
         pc!.onAddStream = (stream) {
@@ -278,7 +228,7 @@ class SocketService extends GetxController {
 
 // --- webrtc - 메소드들 ---
   Future sendOffer(StompClient client2, String targetUid) async {
-    client2 = await initSocket();
+    // client2 = await initSocket();
 
     await joinRoom();
     this.targetUid = targetUid;
@@ -307,7 +257,7 @@ class SocketService extends GetxController {
   }
 
   Future sendAnswer(StompClient client2) async {
-    client2 = await initSocket();
+    // client2 = await initSocket();
     await joinRoom();
     debugPrint('send answer');
     var answer = await pc!.createAnswer();
@@ -334,7 +284,7 @@ class SocketService extends GetxController {
   }
 
   Future sendIce(RTCIceCandidate ice, StompClient client2) async {
-    client2 = await initSocket();
+    // client2 = await initSocket();
     await joinRoom();
     debugPrint("send ice");
     update();

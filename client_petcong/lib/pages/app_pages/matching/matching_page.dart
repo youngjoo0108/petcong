@@ -48,7 +48,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   }
 
   void initClient() async {
-    client = await socketService.initSocket();
+    client = socketService.getClient();
     print(
         "========================in matchingPage.initClient, client.hashCode() = ${client.hashCode}");
 
