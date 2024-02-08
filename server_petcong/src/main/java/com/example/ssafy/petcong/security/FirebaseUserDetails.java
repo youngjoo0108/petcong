@@ -11,11 +11,11 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class FirebaseUserDetails implements UserDetails {
     public static final String UID = "uid";
-    public static final String USER_ID = "userId";
+    public static final String MEMBER_ID = "memberId";
 
     @Getter
     private final String uid;
-    private final String userId;
+    private final String memberId;
     private final boolean status;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -24,7 +24,7 @@ public class FirebaseUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return this.userId;
+        return this.memberId;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class FirebaseUserDetails implements UserDetails {
         return this.status;
     }
 
-    public int getUserId() {
-        return Integer.parseInt(this.userId);
+    public int getMemberId() {
+        return Integer.parseInt(this.memberId);
     }
 }

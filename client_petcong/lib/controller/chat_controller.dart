@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:petcong/widgets/matched_card.dart';
-import 'package:petcong/widgets/matching_card.dart';
 
 const _images = [
   'assets/src/dog.jpg',
@@ -26,9 +25,7 @@ class HorizontalItem extends StatelessWidget {
           child: Material(
             // color: Colors.white,
             child: Center(
-              child: MatchedCard(
-                  name: _names[1],
-                  profileImages: _images[0]),
+              child: MatchedCard(name: _names[1], profileImages: _images[0]),
             ),
           ),
         ),

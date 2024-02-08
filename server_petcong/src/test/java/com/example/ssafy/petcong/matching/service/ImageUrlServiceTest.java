@@ -1,8 +1,9 @@
 package com.example.ssafy.petcong.matching.service;
 
 
-import com.example.ssafy.petcong.user.model.entity.UserImg;
-import com.example.ssafy.petcong.user.repository.UserImgRepository;
+import com.example.ssafy.petcong.member.model.entity.Member;
+import com.example.ssafy.petcong.member.model.entity.MemberImg;
+import com.example.ssafy.petcong.member.repository.MemberImgRepository;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class ImageUrlServiceTest {
     @Mock
-    private UserImgRepository imageRepository;
+    private MemberImgRepository imageRepository;
 
     @InjectMocks
     private MatchingProfileServiceImpl profileService;
@@ -30,16 +31,17 @@ public class ImageUrlServiceTest {
     @Test
     public void testGetUrlsById() {
 
-        int userId = 1;
-        List<UserImg> userImgList = Arrays.asList(
-                UserImg.builder().imgId(1).user(userId).bucketKey("url1").build(),
-                UserImg.builder().imgId(2).user(userId).bucketKey("url2").build(),
-                UserImg.builder().imgId(3).user(userId).bucketKey("url3").build()
+        int memberId = 1;
+        Member member = Member.builder().memberId(memberId).build();
+        List<MemberImg> memberImgList = Arrays.asList(
+                MemberImg.builder().imgId(1).member(member).bucketKey("url1").build(),
+                MemberImg.builder().imgId(2).member(member).bucketKey("url2").build(),
+                MemberImg.builder().imgId(3).member(member).bucketKey("url3").build()
         );
 
-        when(imageRepository.findByUserId(userId)).thenReturn(userImgList);
+        when(imageRepository.findMemberImgByMember_MemberId(memberId)).thenReturn(memberImgList);
 
-        List<String> urls = profileService.pictures(userId);
+        List<String> urls = profileService.pictures(memberId);
         List<String> expectedUrls = Arrays.asList("url1", "url2", "url3");
 
         assertEquals(expectedUrls, urls);

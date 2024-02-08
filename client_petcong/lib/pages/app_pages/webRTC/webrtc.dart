@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
-import 'package:petcong/services/socket_service.dart';
+import 'package:petcong/pages/homepage.dart';
 
 class MainVideoCallWidget extends StatefulWidget {
   final RTCVideoRenderer localRenderer;
@@ -14,8 +14,10 @@ class MainVideoCallWidget extends StatefulWidget {
 }
 
 class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
-  double localVideoLeft = 200.0;
-  double localVideoTop = 50.0;
+  double localVideoScale = 1;
+  late double videoWidth = MediaQuery.of(context).size.width * localVideoScale;
+  late double videoHeight =
+      MediaQuery.of(context).size.height * localVideoScale;
 
   @override
   void initState() {
@@ -28,7 +30,6 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
 
   @override
   void dispose() {
-    // Dispose RTCVideoRenderer
     widget.localRenderer.dispose();
     widget.remoteRenderer.dispose();
 
@@ -38,43 +39,50 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Stack(
-          children: [
-            // Remote Video
-            Positioned.fill(
-              child: RTCVideoView(
-                widget.remoteRenderer,
-                mirror: false,
+      body: Stack(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: RTCVideoView(
+                  widget.remoteRenderer,
+                  mirror: false,
+                ),
               ),
             ),
-            // Local Video
-            Positioned(
-              left: localVideoLeft,
-              top: localVideoTop,
-              child: GestureDetector(
-                onPanUpdate: (info) {
-                  setState(() {
-                    localVideoLeft += info.delta.dx;
-                    localVideoTop += info.delta.dy;
-                  });
-                },
-                child: SizedBox(
-                  width: 200,
-                  height: 150,
+          ),
+          Positioned(
+            left: MediaQuery.of(context).size.width * (5 / 8),
+            top: MediaQuery.of(context).size.height / 25,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width / 3,
+              height: MediaQuery.of(context).size.height / 3,
+              child: Positioned(
+                left: MediaQuery.of(context).size.width,
+                top: MediaQuery.of(context).size.height / 100,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
                   child: RTCVideoView(
                     widget.localRenderer,
+                    objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
                     mirror: true,
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          SocketService().onCallPressed('off');
+        onPressed: () async {
+          widget.localRenderer.srcObject!.getTracks().forEach((track) {
+            track.stop();
+          });
+          await Future.delayed(const Duration(seconds: 2));
+          Get.offAll(const HomePage());
         },
         child: const Icon(Icons.call_end),
       ),

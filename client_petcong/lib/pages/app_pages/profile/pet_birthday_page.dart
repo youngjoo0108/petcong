@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'package:petcong/pages/app_pages/profile/pet_name_page.dart';
 import 'pet_gender_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
@@ -16,13 +17,14 @@ class PetBirthdayPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PetBirthdayPageState createState() => _PetBirthdayPageState();
+  PetBirthdayPageState createState() => PetBirthdayPageState();
 }
 
-class _PetBirthdayPageState extends State<PetBirthdayPage> {
+class PetBirthdayPageState extends State<PetBirthdayPage> {
   final _controller = TextEditingController();
+  final SignupController signupController = Get.put(SignupController());
   final _dateValidator = ValueNotifier<String?>('Initial value');
-  final double _progress = 0.4;
+  final double _progress = 6 / 12;
 
   @override
   void initState() {
@@ -79,6 +81,7 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
     return null;
   }
 
+//TODO: change to age
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,7 +102,7 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
               alignment: Alignment.centerLeft,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: () => Get.off(const PetNamePage(progress: 3 / 10)),
+                onPressed: () => Get.off(const PetNamePage(progress: 5 / 12)),
               ),
             ),
             Padding(
@@ -148,10 +151,13 @@ class _PetBirthdayPageState extends State<PetBirthdayPage> {
                           onPressed:
                               value == null // value가 null인 경우에 버튼이 눌리도록 수정합니다.
                                   ? () {
-                                      Get.to(PetGenderPage(
-                                        petName: widget.petName,
-                                        progress: widget.progress + 1 / 10,
-                                      ));
+                                      SignupController.to.addPetAge(10);
+                                      Get.to(
+                                          PetGenderPage(
+                                            petName: widget.petName,
+                                            progress: widget.progress + 1 / 12,
+                                          ),
+                                          transition: Transition.noTransition);
                                     }
                                   : null,
                         ),

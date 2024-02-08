@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:petcong/widgets/create_button.dart';
 import 'package:petcong/widgets/delete_button.dart';
 import 'package:get/get.dart';
 import 'dart:io';
-import 'icebreak_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 import 'package:petcong/pages/homepage.dart';
@@ -16,10 +16,10 @@ class DisplayVideo extends StatefulWidget {
   const DisplayVideo({Key? key, required this.videoPath}) : super(key: key);
 
   @override
-  _DisplayVideoState createState() => _DisplayVideoState();
+  DisplayVideoState createState() => DisplayVideoState();
 }
 
-class _DisplayVideoState extends State<DisplayVideo> {
+class DisplayVideoState extends State<DisplayVideo> {
   late VideoPlayerController _controller;
   late String _currentVideoPath;
 
@@ -84,12 +84,13 @@ class VideoPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _VideoPageState createState() => _VideoPageState();
+  VideoPageState createState() => VideoPageState();
 }
 
-class _VideoPageState extends State<VideoPage> {
+class VideoPageState extends State<VideoPage> {
   late double _progress;
   final List<String> _videoPaths = []; // 선택한 비디오들의 경로를 저장하는 리스트
+  final SignupController signupController = Get.put(SignupController());
 
   @override
   void initState() {
@@ -99,15 +100,13 @@ class _VideoPageState extends State<VideoPage> {
 
   Future<void> navigateToMediaPage(BuildContext context) async {
     final picker = ImagePicker();
-    final pickedFile = await picker.getVideo(source: ImageSource.gallery);
+    final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       setState(() {
         _videoPaths.add(pickedFile.path);
       });
-    } else {
-      print('No video selected.');
-    }
+    } else {}
   }
 
   void deleteImage(int index) {
@@ -118,11 +117,8 @@ class _VideoPageState extends State<VideoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Get.back(result: _progress);
-        return false;
-      },
+    return PopScope(
+      canPop: true,
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -266,10 +262,9 @@ class _VideoPageState extends State<VideoPage> {
                     isFilled: true, // 버튼이 항상 채워져 있도록 합니다.
                     buttonText: 'CONTINUE',
                     onPressed: () {
+                      SignupController.to.signUpUser(context);
                       // 조건문 없이 바로 다음 페이지로 이동하도록 설정합니다.
-                      Get.to(IcebreakPage(
-                        progress: _progress + 0.1, // 여기에서 1/10을 더해줍니다.
-                      ));
+                      Get.offAll(const HomePage(), transition: Transition.zoom);
                     },
                     width: 240.0, // 원하는 가로 길이를 설정
                     height: 30.0, // 원하는 세로 길이를 설정

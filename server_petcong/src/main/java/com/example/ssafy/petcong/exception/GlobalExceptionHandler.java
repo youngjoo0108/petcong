@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.nio.file.InvalidPathException;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -29,9 +30,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(ex.getMessage());
     }
 
+    @ExceptionHandler(InvalidPathException.class)
+    public ResponseEntity<String> handleInvalidPathException(InvalidPathException ex) {
+        log.warn(ex.getMessage());
+        ex.printStackTrace();
+        return ResponseEntity
+                .badRequest()
+                .body(ex.getMessage());
+    }
+
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
         log.warn(ex.getMessage());
+        ex.printStackTrace();
         return ResponseEntity
                 .badRequest()
                 .body(ex.getMessage());
@@ -39,6 +50,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotRegisterdException.class)
     public ResponseEntity<String> handleNotRegisterdException(NotRegisterdException ex) {
+        ex.printStackTrace();
         return ResponseEntity
                 .accepted()
                 .build();
