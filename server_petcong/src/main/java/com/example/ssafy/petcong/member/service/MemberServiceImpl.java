@@ -6,8 +6,8 @@ import com.example.ssafy.petcong.member.model.dto.*;
 import com.example.ssafy.petcong.member.model.entity.Member;
 import com.example.ssafy.petcong.member.model.enums.Status;
 import com.example.ssafy.petcong.member.repository.MemberRepository;
-
 import com.example.ssafy.petcong.util.S3KeyGenerator;
+
 import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
