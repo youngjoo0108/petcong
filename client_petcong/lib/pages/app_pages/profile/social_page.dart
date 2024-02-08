@@ -54,7 +54,7 @@ class SocialPageState extends State<SocialPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -64,7 +64,7 @@ class SocialPageState extends State<SocialPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.close, size: 32),
+                      icon: const Icon(Icons.arrow_back_ios, size: 32),
                       onPressed: () =>
                           Get.off(const IntroducePage(progress: 8 / 12)),
                     ),
@@ -85,7 +85,7 @@ class SocialPageState extends State<SocialPage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 5.0),
               const Center(
                   child: Text('SNS',
                       style: TextStyle(

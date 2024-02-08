@@ -39,7 +39,7 @@ class PreferPageState extends State<PreferPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -50,9 +50,11 @@ class PreferPageState extends State<PreferPage> {
                   onPressed: () => Get.off(const GenderPage(progress: 3 / 12)),
                 ),
               ),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 5.0),
               const Center(
-                  child: Text('추천 상대!', style: TextStyle(fontSize: 32.0))),
+                  child: Text('추천 상대!',
+                      style: TextStyle(
+                          fontSize: 32.0, fontWeight: FontWeight.w600))),
               const SizedBox(height: 30.0),
               Center(
                 child: SizedBox(

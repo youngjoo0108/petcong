@@ -52,7 +52,7 @@ class NicknamePageState extends State<NicknamePage> {
             Align(
               alignment: Alignment.centerLeft,
               child: IconButton(
-                icon: const Icon(Icons.close, size: 32),
+                icon: const Icon(Icons.arrow_back_ios, size: 32),
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
@@ -64,7 +64,7 @@ class NicknamePageState extends State<NicknamePage> {
                 },
               ),
             ),
-            const SizedBox(height: 10.0),
+            const SizedBox(height: 5.0),
             const Text('내 별명은?',
                 style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600)),
             const SizedBox(height: 30.0),
