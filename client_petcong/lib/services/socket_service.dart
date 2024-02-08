@@ -216,7 +216,7 @@ class SocketService extends GetxController {
   Future joinRoom() async {
     try {
       if (pc == null) {
-        await initSocket();
+        await getClient();
 
         final config = {
           'iceServers': [
@@ -297,7 +297,7 @@ class SocketService extends GetxController {
 
 // --- webrtc - 메소드들 ---
   Future sendOffer(StompClient client2, String targetUid) async {
-    client2 = await initSocket();
+    client2 = await getClient();
     print("========================in sendOffer, client2.hashCode() = " +
         client2.hashCode.toString());
 
@@ -328,7 +328,7 @@ class SocketService extends GetxController {
   }
 
   Future sendAnswer(StompClient client2) async {
-    client2 = await initSocket();
+    client2 = await getClient();
     print("========================in sendAnswer, client2.hashCode() = " +
         client2.hashCode.toString());
 
@@ -358,7 +358,7 @@ class SocketService extends GetxController {
   }
 
   Future sendIce(RTCIceCandidate ice, StompClient client2) async {
-    client2 = await initSocket();
+    client2 = await getClient();
     print("========================in sendIce, client2.hashCode() = " +
         client2.hashCode.toString());
 
