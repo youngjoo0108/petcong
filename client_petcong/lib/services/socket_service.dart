@@ -30,6 +30,7 @@ class SocketService extends GetxController {
   final _remoteRenderer = RTCVideoRenderer();
   MediaStream? _localStream;
 
+<<<<<<< HEAD
   @override
   void onInit() {
     super.onInit();
@@ -37,6 +38,14 @@ class SocketService extends GetxController {
     initSocket();
     Future.delayed(const Duration(seconds: 1));
   }
+=======
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   initSocket();
+  //   Future.delayed(Duration(seconds: 1));
+  // }
+>>>>>>> aa487a4ea6eea4ac5c7304696a988c08b9f8ba61
 
   Future<void> initPrefs() async {
     try {
@@ -59,6 +68,8 @@ class SocketService extends GetxController {
         onInitComplete!();
       }
       debugPrint('!!!!!!!!!!!!!!!!!!!!!I get IdToken$uid!!!!!!!!!!!!!!');
+      initSocket();
+      Future.delayed(Duration(seconds: 1));
     } catch (e) {
       debugPrint('Error during initialization: $e');
     }

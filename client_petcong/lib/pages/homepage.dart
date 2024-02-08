@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> activateClient() async {
     await socketService.init();
-
+    print("------------------socketService.init() complete");
     _client = socketService.getClient();
 
     print(
