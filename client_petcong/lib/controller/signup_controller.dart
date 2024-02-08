@@ -201,11 +201,9 @@ class SignupController extends GetxController {
       preference: preference,
       email: UserController.currentUser?.email,
       address: address,
-      // uid: UserController.currentUser?.uid,
-      uid: "currentUser?.uid",
+      uid: UserController.currentUser?.uid,
       instagramId: instagramId,
       kakaoId: kakaoId,
-      status: "ACTIVE",
     );
 
     PetInfoModel petModel = PetInfoModel(

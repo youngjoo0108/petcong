@@ -122,7 +122,6 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   Future<void> onLike(String targetUid) async {
     ChoiceRes? choiceRes;
     try {
-      print('asdfasdf');
       choiceRes = await postMatching(targetUid);
     } catch (exception) {
       print("exception = $exception");
