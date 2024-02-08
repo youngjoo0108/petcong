@@ -42,8 +42,11 @@ public class MemberController {
                 @ApiResponse(responseCode = "400", description = "가입 시 필요한 유저 정보 누락")
     })
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
-        SignupResponseDto signupResponseDto = memberService.signup(signupRequestDto);
+    public ResponseEntity<?> signup(
+            @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
+            @RequestBody @Valid SignupRequestDto signupRequestDto
+    ) {
+        SignupResponseDto signupResponseDto = memberService.signup(uid, signupRequestDto);
 
         return ResponseEntity
                 .created(null)

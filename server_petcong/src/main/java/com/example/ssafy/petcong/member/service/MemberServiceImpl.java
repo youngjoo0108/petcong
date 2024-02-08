@@ -4,6 +4,7 @@ import com.example.ssafy.petcong.AWS.service.AWSService;
 import com.example.ssafy.petcong.exception.NotRegisterdException;
 import com.example.ssafy.petcong.member.model.dto.*;
 import com.example.ssafy.petcong.member.model.entity.Member;
+import com.example.ssafy.petcong.member.model.enums.Status;
 import com.example.ssafy.petcong.member.repository.MemberRepository;
 
 import com.example.ssafy.petcong.util.S3KeyGenerator;
@@ -54,9 +55,13 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
-        MemberInfoDto memberInfo = signupRequestDto.getMemberInfo();
+    public SignupResponseDto signup(String uid, SignupRequestDto signupRequestDto) {
+        SignupMemberInfoDto signupMemberInfo = signupRequestDto.getSignupMemberInfo();
         PetInfoDto petInfo = signupRequestDto.getPetInfo();
+
+        MemberInfoDto memberInfo = MemberInfoDto.fromSignupMemberInfo(signupMemberInfo);
+        memberInfo.setUid(uid);
+        memberInfo.setStatus(Status.ACTIVE);
 
         MemberRecord savedMember = save(memberInfo);
 
