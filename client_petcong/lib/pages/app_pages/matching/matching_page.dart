@@ -48,7 +48,6 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
 
   // late Function onCallPressed;
   final SocketService socketService = SocketService();
-  final MatchingService matchingService = MatchingService();
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +123,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     ChoiceRes? choiceRes;
     try {
       print('asdfasdf');
-      choiceRes = await matchingService.postMatching(targetUid);
+      choiceRes = await postMatching(targetUid);
     } catch (exception) {
       print("exception = $exception");
       print("alert: 잘못된 요청");
