@@ -53,7 +53,7 @@ public class MemberController {
                 .body(signupResponseDto);
     }
 
-    @Operation(summary = "로그인", description = "로그인 상태를 변경",
+    @Operation(summary = "로그인", description = "로그인으로 상태를 변경",
             responses = {
                     @ApiResponse(responseCode = "200", description = "가입 기록 있음",
                             content = @Content(schema = @Schema(implementation = MemberRecord.class))),
@@ -67,6 +67,19 @@ public class MemberController {
                 .ok()
                 .body(updatedUser);
     }
+
+    @Operation(summary = "로그아웃", description = "로그아웃으로 상태를 변경",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "로그아웃 성공")
+            })
+    @PostMapping("/signout")
+    public ResponseEntity<?> signout(@AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId) {
+        boolean isSignouted = memberService.signout(memberId);
+
+        return ResponseEntity
+                .accepted()
+                .body(isSignouted);
+    };
 
     @Operation(summary = "회원 상세 정보 조회",
             responses = @ApiResponse(responseCode = "200", description = "조회 성공",

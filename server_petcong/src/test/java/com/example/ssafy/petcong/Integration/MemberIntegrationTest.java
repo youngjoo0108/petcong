@@ -132,6 +132,33 @@ public class MemberIntegrationTest {
     }
 
     @Test
+    @DisplayName("Signout Test")
+    void testSignout() throws Exception {
+        //given
+
+        //when
+        var request = MockMvcRequestBuilders
+                .post("/members/signout")
+                .header("tester", "A603")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        //then
+        MvcResult mvcResult = mockMvc
+                .perform(request)
+                .andExpect(status().isAccepted())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+
+        boolean isSignouted = Boolean.parseBoolean(response);
+
+        assertThat(isSignouted).isTrue();
+
+        log.info("Signout Test: " + isSignouted);
+    }
+
+    @Test
     @DisplayName("PostProfileImage Test")
     void testPostProfileImage() throws Exception {
         try(FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\anya.jpg")) {

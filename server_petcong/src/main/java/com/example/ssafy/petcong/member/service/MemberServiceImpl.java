@@ -83,6 +83,21 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
+    public boolean signout(int memberId) {
+        Member signoutMember = memberRepository.findMemberByMemberId(memberId).orElseThrow(() -> new NoSuchElementException(String.valueOf(memberId)));
+        signoutMember.updateCallable(false);
+
+        Member member = memberRepository.save(signoutMember);
+
+        if (member != null && !member.isCallable()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional
     public ProfileDto getProfile(int memberId) {
         MemberRecord memberRecord = findMemberByMemberId(memberId);
         MemberInfoDto memberInfo = MemberInfoDto.fromMemberRecord(memberRecord);
