@@ -48,7 +48,6 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
 
   // late Function onCallPressed;
   final SocketService socketService = SocketService();
-  // final MatchingService matchingService = MatchingService();
 
   @override
   Widget build(BuildContext context) {
