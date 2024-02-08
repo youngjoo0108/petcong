@@ -288,7 +288,7 @@ class SocketService extends GetxController {
 
 // --- webrtc - 메소드들 ---
   Future sendOffer(StompClient client2, String targetUid) async {
-    // client2 = await initSocket();
+    client2 = await initSocket();
     print(
         "========================in sendOffer, client2.hashCode() = ${client2.hashCode}");
 
@@ -319,7 +319,7 @@ class SocketService extends GetxController {
   }
 
   Future sendAnswer(StompClient client2) async {
-    client2 = await initSocket();
+    // client2 = await initSocket();
     print(
         "========================in sendAnswer, client2.hashCode() = ${client2.hashCode}");
 
@@ -330,7 +330,7 @@ class SocketService extends GetxController {
     var map = {"type": "answer", "value": answer.toMap()};
     debugPrint("before sendAnswer");
     debugPrint("map = ${jsonEncode(map)}");
-    client2.send(
+    client!.send(
         destination: subsPrefix + targetUid.toString(),
         headers: {
           "content-type": "application/json",
@@ -349,7 +349,7 @@ class SocketService extends GetxController {
   }
 
   Future sendIce(RTCIceCandidate ice, StompClient client2) async {
-    client2 = await initSocket();
+    // client2 = await initSocket();
     print(
         "========================in sendIce, client2.hashCode() = ${client2.hashCode}");
 
@@ -357,7 +357,7 @@ class SocketService extends GetxController {
     debugPrint("send ice");
     update();
     var map = {"type": "ice", "value": ice.toMap()};
-    client2.send(
+    client!.send(
         destination: subsPrefix + targetUid.toString(),
         headers: {
           "content-type": "application/json",
