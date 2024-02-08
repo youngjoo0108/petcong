@@ -53,10 +53,11 @@ class PhotoPageState extends State<PhotoPage> {
   final List<String> _photoPaths = []; // 선택한 이미지들의 경로를 저장하는 리스트
 
   void navigateToMediaPage() async {
-    final result = await Get.to<String>(const MediaPage());
+    final result = await Get.to(() => const MediaPage());
+
     if (result != null) {
       setState(() {
-        _photoPaths.add(result);
+        _photoPaths.addAll(result);
       });
     }
   }
