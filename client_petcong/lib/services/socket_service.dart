@@ -15,7 +15,7 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 
 class SocketService extends GetxController {
   // Socket 변수
-  StompClient? client;
+  late final StompClient client;
   RxList<String> msgArr = <String>[].obs;
   String? uid;
   String? idToken;
@@ -28,6 +28,12 @@ class SocketService extends GetxController {
   final _localRenderer = RTCVideoRenderer();
   final _remoteRenderer = RTCVideoRenderer();
   MediaStream? _localStream;
+
+  @override
+  void onInit() {
+    super.onInit();
+    initSocket();
+  }
 
   Future<void> initPrefs() async {
     try {
@@ -55,7 +61,11 @@ class SocketService extends GetxController {
     }
   }
 
-  Future<StompClient> initSocket() async {
+  StompClient getClient() {
+    return client;
+  }
+
+  Future<void> initSocket() async {
     initPrefs();
     if (client == null) {
       client = StompClient(
@@ -125,7 +135,7 @@ class SocketService extends GetxController {
         "========================in socketService.initSocket, client.hashCode() = " +
             client.hashCode.toString());
 
-    return client!;
+    // return client!;
   }
 
   void makeCall(String targetUid) async {
