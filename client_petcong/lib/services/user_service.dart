@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:petcong/controller/user_controller.dart';
+import 'package:petcong/models/profile_page_model.dart';
 import 'package:petcong/models/user_info_model.dart';
 import 'package:petcong/models/user_model.dart';
 import 'package:petcong/models/user_signup_model.dart';
@@ -20,9 +21,12 @@ Future<void> postSignup(UserSignupModel user) async {
   print(user.toJson());
 
   final response = await http.post(Uri.parse('$serverUrl/members/signup'),
-      headers: {'tester': 'A603', 'Content-Type': 'application/json',},
+      headers: {
+        'tester': 'A603',
+        'Content-Type': 'application/json',
+      },
       body: jsonEncode(user.toJson()));
-  
+
   if (response.statusCode == 201) {
     if (kDebugMode) {
       print("success");
@@ -59,17 +63,12 @@ Future<bool> postSignin() async {
 }
 
 // GET /users/info
-Future<UserModel> getUserInfo() async {
-  // ---- local testing
-  // final response = await http.get(Uri.parse('http://10.0.2.2:8080/users/info'),
-  //     headers: {"tester": "A603"});
-
-  // ---- server testing
+Future<ProfilePageModel> getUserInfo() async {
   final response =
       await http.get(Uri.parse('$serverUrl/users/info'), headers: reqHeaders);
 
   if (response.statusCode == 200) {
-    return UserModel.fromJson(
+    return ProfilePageModel.fromJson(
         jsonDecode(response.body) as Map<String, dynamic>);
   } else {
     if (kDebugMode) {
@@ -82,7 +81,7 @@ Future<UserModel> getUserInfo() async {
 }
 
 // PATCH /users/update
-Future<void> patchUserInfo(UserInfoModel user) async {
+Future<void> patchUserInfo(UserSignupModel user) async {
   final response = await http.patch(Uri.parse('$serverUrl/users/update'),
       headers: reqHeaders, body: jsonEncode(user.toJson()));
 

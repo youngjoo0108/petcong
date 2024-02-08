@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/choice_res.dart';
-import 'package:petcong/models/profile_model.dart';
+import 'package:petcong/models/card_profile_model.dart';
 import 'package:petcong/services/user_service.dart';
 
 const bool testing = true;
@@ -38,27 +38,27 @@ Future<dynamic> postMatching(String targetUid) async {
 }
 
 // GET /matchings/profile
-Future<ProfileModel> getProfile() async {
+Future<CardProfileModel> getProfile() async {
   final response = await http.get(Uri.parse('$serverUrl/matchings/profile'),
       headers: reqHeaders);
 
   if (response.statusCode == 200) {
     if (kDebugMode) print(jsonDecode(response.body));
-    return ProfileModel.fromJson(jsonDecode(response.body));
+    return CardProfileModel.fromJson(jsonDecode(response.body));
   } else {
     throw Exception("getProfile request failed");
   }
 }
 
 // GET /matchings/matchList
-Future<List<ProfileModel>> getMatchList() async {
+Future<List<CardProfileModel>> getMatchList() async {
   final response = await http.get(Uri.parse('$serverUrl/matchings/list'),
       headers: reqHeaders);
 
   if (response.statusCode == 200) {
     if (kDebugMode) print(jsonDecode(response.body));
     return (jsonDecode(response.body) as List)
-        .map((e) => ProfileModel.fromJson(e))
+        .map((e) => CardProfileModel.fromJson(e))
         .toList();
   } else {
     throw Exception("getMatchList request failed");
