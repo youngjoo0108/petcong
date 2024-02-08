@@ -121,6 +121,10 @@ class SocketService extends GetxController {
       await activateSocket(client!);
       await Future.delayed(const Duration(milliseconds: 250));
     }
+    print(
+        "========================in socketService.initSocket, client.hashCode() = " +
+            client.hashCode.toString());
+
     return client!;
   }
 
@@ -284,6 +288,8 @@ class SocketService extends GetxController {
 // --- webrtc - 메소드들 ---
   Future sendOffer(StompClient client2, String targetUid) async {
     client2 = await initSocket();
+    print("========================in sendOffer, client2.hashCode() = " +
+        client2.hashCode.toString());
 
     await joinRoom();
     this.targetUid = targetUid;
@@ -313,6 +319,9 @@ class SocketService extends GetxController {
 
   Future sendAnswer(StompClient client2) async {
     client2 = await initSocket();
+    print("========================in sendAnswer, client2.hashCode() = " +
+        client2.hashCode.toString());
+
     await joinRoom();
     debugPrint('send answer');
     var answer = await pc!.createAnswer();
@@ -340,6 +349,9 @@ class SocketService extends GetxController {
 
   Future sendIce(RTCIceCandidate ice, StompClient client2) async {
     client2 = await initSocket();
+    print("========================in sendIce, client2.hashCode() = " +
+        client2.hashCode.toString());
+
     await joinRoom();
     debugPrint("send ice");
     update();
