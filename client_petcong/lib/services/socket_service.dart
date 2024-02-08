@@ -15,7 +15,7 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 
 class SocketService extends GetxController {
   // Socket 변수
-  StompClient? client;
+  static StompClient? client;
   RxList<String> msgArr = <String>[].obs;
   String? uid;
   String? idToken;
@@ -94,8 +94,7 @@ class SocketService extends GetxController {
                       break;
                     case 'offer':
                       print(
-                          "gotOffer============client ====================================" +
-                              client.hashCode.toString());
+                          "gotOffer============client ====================================${client.hashCode}");
                       value.forEach((key, value) {
                         print('Key: $key, Value: $value');
                       });
@@ -104,14 +103,12 @@ class SocketService extends GetxController {
                       break;
                     case 'answer':
                       print(
-                          "gotAnswer============client ====================================" +
-                              client.hashCode.toString());
+                          "gotAnswer============client ====================================${client.hashCode}");
                       gotAnswer(value['sdp'], value['type']);
                       break;
                     case 'ice':
                       print(
-                          "gotIce============client ====================================" +
-                              client.hashCode.toString());
+                          "gotIce============client ====================================${client.hashCode}");
                       gotIce(value['candidate'], value['sdpMid'],
                           value['sdpMLineIndex']);
                   }
@@ -127,8 +124,7 @@ class SocketService extends GetxController {
       await Future.delayed(const Duration(milliseconds: 250));
     }
     print(
-        "========================in socketService.initSocket, client.hashCode() = " +
-            client.hashCode.toString());
+        "========================in socketService.initSocket, client.hashCode() = ${client.hashCode}");
 
     return client!;
   }
@@ -241,7 +237,7 @@ class SocketService extends GetxController {
         pc!.onAddStream = (stream) {
           _remoteRenderer.srcObject = stream;
         };
-        await Future.delayed(Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
       } else {
         // return pc;
       }
@@ -292,9 +288,9 @@ class SocketService extends GetxController {
 
 // --- webrtc - 메소드들 ---
   Future sendOffer(StompClient client2, String targetUid) async {
-    client2 = await initSocket();
-    print("========================in sendOffer, client2.hashCode() = " +
-        client2.hashCode.toString());
+    // client2 = await initSocket();
+    print(
+        "========================in sendOffer, client2.hashCode() = ${client2.hashCode}");
 
     await joinRoom();
     this.targetUid = targetUid;
@@ -305,7 +301,7 @@ class SocketService extends GetxController {
     var offer = await pc!.createOffer();
     pc!.setLocalDescription(offer);
     var map = {"type": "offer", "value": offer.toMap()};
-    client2.send(
+    client!.send(
         destination: '/queue/$targetUid',
         headers: {
           "content-type": "application/json",
@@ -324,8 +320,8 @@ class SocketService extends GetxController {
 
   Future sendAnswer(StompClient client2) async {
     client2 = await initSocket();
-    print("========================in sendAnswer, client2.hashCode() = " +
-        client2.hashCode.toString());
+    print(
+        "========================in sendAnswer, client2.hashCode() = ${client2.hashCode}");
 
     await joinRoom();
     debugPrint('send answer');
@@ -354,8 +350,8 @@ class SocketService extends GetxController {
 
   Future sendIce(RTCIceCandidate ice, StompClient client2) async {
     client2 = await initSocket();
-    print("========================in sendIce, client2.hashCode() = " +
-        client2.hashCode.toString());
+    print(
+        "========================in sendIce, client2.hashCode() = ${client2.hashCode}");
 
     await joinRoom();
     debugPrint("send ice");

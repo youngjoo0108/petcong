@@ -50,8 +50,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   void initClient() async {
     client = await socketService.initSocket();
     print(
-        "========================in matchingPage.initClient, client.hashCode() = " +
-            client.hashCode.toString());
+        "========================in matchingPage.initClient, client.hashCode() = ${client.hashCode}");
 
     print(client);
   }
@@ -120,8 +119,8 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           // Get.to(const CallWaiting());
           // SocketService().joinRoom();
 
-          // onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2'); // 패드
-          onLike('4GtzqrsSDBVSC1FkOWXXJ2i7CfA3'); // 영주폰
+          onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2'); // 패드
+          // onLike('4GtzqrsSDBVSC1FkOWXXJ2i7CfA3'); // 영주폰
         },
         label: const Text('call'),
         icon: const Icon(Icons.call),
