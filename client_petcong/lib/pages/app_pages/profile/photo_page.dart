@@ -176,6 +176,7 @@ class PhotoPageState extends State<PhotoPage> {
                   buttonText: 'CONTINUE',
                   onPressed: _photoPaths.length >= 2
                       ? () {
+                        
                           Get.to(
                               VideoPage(
                                 progress: _progress + 1 / 12,
