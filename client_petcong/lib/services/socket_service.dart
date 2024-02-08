@@ -88,6 +88,9 @@ class SocketService extends GetxController {
                       makeCall(targetUid);
                       break;
                     case 'offer':
+                      print(
+                          "gotOffer============client ====================================" +
+                              client.hashCode.toString());
                       value.forEach((key, value) {
                         print('Key: $key, Value: $value');
                       });
@@ -95,9 +98,15 @@ class SocketService extends GetxController {
                       sendAnswer(client!);
                       break;
                     case 'answer':
+                      print(
+                          "gotAnswer============client ====================================" +
+                              client.hashCode.toString());
                       gotAnswer(value['sdp'], value['type']);
                       break;
                     case 'ice':
+                      print(
+                          "gotIce============client ====================================" +
+                              client.hashCode.toString());
                       gotIce(value['candidate'], value['sdpMid'],
                           value['sdpMLineIndex']);
                   }
