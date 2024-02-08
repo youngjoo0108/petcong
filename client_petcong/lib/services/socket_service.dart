@@ -15,7 +15,7 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 
 class SocketService extends GetxController {
   // Socket 변수
-  StompClient? client;
+  static StompClient? client;
   RxList<String> msgArr = <String>[].obs;
   String? uid;
   String? idToken;
@@ -292,7 +292,7 @@ class SocketService extends GetxController {
 
 // --- webrtc - 메소드들 ---
   Future sendOffer(StompClient client2, String targetUid) async {
-    client2 = await initSocket();
+    // client2 = await initSocket();
     print("========================in sendOffer, client2.hashCode() = " +
         client2.hashCode.toString());
 
@@ -305,7 +305,7 @@ class SocketService extends GetxController {
     var offer = await pc!.createOffer();
     pc!.setLocalDescription(offer);
     var map = {"type": "offer", "value": offer.toMap()};
-    client2.send(
+    client!.send(
         destination: '/queue/$targetUid',
         headers: {
           "content-type": "application/json",
@@ -323,7 +323,7 @@ class SocketService extends GetxController {
   }
 
   Future sendAnswer(StompClient client2) async {
-    client2 = await initSocket();
+    // client2 = await initSocket();
     print("========================in sendAnswer, client2.hashCode() = " +
         client2.hashCode.toString());
 
@@ -334,7 +334,7 @@ class SocketService extends GetxController {
     var map = {"type": "answer", "value": answer.toMap()};
     debugPrint("before sendAnswer");
     debugPrint("map = ${jsonEncode(map)}");
-    client2.send(
+    client!.send(
         destination: subsPrefix + targetUid.toString(),
         headers: {
           "content-type": "application/json",
@@ -353,7 +353,7 @@ class SocketService extends GetxController {
   }
 
   Future sendIce(RTCIceCandidate ice, StompClient client2) async {
-    client2 = await initSocket();
+    // client2 = await initSocket();
     print("========================in sendIce, client2.hashCode() = " +
         client2.hashCode.toString());
 
@@ -361,7 +361,7 @@ class SocketService extends GetxController {
     debugPrint("send ice");
     update();
     var map = {"type": "ice", "value": ice.toMap()};
-    client2.send(
+    client!.send(
         destination: subsPrefix + targetUid.toString(),
         headers: {
           "content-type": "application/json",
