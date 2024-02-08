@@ -13,6 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.nio.file.InvalidPathException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -22,7 +23,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-//        log.warn(ex.getMessage());
         ex.printStackTrace();
 
         return ResponseEntity
@@ -54,6 +54,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity
                 .accepted()
                 .build();
+    }
+
+    @ExceptionHandler(SQLException.class)
+    public ResponseEntity<String> handleSQLException(SQLException ex) {
+        ex.printStackTrace();
+        return ResponseEntity
+                .internalServerError()
+                .body(ex.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
