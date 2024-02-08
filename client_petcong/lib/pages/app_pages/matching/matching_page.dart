@@ -34,7 +34,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   // late Function onCallPressed;
   final SocketService socketService = SocketService();
   final MatchingService matchingService = MatchingService();
-  late StompClient client;
+  StompClient? client;
 
   void _listenController() {
     setState(() {});
@@ -49,6 +49,9 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
 
   void initClient() async {
     client = await socketService.initSocket();
+    print(
+        "========================in matchingPage.initClient, client.hashCode() = ${client.hashCode}");
+
     print(client);
   }
 
@@ -150,6 +153,6 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     // when matched
     print(client);
     socketService.makeCall(choiceRes.targetUid!);
-    socketService.sendOffer(client, choiceRes.targetUid!);
+    socketService.sendOffer(client!, choiceRes.targetUid!);
   }
 }

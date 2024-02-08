@@ -57,6 +57,7 @@ class SocketService extends GetxController {
 
   Future<StompClient> initSocket() async {
     initPrefs();
+    print('before initsocket check if client ${client?.hashCode}');
     if (client == null) {
       client = StompClient(
         config: StompConfig.sockJS(
@@ -89,8 +90,7 @@ class SocketService extends GetxController {
                       break;
                     case 'offer':
                       print(
-                          "gotOffer============client ====================================" +
-                              client.hashCode.toString());
+                          "gotOffer============client ====================================${client.hashCode}");
                       value.forEach((key, value) {
                         print('Key: $key, Value: $value');
                       });
@@ -99,14 +99,12 @@ class SocketService extends GetxController {
                       break;
                     case 'answer':
                       print(
-                          "gotAnswer============client ====================================" +
-                              client.hashCode.toString());
+                          "gotAnswer============client ====================================${client.hashCode}");
                       gotAnswer(value['sdp'], value['type']);
                       break;
                     case 'ice':
                       print(
-                          "gotIce============client ====================================" +
-                              client.hashCode.toString());
+                          "gotIce============client ====================================${client.hashCode}");
                       gotIce(value['candidate'], value['sdpMid'],
                           value['sdpMLineIndex']);
                   }
@@ -120,6 +118,8 @@ class SocketService extends GetxController {
       );
       await activateSocket(client!);
       await Future.delayed(const Duration(milliseconds: 250));
+      print(
+          "========================in socketService.initSocket, client.hashCode() = ${client.hashCode}");
     }
     return client!;
   }
