@@ -88,9 +88,9 @@ class SocketService extends GetxController {
   }
 
   Future<void> initSocket() async {
-    //   if (client != null) {
-    //   return;
-    // }
+    if (client.connected) {
+      return;
+    }
 
     initPrefs();
 
