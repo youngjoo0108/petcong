@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   late SocketService socketService;
-  StompClient? _client;
+  // StompClient? _client;
   String? uid;
   OverlayEntry? _overlayEntry;
 
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> activateClient() async {
     await socketService.init();
-    _client = await socketService.initSocket();
+    await socketService.initSocket();
     // _client?.activate();
   }
 
