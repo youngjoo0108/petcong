@@ -315,7 +315,7 @@ class SocketService extends GetxController {
   }
 
   Future gotOffer(String sdp, String type) async {
-    await joinRoom(); // 받는 쪽은 gotOffer()에서
+    // await joinRoom(); // 받는 쪽은 gotOffer()에서
     RTCSessionDescription offer = RTCSessionDescription(sdp, type);
     debugPrint('got offer');
     pc!.setRemoteDescription(offer);
