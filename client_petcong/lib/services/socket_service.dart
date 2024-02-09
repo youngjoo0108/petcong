@@ -56,11 +56,11 @@ class SocketService extends GetxController {
   }
 
   Future<StompClient> initSocket() async {
-    if (client != null) {
-      client!.deactivate();
-      client = null; //
-      print("client disconnected");
-    }
+    // if (client != null) {
+    //   client!.deactivate();
+    //   client = null; //
+    //   print("client disconnected");
+    // }
     initPrefs();
     if (client == null) {
       client = StompClient(
