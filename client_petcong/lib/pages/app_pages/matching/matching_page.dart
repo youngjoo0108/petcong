@@ -7,6 +7,7 @@ import 'package:petcong/services/socket_service.dart';
 import 'package:petcong/services/matching_service.dart';
 import 'package:petcong/widgets/card_overlay.dart';
 import 'package:petcong/widgets/matching_card.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
@@ -37,9 +38,20 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   late SocketService socketService;
   final MatchingService matchingService = MatchingService();
   late StompClient client;
+  String? uid;
 
   void _listenController() {
     setState(() {});
+  }
+
+  Future<void> initPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      uid = prefs.getString('uid');
+      print(uid);
+    } catch (e) {
+      debugPrint('Error retrieving values from SharedPreferences: $e');
+    }
   }
 
   @override
@@ -53,6 +65,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
         "homePage.socketService -> _MainMatchingPageState로 전달됨===================_MainMatchingPageState.socketService.hashCode = ${socketService.hashCode}======================");
     _controller = SwipableStackController()..addListener(_listenController);
     initClient();
+    initPrefs();
   }
 
   void initClient() async {
@@ -127,9 +140,11 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           // socketService.onCallPressed('on');
           // Get.to(const CallWaiting());
           // SocketService().joinRoom();
-
-          // onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2'); // 패드
-          onLike('4GtzqrsSDBVSC1FkOWXXJ2i7CfA3'); // 영주폰
+          if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
+            onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2'); // 패드
+          } else {
+            onLike('4GtzqrsSDBVSC1FkOWXXJ2i7CfA3'); // 영주폰
+          }
         },
         label: const Text('call'),
         icon: const Icon(Icons.call),
