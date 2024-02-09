@@ -232,6 +232,7 @@ class SocketService extends GetxController {
         };
 
         pc = await createPeerConnection(config, sdpConstraints);
+        await _remoteRenderer.initialize();
         print('11111111111111[$pc]11111111111111111111');
         pc!.onIceCandidate = (ice) {
           sendIce(ice);
@@ -262,7 +263,7 @@ class SocketService extends GetxController {
   Future<void> startCamera() async {
     // await joinRoom();
     await _localRenderer.initialize();
-    await _remoteRenderer.initialize();
+    // await _remoteRenderer.initialize();
     print(pc);
     if (pc != null) {
       print('11111111111');
