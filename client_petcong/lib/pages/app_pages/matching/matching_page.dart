@@ -22,7 +22,9 @@ const _humanAges = [21, 22, 23];
 const _petAges = [1, 2, 3];
 
 class MainMatchingPage extends StatefulWidget {
-  const MainMatchingPage({Key? key}) : super(key: key);
+  final SocketService?
+      socketService; // HomePage -> _MainMatchingPageState로의 전달을 위함
+  const MainMatchingPage({Key? key, this.socketService}) : super(key: key);
 
   @override
   State<MainMatchingPage> createState() => _MainMatchingPageState();
@@ -32,7 +34,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   late final SwipableStackController _controller;
 
   // late Function onCallPressed;
-  final SocketService socketService = SocketService();
+  late SocketService socketService;
   final MatchingService matchingService = MatchingService();
   late StompClient client;
 
@@ -43,12 +45,19 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   @override
   void initState() {
     super.initState();
+    print(
+        "===================MainMatchingPage.socketService(type: SocketService?).hashCode = ${widget.socketService.hashCode}======================");
+    socketService = widget
+        .socketService!; // 얘를 생성하는 쪽(HomePage)의 socketService를 전달받아야 함. 전달이 제대로 안 됐다면 에러 나게 설정
+    print(
+        "homePage.socketService -> _MainMatchingPageState로 전달됨===================_MainMatchingPageState.socketService.hashCode = ${socketService.hashCode}======================");
     _controller = SwipableStackController()..addListener(_listenController);
     initClient();
   }
 
   void initClient() async {
-    client = await socketService.initSocket();
+    client = await socketService
+        .initSocket(); // socketService의 client를 static으로 설정했으므로, socketService 인스턴스가 여러개라도 얘는 기존에 있던 client를 받는다.
     print(
         "========================in matchingPage.initClient, client.hashCode() = ${client.hashCode}");
 
