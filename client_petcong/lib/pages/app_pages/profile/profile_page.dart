@@ -97,7 +97,6 @@ class MainProfilePage extends StatelessWidget {
               SizedBox(
                 height: 50,
                 child: MixinBuilder<ProfileController>(
-                  init: ProfileController(),
                   builder: (controller) {
                     MemberProfile? member =
                         controller.profile.value.memberProfile;
