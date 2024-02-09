@@ -229,7 +229,7 @@ class SocketService extends GetxController {
         };
 
         pc = await createPeerConnection(config, sdpConstraints);
-        print('11111111111111$pc');
+        print('11111111111111[$pc]11111111111111111111');
         pc!.onIceCandidate = (ice) {
           sendIce(ice, client!);
         };
@@ -257,7 +257,7 @@ class SocketService extends GetxController {
   }
 
   Future<void> startCamera() async {
-    await joinRoom();
+    // await joinRoom();
     await _localRenderer.initialize();
     await _remoteRenderer.initialize();
     print(pc);
@@ -292,7 +292,7 @@ class SocketService extends GetxController {
     print(
         "========================in sendOffer, client2.hashCode() = ${client2.hashCode}");
 
-    await joinRoom();
+    // await joinRoom(); // 통화 거는쪽은 makeCall()에서
     this.targetUid = targetUid;
 
     debugPrint('send offer');
@@ -312,7 +312,7 @@ class SocketService extends GetxController {
   }
 
   Future gotOffer(String sdp, String type) async {
-    await joinRoom();
+    await joinRoom(); // 받는 쪽은 gotOffer()에서
     RTCSessionDescription offer = RTCSessionDescription(sdp, type);
     debugPrint('got offer');
     pc!.setRemoteDescription(offer);
@@ -323,7 +323,7 @@ class SocketService extends GetxController {
     print(
         "========================in sendAnswer, client2.hashCode() = ${client2.hashCode}");
 
-    await joinRoom();
+    // await joinRoom();
     debugPrint('send answer');
     var answer = await pc!.createAnswer();
     pc!.setLocalDescription(answer);
@@ -341,7 +341,7 @@ class SocketService extends GetxController {
   }
 
   Future gotAnswer(String sdp, String type) async {
-    await joinRoom();
+    // await joinRoom();
     RTCSessionDescription answer = RTCSessionDescription(sdp, type);
     debugPrint('got answer');
     update();
@@ -353,7 +353,7 @@ class SocketService extends GetxController {
     print(
         "========================in sendIce, client2.hashCode() = ${client2.hashCode}");
 
-    await joinRoom();
+    // await joinRoom();
     debugPrint("send ice");
     update();
     var map = {"type": "ice", "value": ice.toMap()};
@@ -368,7 +368,7 @@ class SocketService extends GetxController {
   }
 
   Future gotIce(String candidate, String sdpMid, int sdpMLineIndex) async {
-    await joinRoom();
+    // await joinRoom();
     RTCIceCandidate ice = RTCIceCandidate(candidate, sdpMid, sdpMLineIndex);
     debugPrint("got ice");
     pc!.addCandidate(ice);
