@@ -273,13 +273,13 @@ class SocketService extends GetxController {
       };
       _localStream = await Helper.openCamera(mediaConstraints);
 
+      // (화면에 띄울) localRenderer의 데이터 소스를 내 localStream으로 설정
+      _localRenderer.srcObject = _localStream;
+
       // 스트림의 트랙(카메라 정보가 들어오는 연결)을 peerConnection(정보를 전송할 connection)에 추가
       _localStream!.getTracks().forEach((track) {
         pc!.addTrack(track, _localStream!);
       });
-
-      // (화면에 띄울) localRenderer의 데이터 소스를 내 localStream으로 설정
-      _localRenderer.srcObject = _localStream;
     }
     // 마이크 카메라 끄
     Get.to(
@@ -329,7 +329,7 @@ class SocketService extends GetxController {
 
     // await joinRoom();
     debugPrint('send answer');
-    var answer = await pc!.createAnswer();
+    var answer = await pc!.createAnswer({});
     pc!.setLocalDescription(answer);
     var map = {"type": "answer", "value": answer.toMap()};
     debugPrint("before sendAnswer");
