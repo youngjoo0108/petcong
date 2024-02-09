@@ -25,6 +25,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
     // Initialize RTCVideoRenderer
     widget.localRenderer.initialize();
     widget.remoteRenderer.initialize();
+    print(widget.localRenderer);
   }
 
   @override
