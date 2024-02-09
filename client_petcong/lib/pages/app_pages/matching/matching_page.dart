@@ -162,6 +162,6 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     // when matched
     print(client);
     socketService.makeCall(choiceRes.targetUid!);
-    socketService.sendOffer(client, choiceRes.targetUid!);
+    socketService.sendOffer(choiceRes.targetUid!);
   }
 }

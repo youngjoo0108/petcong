@@ -56,10 +56,13 @@ class SocketService extends GetxController {
   }
 
   Future<StompClient> initSocket() async {
+    // if (client != null) {
+    //   client!.deactivate();
+    //   client = null; //
+    //   print("client disconnected");
+    // }
     if (client != null) {
-      client!.deactivate();
-      client = null; //
-      print("client disconnected");
+      return client!;
     }
     initPrefs();
     if (client == null) {
@@ -99,7 +102,7 @@ class SocketService extends GetxController {
                         print('Key: $key, Value: $value');
                       });
                       gotOffer(value['sdp'], value['type']);
-                      sendAnswer(client!);
+                      sendAnswer();
                       break;
                     case 'answer':
                       print(
@@ -125,7 +128,7 @@ class SocketService extends GetxController {
     }
     print(
         "========================in socketService.initSocket, client.hashCode() = ${client.hashCode}");
-
+    print("SocketService.client 할당 됨");
     return client!;
   }
 
@@ -175,7 +178,7 @@ class SocketService extends GetxController {
   // Future<void> offCallPressed() async {}
 
   Future<void> disposeSocket(myuid) async {
-    await initSocket();
+    // await initSocket();
     String stringUid = myuid as String;
     try {
       if (client!.isActive == true) {
@@ -207,7 +210,7 @@ class SocketService extends GetxController {
   Future joinRoom() async {
     try {
       if (pc == null) {
-        await initSocket();
+        // await initSocket();
 
         final config = {
           'iceServers': [
@@ -231,7 +234,7 @@ class SocketService extends GetxController {
         pc = await createPeerConnection(config, sdpConstraints);
         print('11111111111111[$pc]11111111111111111111');
         pc!.onIceCandidate = (ice) {
-          sendIce(ice, client!);
+          sendIce(ice);
         };
 
         pc!.onAddStream = (stream) {
@@ -287,10 +290,10 @@ class SocketService extends GetxController {
   }
 
 // --- webrtc - 메소드들 ---
-  Future sendOffer(StompClient client2, String targetUid) async {
-    client2 = await initSocket();
+  Future sendOffer(String targetUid) async {
+    // await initSocket();
     print(
-        "========================in sendOffer, client2.hashCode() = ${client2.hashCode}");
+        "========================in sendOffer, client.hashCode() = ${client.hashCode}");
 
     // await joinRoom(); // 통화 거는쪽은 makeCall()에서
     this.targetUid = targetUid;
@@ -318,10 +321,10 @@ class SocketService extends GetxController {
     pc!.setRemoteDescription(offer);
   }
 
-  Future sendAnswer(StompClient client2) async {
+  Future sendAnswer() async {
     // client2 = await initSocket();
     print(
-        "========================in sendAnswer, client2.hashCode() = ${client2.hashCode}");
+        "========================in sendAnswer, client.hashCode() = ${client.hashCode}");
 
     // await joinRoom();
     debugPrint('send answer');
@@ -348,10 +351,10 @@ class SocketService extends GetxController {
     pc!.setRemoteDescription(answer);
   }
 
-  Future sendIce(RTCIceCandidate ice, StompClient client2) async {
+  Future sendIce(RTCIceCandidate ice) async {
     // client2 = await initSocket();
     print(
-        "========================in sendIce, client2.hashCode() = ${client2.hashCode}");
+        "========================in sendIce, client.hashCode() = ${client.hashCode}");
 
     // await joinRoom();
     debugPrint("send ice");
