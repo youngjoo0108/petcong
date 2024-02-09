@@ -140,10 +140,10 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           // socketService.onCallPressed('on');
           // Get.to(const CallWaiting());
           // SocketService().joinRoom();
-          if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
-            onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2'); // 패드
+          if (uid == '254cPtscWPPyONOlSiLxqkfjzBz1') {
+            onLike('p7n3ZJ3YmKPIaD3esIb20RTWuyk2'); // rkd2rb
           } else {
-            onLike('4GtzqrsSDBVSC1FkOWXXJ2i7CfA3'); // 영주폰
+            onLike('254cPtscWPPyONOlSiLxqkfjzBz1'); // ehighsub
           }
         },
         label: const Text('call'),
