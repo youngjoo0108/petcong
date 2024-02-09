@@ -50,8 +50,7 @@ class _HomePageState extends State<HomePage> {
     await socketService.init();
     _client = await socketService.initSocket();
     print(
-        "========================in homepage.activateClient, client.hashCode() = " +
-            _client.hashCode.toString());
+        "========================in homepage.activateClient, client.hashCode() = ${_client.hashCode}");
     // _client?.activate();
   }
 
@@ -61,14 +60,31 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading:
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 20.0),
-            Image.asset(
-          'assets/src/test_logo.png',
-          // width: 120,
-          // height: 40,
-          // scale: 5,
+        // leading:
+        //     // Padding(
+        //     //   padding: const EdgeInsets.only(left: 20.0),
+        //     Image.asset(
+        //   'assets/src/가로형-고화질.png',
+        //   // width: 120,
+        //   // height: 40,
+        //   // scale: 5,
+        // ),
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.settings),
+        //     onPressed: () {
+        //       _showLogoutDropdown(context);
+        //     },
+        //   ),
+        // ],
+
+        title: SizedBox(
+          width: 100, // 이미지의 너비 조절
+          height: 30, // 이미지의 높이 조절
+          child: Image.asset(
+            'assets/src/가로형-사이즈맞춤.png',
+            // fit: BoxFit.cover, // 이미지가 AppBar에 맞게 잘리지 않도록 설정
+          ),
         ),
         actions: [
           IconButton(
