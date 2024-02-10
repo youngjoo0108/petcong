@@ -183,13 +183,19 @@ class PhotoPageState extends State<PhotoPage> {
                     buttonText: 'CONTINUE',
                     onPressed: _photoPaths.length >= 2
                         ? () async {
-                            await user_service.postPicture(_photoPaths);
-                            Get.to(
-                              VideoPage(
-                                progress: _progress + 1 / 12,
-                              ),
-                              transition: Transition.noTransition,
-                            );
+                            try {
+                              await user_service.postPicture(_photoPaths);
+                              print('postPicture 성공!'); // 성공했을 때 디버깅 메시지 출력
+                              Get.to(
+                                VideoPage(
+                                  progress: _progress + 1 / 12,
+                                ),
+                                transition: Transition.noTransition,
+                              );
+                            } catch (e) {
+                              // postPicture 함수가 실패했을 때의 코드
+                              print('Error: $e');
+                            }
                           }
                         : null,
                     width: 240.0,
