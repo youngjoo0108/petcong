@@ -143,10 +143,10 @@ class SocketService extends GetxController {
   }
 
   void makeCall(String targetUidParam) async {
-    this.targetUid = targetUidParam;
+    targetUid = targetUidParam;
     // matched
     // 전화 오는 화면으로
-    Get.to(const CallWaiting());
+    Get.to(CallWaiting(this));
     // rtc 연결 & 화면 띄우기 합쳐서 onCallPressed로 옮김
     // // 화면 띄워주면서, rtc 연결 시작
     // // 화면 띄워주면서, rtc 연결 시작

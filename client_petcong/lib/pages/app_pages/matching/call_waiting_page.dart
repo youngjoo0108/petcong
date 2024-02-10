@@ -3,7 +3,8 @@ import 'package:petcong/constants/style.dart';
 import 'package:petcong/services/socket_service.dart';
 
 class CallWaiting extends StatelessWidget {
-  const CallWaiting({super.key});
+  final SocketService? socketService;
+  const CallWaiting(this.socketService, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class CallWaiting extends StatelessWidget {
             child: FloatingActionButton(
               heroTag: 'call_button',
               onPressed: () async {
-                SocketService()
+                socketService!
                     .onCallPressed('on'); // 통화대기화면 call버튼 -> rtc 연결 시작 ~ 화면 on
               },
               shape: const CircleBorder(eccentricity: 0),
