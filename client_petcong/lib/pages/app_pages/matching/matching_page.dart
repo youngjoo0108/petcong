@@ -143,7 +143,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           // SocketService().joinRoom();
           if (uid == 'p7n3ZJ3YmKPIaD3esIb20RTWuyk2') {
             // 내 uid가 내꺼면, 타겟uid 형꺼
-            onLike(''); // 형 uid 기입
+            onLike('kS95PNT8RUc78Qr7TQ4uRaJmbw23'); // 형 uid 기입
           } else {
             onLike('p7n3ZJ3YmKPIaD3esIb20RTWuyk2'); // 형 uid면, 타겟uid 내꺼
           }
@@ -178,7 +178,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     }
     // when matched
     print(client);
-    socketService.makeCall(choiceRes.targetUid!);
-    socketService.sendOffer(choiceRes.targetUid!);
+    socketService.makeCall(choiceRes.targetUid!); // callWaitingPage로 이동만.
+    // socketService.sendOffer(choiceRes.targetUid!); // callWaitingPage의 call버튼 눌렀을 때부터 시그널링 시작돼야함.
   }
 }
