@@ -31,7 +31,8 @@ class CallWaiting extends StatelessWidget {
             child: FloatingActionButton(
               heroTag: 'call_button',
               onPressed: () async {
-                SocketService().startCamera();
+                SocketService()
+                    .joinRoom(); // 통화대기화면 call버튼 -> rtc 연결 시작 ~ 화면 on
               },
               shape: const CircleBorder(eccentricity: 0),
               backgroundColor: MyColor.myColor1,

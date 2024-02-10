@@ -135,15 +135,17 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        // 매칭페이지의 call버튼 -> onLike() -> makeCall()을 통해 통화대기화면 이동까지만.
         heroTag: 'call',
         onPressed: () {
           // socketService.onCallPressed('on');
           // Get.to(const CallWaiting());
           // SocketService().joinRoom();
-          if (uid == '254cPtscWPPyONOlSiLxqkfjzBz1') {
-            onLike('p7n3ZJ3YmKPIaD3esIb20RTWuyk2'); // rkd2rb
+          if (uid == 'p7n3ZJ3YmKPIaD3esIb20RTWuyk2') {
+            // 내 uid가 내꺼면, 타겟uid 형꺼
+            onLike(''); // 형 uid 기입
           } else {
-            onLike('254cPtscWPPyONOlSiLxqkfjzBz1'); // ehighsub
+            onLike('p7n3ZJ3YmKPIaD3esIb20RTWuyk2'); // 형 uid면, 타겟uid 내꺼
           }
         },
         label: const Text('call'),
