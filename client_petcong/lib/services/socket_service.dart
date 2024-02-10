@@ -142,7 +142,8 @@ class SocketService extends GetxController {
     return client!;
   }
 
-  void makeCall(String targetUid) async {
+  void makeCall(String targetUidParam) async {
+    this.targetUid = targetUidParam;
     // matched
     // 전화 오는 화면으로
     Get.to(const CallWaiting());
