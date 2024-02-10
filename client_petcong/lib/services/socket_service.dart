@@ -130,26 +130,6 @@ class SocketService extends GetxController {
     return client!;
   }
 
-  // void onCallPressed(call) async {
-  //   await _localRenderer.initialize();
-  //   await _remoteRenderer.initialize();
-
-  //   await joinRoom();
-
-  //   Get.to(MainVideoCallWidget(
-  //       localRenderer: _localRenderer, remoteRenderer: _remoteRenderer));
-  // }
-
-  void makeCall(String targetUid) async {
-    // matched
-    // 전화 오는 화면으로
-    Get.to(const CallWaiting());
-    // 화면 띄워주면서, rtc 연결 시작
-    await _localRenderer.initialize();
-    await _remoteRenderer.initialize();
-    await joinRoom();
-  }
-
   Future<void> activateSocket(StompClient client) async {
     client.activate();
   }
@@ -182,11 +162,37 @@ class SocketService extends GetxController {
     }
   }
 
+  void makeCall(String targetUid) async {
+    // matched
+    // 전화 오는 화면으로
+    // Get.to(const CallWaiting());
+    // 화면 띄워주면서, rtc 연결 시작
+    // await initSocket();
+    if (!client!.isActive) {
+      print('client not activate!!!!!!!!!!!!!!!!!1');
+      await activateSocket(client!); // client가 활성화되지 않은 경우 활성화합니다.
+    }
+    await _localRenderer.initialize();
+    await _remoteRenderer.initialize();
+
+    print('before joinroom');
+    await joinRoom();
+    print(
+        'after joinroom client? ${client.hashCode} !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1');
+    await Future.delayed(const Duration(seconds: 3));
+    print(_remoteRenderer.srcObject);
+    print('is there remoterenderer? ${_remoteRenderer.toString()}');
+    Get.to(MainVideoCallWidget(
+      localRenderer: _localRenderer,
+      remoteRenderer: _remoteRenderer,
+    ));
+  }
+
   // webRTC
   Future joinRoom() async {
     try {
       await initSocket();
-
+      print('in joinroom client ${client.hashCode}!!!!!!!!!!!!!!!!!!!!!!!!1');
       final config = {
         'iceServers': [
           {"url": "stun:stun.l.google.com:19302"},
@@ -209,6 +215,8 @@ class SocketService extends GetxController {
       pc = await createPeerConnection(config, sdpConstraints);
 
       final mediaConstraints = {
+        // 'audio': false,
+        // 'video': false,
         'audio': true,
         'video': {'facingMode': 'user'}
       };
@@ -228,7 +236,7 @@ class SocketService extends GetxController {
         _remoteRenderer.srcObject = stream;
       };
 
-      await Future.delayed(const Duration(seconds: 1));
+      // await Future.delayed(const Duration(seconds: 1));
     } catch (exception) {
       print(exception);
     }
@@ -244,32 +252,16 @@ class SocketService extends GetxController {
     //     body: jsonEncode({"type": "joined", "value": ""}));
   }
 
+  RTCVideoRenderer getLocalRenderer() {
+    return _localRenderer;
+  }
+
+  RTCVideoRenderer getRemoteRenderer() {
+    return _remoteRenderer;
+  }
+
   Future<void> startCamera() async {
-    // await joinRoom();
-    // await _localRenderer.initialize();
-    // await _remoteRenderer.initialize();
-    // print(pc);
-    // if (pc != null) {
-    //   print('11111111111');
-    //   final mediaConstraints = {
-    //     'audio': true,
-    //     'video': {'facingMode': 'user'}
-    //   };
-    //   _localStream = await Helper.openCamera(mediaConstraints);
-
-    //   // 스트림의 트랙(카메라 정보가 들어오는 연결)을 peerConnection(정보를 전송할 connection)에 추가
-    //   _localStream!.getTracks().forEach((track) {
-    //     pc!.addTrack(track, _localStream!);
-    //   });
-
-    //   // (화면에 띄울) localRenderer의 데이터 소스를 내 localStream으로 설정
-    //   _localRenderer.srcObject = _localStream;
-    // }
-    // 마이크 카메라 끄
-    // await _localRenderer.initialize();
-    // await _remoteRenderer.initialize();
     print("here!!!!!!!!!!1localRemderer $_localRenderer!!!!!!!!!!!!!!!!!!!!!1");
-    print(_remoteRenderer.renderVideo);
     Get.to(
       MainVideoCallWidget(
         localRenderer: _localRenderer,
@@ -286,7 +278,7 @@ class SocketService extends GetxController {
     this.targetUid = targetUid;
 
     debugPrint('send offer');
-    await Future.delayed(const Duration(milliseconds: 1000));
+    await Future.delayed(const Duration(seconds: 2));
 
     var offer = await pc!.createOffer();
     pc!.setLocalDescription(offer);
@@ -302,6 +294,7 @@ class SocketService extends GetxController {
   }
 
   Future gotOffer(String sdp, String type) async {
+    update();
     RTCSessionDescription offer = RTCSessionDescription(sdp, type);
     debugPrint('got offer');
     pc!.setRemoteDescription(offer);
@@ -311,7 +304,6 @@ class SocketService extends GetxController {
     // client2 = await initSocket();
     print(
         "========================in sendAnswer, client2.hashCode() = ${client.hashCode}");
-
     debugPrint('send answer');
     var answer = await pc!.createAnswer();
     pc!.setLocalDescription(answer);
@@ -340,7 +332,6 @@ class SocketService extends GetxController {
     // client2 = await initSocket();
     print(
         "========================in sendIce, client2.hashCode() = ${client.hashCode}");
-
     // await joinRoom();
     debugPrint("send ice");
     update();
@@ -360,6 +351,7 @@ class SocketService extends GetxController {
     RTCIceCandidate ice = RTCIceCandidate(candidate, sdpMid, sdpMLineIndex);
     debugPrint("got ice");
     pc!.addCandidate(ice);
+    update();
   }
 
   RTCVideoRenderer get localRenderer => _localRenderer;
