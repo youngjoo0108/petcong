@@ -7,8 +7,16 @@ class ProfileController extends GetxController {
 
   Rx<ProfilePageModel> profile = ProfilePageModel().obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    getProfile();
+  }
+
   void getProfile() async {
     getUserInfo().then((userInfo) {
+      print("getProfile successful");
+      print(userInfo);
       profile.value = userInfo;
     });
   }

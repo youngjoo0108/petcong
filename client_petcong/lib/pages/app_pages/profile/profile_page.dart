@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:petcong/constants/style.dart';
+import 'package:petcong/controller/profile_controller.dart';
+import 'package:petcong/models/profile_page_model.dart';
 import 'package:petcong/pages/app_pages/profile/nickname_page.dart';
 import 'package:petcong/controller/user_controller.dart';
 import 'package:get/get.dart';
+import 'package:petcong/services/user_service.dart';
 import 'media_page.dart';
 
 class MainProfilePage extends StatelessWidget {
@@ -93,10 +96,17 @@ class MainProfilePage extends StatelessWidget {
               ),
               SizedBox(
                 height: 50,
-                child: GetBuilder<UserController>(
+                child: MixinBuilder<ProfileController>(
                   builder: (controller) {
+                    MemberProfile? member =
+                        controller.profile.value.memberProfile;
+                    PetProfile? pet = controller.profile.value.petProfile;
+                    String nickname =
+                        member?.memberInfo?.nickname ?? 'no response';
+                    int age = member?.memberInfo?.age ?? 0;
+
                     return Text(
-                      '${controller.nickname}, ${controller.calculateAge()}',
+                      '${nickname}, ${age}',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Colors.black,
