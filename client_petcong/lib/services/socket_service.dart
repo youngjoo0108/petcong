@@ -167,14 +167,15 @@ class SocketService extends GetxController {
 
       await Future.delayed(const Duration(seconds: 3));
       // gotAnswer랑 gotIce 중 뭐가 마지막인지 모르니, call버튼을 안 누른 상대쪽도 통화 화면으로 잘 넘어가도록 메시지 전송
-      client!.send(
-          destination: subsPrefix + targetUid.toString(),
-          headers: {
-            "content-type": "application/json",
-            "uid": uid.toString(),
-            "info": "connect"
-          },
-          body: jsonEncode({"type": "on", "value": "."}));
+      // //
+      // client!.send(
+      //     destination: subsPrefix + targetUid.toString(),
+      //     headers: {
+      //       "content-type": "application/json",
+      //       "uid": uid.toString(),
+      //       "info": "connect"
+      //     },
+      //     body: jsonEncode({"type": "on", "value": "."}));
       Get.to(
         MainVideoCallWidget(
           localRenderer: _localRenderer,
