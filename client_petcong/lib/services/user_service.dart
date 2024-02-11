@@ -14,6 +14,11 @@ String idTokenString = currentUser?.getIdToken().toString() ?? "";
 const String serverUrl = 'https://i10a603.p.ssafy.io';
 Map<String, String> reqHeaders = checkTesting();
 
+// testing 중인지 확인하고 header에 tester 권한 추가
+Map<String, String> checkTesting() {
+  return testing ? {'tester': 'A603'} : {'Petcong-id-token': idTokenString};
+}
+
 // POST /members/signup
 Future<void> postSignup(UserSignupModel user) async {
   final response = await http.post(Uri.parse('$serverUrl/members/signup'),
@@ -95,29 +100,34 @@ Future<void> patchUserInfo(UserSignupModel user) async {
   }
 }
 
+// POST /members/picture
 Future<void> postPicture(List<String> filePaths) async {
   const String endpoint = '$serverUrl/members/picture';
   var request = http.MultipartRequest('POST', Uri.parse(endpoint));
+  request.headers.addAll(reqHeaders);
 
   for (String filePath in filePaths) {
-    var file = await http.MultipartFile.fromPath('file', filePath);
+    var file = await http.MultipartFile.fromPath('files', filePath);
     request.files.add(file);
   }
 
   try {
     var response = await request.send();
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       if (kDebugMode) {
-        print("success");
+        print("pic posting success");
       }
     } else if (kDebugMode) {
-      print("failed");
+      print("pic posting failed");
       print(response.statusCode);
-      print(response.stream.bytesToString());
+      await for (var line in response.stream
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())) {
+        print('Line: $line');
+      }
     }
   } catch (error) {
     if (kDebugMode) {
-      print("error");
       print(error.toString());
     }
   }
@@ -169,7 +179,24 @@ Future<void> withdrawUser() async {
   }
 }
 
-// TODO: refactor to throw exception if idTokenString is null
-Map<String, String> checkTesting() {
-  return testing ? {'tester': 'A603'} : {'Petcong-id-token': idTokenString};
+// GET /members/picture
+Future<String> getPicture(String key) async {
+  final response = await http.get(
+      Uri.parse('$serverUrl/members/picture?key=$key'),
+      headers: reqHeaders);
+
+  if (response.statusCode == 200) {
+    if (kDebugMode) {
+      print("success");
+      print(response.body);
+    }
+    return response.body;
+  } else {
+    if (kDebugMode) {
+      print(response.statusCode);
+      print(response.body);
+      print("error");
+    }
+    throw Exception("Failed to get picture");
+  }
 }
