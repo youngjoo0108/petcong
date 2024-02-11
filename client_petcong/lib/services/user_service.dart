@@ -95,29 +95,34 @@ Future<void> patchUserInfo(UserSignupModel user) async {
   }
 }
 
+// POST /members/picture
 Future<void> postPicture(List<String> filePaths) async {
   const String endpoint = '$serverUrl/members/picture';
   var request = http.MultipartRequest('POST', Uri.parse(endpoint));
+  request.headers.addAll(reqHeaders);
 
   for (String filePath in filePaths) {
-    var file = await http.MultipartFile.fromPath('file', filePath);
+    var file = await http.MultipartFile.fromPath('files', filePath);
     request.files.add(file);
   }
 
   try {
     var response = await request.send();
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       if (kDebugMode) {
-        print("success");
+        print("pic posting success");
       }
     } else if (kDebugMode) {
-      print("failed");
+      print("pic posting failed");
       print(response.statusCode);
-      print(response.stream.bytesToString());
+      await for (var line in response.stream
+          .transform(utf8.decoder)
+          .transform(const LineSplitter())) {
+        print('Line: $line');
+      }
     }
   } catch (error) {
     if (kDebugMode) {
-      print("error");
       print(error.toString());
     }
   }
