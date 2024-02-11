@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
 import 'package:petcong/controller/profile_controller.dart';
+import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/profile_page_model.dart';
 import 'package:petcong/pages/app_pages/profile/nickname_page.dart';
-import 'package:petcong/controller/user_controller.dart';
-import 'package:get/get.dart';
 import 'package:petcong/services/user_service.dart';
+
 import 'media_page.dart';
 
 class MainProfilePage extends StatelessWidget {
@@ -51,9 +52,20 @@ class MainProfilePage extends StatelessWidget {
                           Get.to(const MediaPage()); // 이미지를 클릭하면 MediaPage로 이동
                         },
                         child: ClipOval(
-                          child: Image.asset(
-                            'assets/src/test_profile.jpg',
-                            fit: BoxFit.fitWidth,
+                          child: MixinBuilder<ProfileController>(
+                            builder: (controller) {
+                              MemberProfile? member =
+                                  controller.profile.value.memberProfile;
+                              String imgUrl =
+                                  member?.memberImgInfosList?[0].bucketKey ??
+                                      "";
+                              if (imgUrl != "") {
+                                getPicture(imgUrl).then((url) {
+                                  imgUrl = url;
+                                });
+                              }
+                              return Image.network(imgUrl);
+                            },
                           ),
                         ),
                       ),
