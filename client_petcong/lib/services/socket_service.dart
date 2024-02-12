@@ -28,7 +28,7 @@ class SocketService extends GetxController {
   final _localRenderer = RTCVideoRenderer();
   final _remoteRenderer = RTCVideoRenderer();
   MediaStream? _localStream;
-  bool? callPressed;
+  static bool callPressed = false;
 
   Future<void> initPrefs() async {
     try {
@@ -38,6 +38,10 @@ class SocketService extends GetxController {
     } catch (e) {
       debugPrint('Error retrieving values from SharedPreferences: $e');
     }
+  }
+
+  void setCallPressed(bool flag) {
+    callPressed = flag;
   }
 
   Future<void> init() async {
@@ -162,7 +166,6 @@ class SocketService extends GetxController {
   Future<void> onCallPressed(call) async {
     print("=======================onCallPressed start");
     if (call == 'on') {
-      callPressed = true;
       // await _localRenderer.initialize();
       // await _remoteRenderer.initialize();
       await joinRoom();
@@ -351,6 +354,7 @@ class SocketService extends GetxController {
           "info": "connect"
         },
         body: jsonEncode(map));
+    callPressed = true;
     print("=======================sendOffer end");
   }
 
@@ -361,6 +365,7 @@ class SocketService extends GetxController {
     RTCSessionDescription offer = RTCSessionDescription(sdp, type);
     debugPrint('got offer');
     pc!.setRemoteDescription(offer);
+    callPressed = true;
     print("=======================sendOffer end");
   }
 

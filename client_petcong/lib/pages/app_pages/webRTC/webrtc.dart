@@ -3,10 +3,12 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
 import 'package:petcong/pages/homepage.dart';
+import 'package:petcong/services/socket_service.dart';
 
 class MainVideoCallWidget extends StatefulWidget {
   final RTCVideoRenderer localRenderer;
   final RTCVideoRenderer remoteRenderer;
+
   const MainVideoCallWidget(
       {super.key, required this.localRenderer, required this.remoteRenderer});
 
@@ -84,6 +86,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           widget.localRenderer.srcObject!.getTracks().forEach((track) {
             track.stop();
           });
+          SocketService().setCallPressed(false); // flag false로
           await Future.delayed(const Duration(seconds: 2));
           Get.offAll(const HomePage());
         },
