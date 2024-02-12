@@ -175,6 +175,8 @@ class SocketService extends GetxController {
 
     pc = await createPeerConnection(config, sdpConstraints);
     print("=======================makeCall start");
+    print("localRenderer is null = ${_localRenderer == null}");
+    print("remoteRenderer is null = ${_remoteRenderer == null}");
     targetUid = targetUidParam;
     // matched
     // 전화 오는 화면으로
@@ -339,6 +341,9 @@ class SocketService extends GetxController {
     } catch (exception) {
       print(exception);
     }
+    print("end joinRoom - localRederer.hashCode = ${localRenderer.hashCode}");
+    print(
+        "end joinRoom - remoteRenderer.hashCode = ${remoteRenderer.hashCode}");
     print("=======================joinRoom end");
 
     // client!.send(

@@ -93,6 +93,10 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           await widget.localRenderer.srcObject!.dispose();
           await widget.pc!.close();
           widget.pc = null;
+          print(
+              "end btn.onPressed - localRederer.hashCode = ${widget.localRenderer.hashCode}");
+          print(
+              "end btn.onPressed - remoteRenderer.hashCode = ${widget.remoteRenderer.hashCode}");
           await widget.localRenderer.dispose();
           await widget.remoteRenderer.dispose();
           // disconnect end
