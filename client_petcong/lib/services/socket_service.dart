@@ -128,14 +128,10 @@ class SocketService extends GetxController {
                       gotIce(value['candidate'], value['sdpMid'],
                           value['sdpMLineIndex']);
                       break;
-                    // case 'on':
-                    //   Get.to(
-                    //     MainVideoCallWidget(
-                    //       localRenderer: _localRenderer!,
-                    //       remoteRenderer: _remoteRenderer!,
-                    //     ),
-                    //   );
-                    //   break;
+                    case 'block':
+                      print("sendOffer blocked!");
+                      callPressed = true;
+                      break;
                   }
                 }
               },
@@ -376,11 +372,21 @@ class SocketService extends GetxController {
 
 // --- webrtc - 메소드들 ---
   Future sendOffer(String targetUid) async {
-    print("=======================sendOffer start");
     if (callPressed) {
       // 상대방이 call버튼을 먼저 눌러서 gotOffer를 받았다면, 중복 send 방지
       return;
     }
+    callPressed = true;
+    // block target's sendOffer
+    client!.send(
+        destination: '/queue/$targetUid',
+        headers: {
+          "content-type": "application/json",
+          "uid": uid.toString(),
+          "info": "connect"
+        },
+        body: jsonEncode({"type": "block", "value": "."}));
+    print("=======================sendOffer start");
     await joinRoom();
     await Future.delayed(const Duration(milliseconds: 500));
     // await initSocket();
@@ -404,7 +410,6 @@ class SocketService extends GetxController {
           "info": "connect"
         },
         body: jsonEncode(map));
-    callPressed = true;
     print("=======================sendOffer end");
   }
 
@@ -413,7 +418,6 @@ class SocketService extends GetxController {
     print("=======================gotOffer start");
     await joinRoom();
     await Future.delayed(const Duration(milliseconds: 500));
-    callPressed = true;
     // await joinRoom(); // 받는 쪽은 gotOffer()에서
     RTCSessionDescription offer = RTCSessionDescription(sdp, type);
     debugPrint('got offer');
