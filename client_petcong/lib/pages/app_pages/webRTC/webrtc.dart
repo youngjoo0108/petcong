@@ -24,15 +24,15 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   void initState() {
     super.initState();
     // Initialize RTCVideoRenderer
-    widget.localRenderer.initialize();
-    widget.remoteRenderer.initialize();
+    // widget.localRenderer.initialize();
+    // widget.remoteRenderer.initialize();
     print("===============in webrtc page, renderers initialized");
   }
 
   @override
   void dispose() {
-    widget.localRenderer.dispose();
-    widget.remoteRenderer.dispose();
+    // widget.localRenderer.dispose();
+    // widget.remoteRenderer.dispose();
     print("===============in webrtc page, renderers disposed");
 
     super.dispose();
@@ -82,9 +82,9 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
       // 통화 종료 버튼
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          widget.localRenderer.srcObject!.getTracks().forEach((track) {
-            track.stop();
-          });
+          // widget.localRenderer.srcObject!.getTracks().forEach((track) {
+          //   track.stop();
+          // });
           await SocketService().disconnectCall();
           SocketService().setCallPressed(false); // flag false로
           await Future.delayed(const Duration(seconds: 2));
