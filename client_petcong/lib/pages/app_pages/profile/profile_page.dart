@@ -415,11 +415,11 @@ class MainProfilePage extends StatelessWidget {
                             end: Alignment.bottomRight,
                           ),
                         ),
-                        child: GetBuilder<UserController>(
+                        child: GetBuilder<ProfileController>(
                           builder: (controller) {
                             // TextEditingController를 다이얼로그 밖에서 선언
                             final textEditingController = TextEditingController(
-                                text: controller.introText);
+                                text: controller.profile.value.petProfile?.petInfo?.description);
 
                             return Center(
                               child: GestureDetector(

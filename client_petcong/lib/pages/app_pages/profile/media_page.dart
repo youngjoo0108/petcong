@@ -9,11 +9,12 @@ class MediaPage extends StatefulWidget {
   MediaPageState createState() => MediaPageState();
 }
 
+//TODO: resolve img quality
 class MediaPageState extends State<MediaPage> {
   final ImagePicker _picker = ImagePicker();
   Future<void> _pickImageFromGallery() async {
-    final List<XFile> images =
-        await _picker.pickMultiImage(requestFullMetadata: false);
+    final List<XFile> images = await _picker.pickMultiImage(
+        requestFullMetadata: false, imageQuality: 30);
     List<String> imagePaths = [];
 
     for (XFile image in images) {

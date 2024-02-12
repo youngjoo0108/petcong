@@ -30,37 +30,6 @@ class UserController extends GetxController {
     'Add Picture', // 마지막 요소를 'Add Picture' 텍스트로 설정
   ];
 
-  // 사용자 정보를 저장할 변수들 추가
-  String nickname = '';
-  String birthday = '';
-  String introText = 'Your Text Here';
-  String photoUrl = ''; // Add this line
-  int age = 0; // 만 나이를 저장할 변수 추가
-  String petHobby = ''; // 반려견 취미 저장 변수
-  String favoriteSnack = ''; // 최애 간식 저장 변수
-
-  final ImagePicker _picker = ImagePicker();
-
-  int calculateAge() {
-    if (birthday.isEmpty) return 0;
-    final birthDate = DateTime.parse(birthday);
-    final currentDate = DateTime.now();
-
-    int age = currentDate.year - birthDate.year;
-    if (currentDate.month < birthDate.month ||
-        (currentDate.month == birthDate.month &&
-            currentDate.day < birthDate.day)) {
-      age--;
-    }
-
-    return age;
-  }
-
-  void updateIntroText(String newIntroText) {
-    introText = newIntroText;
-    update(); // GetX 컨트롤러를 업데이트하여 UI를 다시 빌드합니다.
-  }
-
   @override
   void onReady() {
     super.onReady();
@@ -114,28 +83,6 @@ class UserController extends GetxController {
 
   static User? get currentUser => user;
 
-  Future<void> pickImageFromGallery() async {
-    final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
-    if (photo != null) {
-      photoUrl = photo.path;
-      update();
-    }
-  }
-
-  Future<void> takePicture() async {
-    final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
-    if (photo != null) {
-      photoUrl = photo.path;
-      update();
-    }
-  }
-
-  void updateNickname(String newNickname) {
-    nickname = newNickname;
-    firestore.collection('users').doc(_user.value?.uid).update({
-      'nickname': nickname,
-    });
-  }
 
   void updateSelectedImage(int index, String newImage) {
     if (index >= 0 && index < 5) {

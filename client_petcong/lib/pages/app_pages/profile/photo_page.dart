@@ -7,7 +7,7 @@ import 'video_page.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:petcong/services/user_service.dart' as user_service;
+import 'package:petcong/services/user_service.dart';
 
 // 이미지를 선택하고 화면에 표시되는 기능
 class DisplayImage extends StatelessWidget {
@@ -179,8 +179,7 @@ class PhotoPageState extends State<PhotoPage> {
                     onPressed: _photoPaths.length >= 2
                         ? () async {
                             try {
-                              await user_service.postPicture(_photoPaths);
-                              debugPrint('postPicture 성공!'); // 성공했을 때 디버깅 메시지 출력
+                              await postPicture(_photoPaths);
                               Get.to(
                                 VideoPage(
                                   progress: _progress + 1 / 12,
