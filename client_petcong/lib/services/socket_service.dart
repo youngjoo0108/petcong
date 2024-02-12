@@ -93,15 +93,16 @@ class SocketService extends GetxController {
 
                   String type = response['type'];
                   print('type = $type');
-                  Map<String, dynamic> value = response['value'];
 
                   switch (type) {
                     case 'matched':
+                      Map<String, dynamic> value = response['value'];
                       // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
                       targetUid = value['targetUid'];
                       await makeCall(targetUid);
                       break;
                     case 'offer':
+                      Map<String, dynamic> value = response['value'];
                       print(
                           "gotOffer============client ====================================${client.hashCode}");
                       value.forEach((key, value) {
@@ -115,6 +116,7 @@ class SocketService extends GetxController {
                       });
                       break;
                     case 'answer':
+                      Map<String, dynamic> value = response['value'];
                       print(
                           "gotAnswer============client ====================================${client.hashCode}");
                       await gotAnswer(value['sdp'], value['type']);
@@ -123,6 +125,7 @@ class SocketService extends GetxController {
                       });
                       break;
                     case 'ice':
+                      Map<String, dynamic> value = response['value'];
                       print(
                           "gotIce============client ====================================${client.hashCode}");
                       gotIce(value['candidate'], value['sdpMid'],
