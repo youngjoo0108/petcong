@@ -22,6 +22,7 @@ class SocketService extends GetxController {
   String? uid;
   String? idToken;
   VoidCallback? onInitComplete;
+  User user = FirebaseAuth.instance.currentUser!;
   // RTC 변수
   // late MainVideoCall webrtc;
   RTCPeerConnection? pc;
@@ -30,15 +31,14 @@ class SocketService extends GetxController {
   final _localRenderer = RTCVideoRenderer();
   final _remoteRenderer = RTCVideoRenderer();
   MediaStream? _localStream;
-  late Stream<User?> isTokenReset;
 
   Future<void> initPrefs() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       uid = prefs.getString('uid');
-      idToken = prefs.getString('idToken');
-      isTokenReset = FirebaseAuth.instance.idTokenChanges();
-      print(isTokenReset);
+      await user.getIdToken().then((result) {
+        idToken = result;
+      });
     } catch (e) {
       debugPrint('Error retrieving values from SharedPreferences: $e');
     }
@@ -55,7 +55,6 @@ class SocketService extends GetxController {
         onInitComplete!();
       }
       debugPrint('!!!!!!!!!!!!!!!!!!!!!I get IdToken$uid!!!!!!!!!!!!!!');
-      debugPrint('token changed? $isTokenReset');
     } catch (e) {
       debugPrint('Error during initialization: $e');
     }
