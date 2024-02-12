@@ -118,7 +118,7 @@ class MainProfilePage extends StatelessWidget {
                     int age = member?.memberInfo?.age ?? 0;
 
                     return Text(
-                      '${nickname}, ${age}',
+                      '$nickname, $age',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Colors.black,
