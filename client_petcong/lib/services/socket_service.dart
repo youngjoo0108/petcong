@@ -212,6 +212,7 @@ class SocketService extends GetxController {
         MainVideoCallWidget(
           localRenderer: _localRenderer!,
           remoteRenderer: _remoteRenderer!,
+          pc: pc!,
         ),
       );
     } else {
@@ -351,18 +352,18 @@ class SocketService extends GetxController {
     //     body: jsonEncode({"type": "joined", "value": ""}));
   }
 
-  Future<void> disconnectCall() async {
-    try {
-      await _localStream?.dispose();
-      await pc?.close();
-      pc = null;
-      _localRenderer!.dispose();
-      _remoteRenderer!.dispose();
-      disposeSocket(uid);
-    } catch (error) {
-      debugPrint(error.toString());
-    }
-  }
+  // Future<void> disconnectCall() async {
+  //   try {
+  //     await _localStream?.dispose();
+  //     await pc?.close();
+  //     pc = null;
+  //     _localRenderer!.dispose();
+  //     _remoteRenderer!.dispose();
+  //     disposeSocket(uid);
+  //   } catch (error) {
+  //     debugPrint(error.toString());
+  //   }
+  // }
 
   // Future<void> startCamera() async {
   //   // 마이크 카메라 끄

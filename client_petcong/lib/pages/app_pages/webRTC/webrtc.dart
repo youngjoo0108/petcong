@@ -8,9 +8,13 @@ import 'package:petcong/services/socket_service.dart';
 class MainVideoCallWidget extends StatefulWidget {
   final RTCVideoRenderer localRenderer;
   final RTCVideoRenderer remoteRenderer;
+  RTCPeerConnection? pc;
 
-  const MainVideoCallWidget(
-      {super.key, required this.localRenderer, required this.remoteRenderer});
+  MainVideoCallWidget(
+      {super.key,
+      required this.localRenderer,
+      required this.remoteRenderer,
+      required this.pc});
 
   @override
   _MainVideoCallWidgetState createState() => _MainVideoCallWidgetState();
@@ -85,7 +89,13 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           // widget.localRenderer.srcObject!.getTracks().forEach((track) {
           //   track.stop();
           // });
-          await SocketService().disconnectCall();
+          // disconnectCall 로직
+          await widget.localRenderer.srcObject!.dispose();
+          await widget.pc!.close();
+          widget.pc = null;
+          await widget.localRenderer.dispose();
+          await widget.remoteRenderer.dispose();
+          // disconnect end
           SocketService().setCallPressed(false); // flag false로
           await Future.delayed(const Duration(seconds: 2));
           Get.offAll(const HomePage());
