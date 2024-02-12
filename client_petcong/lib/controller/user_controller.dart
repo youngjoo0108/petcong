@@ -91,8 +91,8 @@ class UserController extends GetxController {
     );
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('uid', userCredential.user!.uid);
-    String? idToken = await userCredential.user!.getIdToken();
-    prefs.setString('idToken', idToken ?? '');
+    // String? idToken = await userCredential.user!.getIdToken();
+    // prefs.setString('idToken', idToken ?? '');
     return userCredential.user;
   }
 
