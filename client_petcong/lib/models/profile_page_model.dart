@@ -37,7 +37,7 @@ class ProfilePageModel {
 
 class MemberProfile {
   MemberInfo? memberInfo;
-  List<dynamic>? memberImgInfosList;
+  List<MemberImgInfosList>? memberImgInfosList;
 
   MemberProfile({
     this.memberInfo,
@@ -50,14 +50,44 @@ class MemberProfile {
             : MemberInfo.fromJson(json["memberInfo"]),
         memberImgInfosList: json["memberImgInfosList"] == null
             ? []
-            : List<dynamic>.from(json["memberImgInfosList"]!.map((x) => x)),
+            : List<MemberImgInfosList>.from(json["memberImgInfosList"]!
+                .map((x) => MemberImgInfosList.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "memberInfo": memberInfo?.toJson(),
         "memberImgInfosList": memberImgInfosList == null
             ? []
-            : List<dynamic>.from(memberImgInfosList!.map((x) => x)),
+            : List<dynamic>.from(memberImgInfosList!.map((x) => x.toJson())),
+      };
+}
+
+class MemberImgInfosList {
+  String? bucketKey;
+  String? contentType;
+  int? length;
+  int? ordinal;
+
+  MemberImgInfosList({
+    this.bucketKey,
+    this.contentType,
+    this.length,
+    this.ordinal,
+  });
+
+  factory MemberImgInfosList.fromJson(Map<String, dynamic> json) =>
+      MemberImgInfosList(
+        bucketKey: json["bucketKey"],
+        contentType: json["contentType"],
+        length: json["length"],
+        ordinal: json["ordinal"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "bucketKey": bucketKey,
+        "contentType": contentType,
+        "length": length,
+        "ordinal": ordinal,
       };
 }
 
