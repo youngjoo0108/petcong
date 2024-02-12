@@ -141,11 +141,11 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           // socketService.onCallPressed('on');
           // Get.to(const CallWaiting());
           // SocketService().joinRoom();
-          if (uid == 'p7n3ZJ3YmKPIaD3esIb20RTWuyk2') {
+          if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
             // 내 uid가 내꺼면, 타겟uid 형꺼
-            onLike('kS95PNT8RUc78Qr7TQ4uRaJmbw23'); // 형 uid 기입
+            onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2'); // 패드
           } else {
-            onLike('p7n3ZJ3YmKPIaD3esIb20RTWuyk2'); // 형 uid면, 타겟uid 내꺼
+            onLike('4GtzqrsSDBVSC1FkOWXXJ2i7CfA3'); // 영주폰
           }
         },
         label: const Text('call'),

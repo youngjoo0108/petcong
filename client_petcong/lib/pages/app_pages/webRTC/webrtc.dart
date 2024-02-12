@@ -25,12 +25,14 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
     // Initialize RTCVideoRenderer
     widget.localRenderer.initialize();
     widget.remoteRenderer.initialize();
+    print("===============in webrtc page, renderers initialized");
   }
 
   @override
   void dispose() {
     widget.localRenderer.dispose();
     widget.remoteRenderer.dispose();
+    print("===============in webrtc page, renderers disposed");
 
     super.dispose();
   }

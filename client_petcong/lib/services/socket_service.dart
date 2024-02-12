@@ -143,6 +143,7 @@ class SocketService extends GetxController {
   }
 
   void makeCall(String targetUidParam) async {
+    print("=======================makeCall start");
     targetUid = targetUidParam;
     // matched
     // 전화 오는 화면으로
@@ -151,6 +152,7 @@ class SocketService extends GetxController {
     // // 화면 띄워주면서, rtc 연결 시작
     // // 화면 띄워주면서, rtc 연결 시작
     // await joinRoom();
+    print("=======================makeCall end");
   }
 
   Future<void> activateSocket(StompClient client) async {
@@ -158,6 +160,7 @@ class SocketService extends GetxController {
   }
 
   Future<void> onCallPressed(call) async {
+    print("=======================onCallPressed start");
     if (call == 'on') {
       callPressed = true;
       // await _localRenderer.initialize();
@@ -199,6 +202,7 @@ class SocketService extends GetxController {
       // await _remoteRenderer.dispose();
       // Get.to(const HomePage());
     }
+    print("=======================onCallPressed end");
   }
 
   // Future<void> offCallPressed() async {}
@@ -234,6 +238,7 @@ class SocketService extends GetxController {
   // webRTC
 
   Future joinRoom() async {
+    print("=======================joinRoom start");
     try {
       // peerConnection 생성
       final config = {
@@ -266,7 +271,12 @@ class SocketService extends GetxController {
       await _remoteRenderer.initialize();
 
       pc!.onAddStream = (stream) {
+        print(
+            "===========================================================\npc.onAddStream 실행됨.\n============================================");
+        print("stream = ${stream} //");
         _remoteRenderer.srcObject = stream;
+        print("_remoteRenderer.srcObject = ${_remoteRenderer.srcObject} // ");
+        print("===============onAddStream end");
       };
 
       // localRenderer 세팅
@@ -290,6 +300,7 @@ class SocketService extends GetxController {
     } catch (exception) {
       print(exception);
     }
+    print("=======================joinRoom end");
 
     // client!.send(
     //     // destination: subsPrefix + targetUid.toString(),
@@ -314,6 +325,7 @@ class SocketService extends GetxController {
 
 // --- webrtc - 메소드들 ---
   Future sendOffer(String targetUid) async {
+    print("=======================sendOffer start");
     if (callPressed!) {
       // 상대방이 call버튼을 먼저 눌러서 gotOffer를 받았다면, 중복 send 방지
       return;
@@ -339,17 +351,21 @@ class SocketService extends GetxController {
           "info": "connect"
         },
         body: jsonEncode(map));
+    print("=======================sendOffer end");
   }
 
   Future gotOffer(String sdp, String type) async {
+    print("=======================gotOffer start");
     callPressed = true;
     // await joinRoom(); // 받는 쪽은 gotOffer()에서
     RTCSessionDescription offer = RTCSessionDescription(sdp, type);
     debugPrint('got offer');
     pc!.setRemoteDescription(offer);
+    print("=======================sendOffer end");
   }
 
   Future sendAnswer() async {
+    print("=======================sendAnswer start");
     // client2 = await initSocket();
     print(
         "========================in sendAnswer, client.hashCode() = ${client.hashCode}");
@@ -369,17 +385,21 @@ class SocketService extends GetxController {
           "info": "connect"
         },
         body: jsonEncode(map));
+    print("=======================sendAnswer end");
   }
 
   Future gotAnswer(String sdp, String type) async {
+    print("=======================gotAnswer start");
     // await joinRoom();
     RTCSessionDescription answer = RTCSessionDescription(sdp, type);
     debugPrint('got answer');
     update();
     pc!.setRemoteDescription(answer);
+    print("=======================gotAnswer end");
   }
 
   Future sendIce(RTCIceCandidate ice) async {
+    print("=======================sendIce start");
     // client2 = await initSocket();
     print(
         "========================in sendIce, client.hashCode() = ${client.hashCode}");
@@ -396,13 +416,16 @@ class SocketService extends GetxController {
           "info": "connect"
         },
         body: jsonEncode(map));
+    print("=======================sendIce end");
   }
 
   Future gotIce(String candidate, String sdpMid, int sdpMLineIndex) async {
+    print("=======================gotIce start");
     // await joinRoom();
     RTCIceCandidate ice = RTCIceCandidate(candidate, sdpMid, sdpMLineIndex);
     debugPrint("got ice");
     pc!.addCandidate(ice);
+    print("=======================gotIce end");
   }
 
   RTCVideoRenderer get localRenderer => _localRenderer;
