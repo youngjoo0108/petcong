@@ -14,10 +14,13 @@ class ProfileController extends GetxController {
   }
 
   void getProfile() async {
-    getUserInfo().then((userInfo) {
+    try {
+      var userInfo = await getUserInfo();
       print("getProfile successful");
       print(userInfo);
       profile.value = userInfo;
-    });
+    } catch (e) {
+      print("Error in getProfile: $e");
+    }
   }
 }

@@ -1,77 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/models/card_profile_model.dart';
 
 class MatchedCard extends StatelessWidget {
-  const MatchedCard({
-    required this.name,
-    required this.profileImages,
-    super.key,
-  });
+  final CardProfileModel matchedUser;
 
-  final String name;
-  final String profileImages;
+  const MatchedCard({Key? key, required this.matchedUser}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ClipRRect(
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                // borderRadius: BorderRadius.circular(14),
-                image: DecorationImage(
-                  image: AssetImage(profileImages),
-                  fit: BoxFit.cover,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    offset: const Offset(0, 2),
-                    blurRadius: 26,
-                    color: Colors.black.withOpacity(0.08),
-                  ),
-                ],
-              ),
+    return Card(
+      child: Column(
+        children: <Widget>[
+          Hero(
+            tag: matchedUser.pictureUrls!.first,
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Image.network(matchedUser.pictureUrls!.first,
+                  fit: BoxFit.cover),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 200,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(14),
-                ),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                    Colors.black12.withOpacity(0),
-                    Colors.black12.withOpacity(.4),
-                    Colors.black12.withOpacity(.62),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: theme.textTheme.titleLarge!.copyWith(
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
+          Text(matchedUser.pictureUrls!.first,
+              style: const TextStyle(fontSize: 16)),
         ],
+      ),
+    );
+  }
+}
+
+class ProfileDetailPage extends StatelessWidget {
+  final CardProfileModel matchedUser;
+
+  const ProfileDetailPage({Key? key, required this.matchedUser})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(matchedUser.nickname),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Hero(
+              tag: matchedUser.pictureUrls!.first,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Image.network(matchedUser.pictureUrls!.first,
+                    fit: BoxFit.cover),
+              ),
+            ),
+            Text(matchedUser.nickname, style: const TextStyle(fontSize: 24)),
+            const SizedBox(height: 10),
+            Text(matchedUser.description!),
+            const SizedBox(height: 10),
+            Text('Instagram: ${matchedUser.instagramId}'),
+            const SizedBox(height: 10),
+            Text('Kakao ID: ${matchedUser.kakaoId}'),
+          ],
+        ),
       ),
     );
   }
