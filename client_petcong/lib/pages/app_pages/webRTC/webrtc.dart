@@ -3,6 +3,8 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
 import 'package:petcong/pages/homepage.dart';
+import 'package:petcong/services/socket_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainVideoCallWidget extends StatefulWidget {
   final RTCVideoRenderer localRenderer;
@@ -17,7 +19,7 @@ class MainVideoCallWidget extends StatefulWidget {
 class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   late double videoWidth = MediaQuery.of(context).size.width;
   late double videoHeight = MediaQuery.of(context).size.height;
-
+  String? myUid;
   @override
   void initState() {
     super.initState();
@@ -25,13 +27,24 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
     // Initialize RTCVideoRenderer
     widget.localRenderer.initialize();
     widget.remoteRenderer.initialize();
+    print('after start webrtc ${widget.remoteRenderer.srcObject}');
+
+    initPrefs();
+  }
+
+  Future<void> initPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      myUid = prefs.getString('uid');
+    } catch (e) {
+      debugPrint('Error retrieving values from SharedPreferences: $e');
+    }
   }
 
   @override
   void dispose() {
     widget.localRenderer.dispose();
     widget.remoteRenderer.dispose();
-
     super.dispose();
   }
 
@@ -82,6 +95,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           widget.localRenderer.srcObject!.getTracks().forEach((track) {
             track.stop();
           });
+          await SocketService().disposeSocket(myUid);
           await Future.delayed(const Duration(seconds: 2));
           Get.offAll(const HomePage());
         },
