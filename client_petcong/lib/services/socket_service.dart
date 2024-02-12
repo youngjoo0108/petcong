@@ -168,7 +168,7 @@ class SocketService extends GetxController {
     if (call == 'on') {
       // await _localRenderer.initialize();
       // await _remoteRenderer.initialize();
-      await joinRoom();
+      // await joinRoom();
       sendOffer(targetUid);
 
       await Future.delayed(const Duration(seconds: 3));
@@ -345,6 +345,7 @@ class SocketService extends GetxController {
       // 상대방이 call버튼을 먼저 눌러서 gotOffer를 받았다면, 중복 send 방지
       return;
     }
+    await joinRoom();
     // await initSocket();
     print(
         "========================in sendOffer, client.hashCode() = ${client.hashCode}");
@@ -372,6 +373,7 @@ class SocketService extends GetxController {
 
   Future gotOffer(String sdp, String type) async {
     print("=======================gotOffer start");
+    await joinRoom();
     callPressed = true;
     // await joinRoom(); // 받는 쪽은 gotOffer()에서
     RTCSessionDescription offer = RTCSessionDescription(sdp, type);
