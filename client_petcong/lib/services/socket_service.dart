@@ -85,7 +85,7 @@ class SocketService extends GetxController {
               headers: {
                 "uid": uid!,
               },
-              callback: (frame) {
+              callback: (frame) async {
                 if (frame.body!.isNotEmpty) {
                   msgArr.add(frame.body!);
                   Map<String, dynamic> response = jsonDecode(frame.body!);
@@ -106,7 +106,7 @@ class SocketService extends GetxController {
                       value.forEach((key, value) {
                         print('Key: $key, Value: $value');
                       });
-                      gotOffer(value['sdp'], value['type']);
+                      await gotOffer(value['sdp'], value['type']);
                       sendAnswer();
                       break;
                     case 'answer':
