@@ -15,7 +15,7 @@ class MatchedCard extends StatelessWidget {
             tag: matchedUser.pictureUrls!.first,
             child: AspectRatio(
               aspectRatio: 1,
-              child: Image.asset(matchedUser.pictureUrls!.first,
+              child: Image.network(matchedUser.pictureUrls!.first,
                   fit: BoxFit.cover),
             ),
           ),
@@ -47,7 +47,7 @@ class ProfileDetailPage extends StatelessWidget {
               tag: matchedUser.pictureUrls!.first,
               child: AspectRatio(
                 aspectRatio: 1,
-                child: Image.asset(matchedUser.pictureUrls!.first,
+                child: Image.network(matchedUser.pictureUrls!.first,
                     fit: BoxFit.cover),
               ),
             ),
