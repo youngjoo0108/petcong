@@ -47,7 +47,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
     if (value == null || value.isEmpty) {
       return '생년월일을 입력해주세요';
     }
-    const datePattern = r'^(\d{4})\/(\d{2})\/(\d{2})$';
+    const datePattern = r'^(\d{4})\-(\d{2})\-(\d{2})$';
     final match = RegExp(datePattern).firstMatch(value);
     if (match == null) {
       return '유효한 날짜 형식이 아닙니다 (YYYY/MM/DD)';
@@ -95,7 +95,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: Column(
           children: <Widget>[
             Align(
@@ -106,7 +106,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(0.0),
+              padding: const EdgeInsets.all(5.0),
               child: Column(
                 children: <Widget>[
                   Text(
@@ -120,7 +120,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
                     child: TextField(
                         controller: _controller,
                         decoration: const InputDecoration(
-                          hintText: 'YYYY/MM/DD',
+                          hintText: 'YYYY-MM-DD',
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
                           ),
@@ -133,7 +133,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
                             fontWeight:
                                 FontWeight.w400), // 여기에 fontWeight를 추가했습니다.
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp('[0-9/]')),
+                          FilteringTextInputFormatter.allow(RegExp('[0-9-]')),
                           _DateInputFormatter(),
                         ],
                         keyboardType: TextInputType.number,
@@ -184,13 +184,13 @@ class _DateInputFormatter extends TextInputFormatter {
       return newValue;
     }
 
-    String newText = newValue.text.replaceAll('/', '');
+    String newText = newValue.text.replaceAll('-', '');
 
     if (newText.length > 4) {
-      newText = '${newText.substring(0, 4)}/${newText.substring(4)}';
+      newText = '${newText.substring(0, 4)}-${newText.substring(4)}';
     }
     if (newText.length > 7) {
-      newText = '${newText.substring(0, 7)}/${newText.substring(7)}';
+      newText = '${newText.substring(0, 7)}-${newText.substring(7)}';
     }
 
     return TextEditingValue(

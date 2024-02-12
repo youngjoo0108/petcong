@@ -7,9 +7,20 @@ class ProfileController extends GetxController {
 
   Rx<ProfilePageModel> profile = ProfilePageModel().obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    getProfile();
+  }
+
   void getProfile() async {
-    getUserInfo().then((userInfo) {
+    try {
+      var userInfo = await getUserInfo();
+      print("getProfile successful");
+      print(userInfo);
       profile.value = userInfo;
-    });
+    } catch (e) {
+      print("Error in getProfile: $e");
+    }
   }
 }
