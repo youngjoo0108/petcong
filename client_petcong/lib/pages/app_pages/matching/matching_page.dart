@@ -178,7 +178,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     }
     // when matched
     print(client);
-    socketService.makeCall(choiceRes.targetUid!); // callWaitingPage로 이동만.
+    await socketService.makeCall(choiceRes.targetUid!); // callWaitingPage로 이동만.
     // socketService.sendOffer(choiceRes.targetUid!); // callWaitingPage의 call버튼 눌렀을 때부터 시그널링 시작돼야함.
   }
 }

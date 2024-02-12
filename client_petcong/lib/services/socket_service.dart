@@ -98,7 +98,7 @@ class SocketService extends GetxController {
                     case 'matched':
                       // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
                       targetUid = value['targetUid'];
-                      makeCall(targetUid);
+                      await makeCall(targetUid);
                       break;
                     case 'offer':
                       print(
@@ -146,7 +146,27 @@ class SocketService extends GetxController {
     return client!;
   }
 
-  void makeCall(String targetUidParam) async {
+  Future<void> makeCall(String targetUidParam) async {
+    final config = {
+      'iceServers': [
+        {"url": "stun:stun.l.google.com:19302"},
+        {
+          "url": "turn:i10a603.p.ssafy.io:3478",
+          "username": "ehigh",
+          "credential": "1234",
+        },
+      ],
+    };
+
+    final sdpConstraints = {
+      'mandatory': {
+        'OfferToReceiveAudio': true,
+        'OfferToReceiveVideo': true,
+      },
+      'optional': []
+    };
+
+    pc = await createPeerConnection(config, sdpConstraints);
     print("=======================makeCall start");
     targetUid = targetUidParam;
     // matched
@@ -240,30 +260,32 @@ class SocketService extends GetxController {
 
   // webRTC
 
+  void sendAllIces() {}
+
   Future joinRoom() async {
     print("=======================joinRoom start");
     try {
-      // peerConnection 생성
-      final config = {
-        'iceServers': [
-          {"url": "stun:stun.l.google.com:19302"},
-          {
-            "url": "turn:i10a603.p.ssafy.io:3478",
-            "username": "ehigh",
-            "credential": "1234",
-          },
-        ],
-      };
+      // // peerConnection 생성
+      // final config = {
+      //   'iceServers': [
+      //     {"url": "stun:stun.l.google.com:19302"},
+      //     {
+      //       "url": "turn:i10a603.p.ssafy.io:3478",
+      //       "username": "ehigh",
+      //       "credential": "1234",
+      //     },
+      //   ],
+      // };
 
-      final sdpConstraints = {
-        'mandatory': {
-          'OfferToReceiveAudio': true,
-          'OfferToReceiveVideo': true,
-        },
-        'optional': []
-      };
+      // final sdpConstraints = {
+      //   'mandatory': {
+      //     'OfferToReceiveAudio': true,
+      //     'OfferToReceiveVideo': true,
+      //   },
+      //   'optional': []
+      // };
 
-      pc = await createPeerConnection(config, sdpConstraints);
+      // pc = await createPeerConnection(config, sdpConstraints);
 
       print('11111111111111[$pc]11111111111111111111');
       pc!.onIceCandidate = (ice) {
