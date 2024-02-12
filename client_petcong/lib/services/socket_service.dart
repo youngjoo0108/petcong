@@ -340,47 +340,55 @@ class SocketService extends GetxController {
 
 // --- webrtc - 메소드들 ---
   Future sendOffer(String targetUid) async {
-    print("=======================sendOffer start");
-    if (callPressed) {
-      // 상대방이 call버튼을 먼저 눌러서 gotOffer를 받았다면, 중복 send 방지
-      return;
+    try {
+      print("=======================sendOffer start");
+      if (callPressed) {
+        // 상대방이 call버튼을 먼저 눌러서 gotOffer를 받았다면, 중복 send 방지
+        return;
+      }
+      await joinRoom();
+      // await initSocket();
+      print(
+          "========================in sendOffer, client.hashCode() = ${client.hashCode}");
+
+      // await joinRoom(); // 통화 거는쪽은 makeCall()에서
+      this.targetUid = targetUid;
+
+      debugPrint('send offer');
+      await Future.delayed(const Duration(milliseconds: 1000));
+
+      var offer = await pc!.createOffer();
+      pc!.setLocalDescription(offer);
+      var map = {"type": "offer", "value": offer.toMap()};
+      client!.send(
+          destination: '/queue/$targetUid',
+          headers: {
+            "content-type": "application/json",
+            "uid": uid.toString(),
+            "info": "connect"
+          },
+          body: jsonEncode(map));
+      callPressed = true;
+      print("=======================sendOffer end");
+    } catch (exception) {
+      print("exception = ${exception}");
     }
-    await joinRoom();
-    // await initSocket();
-    print(
-        "========================in sendOffer, client.hashCode() = ${client.hashCode}");
-
-    // await joinRoom(); // 통화 거는쪽은 makeCall()에서
-    this.targetUid = targetUid;
-
-    debugPrint('send offer');
-    await Future.delayed(const Duration(milliseconds: 1000));
-
-    var offer = await pc!.createOffer();
-    pc!.setLocalDescription(offer);
-    var map = {"type": "offer", "value": offer.toMap()};
-    client!.send(
-        destination: '/queue/$targetUid',
-        headers: {
-          "content-type": "application/json",
-          "uid": uid.toString(),
-          "info": "connect"
-        },
-        body: jsonEncode(map));
-    callPressed = true;
-    print("=======================sendOffer end");
   }
 
   Future gotOffer(String sdp, String type) async {
-    print("=======================gotOffer start");
-    await joinRoom();
-    callPressed = true;
-    // await joinRoom(); // 받는 쪽은 gotOffer()에서
-    RTCSessionDescription offer = RTCSessionDescription(sdp, type);
-    debugPrint('got offer');
-    pc!.setRemoteDescription(offer);
-    callPressed = true;
-    print("=======================sendOffer end");
+    try {
+      print("=======================gotOffer start");
+      await joinRoom();
+      callPressed = true;
+      // await joinRoom(); // 받는 쪽은 gotOffer()에서
+      RTCSessionDescription offer = RTCSessionDescription(sdp, type);
+      debugPrint('got offer');
+      pc!.setRemoteDescription(offer);
+      callPressed = true;
+      print("=======================sendOffer end");
+    } catch (exception) {
+      print("exception = ${exception}");
+    }
   }
 
   Future sendAnswer() async {
