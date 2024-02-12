@@ -297,7 +297,7 @@ class SocketService extends GetxController {
       try {
         await _remoteRenderer!.initialize();
       } catch (exception) {
-        print("exception = ${exception}");
+        print("exception = $exception");
       }
 
       pc!.onAddStream = (stream) {
@@ -401,6 +401,7 @@ class SocketService extends GetxController {
   }
 
   Future gotOffer(String sdp, String type) async {
+    update();
     print("=======================gotOffer start");
     await joinRoom();
     await Future.delayed(const Duration(milliseconds: 500));
@@ -438,11 +439,11 @@ class SocketService extends GetxController {
   }
 
   Future gotAnswer(String sdp, String type) async {
+    update();
     print("=======================gotAnswer start");
     // await joinRoom();
     RTCSessionDescription answer = RTCSessionDescription(sdp, type);
     debugPrint('got answer');
-    update();
     pc!.setRemoteDescription(answer);
     print("=======================gotAnswer end");
   }
@@ -469,6 +470,7 @@ class SocketService extends GetxController {
   }
 
   Future gotIce(String candidate, String sdpMid, int sdpMLineIndex) async {
+    update();
     print("=======================gotIce start");
     // await joinRoom();
     RTCIceCandidate ice = RTCIceCandidate(candidate, sdpMid, sdpMLineIndex);
