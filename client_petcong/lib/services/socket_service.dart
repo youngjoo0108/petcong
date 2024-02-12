@@ -17,13 +17,14 @@ class SocketService extends GetxController {
   // Socket 변수
   static StompClient? client;
   RxList<String> msgArr = <String>[].obs;
-  String? uid;
+  static late final String?
+      uid; // initPrefs()에서 late init 된 후, 바뀌지 않을 값 / static 함수에서 사용함.
   String? idToken;
   VoidCallback? onInitComplete;
   // RTC 변수
   // late MainVideoCall webrtc;
   RTCPeerConnection? pc;
-  late String targetUid;
+  static late String targetUid; // matched 메시지 받았을 때 초기화됨. static 함수에서 사용함.
   String subsPrefix = "/queue/";
   RTCVideoRenderer? _localRenderer;
   RTCVideoRenderer? _remoteRenderer;
@@ -134,6 +135,12 @@ class SocketService extends GetxController {
                     case 'block':
                       print("sendOffer blocked!");
                       callPressed = true;
+                      break;
+                    case 'idx':
+                      int newIdx = int.parse(response['value']);
+                      MainVideoCallWidget.quizIdx = newIdx;
+                      print(
+                          "===============index changed by partner / index = ${MainVideoCallWidget.quizIdx}==");
                       break;
                   }
                 }
@@ -380,14 +387,7 @@ class SocketService extends GetxController {
   //   );
   // }
 
-// --- webrtc - 메소드들 ---
-  Future sendOffer(String targetUid) async {
-    if (callPressed) {
-      // 상대방이 call버튼을 먼저 눌러서 gotOffer를 받았다면, 중복 send 방지
-      return;
-    }
-    callPressed = true;
-    // block target's sendOffer
+  static void sendMessage(String type, String value) {
     client!.send(
         destination: '/queue/$targetUid',
         headers: {
@@ -395,7 +395,18 @@ class SocketService extends GetxController {
           "uid": uid.toString(),
           "info": "connect"
         },
-        body: jsonEncode({"type": "block", "value": "."}));
+        body: jsonEncode({"type": type, "value": value}));
+  }
+
+// --- webrtc - 메소드들 ---
+  Future sendOffer(String targetUidLocal) async {
+    if (callPressed) {
+      // 상대방이 call버튼을 먼저 눌러서 gotOffer를 받았다면, 중복 send 방지
+      return;
+    }
+    callPressed = true;
+    // block target's sendOffer
+    sendMessage("block", ".");
     print("=======================sendOffer start");
     await joinRoom();
     await Future.delayed(const Duration(milliseconds: 500));
@@ -404,22 +415,14 @@ class SocketService extends GetxController {
         "========================in sendOffer, client.hashCode() = ${client.hashCode}");
 
     // await joinRoom(); // 통화 거는쪽은 makeCall()에서
-    this.targetUid = targetUid;
+    targetUid = targetUidLocal;
 
     debugPrint('send offer');
     await Future.delayed(const Duration(milliseconds: 1000));
 
     var offer = await pc!.createOffer();
     pc!.setLocalDescription(offer);
-    var map = {"type": "offer", "value": offer.toMap()};
-    client!.send(
-        destination: '/queue/$targetUid',
-        headers: {
-          "content-type": "application/json",
-          "uid": uid.toString(),
-          "info": "connect"
-        },
-        body: jsonEncode(map));
+    sendMessage("offer", offer.toMap());
     print("=======================sendOffer end");
   }
 
@@ -446,17 +449,8 @@ class SocketService extends GetxController {
     debugPrint('send answer');
     var answer = await pc!.createAnswer({});
     pc!.setLocalDescription(answer);
-    var map = {"type": "answer", "value": answer.toMap()};
     debugPrint("before sendAnswer");
-    debugPrint("map = ${jsonEncode(map)}");
-    client!.send(
-        destination: subsPrefix + targetUid.toString(),
-        headers: {
-          "content-type": "application/json",
-          "uid": uid.toString(),
-          "info": "connect"
-        },
-        body: jsonEncode(map));
+    sendMessage("answer", answer.toMap());
     print("=======================sendAnswer end");
   }
 
@@ -479,15 +473,7 @@ class SocketService extends GetxController {
     // await joinRoom();
     debugPrint("send ice");
     update();
-    var map = {"type": "ice", "value": ice.toMap()};
-    client!.send(
-        destination: subsPrefix + targetUid.toString(),
-        headers: {
-          "content-type": "application/json",
-          "uid": uid.toString(),
-          "info": "connect"
-        },
-        body: jsonEncode(map));
+    sendMessage("ice", ice.toMap());
     print("=======================sendIce end");
   }
 
