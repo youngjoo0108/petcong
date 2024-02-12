@@ -76,12 +76,7 @@ class PhotoPageState extends State<PhotoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Get.back(result: _progress);
-        return false;
-      },
-      child: Scaffold(
+    return  Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: LinearProgressIndicator(
@@ -185,7 +180,7 @@ class PhotoPageState extends State<PhotoPage> {
                         ? () async {
                             try {
                               await user_service.postPicture(_photoPaths);
-                              print('postPicture 성공!'); // 성공했을 때 디버깅 메시지 출력
+                              debugPrint('postPicture 성공!'); // 성공했을 때 디버깅 메시지 출력
                               Get.to(
                                 VideoPage(
                                   progress: _progress + 1 / 12,
@@ -194,7 +189,7 @@ class PhotoPageState extends State<PhotoPage> {
                               );
                             } catch (e) {
                               // postPicture 함수가 실패했을 때의 코드
-                              print('Error: $e');
+                              debugPrint('Error: $e');
                             }
                           }
                         : null,
@@ -206,7 +201,6 @@ class PhotoPageState extends State<PhotoPage> {
             ),
           ],
         ),
-      ),
     );
   }
 }
