@@ -17,7 +17,7 @@ class SocketService extends GetxController {
   // Socket 변수
   static StompClient? client;
   RxList<String> msgArr = <String>[].obs;
-  static late final String?
+  static String?
       uid; // initPrefs()에서 late init 된 후, 바뀌지 않을 값 / static 함수에서 사용함.
   String? idToken;
   VoidCallback? onInitComplete;
