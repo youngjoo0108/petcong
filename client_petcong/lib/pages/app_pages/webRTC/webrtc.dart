@@ -31,8 +31,8 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
 
   @override
   void dispose() {
-    widget.localRenderer.dispose();
-    widget.remoteRenderer.dispose();
+    widget.localRenderer.srcObject = null;
+    widget.remoteRenderer.srcObject = null;
     print("===============in webrtc page, renderers disposed");
 
     super.dispose();
