@@ -25,8 +25,8 @@ class SocketService extends GetxController {
   RTCPeerConnection? pc;
   late String targetUid;
   String subsPrefix = "/queue/";
-  final _localRenderer = RTCVideoRenderer();
-  final _remoteRenderer = RTCVideoRenderer();
+  RTCVideoRenderer? _localRenderer;
+  RTCVideoRenderer? _remoteRenderer;
   MediaStream? _localStream;
   static bool callPressed = false;
 
@@ -123,8 +123,8 @@ class SocketService extends GetxController {
                     case 'on':
                       Get.to(
                         MainVideoCallWidget(
-                          localRenderer: _localRenderer,
-                          remoteRenderer: _remoteRenderer,
+                          localRenderer: _localRenderer!,
+                          remoteRenderer: _remoteRenderer!,
                         ),
                       );
                       break;
@@ -184,8 +184,8 @@ class SocketService extends GetxController {
       //     body: jsonEncode({"type": "on", "value": "."}));
       Get.to(
         MainVideoCallWidget(
-          localRenderer: _localRenderer,
-          remoteRenderer: _remoteRenderer,
+          localRenderer: _localRenderer!,
+          remoteRenderer: _remoteRenderer!,
         ),
       );
     } else {
@@ -271,19 +271,21 @@ class SocketService extends GetxController {
       };
 
       // remoteRenderer 세팅
-      await _remoteRenderer.initialize();
+      _remoteRenderer = RTCVideoRenderer();
+      await _remoteRenderer!.initialize();
 
       pc!.onAddStream = (stream) {
         print(
             "===========================================================\npc.onAddStream 실행됨.\n============================================");
         print("stream = $stream //");
-        _remoteRenderer.srcObject = stream;
-        print("_remoteRenderer.srcObject = ${_remoteRenderer.srcObject} // ");
+        _remoteRenderer!.srcObject = stream;
+        print("_remoteRenderer.srcObject = ${_remoteRenderer!.srcObject} // ");
         print("===============onAddStream end");
       };
 
       // localRenderer 세팅
-      await _localRenderer.initialize();
+      _localRenderer = RTCVideoRenderer();
+      await _localRenderer!.initialize();
       final mediaConstraints = {
         'audio': true,
         'video': {'facingMode': 'user'}
@@ -292,7 +294,7 @@ class SocketService extends GetxController {
       _localStream = await Helper.openCamera(mediaConstraints);
 
       // (화면에 띄울) localRenderer의 데이터 소스를 내 localStream으로 설정
-      _localRenderer.srcObject = _localStream;
+      _localRenderer!.srcObject = _localStream;
 
       // 스트림의 트랙(카메라 정보가 들어오는 연결)을 peerConnection(정보를 전송할 connection)에 추가
       _localStream!.getTracks().forEach((track) {
@@ -321,8 +323,8 @@ class SocketService extends GetxController {
       // await _localStream?.dispose();
       await pc?.close();
       pc = null;
-      _localRenderer.srcObject = null;
-      _remoteRenderer.srcObject = null;
+      _localRenderer!.dispose();
+      _remoteRenderer!.dispose();
     } catch (error) {
       debugPrint(error.toString());
     }
@@ -449,6 +451,6 @@ class SocketService extends GetxController {
     print("=======================gotIce end");
   }
 
-  RTCVideoRenderer get localRenderer => _localRenderer;
-  RTCVideoRenderer get remoteRenderer => _remoteRenderer;
+  RTCVideoRenderer get localRenderer => _localRenderer!;
+  RTCVideoRenderer get remoteRenderer => _remoteRenderer!;
 }
