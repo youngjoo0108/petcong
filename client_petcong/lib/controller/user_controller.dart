@@ -11,6 +11,7 @@ import 'package:petcong/pages/signin_pages/sign_in_page.dart';
 import 'package:petcong/services/socket_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:petcong/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserController extends GetxController {
@@ -99,6 +100,13 @@ class UserController extends GetxController {
   }
 
   static Future<void> signOut(String uid) async {
+    await SocketService().disposeSocket(uid);
+    await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
+  }
+
+  static Future<void> withdraw(String uid) async {
+    withdrawUser();
     await SocketService().disposeSocket(uid);
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();

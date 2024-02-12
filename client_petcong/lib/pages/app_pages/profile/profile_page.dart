@@ -87,7 +87,7 @@ class MainProfilePage extends StatelessWidget {
                           shape: OvalBorder(),
                           shadows: [
                             BoxShadow(
-                              color: Colors.grey,
+                              color: Color.fromARGB(255, 171, 158, 158),
                               blurRadius: 1,
                               offset: Offset(0, 1),
                               spreadRadius: 1,
