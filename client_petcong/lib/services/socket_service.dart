@@ -29,6 +29,7 @@ class SocketService extends GetxController {
   RTCVideoRenderer? _remoteRenderer;
   MediaStream? _localStream;
   static bool callPressed = false;
+  List<RTCIceCandidate>? iceCandidates;
 
   Future<void> initPrefs() async {
     try {
@@ -107,12 +108,19 @@ class SocketService extends GetxController {
                         print('Key: $key, Value: $value');
                       });
                       await gotOffer(value['sdp'], value['type']);
-                      sendAnswer();
+                      await sendAnswer();
+                      await Future.delayed(const Duration(milliseconds: 300));
+                      iceCandidates!.forEach((ice) {
+                        sendIce(ice);
+                      });
                       break;
                     case 'answer':
                       print(
                           "gotAnswer============client ====================================${client.hashCode}");
-                      gotAnswer(value['sdp'], value['type']);
+                      await gotAnswer(value['sdp'], value['type']);
+                      iceCandidates!.forEach((ice) {
+                        sendIce(ice);
+                      });
                       break;
                     case 'ice':
                       print(
@@ -262,6 +270,7 @@ class SocketService extends GetxController {
   void sendAllIces() {}
 
   Future joinRoom() async {
+    iceCandidates = [];
     print("=======================joinRoom start");
     try {
       // // peerConnection 생성
@@ -288,7 +297,7 @@ class SocketService extends GetxController {
 
       print('11111111111111[$pc]11111111111111111111');
       pc!.onIceCandidate = (ice) {
-        sendIce(ice);
+        iceCandidates!.add(ice);
       };
 
       // remoteRenderer 세팅
