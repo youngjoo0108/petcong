@@ -57,11 +57,6 @@ class SocketService extends GetxController {
   }
 
   Future<StompClient> initSocket() async {
-    // if (client != null) {
-    //   client!.deactivate();
-    //   client = null; //
-    //   print("client disconnected");
-    // }
     initPrefs();
     if (client == null) {
       client = StompClient(
@@ -122,7 +117,8 @@ class SocketService extends GetxController {
         ),
       );
       await activateSocket(client!);
-      await Future.delayed(const Duration(milliseconds: 250));
+      print('activating socket');
+      await Future.delayed(const Duration(milliseconds: 300));
     }
     print(
         "========================in socketService.initSocket, client.hashCode() = ${client.hashCode}");
@@ -155,6 +151,7 @@ class SocketService extends GetxController {
       }
       // dispose();
       client!.deactivate();
+      client = null;
       debugPrint('연결끔');
       debugPrint('After deactivating: Is client active? ${client?.isActive}');
     } catch (e) {
@@ -172,6 +169,7 @@ class SocketService extends GetxController {
       print('client not activate!!!!!!!!!!!!!!!!!1');
       await activateSocket(client!); // client가 활성화되지 않은 경우 활성화합니다.
     }
+
     await _localRenderer.initialize();
     await _remoteRenderer.initialize();
 
@@ -179,9 +177,11 @@ class SocketService extends GetxController {
     await joinRoom();
     print(
         'after joinroom client? ${client.hashCode} !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1');
-    await Future.delayed(const Duration(seconds: 3));
+    sendOffer(client!, targetUid);
+    await Future.delayed(const Duration(seconds: 2));
     print(_remoteRenderer.srcObject);
-    print('is there remoterenderer? ${_remoteRenderer.toString()}');
+    print('is there remoterenderer? ${_remoteRenderer.srcObject}');
+
     Get.to(MainVideoCallWidget(
       localRenderer: _localRenderer,
       remoteRenderer: _remoteRenderer,
@@ -252,13 +252,13 @@ class SocketService extends GetxController {
     //     body: jsonEncode({"type": "joined", "value": ""}));
   }
 
-  RTCVideoRenderer getLocalRenderer() {
-    return _localRenderer;
-  }
+  // RTCVideoRenderer getLocalRenderer() {
+  //   return _localRenderer;
+  // }
 
-  RTCVideoRenderer getRemoteRenderer() {
-    return _remoteRenderer;
-  }
+  // RTCVideoRenderer getRemoteRenderer() {
+  //   return _remoteRenderer;
+  // }
 
   Future<void> startCamera() async {
     print("here!!!!!!!!!!1localRemderer $_localRenderer!!!!!!!!!!!!!!!!!!!!!1");
@@ -278,7 +278,7 @@ class SocketService extends GetxController {
     this.targetUid = targetUid;
 
     debugPrint('send offer');
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
 
     var offer = await pc!.createOffer();
     pc!.setLocalDescription(offer);
@@ -294,10 +294,10 @@ class SocketService extends GetxController {
   }
 
   Future gotOffer(String sdp, String type) async {
-    update();
     RTCSessionDescription offer = RTCSessionDescription(sdp, type);
     debugPrint('got offer');
     pc!.setRemoteDescription(offer);
+    update();
   }
 
   Future sendAnswer(StompClient client) async {
@@ -324,8 +324,8 @@ class SocketService extends GetxController {
     // await joinRoom();
     RTCSessionDescription answer = RTCSessionDescription(sdp, type);
     debugPrint('got answer');
-    update();
     pc!.setRemoteDescription(answer);
+    update();
   }
 
   Future sendIce(RTCIceCandidate ice, StompClient client) async {
@@ -334,7 +334,6 @@ class SocketService extends GetxController {
         "========================in sendIce, client2.hashCode() = ${client.hashCode}");
     // await joinRoom();
     debugPrint("send ice");
-    update();
     var map = {"type": "ice", "value": ice.toMap()};
     client.send(
         destination: subsPrefix + targetUid.toString(),
@@ -344,6 +343,7 @@ class SocketService extends GetxController {
           "info": "connect"
         },
         body: jsonEncode(map));
+    update();
   }
 
   Future gotIce(String candidate, String sdpMid, int sdpMLineIndex) async {
