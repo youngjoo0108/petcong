@@ -86,9 +86,9 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
       // 통화 종료 버튼
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // widget.localRenderer.srcObject!.getTracks().forEach((track) {
-          //   track.stop();
-          // });
+          widget.localRenderer.srcObject!.getTracks().forEach((track) {
+            track.stop();
+          });
           // disconnectCall 로직
           await widget.localRenderer.srcObject!.dispose();
           await widget.pc!.close();
