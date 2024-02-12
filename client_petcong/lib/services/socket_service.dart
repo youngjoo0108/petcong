@@ -351,13 +351,14 @@ class SocketService extends GetxController {
     //     body: jsonEncode({"type": "joined", "value": ""}));
   }
 
-  void disconnectCall() async {
+  Future<void> disconnectCall() async {
     try {
-      // await _localStream?.dispose();
+      await _localStream?.dispose();
       await pc?.close();
       pc = null;
       _localRenderer!.dispose();
       _remoteRenderer!.dispose();
+      disposeSocket(uid);
     } catch (error) {
       debugPrint(error.toString());
     }

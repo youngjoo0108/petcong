@@ -85,7 +85,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           widget.localRenderer.srcObject!.getTracks().forEach((track) {
             track.stop();
           });
-          SocketService().disconnectCall;
+          await SocketService().disconnectCall();
           SocketService().setCallPressed(false); // flag false로
           await Future.delayed(const Duration(seconds: 2));
           Get.offAll(const HomePage());
