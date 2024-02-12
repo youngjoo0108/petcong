@@ -272,7 +272,11 @@ class SocketService extends GetxController {
 
       // remoteRenderer 세팅
       _remoteRenderer = RTCVideoRenderer();
-      await _remoteRenderer!.initialize();
+      try {
+        await _remoteRenderer!.initialize();
+      } catch (exception) {
+        print("exception = ${exception}");
+      }
 
       pc!.onAddStream = (stream) {
         print(
