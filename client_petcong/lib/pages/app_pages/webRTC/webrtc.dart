@@ -23,7 +23,6 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   @override
   void initState() {
     super.initState();
-
     // Initialize RTCVideoRenderer
     widget.localRenderer.initialize();
     widget.remoteRenderer.initialize();
@@ -86,6 +85,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           widget.localRenderer.srcObject!.getTracks().forEach((track) {
             track.stop();
           });
+          SocketService().disconnectCall;
           SocketService().setCallPressed(false); // flag false로
           await Future.delayed(const Duration(seconds: 2));
           Get.offAll(const HomePage());

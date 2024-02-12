@@ -276,7 +276,7 @@ class SocketService extends GetxController {
       pc!.onAddStream = (stream) {
         print(
             "===========================================================\npc.onAddStream 실행됨.\n============================================");
-        print("stream = ${stream} //");
+        print("stream = $stream //");
         _remoteRenderer.srcObject = stream;
         print("_remoteRenderer.srcObject = ${_remoteRenderer.srcObject} // ");
         print("===============onAddStream end");
@@ -316,6 +316,18 @@ class SocketService extends GetxController {
     //     body: jsonEncode({"type": "joined", "value": ""}));
   }
 
+  void disconnectCall() async {
+    try {
+      // await _localStream?.dispose();
+      await pc?.close();
+      pc = null;
+      _localRenderer.srcObject = null;
+      _remoteRenderer.srcObject = null;
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+  }
+
   // Future<void> startCamera() async {
   //   // 마이크 카메라 끄
   //   Get.to(
@@ -329,7 +341,7 @@ class SocketService extends GetxController {
 // --- webrtc - 메소드들 ---
   Future sendOffer(String targetUid) async {
     print("=======================sendOffer start");
-    if (callPressed!) {
+    if (callPressed) {
       // 상대방이 call버튼을 먼저 눌러서 gotOffer를 받았다면, 중복 send 방지
       return;
     }
