@@ -76,7 +76,7 @@ class MainProfilePage extends StatelessWidget {
                     right: 5,
                     child: GestureDetector(
                       onTap: () {
-                        Get.to(const NicknamePage(progress: 1 / 12));
+                        Get.to(const NicknamePage(progress: 0));
                       },
                       child: Container(
                         width: 45,
@@ -419,7 +419,8 @@ class MainProfilePage extends StatelessWidget {
                           builder: (controller) {
                             // TextEditingController를 다이얼로그 밖에서 선언
                             final textEditingController = TextEditingController(
-                                text: controller.profile.value.petProfile?.petInfo?.description);
+                                text: controller.profile.value.petProfile
+                                    ?.petInfo?.description);
 
                             return Center(
                               child: GestureDetector(

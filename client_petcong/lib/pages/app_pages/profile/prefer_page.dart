@@ -47,7 +47,7 @@ class PreferPageState extends State<PreferPage> {
                 alignment: Alignment.centerLeft,
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back_ios, size: 32),
-                  onPressed: () => Get.off(const GenderPage(progress: 3 / 12)),
+                  onPressed: () => Get.off(const GenderPage(progress: 0.2)),
                 ),
               ),
               const SizedBox(height: 5.0),
@@ -62,7 +62,7 @@ class PreferPageState extends State<PreferPage> {
                   height: 50.0,
                   child: ContinueButton(
                     isFilled: _prefer == 'FEMALE',
-                    buttonText: '여자예요!',
+                    buttonText: '여자!',
                     onPressed: () {
                       setState(() {
                         _prefer = 'FEMALE';
@@ -79,7 +79,7 @@ class PreferPageState extends State<PreferPage> {
                   height: 50.0,
                   child: ContinueButton(
                     isFilled: _prefer == 'MALE',
-                    buttonText: '남자예요!',
+                    buttonText: '남자!',
                     onPressed: () {
                       setState(() {
                         _prefer = 'MALE';
@@ -115,7 +115,7 @@ class PreferPageState extends State<PreferPage> {
                         SignupController.to.addPreference(_prefer);
                         Get.to(
                             PetNamePage(
-                              progress: widget.progress + 1 / 12,
+                              progress: widget.progress + 0.1,
                             ),
                             transition: Transition.noTransition);
                       }
