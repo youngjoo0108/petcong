@@ -124,6 +124,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
               await Future.delayed(const Duration(seconds: 2));
               Get.offAll(const HomePage());
             },
+            heroTag: 'stop_call_button',
             shape: const CircleBorder(eccentricity: 0),
             backgroundColor: MyColor.petCongColor4,
             child: const Icon(Icons.call_end),
@@ -132,6 +133,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
             onPressed: onIdxbtnPressed,
             shape: const CircleBorder(eccentricity: 0),
             backgroundColor: Colors.blue,
+            heroTag: 'next_button',
             child: const Icon(Icons.call_end),
           ),
         ],
