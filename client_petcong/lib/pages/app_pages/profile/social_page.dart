@@ -142,6 +142,7 @@ class SocialPageState extends State<SocialPage> {
                     ? () {
                         SignupController.to.addKakaoId(_controller1.text);
                         SignupController.to.addInstagramId(_controller2.text);
+                        SignupController.to.signUpUser(context);
                         Get.to(
                             PhotoPage(
                               progress: widget.progress + 0.1,
