@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
 import 'package:petcong/controller/profile_controller.dart';
-import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/profile_page_model.dart';
 import 'package:petcong/pages/app_pages/profile/nickname_page.dart';
 import 'package:petcong/services/user_service.dart';

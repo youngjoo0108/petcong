@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:petcong/models/choice_res.dart';
-import 'package:petcong/pages/app_pages/matching/call_waiting_page.dart';
 import 'package:petcong/services/socket_service.dart';
 import 'package:petcong/services/matching_service.dart';
 import 'package:petcong/widgets/card_overlay.dart';
@@ -146,6 +144,12 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   void _onSwipe(int index, SwipeDirection direction) {
     if (kDebugMode) {
       print('$index, $direction');
+    }
+    if (direction == SwipeDirection.right) {
+      // onLike(targetUid);
+      debugPrint("onDislike {$index, $direction}");
+    } else if (direction == SwipeDirection.left) {
+      debugPrint("onDislike {$index, $direction}");
     }
   }
 
