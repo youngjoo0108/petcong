@@ -106,7 +106,7 @@ class NicknamePageState extends State<NicknamePage> {
                       SignupController.to.addNickName(_nickname!);
                       Get.to(
                           BirthdayPage(
-                            progress: widget.progress + 1 / 12,
+                            progress: widget.progress + 0.1,
                           ),
                           transition: Transition.noTransition);
                     }

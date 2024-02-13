@@ -66,7 +66,7 @@ class IntroducePageState extends State<IntroducePage> {
                         ),
                         onPressed: () {
                           Get.to(const SocialPage(
-                            progress: 9 / 12,
+                            progress: 0.8,
                           ));
                         },
                       ),
@@ -114,7 +114,7 @@ class IntroducePageState extends State<IntroducePage> {
                       ? () {
                           Get.to(
                               SocialPage(
-                                progress: widget.progress + 1 / 12,
+                                progress: widget.progress + 0.1,
                               ),
                               transition: Transition.noTransition);
                         }

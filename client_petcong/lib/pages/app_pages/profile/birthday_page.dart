@@ -113,7 +113,7 @@ class BirthdayPageState extends State<BirthdayPage> {
 
   @override
   Widget build(BuildContext context) {
-    double progress = 2 / 12;
+    double progress = 0.1;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -132,7 +132,7 @@ class BirthdayPageState extends State<BirthdayPage> {
               alignment: Alignment.centerLeft,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: () => Get.off(const NicknamePage(progress: 1 / 12)),
+                onPressed: () => Get.off(const NicknamePage(progress: 0)),
               ),
             ),
             Padding(
@@ -182,7 +182,7 @@ class BirthdayPageState extends State<BirthdayPage> {
                                     .addBirthdayAndAge(_controller.text.trim());
                                 Get.to(
                                     GenderPage(
-                                      progress: widget.progress + 1 / 12,
+                                      progress: widget.progress + 0.1,
                                     ),
                                     transition: Transition.noTransition);
                               }
