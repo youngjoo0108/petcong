@@ -66,6 +66,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> runtimeExceptionHandler(RuntimeException e) {
+        e.printStackTrace();
         log.error(e.getMessage());
         log.error(Arrays.toString(e.getStackTrace()));
         e.printStackTrace();
