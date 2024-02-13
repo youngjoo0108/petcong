@@ -30,11 +30,11 @@ public class Matching {
     @Column(name = "matching_id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(referencedColumnName = "member_id", name = "from_member_id")
     private Member fromMember;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(referencedColumnName = "member_id", name = "to_member_id")
     private Member toMember;
 
