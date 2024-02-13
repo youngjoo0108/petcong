@@ -45,7 +45,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) {
+    public AuthenticationManager authenticationManager(AuthenticationProvider... authenticationProvider) {
        return new ProviderManager(authenticationProvider);
     }
 

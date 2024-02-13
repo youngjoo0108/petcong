@@ -62,6 +62,14 @@
           }
         },
         {
+          "client_id": "55237249346-uq6d2r4u01lsvr6riod2uk1am1v9qhfs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.petcong",
+            "certificate_hash": "c402bbe368d7fee6e0f496f52668d43dee521c60"
+          }
+        },
+        {
           "client_id": "55237249346-56ildqr6rnf4o2enllbv4fqbsl09utl1.apps.googleusercontent.com",
           "client_type": 3
         }

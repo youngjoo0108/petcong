@@ -2,30 +2,54 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:petcong/controller/user_controller.dart';
-import 'package:petcong/models/choice_res.dart';
 import 'package:petcong/models/card_profile_model.dart';
+import 'package:petcong/models/choice_res.dart';
+import 'package:get/get.dart';
 import 'package:petcong/services/user_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+// class MatchingService extends GetxController {
 const bool testing = true;
 
 User? currentUser = UserController.currentUser;
-String idTokenString = currentUser?.getIdToken().toString() ?? "";
+// String idTokenString = currentUser?.getIdToken().toString() ?? "";
+// User user = FirebaseAuth.instance.currentUser!;
+// String? idToken;
 const String serverUrl = 'https://i10a603.p.ssafy.io';
+// Map<String, String>? reqHeaders;
+
+Future<void> initPrefs() async {
+  print("initPrefs 실행됨");
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    idTokenString = prefs.getString('idToken')!;
+  } catch (e) {
+    debugPrint('Error retrieving values from SharedPreferences: $e');
+  }
+}
 
 Future<dynamic> postMatching(String targetUid) async {
-  Map<String, String> reqHeaders = await getIdToken();
+  print("postMatching 실행됨");
+  // await initPrefs();
+  // Map<String, String> reqHeaders = await getIdToken();
+  // make headers
+  Map<String, String> reqHeaders = {"Content-Type": "application/json"};
+
+  User user = UserController.currentUser!;
+  String? idToken;
+  await user.getIdToken().then((value) => idToken = value!);
+  reqHeaders['Petcong-id-token'] = idToken!;
+
   String endpoint = '$serverUrl/matchings/choice';
   final response = await http.post(Uri.parse(endpoint),
-      headers: reqHeaders, body: jsonEncode({'partnerUserUid': targetUid}));
-  print("body === " + jsonDecode(response.body));
-
+      headers: reqHeaders, body: jsonEncode({'partnerUid': targetUid}));
   if (response.statusCode == 200) {
-    print('1111111');
-    return ChoiceRes.fromJson(jsonDecode(response.body));
+    String body = response.body;
+    return ChoiceRes.fromJson(jsonDecode(body));
   } else if (response.statusCode == 204) {
-    print('222222');
     return;
   } else {
     if (kDebugMode) {
@@ -35,6 +59,8 @@ Future<dynamic> postMatching(String targetUid) async {
       throw Exception("invalid matching request");
     }
   }
+
+  // Map<String, String> reqHeaders = checkTesting();
 }
 
 // GET /matchings/profile
