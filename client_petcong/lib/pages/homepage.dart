@@ -53,7 +53,9 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> activateClient() async {
     await socketService.init();
-    _client = await socketService.initSocket();
+    print("------------------socketService.init() complete");
+    _client = socketService.getClient();
+
     print(
         "========================in homepage.activateClient, client.hashCode() = ${_client.hashCode}");
     // _client?.activate();

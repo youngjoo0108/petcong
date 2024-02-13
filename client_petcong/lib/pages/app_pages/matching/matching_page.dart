@@ -57,12 +57,9 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   @override
   void initState() {
     super.initState();
-    print(
-        "===================MainMatchingPage.socketService(type: SocketService?).hashCode = ${widget.socketService.hashCode}======================");
+
     socketService = widget
         .socketService!; // 얘를 생성하는 쪽(HomePage)의 socketService를 전달받아야 함. 전달이 제대로 안 됐다면 에러 나게 설정
-    print(
-        "homePage.socketService -> _MainMatchingPageState로 전달됨===================_MainMatchingPageState.socketService.hashCode = ${socketService.hashCode}======================");
     _controller = SwipableStackController()..addListener(_listenController);
     initClient();
     initPrefs();
@@ -71,10 +68,16 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   void initClient() async {
     client = await socketService
         .initSocket(); // socketService의 client를 static으로 설정했으므로, socketService 인스턴스가 여러개라도 얘는 기존에 있던 client를 받는다.
-    print(
-        "========================in matchingPage.initClient, client.hashCode() = ${client.hashCode}");
+  }
 
-    print(client);
+  Future<void> initPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      uid = prefs.getString('uid');
+      print(uid);
+    } catch (e) {
+      debugPrint('Error retrieving values from SharedPreferences: $e');
+    }
   }
 
   @override
@@ -142,7 +145,6 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           // Get.to(const CallWaiting());
           // SocketService().joinRoom();
           if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
-            // 내 uid가 내꺼면, 타겟uid 형꺼
             onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2'); // 패드
           } else {
             onLike('4GtzqrsSDBVSC1FkOWXXJ2i7CfA3'); // 영주폰
@@ -177,8 +179,6 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       return;
     }
     // when matched
-    print(client);
     await socketService.makeCall(choiceRes.targetUid!); // callWaitingPage로 이동만.
-    // socketService.sendOffer(choiceRes.targetUid!); // callWaitingPage의 call버튼 눌렀을 때부터 시그널링 시작돼야함.
   }
 }

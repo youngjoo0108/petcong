@@ -5,6 +5,8 @@ import 'package:petcong/constants/style.dart';
 import 'package:petcong/pages/homepage.dart';
 import 'package:petcong/services/socket_service.dart';
 import 'package:stomp_dart_client/stomp.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class MainVideoCallWidget extends StatefulWidget {
   final RTCVideoRenderer localRenderer;
@@ -28,22 +30,16 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   late double videoHeight = MediaQuery.of(context).size.height;
   // icebreakings
   List<String> quizs = ["sampleQuiz1", "sampleQuiz2", "sampleQuiz3"];
+
   @override
   void initState() {
     super.initState();
     MainVideoCallWidget.quizIdx = 0;
-    // Initialize RTCVideoRenderer
-    // widget.localRenderer.initialize();
-    // widget.remoteRenderer.initialize();
-    print("===============in webrtc page, renderers initialized");
   }
+
 
   @override
   void dispose() {
-    // widget.localRenderer.dispose();
-    // widget.remoteRenderer.dispose();
-    print("===============in webrtc page, renderers disposed");
-
     super.dispose();
   }
 

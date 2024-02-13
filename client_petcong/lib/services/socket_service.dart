@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:http/http.dart';
 import 'package:petcong/pages/app_pages/matching/call_waiting_page.dart';
 import 'package:petcong/pages/app_pages/matching/matching_page.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
@@ -32,11 +34,14 @@ class SocketService extends GetxController {
   static bool callPressed = false;
   List<RTCIceCandidate>? iceCandidates;
 
+
   Future<void> initPrefs() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       uid = prefs.getString('uid');
       idToken = prefs.getString('idToken');
+      isTokenReset = FirebaseAuth.instance.idTokenChanges();
+      print(isTokenReset);
     } catch (e) {
       debugPrint('Error retrieving values from SharedPreferences: $e');
     }
@@ -57,20 +62,17 @@ class SocketService extends GetxController {
         onInitComplete!();
       }
       debugPrint('!!!!!!!!!!!!!!!!!!!!!I get IdToken$uid!!!!!!!!!!!!!!');
+      debugPrint('token changed? $isTokenReset');
     } catch (e) {
       debugPrint('Error during initialization: $e');
     }
   }
 
   Future<StompClient> initSocket() async {
-    // if (client != null) {
-    //   client!.deactivate();
-    //   client = null; //
-    //   print("client disconnected");
-    // }
     if (client != null) {
       return client!;
     }
+
     initPrefs();
     if (client == null) {
       client = StompClient(
@@ -155,7 +157,8 @@ class SocketService extends GetxController {
         ),
       );
       await activateSocket(client!);
-      await Future.delayed(const Duration(milliseconds: 250));
+      print('activating socket');
+      await Future.delayed(const Duration(milliseconds: 300));
     }
     print(
         "========================in socketService.initSocket, client.hashCode() = ${client.hashCode}");
@@ -205,21 +208,9 @@ class SocketService extends GetxController {
   Future<void> onCallPressed(call) async {
     print("=======================onCallPressed start");
     if (call == 'on') {
-      // await _localRenderer.initialize();
-      // await _remoteRenderer.initialize();
-      // await joinRoom();
       await sendOffer(targetUid);
       await Future.delayed(const Duration(seconds: 5));
-      // gotAnswer랑 gotIce 중 뭐가 마지막인지 모르니, call버튼을 안 누른 상대쪽도 통화 화면으로 잘 넘어가도록 메시지 전송
-      // //
-      // client!.send(
-      //     destination: subsPrefix + targetUid.toString(),
-      //     headers: {
-      //       "content-type": "application/json",
-      //       "uid": uid.toString(),
-      //       "info": "connect"
-      //     },
-      //     body: jsonEncode({"type": "on", "value": "."}));
+ 
       Get.to(
         MainVideoCallWidget(
           localRenderer: _localRenderer!,
@@ -227,27 +218,10 @@ class SocketService extends GetxController {
           pc: pc!,
         ),
       );
-    } else {
-      // 키
-      // // if (_localStream != null) {
-      // //   print('here!!!!!!!!!!!!!!!!');
-      // //   _localStream!.getTracks().forEach((track) {
-      // //     track.stop();
-      // //   });
-      // // }
-
-      // print(
-      //     '??????????????????????????$_localStream, ${localRenderer.srcObject}');
-      // print(_localStream?.getAudioTracks());
-      // print(_localStream?.getVideoTracks());
-      // await _localRenderer.dispose();
-      // await _remoteRenderer.dispose();
-      // Get.to(const HomePage());
     }
     print("=======================onCallPressed end");
   }
 
-  // Future<void> offCallPressed() async {}
 
   Future<void> disposeSocket(myuid) async {
     // await initSocket();
@@ -270,6 +244,7 @@ class SocketService extends GetxController {
       }
       // dispose();
       client!.deactivate();
+      client = null;
       debugPrint('연결끔');
       debugPrint('After deactivating: Is client active? ${client?.isActive}');
     } catch (e) {
@@ -277,37 +252,10 @@ class SocketService extends GetxController {
     }
   }
 
-  // webRTC
-
-  void sendAllIces() {}
-
   Future joinRoom() async {
     iceCandidates = [];
     print("=======================joinRoom start");
     try {
-      // // peerConnection 생성
-      // final config = {
-      //   'iceServers': [
-      //     {"url": "stun:stun.l.google.com:19302"},
-      //     {
-      //       "url": "turn:i10a603.p.ssafy.io:3478",
-      //       "username": "ehigh",
-      //       "credential": "1234",
-      //     },
-      //   ],
-      // };
-
-      // final sdpConstraints = {
-      //   'mandatory': {
-      //     'OfferToReceiveAudio': true,
-      //     'OfferToReceiveVideo': true,
-      //   },
-      //   'optional': []
-      // };
-
-      // pc = await createPeerConnection(config, sdpConstraints);
-
-      print('11111111111111[$pc]11111111111111111111');
       pc!.onIceCandidate = (ice) {
         iceCandidates!.add(ice);
       };
@@ -321,12 +269,7 @@ class SocketService extends GetxController {
       }
 
       pc!.onAddStream = (stream) {
-        print(
-            "===========================================================\npc.onAddStream 실행됨.\n============================================");
-        print("stream = $stream //");
         _remoteRenderer!.srcObject = stream;
-        print("_remoteRenderer.srcObject = ${_remoteRenderer!.srcObject} // ");
-        print("===============onAddStream end");
       };
 
       // localRenderer 세팅
@@ -351,44 +294,8 @@ class SocketService extends GetxController {
     } catch (exception) {
       print(exception);
     }
-    print("end joinRoom - localRederer.hashCode = ${localRenderer.hashCode}");
-    print(
-        "end joinRoom - remoteRenderer.hashCode = ${remoteRenderer.hashCode}");
     print("=======================joinRoom end");
-
-    // client!.send(
-    //     // destination: subsPrefix + targetUid.toString(),
-    //     destination: subsPrefix + targetUid.toString(),
-    //     headers: {
-    //       "content-type": "application/json",
-    //       "uid": uid!.toString(),
-    //       "info": "connect"
-    //     },
-    //     body: jsonEncode({"type": "joined", "value": ""}));
   }
-
-  // Future<void> disconnectCall() async {
-  //   try {
-  //     await _localStream?.dispose();
-  //     await pc?.close();
-  //     pc = null;
-  //     _localRenderer!.dispose();
-  //     _remoteRenderer!.dispose();
-  //     disposeSocket(uid);
-  //   } catch (error) {
-  //     debugPrint(error.toString());
-  //   }
-  // }
-
-  // Future<void> startCamera() async {
-  //   // 마이크 카메라 끄
-  //   Get.to(
-  //     MainVideoCallWidget(
-  //       localRenderer: _localRenderer,
-  //       remoteRenderer: _remoteRenderer,
-  //     ),
-  //   );
-  // }
 
   static void sendMessage(String type, String value) {
     client!.send(
@@ -410,84 +317,49 @@ class SocketService extends GetxController {
     callPressed = true;
     // block target's sendOffer
     sendMessage("block", ".");
-    print("=======================sendOffer start");
     await joinRoom();
     await Future.delayed(const Duration(milliseconds: 500));
-    // await initSocket();
-    print(
-        "========================in sendOffer, client.hashCode() = ${client.hashCode}");
 
-    // await joinRoom(); // 통화 거는쪽은 makeCall()에서
     targetUid = targetUidLocal;
 
-    debugPrint('send offer');
     await Future.delayed(const Duration(milliseconds: 1000));
 
     var offer = await pc!.createOffer();
     pc!.setLocalDescription(offer);
     sendMessage("offer", jsonEncode(offer.toMap()));
-    print("=======================sendOffer end");
   }
 
   Future gotOffer(String sdp, String type) async {
     update();
-    print("=======================gotOffer start");
     await joinRoom();
     await Future.delayed(const Duration(milliseconds: 500));
     // await joinRoom(); // 받는 쪽은 gotOffer()에서
     RTCSessionDescription offer = RTCSessionDescription(sdp, type);
-    debugPrint('got offer');
     pc!.setRemoteDescription(offer);
     callPressed = true;
-    print("=======================sendOffer end");
   }
 
   Future sendAnswer() async {
-    print("=======================sendAnswer start");
-    // client2 = await initSocket();
-    print(
-        "========================in sendAnswer, client.hashCode() = ${client.hashCode}");
-
-    // await joinRoom();
-    debugPrint('send answer');
     var answer = await pc!.createAnswer({});
     pc!.setLocalDescription(answer);
-    debugPrint("before sendAnswer");
     sendMessage("answer", jsonEncode(answer.toMap()));
-    print("=======================sendAnswer end");
   }
 
   Future gotAnswer(String sdp, String type) async {
     update();
-    print("=======================gotAnswer start");
-    // await joinRoom();
     RTCSessionDescription answer = RTCSessionDescription(sdp, type);
-    debugPrint('got answer');
     pc!.setRemoteDescription(answer);
-    print("=======================gotAnswer end");
   }
 
   Future sendIce(RTCIceCandidate ice) async {
-    print("=======================sendIce start");
-    // client2 = await initSocket();
-    print(
-        "========================in sendIce, client.hashCode() = ${client.hashCode}");
-
-    // await joinRoom();
-    debugPrint("send ice");
     update();
     sendMessage("ice", jsonEncode(ice.toMap()));
-    print("=======================sendIce end");
   }
 
   Future gotIce(String candidate, String sdpMid, int sdpMLineIndex) async {
     update();
-    print("=======================gotIce start");
-    // await joinRoom();
     RTCIceCandidate ice = RTCIceCandidate(candidate, sdpMid, sdpMLineIndex);
-    debugPrint("got ice");
     pc!.addCandidate(ice);
-    print("=======================gotIce end");
   }
 
   RTCVideoRenderer get localRenderer => _localRenderer!;

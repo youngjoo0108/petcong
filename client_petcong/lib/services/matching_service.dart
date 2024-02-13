@@ -15,15 +15,15 @@ class MatchingService extends GetxController {
 
   // User? currentUser = UserController.currentUser;
   // String idTokenString = currentUser?.getIdToken().toString() ?? "";
-  User? currentUser;
-  String? idTokenString;
+  User user = FirebaseAuth.instance.currentUser!;
+  String? idToken;
   final String serverUrl = 'http://i10a603.p.ssafy.io:8081';
   Map<String, String>? reqHeaders;
 
   @override
   void initState() {
     print("initState 실행됨");
-    currentUser = UserController.currentUser;
+    // currentUser = UserController.currentUser;
     // idTokenString = currentUser?.getIdToken().toString() ?? "";
     // reqHeaders = {'tester': 'A603'};
     initPrefs();
@@ -32,13 +32,13 @@ class MatchingService extends GetxController {
   Future<void> initPrefs() async {
     print("initPrefs 실행됨");
     try {
-      final prefs = await SharedPreferences.getInstance();
-      idTokenString = prefs.getString('idToken');
-      Future.delayed(const Duration(seconds: 2));
+      await user.getIdToken().then((result) {
+        idToken = result;
+      });
       print(
-          "idtokenString = ${idTokenString!}==============================================");
+          "idtokenString = ${idToken!}==============================================");
       reqHeaders = {
-        "Petcong-id-token": idTokenString!,
+        "Petcong-id-token": idToken!,
         "Content-Type": "application/json"
       };
     } catch (e) {
