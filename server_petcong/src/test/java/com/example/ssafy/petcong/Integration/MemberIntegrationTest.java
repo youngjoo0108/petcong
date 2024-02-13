@@ -9,7 +9,7 @@ import com.example.ssafy.petcong.member.model.dto.*;
 import com.example.ssafy.petcong.member.model.enums.Gender;
 import com.example.ssafy.petcong.member.model.enums.PetSize;
 import com.example.ssafy.petcong.member.model.enums.Preference;
-import com.example.ssafy.petcong.security.UserRole;
+import com.example.ssafy.petcong.security.role.UserRole;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

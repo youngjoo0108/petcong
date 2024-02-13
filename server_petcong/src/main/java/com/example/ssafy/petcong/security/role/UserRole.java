@@ -1,4 +1,4 @@
-package com.example.ssafy.petcong.security;
+package com.example.ssafy.petcong.security.role;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -2,9 +2,9 @@ package com.example.ssafy.petcong.member.controller;
 
 import com.example.ssafy.petcong.AWS.service.AWSService;
 import com.example.ssafy.petcong.member.service.MemberService;
-import com.example.ssafy.petcong.security.FirebaseUserDetails;
+import com.example.ssafy.petcong.security.userdetails.FirebaseUserDetails;
 import com.example.ssafy.petcong.member.model.dto.*;
-import com.example.ssafy.petcong.security.SignupUserDetails;
+import com.example.ssafy.petcong.security.userdetails.SignupUserDetails;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
