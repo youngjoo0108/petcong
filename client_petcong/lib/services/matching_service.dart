@@ -2,12 +2,10 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/card_profile_model.dart';
 import 'package:petcong/models/choice_res.dart';
-import 'package:get/get.dart';
 import 'package:petcong/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
