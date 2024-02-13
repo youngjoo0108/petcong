@@ -66,7 +66,7 @@ class SocialPageState extends State<SocialPage> {
                     IconButton(
                       icon: const Icon(Icons.arrow_back_ios, size: 32),
                       onPressed: () =>
-                          Get.off(const IntroducePage(progress: 8 / 12)),
+                          Get.off(const IntroducePage(progress: 0.7)),
                     ),
                     TextButton(
                       child: const Text(
@@ -78,7 +78,7 @@ class SocialPageState extends State<SocialPage> {
                       ),
                       onPressed: () {
                         Get.to(const PhotoPage(
-                          progress: 10 / 12,
+                          progress: 0.9,
                         ));
                       },
                     ),
@@ -144,7 +144,7 @@ class SocialPageState extends State<SocialPage> {
                         SignupController.to.addInstagramId(_controller2.text);
                         Get.to(
                             PhotoPage(
-                              progress: widget.progress + 1 / 12,
+                              progress: widget.progress + 0.1,
                             ),
                             transition: Transition.noTransition);
                       }

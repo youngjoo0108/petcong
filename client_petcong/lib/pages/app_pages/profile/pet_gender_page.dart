@@ -126,7 +126,7 @@ class PetGenderPageState extends State<PetGenderPage> {
                     ? () {
                         SignupController.to.addPetGender(_gender);
                         SignupController.to.addNeutered(_isNeutered);
-                        Get.to(() => (const IntroducePage(progress: 0.65)),
+                        Get.to(() => (const IntroducePage(progress: 0.7)),
                             transition: Transition.noTransition);
                       }
                     : null,

@@ -4,6 +4,7 @@ import com.example.ssafy.petcong.AWS.service.AWSService;
 import com.example.ssafy.petcong.member.service.MemberService;
 import com.example.ssafy.petcong.security.FirebaseUserDetails;
 import com.example.ssafy.petcong.member.model.dto.*;
+import com.example.ssafy.petcong.security.SignupUserDetails;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -43,7 +44,7 @@ public class MemberController {
     })
     @PostMapping("/signup")
     public ResponseEntity<?> signup(
-            @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
+            @AuthenticationPrincipal(expression = SignupUserDetails.UID) String uid,
             @RequestBody @Valid SignupRequestDto signupRequestDto
     ) {
         SignupResponseDto signupResponseDto = memberService.signup(uid, signupRequestDto);

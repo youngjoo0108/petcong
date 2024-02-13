@@ -13,9 +13,9 @@ const bool testing = true;
 User? currentUser = UserController.currentUser;
 String idTokenString = currentUser?.getIdToken().toString() ?? "";
 const String serverUrl = 'https://i10a603.p.ssafy.io';
-Map<String, String> reqHeaders = checkTesting();
 
 Future<dynamic> postMatching(String targetUid) async {
+  Map<String, String> reqHeaders = await getIdToken();
   String endpoint = '$serverUrl/matchings/choice';
   final response = await http.post(Uri.parse(endpoint),
       headers: reqHeaders, body: jsonEncode({'partnerUserUid': targetUid}));
@@ -39,6 +39,7 @@ Future<dynamic> postMatching(String targetUid) async {
 
 // GET /matchings/profile
 Future<CardProfileModel> getProfile() async {
+  Map<String, String> reqHeaders = await getIdToken();
   final response = await http.get(Uri.parse('$serverUrl/matchings/profile'),
       headers: reqHeaders);
 
@@ -52,6 +53,7 @@ Future<CardProfileModel> getProfile() async {
 
 // GET /matchings/matchList
 Future<List<CardProfileModel>> getMatchList() async {
+  Map<String, String> reqHeaders = await getIdToken();
   final response = await http.get(Uri.parse('$serverUrl/matchings/list'),
       headers: reqHeaders);
 
