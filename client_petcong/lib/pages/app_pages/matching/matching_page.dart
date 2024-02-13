@@ -23,7 +23,9 @@ const _humanAges = [21, 22, 23];
 const _petAges = [1, 2, 3];
 
 class MainMatchingPage extends StatefulWidget {
-  const MainMatchingPage({Key? key}) : super(key: key);
+  final SocketService?
+      socketService; // HomePage -> _MainMatchingPageState로의 전달을 위함
+  const MainMatchingPage({Key? key, this.socketService}) : super(key: key);
 
   @override
   State<MainMatchingPage> createState() => _MainMatchingPageState();
@@ -33,7 +35,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   late final SwipableStackController _controller;
 
   // late Function onCallPressed;
-  final SocketService socketService = SocketService();
+  late SocketService socketService;
   final MatchingService matchingService = MatchingService();
   late StompClient client;
   String? uid;
@@ -42,21 +44,30 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     setState(() {});
   }
 
+  Future<void> initPrefs() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      uid = prefs.getString('uid');
+      print(uid);
+    } catch (e) {
+      debugPrint('Error retrieving values from SharedPreferences: $e');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
+    socketService = widget
+        .socketService!; // 얘를 생성하는 쪽(HomePage)의 socketService를 전달받아야 함. 전달이 제대로 안 됐다면 에러 나게 설정
     _controller = SwipableStackController()..addListener(_listenController);
     initClient();
     initPrefs();
   }
 
   void initClient() async {
-    client = socketService.getClient();
-    print(
-        "========================in matchingPage.initClient, client.hashCode() = ${client.hashCode}");
-
-    print(client);
+    client = await socketService
+        .initSocket(); // socketService의 client를 static으로 설정했으므로, socketService 인스턴스가 여러개라도 얘는 기존에 있던 client를 받는다.
   }
 
   Future<void> initPrefs() async {
@@ -127,6 +138,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        // 매칭페이지의 call버튼 -> onLike() -> makeCall()을 통해 통화대기화면 이동까지만.
         heroTag: 'call',
         onPressed: () {
           // socketService.onCallPressed('on');
@@ -167,8 +179,6 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       return;
     }
     // when matched
-    print(client.hashCode);
-    socketService.makeCall(choiceRes.targetUid!);
-    // socketService.sendOffer(client, choiceRes.targetUid!);
+    await socketService.makeCall(choiceRes.targetUid!); // callWaitingPage로 이동만.
   }
 }

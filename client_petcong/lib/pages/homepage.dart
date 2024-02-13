@@ -17,23 +17,28 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
-  late SocketService socketService;
+  final SocketService socketService =
+      SocketService(); // State 객체가 하나 생성되고, socketService 인스턴스도 하나여야 하므로 final
   StompClient? _client;
   String? uid;
   OverlayEntry? _overlayEntry;
 
-  final screens = [
-    const MainChatPage(),
-    const MainMatchingPage(),
-    const MainProfilePage(),
-  ];
+  late final screens;
 
   @override
   void initState() {
     super.initState();
     initPrefs();
-    socketService = SocketService();
     activateClient();
+    print(
+        "==================homepage.socketService.hashCode = ${socketService.hashCode}====================================");
+    screens = [
+      const MainChatPage(),
+      MainMatchingPage(
+        socketService: socketService,
+      ),
+      const MainProfilePage(),
+    ];
   }
 
   Future<void> initPrefs() async {

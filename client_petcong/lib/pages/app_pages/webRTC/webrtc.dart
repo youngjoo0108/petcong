@@ -4,13 +4,22 @@ import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
 import 'package:petcong/pages/homepage.dart';
 import 'package:petcong/services/socket_service.dart';
+import 'package:stomp_dart_client/stomp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class MainVideoCallWidget extends StatefulWidget {
   final RTCVideoRenderer localRenderer;
   final RTCVideoRenderer remoteRenderer;
-  const MainVideoCallWidget(
-      {super.key, required this.localRenderer, required this.remoteRenderer});
+  RTCPeerConnection? pc;
+  static late int quizIdx;
+
+  MainVideoCallWidget({
+    super.key,
+    required this.localRenderer,
+    required this.remoteRenderer,
+    required this.pc,
+  });
 
   @override
   _MainVideoCallWidgetState createState() => _MainVideoCallWidgetState();
@@ -19,33 +28,32 @@ class MainVideoCallWidget extends StatefulWidget {
 class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   late double videoWidth = MediaQuery.of(context).size.width;
   late double videoHeight = MediaQuery.of(context).size.height;
-  String? myUid;
+  // icebreakings
+  List<String> quizs = ["sampleQuiz1", "sampleQuiz2", "sampleQuiz3"];
+
   @override
   void initState() {
     super.initState();
-
-    // Initialize RTCVideoRenderer
-    widget.localRenderer.initialize();
-    widget.remoteRenderer.initialize();
-    print('after start webrtc ${widget.remoteRenderer.srcObject}');
-
-    initPrefs();
+    MainVideoCallWidget.quizIdx = 0;
   }
 
-  Future<void> initPrefs() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      myUid = prefs.getString('uid');
-    } catch (e) {
-      debugPrint('Error retrieving values from SharedPreferences: $e');
-    }
-  }
 
   @override
   void dispose() {
-    widget.localRenderer.dispose();
-    widget.remoteRenderer.dispose();
     super.dispose();
+  }
+
+  void onIdxbtnPressed() {
+    int maxIdx = quizs.length;
+    if (MainVideoCallWidget.quizIdx >= maxIdx) {
+      MainVideoCallWidget.quizIdx = maxIdx;
+      print("===============index changed by me / max!!");
+      return;
+    }
+    MainVideoCallWidget.quizIdx++;
+    print(
+        "===============index changed by me / index = ${MainVideoCallWidget.quizIdx}==");
+    SocketService.sendMessage("idx", MainVideoCallWidget.quizIdx.toString());
   }
 
   @override
@@ -90,18 +98,41 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
         ],
       ),
       // 통화 종료 버튼
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          widget.localRenderer.srcObject!.getTracks().forEach((track) {
-            track.stop();
-          });
-          await SocketService().disposeSocket(myUid);
-          await Future.delayed(const Duration(seconds: 2));
-          Get.offAll(const HomePage());
-        },
-        shape: const CircleBorder(eccentricity: 0),
-        backgroundColor: MyColor.petCongColor4,
-        child: const Icon(Icons.call_end),
+      floatingActionButton: Row(
+        children: [
+          FloatingActionButton(
+            onPressed: () async {
+              widget.localRenderer.srcObject!.getTracks().forEach((track) {
+                track.stop();
+              });
+              // disconnectCall 로직
+              await widget.localRenderer.srcObject!.dispose();
+              await widget.pc!.close();
+              widget.pc = null;
+              print(
+                  "end btn.onPressed - localRederer.hashCode = ${widget.localRenderer.hashCode}");
+              print(
+                  "end btn.onPressed - remoteRenderer.hashCode = ${widget.remoteRenderer.hashCode}");
+              await widget.localRenderer.dispose();
+              await widget.remoteRenderer.dispose();
+              // disconnect end
+              SocketService().setCallPressed(false); // flag false로
+              await Future.delayed(const Duration(seconds: 2));
+              Get.offAll(const HomePage());
+            },
+            heroTag: 'stop_call_button',
+            shape: const CircleBorder(eccentricity: 0),
+            backgroundColor: MyColor.petCongColor4,
+            child: const Icon(Icons.call_end),
+          ),
+          FloatingActionButton(
+            onPressed: onIdxbtnPressed,
+            shape: const CircleBorder(eccentricity: 0),
+            backgroundColor: Colors.blue,
+            heroTag: 'next_button',
+            child: const Icon(Icons.call_end),
+          ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

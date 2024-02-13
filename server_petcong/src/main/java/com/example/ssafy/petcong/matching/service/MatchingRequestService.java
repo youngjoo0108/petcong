@@ -45,14 +45,20 @@ public class MatchingRequestService {
         Member fromMember = memberRepository.findMemberByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
         // DB에서 requestMemberId, partnerMemberId인 데이터 가져오기
         Member toMember = memberRepository.findMemberByUid(partnerUid).orElseThrow(() -> new NoSuchElementException(partnerUid));
-        // 상대가 나에게 보낸 요청이 있는지 찾기
-        Matching matching = matchingRepository.findPendingByMembers(toMember, fromMember);
 
         // invalid memberId
         if (fromMember == null || toMember == null || fromMember.getMemberId() == toMember.getMemberId()) {
-            System.out.println("invalid memberId");
             throw new RuntimeException();
         }
+
+        // 이전에 이미 요청을 보냈던 상태라면, 에러 반환 (pending이든, matched든, rejected든)
+        Matching prevMatching = matchingRepository.findByFromMemberAndToMember(fromMember, toMember);
+        if (prevMatching != null) {
+            throw new RuntimeException();
+        }
+
+        // 상대가 나에게 보낸 요청이 있는지 찾기
+        Matching matching = matchingRepository.findByFromMemberAndToMember(toMember, fromMember);
 
         // to pending
         if (matching == null) {
@@ -62,7 +68,6 @@ public class MatchingRequestService {
         }
         // 이미 matched / rejected 이면
         if (matching.getCallStatus() != CallStatus.PENDING) {
-            System.out.println("invalid status");
             throw new RuntimeException();
         }
         // to matched

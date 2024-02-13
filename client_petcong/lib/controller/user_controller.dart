@@ -72,6 +72,8 @@ class UserController extends GetxController {
     if (user == null) {
       Get.offAll(() => const SignInPage());
     } else {
+      // String? idToken = await userCredential.user!.getIdToken();
+      // prefs.setString('idToken', idToken ?? '');
       Get.offAll(() => const HomePage());
     }
   }
