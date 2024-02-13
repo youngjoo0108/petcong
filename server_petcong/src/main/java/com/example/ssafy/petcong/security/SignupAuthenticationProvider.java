@@ -27,7 +27,6 @@ public class SignupAuthenticationProvider implements AuthenticationProvider {
         SignupAuthenticationToken signupAuthenticationToken = (SignupAuthenticationToken) authentication;
         try {
             String idToken = signupAuthenticationToken.getIdToken();
-            log.error(idToken);
             FirebaseToken decodedToken = firebaseAuth.verifyIdToken(idToken);
             String uid = decodedToken.getUid();
             SignupUserDetails signupUserDetails = new SignupUserDetails(uid);
