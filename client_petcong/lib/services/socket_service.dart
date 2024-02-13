@@ -75,7 +75,7 @@ class SocketService extends GetxController {
     if (client == null) {
       client = StompClient(
         config: StompConfig.sockJS(
-          url: 'https://i10a603.p.ssafy.io/websocket',
+          url: 'i10a603.p.ssafy.io/websocket',
           webSocketConnectHeaders: {
             // "Petcong-id-token": idToken,
             "transports": ["websocket"],
@@ -159,7 +159,7 @@ class SocketService extends GetxController {
       await Future.delayed(const Duration(milliseconds: 300));
     }
     print(
-        "========================in socketService.initSocket, client.hashCode() = ${client.hashCode}");
+        "========================in socketService.initSocket, client.hashCode() = ${client.hashCode} ${client!.connected}");
     print("SocketService.client 할당 됨");
     return client!;
   }
