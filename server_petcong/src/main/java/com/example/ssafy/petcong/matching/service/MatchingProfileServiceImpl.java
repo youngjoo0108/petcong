@@ -15,6 +15,7 @@ import com.example.ssafy.petcong.member.repository.MemberRepository;
 import com.example.ssafy.petcong.member.model.enums.Gender;
 import com.example.ssafy.petcong.member.model.enums.Preference;
 
+import com.example.ssafy.petcong.member.repository.PetRepository;
 import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
     private final MatchingRepository matchingRepository;
     private final MemberImgRepository memberImgRepository;
     private final AWSService awsService;
+    private final PetRepository petRepository;
 
     private final int NO_MEMBER = -1;
 
@@ -117,7 +119,10 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
     }
 
     @Override
-    public List<Matching> findMatchingList(int fromMemberId, int toMemberId) {
-        return matchingRepository.findMatchingByFromMember_MemberIdOrToMember_MemberIdAndCallStatus(fromMemberId, toMemberId, CallStatus.MATCHED);
-    }
-}
+    public List<ProfileRecord> findMatchingList(int myId) {
+        List<Matching> matchingList = matchingRepository.findMatchingByFromMember_MemberIdOrToMember_MemberIdAndCallStatus(myId, myId, CallStatus.MATCHED);
+        return matchingList.stream()
+                .map(matching -> {
+                    Member member = matching.getFromMember().getMemberId() == myId? matching.getToMember() : matching.getFromMember();
+                    List<String> urls = pictures(member.getMemberId());
+                    Pet pet = petRepository.findPetByMember_MemberId(member.getMemberId()).orElseThrow(() -> new NoSuchElementException(String.valueOf(member.getMemberId()))); return new ProfileRecord(member, pet, urls); }) .collect(Collectors.toList()); } }
