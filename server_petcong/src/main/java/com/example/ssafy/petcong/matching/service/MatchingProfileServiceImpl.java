@@ -9,6 +9,7 @@ import com.example.ssafy.petcong.matching.service.util.OnlineMembersService;
 import com.example.ssafy.petcong.matching.service.util.SeenTodayService;
 import com.example.ssafy.petcong.member.model.entity.Member;
 import com.example.ssafy.petcong.member.model.entity.MemberImg;
+import com.example.ssafy.petcong.member.model.entity.Pet;
 import com.example.ssafy.petcong.member.repository.MemberImgRepository;
 import com.example.ssafy.petcong.member.repository.MemberRepository;
 import com.example.ssafy.petcong.member.model.enums.Gender;
@@ -18,11 +19,13 @@ import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MatchingProfileServiceImpl implements MatchingProfileService {
@@ -62,8 +65,9 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         List<String> urls = pictures(filteredMemberId);
         int finalFilteredMemberId = filteredMemberId;
         Member filteredMember = memberRepository.findMemberByMemberId(filteredMemberId).orElseThrow(() -> new NoSuchElementException(String.valueOf(finalFilteredMemberId)));
+        Pet filteredPet = filteredMember.getPet();
 
-        return Optional.of(new ProfileRecord(filteredMember, urls));
+        return Optional.of(new ProfileRecord(filteredMember, filteredPet, urls));
     }
 
     private int nextOnlineMember() {
@@ -97,10 +101,8 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         if (requestingMemberId == potentialMemberId) return false;
         // 2. 온라인 유저인지 확인
         if (!potentialMember.isCallable()) return false;
-
         // 2.5. 선호 상대 확인
         if (!isPreferred(requestingMember, potentialMember)) return false;
-
         // 3. matching table에서 서로 매치한적 있는지 또는 거절 받은 유저인지 확인
         Matching matchingSentByRequesting = matchingRepository.findByFromMemberAndToMember(requestingMember, potentialMember);
         if (matchingSentByRequesting != null) return false;
@@ -108,8 +110,8 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         if (matchingSentByPotential != null && matchingSentByPotential.getCallStatus() != CallStatus.PENDING) return false;
 
         // 4. 오늘 본적 있는지
-        if (!seenToday.hasSeen(requestingMemberId, potentialMemberId)) return false;
-        seenToday.addSeen(requestingMemberId, potentialMemberId);
+//        if (seenToday.hasSeen(requestingMemberId, potentialMemberId)) return false;
+//        seenToday.addSeen(requestingMemberId, potentialMemberId);
 
         return true;
     }
