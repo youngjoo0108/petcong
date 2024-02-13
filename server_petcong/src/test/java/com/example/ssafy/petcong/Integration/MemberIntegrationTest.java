@@ -9,10 +9,11 @@ import com.example.ssafy.petcong.member.model.dto.*;
 import com.example.ssafy.petcong.member.model.enums.Gender;
 import com.example.ssafy.petcong.member.model.enums.PetSize;
 import com.example.ssafy.petcong.member.model.enums.Preference;
-import com.example.ssafy.petcong.member.model.enums.Status;
-
 import com.example.ssafy.petcong.security.UserRole;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.transaction.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,7 +39,7 @@ import java.time.LocalDate;
 import java.util.stream.Stream;
 
 @Slf4j
-//@Transactional
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 public class MemberIntegrationTest {
@@ -48,18 +49,16 @@ public class MemberIntegrationTest {
     private MockMvc mockMvc;
 
     static Stream<Arguments> provideDummySignUpMember() {
-        MemberInfoDto memberInfoDto = new MemberInfoDto();
-        memberInfoDto.setAge(10);
-        memberInfoDto.setNickname("nickname");
-        memberInfoDto.setEmail("signuptest@signuptest.com");
-        memberInfoDto.setAddress("korea");
-        memberInfoDto.setUid("signuptest");
-        memberInfoDto.setInstagramId("instatonid");
-        memberInfoDto.setKakaoId("kakaochocolate");
-        memberInfoDto.setBirthday(LocalDate.of(1997, 1, 29));
-        memberInfoDto.setGender(Gender.MALE);
-        memberInfoDto.setStatus(Status.ACTIVE);
-        memberInfoDto.setPreference(Preference.FEMALE);
+        SignupMemberInfoDto signupMemberInfoDto = new SignupMemberInfoDto();
+        signupMemberInfoDto.setAge(10);
+        signupMemberInfoDto.setNickname("nickname");
+        signupMemberInfoDto.setEmail("signuptest@signuptest.com");
+        signupMemberInfoDto.setAddress("korea");
+        signupMemberInfoDto.setInstagramId("instatonid");
+        signupMemberInfoDto.setKakaoId("kakaochocolate");
+        signupMemberInfoDto.setBirthday(LocalDate.of(1997, 1, 29));
+        signupMemberInfoDto.setGender(Gender.MALE);
+        signupMemberInfoDto.setPreference(Preference.FEMALE);
 
         PetInfoDto petInfoDto = new PetInfoDto();
         petInfoDto.setAge(1);
@@ -75,7 +74,7 @@ public class MemberIntegrationTest {
         petInfoDto.setWeight(30);
         petInfoDto.setSnack("생닭다리");
 
-        SignupRequestDto signupRequestDto = new SignupRequestDto(memberInfoDto, petInfoDto);
+        SignupRequestDto signupRequestDto = new SignupRequestDto(signupMemberInfoDto, petInfoDto);
         return Stream.of(Arguments.of(signupRequestDto));
     }
 
@@ -130,6 +129,33 @@ public class MemberIntegrationTest {
         assertThat(response).isNotNull();
 
         log.info("Signin Test: " + response);
+    }
+
+    @Test
+    @DisplayName("Signout Test")
+    void testSignout() throws Exception {
+        //given
+
+        //when
+        var request = MockMvcRequestBuilders
+                .post("/members/signout")
+                .header("tester", "A603")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        //then
+        MvcResult mvcResult = mockMvc
+                .perform(request)
+                .andExpect(status().isAccepted())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        String response = mvcResult.getResponse().getContentAsString();
+
+        boolean isSignouted = Boolean.parseBoolean(response);
+
+        assertThat(isSignouted).isTrue();
+
+        log.info("Signout Test: " + isSignouted);
     }
 
     @Test
