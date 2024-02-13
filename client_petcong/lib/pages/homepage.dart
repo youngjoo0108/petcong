@@ -6,6 +6,7 @@ import 'package:petcong/widgets/navigations.dart';
 import 'package:petcong/pages/app_pages/chat/chat_page.dart';
 import 'package:petcong/pages/app_pages/profile/profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stomp_dart_client/stomp.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
