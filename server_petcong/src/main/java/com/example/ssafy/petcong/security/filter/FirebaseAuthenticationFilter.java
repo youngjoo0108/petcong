@@ -2,6 +2,7 @@ package com.example.ssafy.petcong.security.filter;
 
 import com.example.ssafy.petcong.security.FirebaseAuthenticationToken;
 import com.example.ssafy.petcong.security.FirebaseUserDetails;
+import com.example.ssafy.petcong.security.SignupAuthenticationToken;
 import com.example.ssafy.petcong.security.UserRole;
 
 import jakarta.servlet.FilterChain;
@@ -54,9 +55,12 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
             AbstractAuthenticationToken authenticatedToken = FirebaseAuthenticationToken.authenticated(anonymousUserDetails, anonymousUserDetails.getPassword(), null);
             authenticatedToken.setDetails(anonymousUserDetails);
             return authenticatedToken;
+        } else if (role.equals(UserRole.SIGNUP)) { // signup request
+            String idToken = getTokenFromHeader();
+            authentication = SignupAuthenticationToken.unauthenticated(idToken);
+            return authenticationManager.authenticate(authentication);
         } else {
             String idToken = getTokenFromHeader(); // unauthenticated request
-            idToken = (idToken != null) ? idToken.trim() : "";
             authentication = FirebaseAuthenticationToken.unauthenticated(idToken);
             return authenticationManager.authenticate(authentication);
         }
@@ -68,7 +72,9 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
 
     private String getTokenFromHeader() {
         Assert.notNull(httpServletRequest, "HttpServletRequest must not be null.");
-
-        return httpServletRequest.getHeader(TOKEN);
+        String idToken = httpServletRequest.getHeader(TOKEN);
+        idToken = (idToken != null) ? idToken.trim() : "";
+        return idToken;
     }
+
 }
