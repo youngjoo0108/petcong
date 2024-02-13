@@ -45,8 +45,8 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(
             @AuthenticationPrincipal(expression = SignupUserDetails.UID) String uid,
-            @RequestBody @Valid SignupRequestDto signupRequestDto
-    ) {
+            @RequestBody @Valid SignupRequestDto signupRequestDto) {
+
         SignupResponseDto signupResponseDto = memberService.signup(uid, signupRequestDto);
 
         return ResponseEntity
@@ -102,8 +102,8 @@ public class MemberController {
     @PatchMapping("/update")
     public ResponseEntity<?> updateUserInfo(
             @AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId,
-            @RequestBody @Valid MemberInfoDto memberInfo
-    ) {
+            @RequestBody @Valid MemberInfoDto memberInfo) {
+
         MemberRecord updatedUser = memberService.updateMemberInfo(memberId, memberInfo);
 
         return ResponseEntity
@@ -133,8 +133,8 @@ public class MemberController {
     public ResponseEntity<?> postProfileImage(
             @AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId,
             @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
-            @RequestParam MultipartFile[] files
-    ) {
+            @RequestParam MultipartFile[] files) {
+
         List<MemberImgRecord> memberImgRecord = memberService.uploadMemberImage(memberId, uid, files);
 
         return ResponseEntity
@@ -152,8 +152,8 @@ public class MemberController {
     public ResponseEntity<?> postDogTrick(
             @AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId,
             @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
-            @RequestParam MultipartFile[] files
-    ) {
+            @RequestParam MultipartFile[] files) {
+
         List<SkillMultimediaRecord> skillMultimediaRecord = memberService.uploadSkillMultimedia(memberId, uid, files);
 
         return ResponseEntity
@@ -168,8 +168,8 @@ public class MemberController {
     public ResponseEntity<?> patchProfileImage(
             @AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId,
             @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
-            @RequestParam MultipartFile[] files
-    ) {
+            @RequestParam MultipartFile[] files) {
+
         List<MemberImgRecord> memberImgRecordList = memberService.updateMemberImage(memberId, uid, files);
 
         return ResponseEntity
@@ -184,8 +184,8 @@ public class MemberController {
     public ResponseEntity<?> patchDogTrick(
             @AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId,
             @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
-            @RequestParam MultipartFile[] files
-    ) {
+            @RequestParam MultipartFile[] files) {
+
         List<SkillMultimediaRecord> skillMultimediaRecordList = memberService.updateSkillMultimedia(memberId, uid, files);
 
         return ResponseEntity
