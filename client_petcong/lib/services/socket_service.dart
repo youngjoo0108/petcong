@@ -97,8 +97,7 @@ class SocketService extends GetxController {
 
                   switch (type) {
                     case 'matched':
-                      Map<String, dynamic> value =
-                          jsonDecode(response['value']);
+                      Map<String, dynamic> value = response['value'];
                       // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
                       targetUid = value['targetUid'];
                       await makeCall(targetUid);
