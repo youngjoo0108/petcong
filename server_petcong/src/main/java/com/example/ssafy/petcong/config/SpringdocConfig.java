@@ -37,6 +37,15 @@ public class SpringdocConfig {
                     .description("test header")
                     .required(true);
             operation.addParametersItem(param);
+
+            param = new Parameter()
+                    .in(ParameterIn.HEADER.toString())
+                    .schema(new StringSchema()._default("Put id token").name("Petcong-id-token"))
+                    .name("Petcong-id-token")
+                    .description("파이어베이스 access token")
+                    .required(false);
+            operation.addParametersItem(param);
+
             return operation;
         });
     }
