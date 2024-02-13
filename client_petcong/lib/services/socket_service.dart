@@ -422,7 +422,7 @@ class SocketService extends GetxController {
 
     var offer = await pc!.createOffer();
     pc!.setLocalDescription(offer);
-    sendMessage("offer", offer.toMap());
+    sendMessage("offer", jsonEncode(offer.toMap()));
     print("=======================sendOffer end");
   }
 
@@ -450,7 +450,7 @@ class SocketService extends GetxController {
     var answer = await pc!.createAnswer({});
     pc!.setLocalDescription(answer);
     debugPrint("before sendAnswer");
-    sendMessage("answer", answer.toMap());
+    sendMessage("answer", jsonEncode(answer.toMap()));
     print("=======================sendAnswer end");
   }
 
@@ -473,7 +473,7 @@ class SocketService extends GetxController {
     // await joinRoom();
     debugPrint("send ice");
     update();
-    sendMessage("ice", ice.toMap());
+    sendMessage("ice", jsonEncode(ice.toMap()));
     print("=======================sendIce end");
   }
 
