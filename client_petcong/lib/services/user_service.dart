@@ -7,7 +7,7 @@ import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/profile_page_model.dart';
 import 'package:petcong/models/user_signup_model.dart';
 
-const bool testing = false;
+const bool testing = true;
 
 String idTokenString = "";
 

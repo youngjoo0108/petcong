@@ -6,76 +6,62 @@ import 'pet_gender_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
 
-class PetBirthdayPage extends StatefulWidget {
+class PetAgePage extends StatefulWidget {
   final String petName;
   final double progress;
 
-  const PetBirthdayPage({
+  const PetAgePage({
     Key? key,
     required this.petName,
     required this.progress,
   }) : super(key: key);
 
   @override
-  PetBirthdayPageState createState() => PetBirthdayPageState();
+  PetAgePageState createState() => PetAgePageState();
 }
 
-class PetBirthdayPageState extends State<PetBirthdayPage> {
+class NumberInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    return newValue;
+  }
+}
+
+class PetAgePageState extends State<PetAgePage> {
   final _controller = TextEditingController();
   final SignupController signupController = Get.put(SignupController());
-  final _dateValidator = ValueNotifier<String?>('Initial value');
-  final double _progress = 6 / 12;
+  final numberValidator = ValueNotifier<String?>('Initial value');
+  final double _progress = 0.5;
 
   @override
   void initState() {
     super.initState();
     _controller.addListener(() {
       final text = _controller.text.trim();
-      _dateValidator.value =
-          text.isEmpty ? 'Initial value' : _validateDate(text);
+      numberValidator.value =
+          text.isEmpty ? 'Initial value' : _validateNumber(text);
     });
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    _dateValidator.dispose();
+    numberValidator.dispose();
     super.dispose();
   }
 
-  String? _validateDate(String? value) {
+  String? _validateNumber(String? value) {
     if (value == null || value.isEmpty) {
-      return '생년월일을 입력해주세요';
-    }
-    const datePattern = r'^(\d{4})\-(\d{2})\-(\d{2})$';
-    final match = RegExp(datePattern).firstMatch(value);
-    if (match == null) {
-      return '유효한 날짜 형식이 아닙니다 (YYYY/MM/DD)';
+      return '나이를 입력해주세요';
     }
 
     try {
-      final year = int.parse(match.group(1)!);
-      final month = int.parse(match.group(2)!);
-      final day = int.parse(match.group(3)!);
-      if (month < 1 || month > 12 || day < 1 || day > 31) {
-        return '유효한 날짜가 아닙니다.';
-      }
-      if (day == 31 &&
-          (month == 2 ||
-              month == 4 ||
-              month == 6 ||
-              month == 9 ||
-              month == 11)) {
-        return '유효한 날짜가 아닙니다.';
-      }
-      if (month == 2 && day > 29) {
-        return '유효한 날짜가 아닙니다.';
-      }
-      if (month == 2 && day == 29 && year % 4 != 0) {
-        return '유효한 날짜가 아닙니다.';
-      }
+      int.parse(value);
     } catch (e) {
-      return '유효한 날짜가 아닙니다.';
+      return '유효한 숫자가 아닙니다.';
     }
 
     return null;
@@ -110,7 +96,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    '${widget.petName}의 생일은?',
+                    '${widget.petName}의 나이는?',
                     style: const TextStyle(
                         fontSize: 32.0, fontWeight: FontWeight.w600),
                   ),
@@ -118,30 +104,31 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
                   SizedBox(
                     width: 200, // 원하는 너비를 설정합니다.
                     child: TextField(
-                        controller: _controller,
-                        decoration: const InputDecoration(
-                          hintText: 'YYYY-MM-DD',
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
+                      controller: _controller,
+                      decoration: const InputDecoration(
+                        hintText: '나이를 입력해주세요',
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
                         ),
-                        style: const TextStyle(
-                            fontSize: 20.0,
-                            fontWeight:
-                                FontWeight.w400), // 여기에 fontWeight를 추가했습니다.
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp('[0-9-]')),
-                          _DateInputFormatter(),
-                        ],
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.center),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                      ),
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        NumberInputFormatter(),
+                      ],
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   const SizedBox(height: 30.0),
                   ValueListenableBuilder<String?>(
-                    valueListenable: _dateValidator,
+                    valueListenable: numberValidator,
                     builder: (context, value, child) {
                       return SizedBox(
                         child: ContinueButton(
@@ -155,7 +142,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
                                       Get.to(
                                           PetGenderPage(
                                             petName: widget.petName,
-                                            progress: widget.progress + 1 / 12,
+                                            progress: widget.progress + 0.1,
                                           ),
                                           transition: Transition.noTransition);
                                     }
@@ -170,32 +157,6 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _DateInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    if (newValue.text.length < oldValue.text.length) {
-      return newValue;
-    }
-
-    String newText = newValue.text.replaceAll('-', '');
-
-    if (newText.length > 4) {
-      newText = '${newText.substring(0, 4)}-${newText.substring(4)}';
-    }
-    if (newText.length > 7) {
-      newText = '${newText.substring(0, 7)}-${newText.substring(7)}';
-    }
-
-    return TextEditingValue(
-      text: newText,
-      selection: TextSelection.collapsed(offset: newText.length),
     );
   }
 }

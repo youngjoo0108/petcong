@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:petcong/controller/signup_controller.dart';
-import 'pet_birthday_page.dart';
+import 'pet_age_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
 import 'prefer_page.dart';
@@ -58,7 +58,7 @@ class PetNamePageState extends State<PetNamePage> {
               alignment: Alignment.centerLeft,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: () => Get.off(const PreferPage(progress: 4 / 12)),
+                onPressed: () => Get.off(const PreferPage(progress: 0.3)),
               ),
             ),
             const SizedBox(height: 5.0),
@@ -98,9 +98,9 @@ class PetNamePageState extends State<PetNamePage> {
                   ? () {
                       SignupController.to.addPetName(_controller.text.trim());
                       Get.to(
-                          PetBirthdayPage(
+                          PetAgePage(
                             petName: _controller.text,
-                            progress: widget.progress + 1 / 12,
+                            progress: widget.progress + 0.1,
                           ),
                           transition: Transition.noTransition);
                     }
