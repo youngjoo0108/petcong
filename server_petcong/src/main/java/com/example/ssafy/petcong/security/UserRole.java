@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum UserRole {
     ANONYMOUS("4", "SA7q9H4r0WfIkvdah6OSIW7Y6XQ2", true),
-    UNAUTHENTICATED("-1", "UNAUTH", false);
+    UNAUTHENTICATED("-1", "UNAUTH", false),
+    SIGNUP("-1", "SIGNUP", false);
 
     private final String memberId;
     private final String uid;
