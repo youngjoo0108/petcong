@@ -138,7 +138,8 @@ class PetAgePageState extends State<PetAgePage> {
                           onPressed:
                               value == null // value가 null인 경우에 버튼이 눌리도록 수정합니다.
                                   ? () {
-                                      SignupController.to.addPetAge(10);
+                                      SignupController.to.addPetAge(
+                                          int.parse(_controller.value.text));
                                       Get.to(
                                           PetGenderPage(
                                             petName: widget.petName,

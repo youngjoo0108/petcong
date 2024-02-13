@@ -145,6 +145,12 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     if (kDebugMode) {
       print('$index, $direction');
     }
+    if (direction == SwipeDirection.right) {
+      // onLike(targetUid);
+      debugPrint("onDislike {$index, $direction}");
+    } else if (direction == SwipeDirection.left) {
+      debugPrint("onDislike {$index, $direction}");
+    }
   }
 
   /// targetId = int

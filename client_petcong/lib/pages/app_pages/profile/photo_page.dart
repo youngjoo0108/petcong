@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:petcong/widgets/create_button.dart';
 import 'package:petcong/widgets/delete_button.dart';
@@ -178,6 +179,7 @@ class PhotoPageState extends State<PhotoPage> {
                   buttonText: 'CONTINUE',
                   onPressed: _photoPaths.length >= 2
                       ? () async {
+                          SignupController.to.signUpUser(context);
                           try {
                             await postPicture(_photoPaths);
                             Get.to(
