@@ -70,16 +70,6 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
         .initSocket(); // socketService의 client를 static으로 설정했으므로, socketService 인스턴스가 여러개라도 얘는 기존에 있던 client를 받는다.
   }
 
-  Future<void> initPrefs() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      uid = prefs.getString('uid');
-      print(uid);
-    } catch (e) {
-      debugPrint('Error retrieving values from SharedPreferences: $e');
-    }
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -141,9 +131,6 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
         // 매칭페이지의 call버튼 -> onLike() -> makeCall()을 통해 통화대기화면 이동까지만.
         heroTag: 'call',
         onPressed: () {
-          // socketService.onCallPressed('on');
-          // Get.to(const CallWaiting());
-          // SocketService().joinRoom();
           if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
             onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2'); // 패드
           } else {

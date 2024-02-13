@@ -22,6 +22,7 @@ class SocketService extends GetxController {
   static String?
       uid; // initPrefs()에서 late init 된 후, 바뀌지 않을 값 / static 함수에서 사용함.
   String? idToken;
+  User user = FirebaseAuth.instance.currentUser!;
   VoidCallback? onInitComplete;
   // RTC 변수
   // late MainVideoCall webrtc;
@@ -34,14 +35,13 @@ class SocketService extends GetxController {
   static bool callPressed = false;
   List<RTCIceCandidate>? iceCandidates;
 
-
   Future<void> initPrefs() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       uid = prefs.getString('uid');
-      idToken = prefs.getString('idToken');
-      isTokenReset = FirebaseAuth.instance.idTokenChanges();
-      print(isTokenReset);
+      await user.getIdToken().then((result) {
+        idToken = result;
+      });
     } catch (e) {
       debugPrint('Error retrieving values from SharedPreferences: $e');
     }
@@ -62,7 +62,6 @@ class SocketService extends GetxController {
         onInitComplete!();
       }
       debugPrint('!!!!!!!!!!!!!!!!!!!!!I get IdToken$uid!!!!!!!!!!!!!!');
-      debugPrint('token changed? $isTokenReset');
     } catch (e) {
       debugPrint('Error during initialization: $e');
     }
@@ -210,7 +209,7 @@ class SocketService extends GetxController {
     if (call == 'on') {
       await sendOffer(targetUid);
       await Future.delayed(const Duration(seconds: 5));
- 
+
       Get.to(
         MainVideoCallWidget(
           localRenderer: _localRenderer!,
@@ -221,7 +220,6 @@ class SocketService extends GetxController {
     }
     print("=======================onCallPressed end");
   }
-
 
   Future<void> disposeSocket(myuid) async {
     // await initSocket();

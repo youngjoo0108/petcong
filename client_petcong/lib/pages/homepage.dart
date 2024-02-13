@@ -19,7 +19,6 @@ class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   final SocketService socketService =
       SocketService(); // State 객체가 하나 생성되고, socketService 인스턴스도 하나여야 하므로 final
-  StompClient? _client;
   String? uid;
   OverlayEntry? _overlayEntry;
 
@@ -30,8 +29,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     initPrefs();
     activateClient();
-    print(
-        "==================homepage.socketService.hashCode = ${socketService.hashCode}====================================");
     screens = [
       const MainChatPage(),
       MainMatchingPage(
@@ -53,44 +50,17 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> activateClient() async {
     await socketService.init();
-    print("------------------socketService.init() complete");
-    _client = socketService.getClient();
-
-    print(
-        "========================in homepage.activateClient, client.hashCode() = ${_client.hashCode}");
-    // _client?.activate();
   }
-
-  void onCallPressed() {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // leading:
-        //     // Padding(
-        //     //   padding: const EdgeInsets.only(left: 20.0),
-        //     Image.asset(
-        //   'assets/src/가로형-고화질.png',
-        //   // width: 120,
-        //   // height: 40,
-        //   // scale: 5,
-        // ),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.settings),
-        //     onPressed: () {
-        //       _showLogoutDropdown(context);
-        //     },
-        //   ),
-        // ],
-
         title: SizedBox(
           width: 100, // 이미지의 너비 조절
           height: 30, // 이미지의 높이 조절
           child: Image.asset(
             'assets/src/가로형-사이즈맞춤.png',
-            // fit: BoxFit.cover, // 이미지가 AppBar에 맞게 잘리지 않도록 설정
           ),
         ),
         actions: [
@@ -144,7 +114,6 @@ class _HomePageState extends State<HomePage> {
                       leading: const Icon(Icons.exit_to_app),
                       title: const Text('Logout'),
                       onTap: () async {
-                        // await UserController.signOut(_client, uid!);
                         await UserController.signOut(uid!);
                         _overlayEntry?.remove();
                       },
