@@ -131,7 +131,7 @@ class SocketService extends GetxController {
       );
       await activateSocket(client!);
       print('activating socket');
-      await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds = 300));
     }
     print(
         "========================in socketService.initSocket, client.hashCode() = ${client.hashCode}");
@@ -196,7 +196,7 @@ class SocketService extends GetxController {
       ),
     );
     await activateSocket(client);
-    await Future.delayed(const Duration(milliseconds: 250));
+    await Future.delayed(const Duration(milliseconds = 250));
 
     print(
         "========================in socketService.initSocket, client.hashCode() = ${client.hashCode}");
