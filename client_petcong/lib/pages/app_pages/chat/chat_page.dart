@@ -15,9 +15,9 @@ class _MainChatPageState extends State<MainChatPage> {
   @override
   Widget build(BuildContext context) {
     Get.put(HistoryController());
-    
+
 //TODO: fix getMatchedUsers api
-// HistoryController.to.getMatchedUsers();
+    HistoryController.to.getMatchedUsers();
 
     RxList<CardProfileModel> matchedUsers = HistoryController.to.matchedUsers;
     return Scaffold(
