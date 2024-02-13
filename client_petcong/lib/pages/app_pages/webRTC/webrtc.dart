@@ -27,7 +27,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   late double videoWidth = MediaQuery.of(context).size.width;
   late double videoHeight = MediaQuery.of(context).size.height;
   // icebreakings
-  List<String> quizs = [];
+  List<String> quizs = ["sampleQuiz1", "sampleQuiz2", "sampleQuiz3"];
   @override
   void initState() {
     super.initState();
