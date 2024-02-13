@@ -74,7 +74,7 @@ class SocketService extends GetxController {
     if (client == null) {
       client = StompClient(
         config: StompConfig.sockJS(
-          url: 'https://i10a603.p.ssafy.io:/websocket',
+          url: 'https://i10a603.p.ssafy.io/websocket',
           webSocketConnectHeaders: {
             // "Petcong-id-token": idToken,
             "transports": ["websocket"],
