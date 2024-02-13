@@ -22,7 +22,6 @@ class SocketService extends GetxController {
   String? uid;
   String? idToken;
   VoidCallback? onInitComplete;
-  User user = FirebaseAuth.instance.currentUser!;
   // RTC 변수
   // late MainVideoCall webrtc;
   RTCPeerConnection? pc;
@@ -31,39 +30,15 @@ class SocketService extends GetxController {
   final _localRenderer = RTCVideoRenderer();
   final _remoteRenderer = RTCVideoRenderer();
   MediaStream? _localStream;
-
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  //   initSocket();
-  //   Future.delayed(Duration(seconds: 1));
-  // }
-
-  SocketService() {
-    try {
-      initPrefs();
-      if (idToken == null) {
-        debugPrint('idToken is null');
-        return;
-      }
-      if (onInitComplete != null) {
-        onInitComplete!();
-      }
-      debugPrint('!!!!!!!!!!!!!!!!!!!!!I get IdToken$uid!!!!!!!!!!!!!!');
-      initSocket();
-      Future.delayed(const Duration(seconds: 1));
-    } catch (e) {
-      debugPrint('Error during initialization: $e');
-    }
-  }
+  late Stream<User?> isTokenReset;
 
   Future<void> initPrefs() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       uid = prefs.getString('uid');
-      await user.getIdToken().then((result) {
-        idToken = result;
-      });
+      idToken = prefs.getString('idToken');
+      isTokenReset = FirebaseAuth.instance.idTokenChanges();
+      print(isTokenReset);
     } catch (e) {
       debugPrint('Error retrieving values from SharedPreferences: $e');
     }
@@ -80,16 +55,33 @@ class SocketService extends GetxController {
         onInitComplete!();
       }
       debugPrint('!!!!!!!!!!!!!!!!!!!!!I get IdToken$uid!!!!!!!!!!!!!!');
-      initSocket();
-      await Future.delayed(const Duration(seconds: 1));
+      debugPrint('token changed? $isTokenReset');
     } catch (e) {
       debugPrint('Error during initialization: $e');
     }
   }
 
-  StompClient getClient() {
-    return client;
-  }
+  Future<StompClient> initSocket() async {
+    initPrefs();
+    if (client == null) {
+      client = StompClient(
+        config: StompConfig.sockJS(
+          url: 'http://i10a603.p.ssafy.io:8081/websocket',
+          webSocketConnectHeaders: {
+            // "Petcong-id-token": idToken,
+            "transports": ["websocket"],
+          },
+          onConnect: (StompFrame frame) {
+            debugPrint("연결됨");
+            client!.subscribe(
+              destination: '/queue/$uid',
+              headers: {
+                "uid": uid!,
+              },
+              callback: (frame) {
+                if (frame.body!.isNotEmpty) {
+                  msgArr.add(frame.body!);
+                  Map<String, dynamic> response = jsonDecode(frame.body!);
 
                   String type = response['type'];
                   print('type = $type');
@@ -131,77 +123,12 @@ class SocketService extends GetxController {
       );
       await activateSocket(client!);
       print('activating socket');
-      await Future.delayed(const Duration(milliseconds = 300));
+      await Future.delayed(const Duration(milliseconds: 300));
     }
     print(
         "========================in socketService.initSocket, client.hashCode() = ${client.hashCode}");
 
-    initPrefs();
-
-    client = StompClient(
-      config: StompConfig.sockJS(
-        url: 'http://i10a603.p.ssafy.io:8081/websocket',
-        webSocketConnectHeaders: {
-          // "Petcong-id-token": idToken,
-          "transports": ["websocket"],
-        },
-        onConnect: (StompFrame frame) {
-          debugPrint("연결됨");
-          client.subscribe(
-            destination: '/queue/$uid',
-            headers: {
-              "uid": uid!,
-            },
-            callback: (frame) {
-              if (frame.body!.isNotEmpty) {
-                msgArr.add(frame.body!);
-                Map<String, dynamic> response = jsonDecode(frame.body!);
-
-                String type = response['type'];
-                print('type = $type');
-                Map<String, dynamic> value = response['value'];
-
-                switch (type) {
-                  case 'matched':
-                    // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
-                    targetUid = value['targetUid'];
-                    makeCall(targetUid);
-                    break;
-                  case 'offer':
-                    print(
-                        "gotOffer============client ====================================${client.hashCode}");
-                    value.forEach((key, value) {
-                      print('Key: $key, Value: $value');
-                    });
-                    gotOffer(value['sdp'], value['type']);
-                    sendAnswer(client);
-                    break;
-                  case 'answer':
-                    print(
-                        "gotAnswer============client ====================================${client.hashCode}");
-                    gotAnswer(value['sdp'], value['type']);
-                    break;
-                  case 'ice':
-                    print(
-                        "gotIce============client ====================================${client.hashCode}");
-                    gotIce(value['candidate'], value['sdpMid'],
-                        value['sdpMLineIndex']);
-                }
-              }
-            },
-          );
-        },
-        onWebSocketError: (dynamic error) =>
-            debugPrint('websocketerror : $error'),
-      ),
-    );
-    await activateSocket(client);
-    await Future.delayed(const Duration(milliseconds = 250));
-
-    print(
-        "========================in socketService.initSocket, client.hashCode() = ${client.hashCode}");
-
-    // return client!;
+    return client!;
   }
 
   Future<void> activateSocket(StompClient client) async {
@@ -209,11 +136,12 @@ class SocketService extends GetxController {
   }
 
   Future<void> disposeSocket(myuid) async {
+    await initSocket();
     String stringUid = myuid as String;
     try {
-      if (client.isActive == true) {
+      if (client!.isActive == true) {
         debugPrint('Before sending message: Socket is active');
-        client.send(
+        client!.send(
           destination: '/queue/$stringUid',
           headers: {
             "content-type": "application/json",
@@ -230,7 +158,7 @@ class SocketService extends GetxController {
       client!.deactivate();
       client = null;
       debugPrint('연결끔');
-      debugPrint('After deactivating: Is client active? ${client.isActive}');
+      debugPrint('After deactivating: Is client active? ${client?.isActive}');
     } catch (e) {
       debugPrint('Error disposing socket: $e');
     }
