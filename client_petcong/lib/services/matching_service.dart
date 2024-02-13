@@ -25,6 +25,7 @@ Future<dynamic> postMatching(String targetUid) async {
   print("postMatching 실행됨");
   // await initPrefs();
   Map<String, String> reqHeaders = await getIdToken();
+  reqHeaders['Content-Type'] = "application/json";
   String endpoint = '$serverUrl/matchings/choice';
   final response = await http.post(Uri.parse(endpoint),
       headers: reqHeaders, body: jsonEncode({'partnerUid': targetUid}));
