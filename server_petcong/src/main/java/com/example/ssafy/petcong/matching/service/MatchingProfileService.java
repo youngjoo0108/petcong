@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface MatchingProfileService {
     List<String> pictures(int memberId);
     Optional<ProfileRecord> profile(String uid);
-    List<Matching> findMatchingList(int fromMemberId, int toMemberId);
+    List<ProfileRecord> findMatchingList(int myId);
 }

@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Tag(name = "matchings", description = "매칭 API")
 @RestController
 @CrossOrigin("*")
@@ -65,7 +67,7 @@ public class MatchingController {
     public ResponseEntity<?> matchingList(@AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid) {
         MemberRecord member = memberService.findMemberByUid(uid);
         int myId = member.memberId();
-        List<Matching> matchings = matchingProfileService.findMatchingList(myId, myId);
+        List<ProfileRecord> matchings = matchingProfileService.findMatchingList(myId);
 
         return ResponseEntity
                 .ok()
