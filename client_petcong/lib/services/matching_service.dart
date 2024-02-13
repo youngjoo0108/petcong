@@ -21,11 +21,28 @@ User? currentUser = UserController.currentUser;
 const String serverUrl = 'http://i10a603.p.ssafy.io:8081';
 // Map<String, String>? reqHeaders;
 
+Future<void> initPrefs() async {
+  print("initPrefs 실행됨");
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    idTokenString = prefs.getString('idToken')!;
+  } catch (e) {
+    debugPrint('Error retrieving values from SharedPreferences: $e');
+  }
+}
+
 Future<dynamic> postMatching(String targetUid) async {
   print("postMatching 실행됨");
   // await initPrefs();
-  Map<String, String> reqHeaders = await getIdToken();
-  reqHeaders['Content-Type'] = "application/json";
+  // Map<String, String> reqHeaders = await getIdToken();
+  // make headers
+  Map<String, String> reqHeaders = {"Content-Type": "application/json"};
+
+  User user = UserController.currentUser!;
+  String? idToken;
+  await user.getIdToken().then((value) => idToken = value!);
+  reqHeaders['Petcong-id-token'] = idToken!;
+
   String endpoint = '$serverUrl/matchings/choice';
   final response = await http.post(Uri.parse(endpoint),
       headers: reqHeaders, body: jsonEncode({'partnerUid': targetUid}));
