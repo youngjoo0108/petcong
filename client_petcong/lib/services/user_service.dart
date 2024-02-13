@@ -7,7 +7,7 @@ import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/profile_page_model.dart';
 import 'package:petcong/models/user_signup_model.dart';
 
-const bool testing = true;
+const bool testing = false;
 
 String idTokenString = "";
 
@@ -42,6 +42,9 @@ Future<void> postSignup(UserSignupModel user) async {
   postHeaders.forEach((key, value) {
     print("$key : $value");
   });
+
+  print("json body");
+  print(jsonEncode(user.toJson()));
 
   final response = await http.post(Uri.parse('$serverUrl/members/signup'),
       headers: postHeaders, body: jsonEncode(user.toJson()));
