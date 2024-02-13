@@ -19,6 +19,7 @@ class _MainChatPageState extends State<MainChatPage> {
     HistoryController.to.getMatchedUsers();
 
     RxList<CardProfileModel> matchedUsers = HistoryController.to.matchedUsers;
+    print("matchedUsers: ${matchedUsers.elementAt(0)}");
     return Scaffold(
       body: SafeArea(
         child: GridView.count(
@@ -28,10 +29,11 @@ class _MainChatPageState extends State<MainChatPage> {
             return GestureDetector(
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => ProfileDetailPage(
-                            matchedUser: matchedUsers[index])));
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) =>
+                          ProfileDetailPage(matchedUser: matchedUsers[index])),
+                );
               },
               child: MatchedCard(matchedUser: matchedUsers[index]),
             );

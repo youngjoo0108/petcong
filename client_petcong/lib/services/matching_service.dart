@@ -68,9 +68,16 @@ Future<CardProfileModel> getProfile() async {
       headers: reqHeaders);
 
   if (response.statusCode == 200) {
-    if (kDebugMode) print(jsonDecode(response.body));
+    if (kDebugMode) {
+      print("getProfile success: ${jsonDecode(response.body)}");
+      print(CardProfileModel.fromJson(jsonDecode(response.body)).nickname);
+    }
     return CardProfileModel.fromJson(jsonDecode(response.body));
   } else {
+    if (kDebugMode) {
+      print("getProfile failed response.body: ${jsonDecode(response.body)}");
+      print("getProfile failed response.statuscode: ${response.statusCode}");
+    }
     throw Exception("getProfile request failed");
   }
 }
@@ -83,6 +90,9 @@ Future<List<CardProfileModel>> getMatchList() async {
 
   debugPrint("getMatchList request status: ${response.statusCode}");
   if (response.statusCode == 200) {
+    if (kDebugMode) {
+      print("getMatchList success: ${jsonDecode(response.body)}");
+    }
     return (jsonDecode(response.body) as List)
         .map((e) => CardProfileModel.fromJson(e))
         .toList();
