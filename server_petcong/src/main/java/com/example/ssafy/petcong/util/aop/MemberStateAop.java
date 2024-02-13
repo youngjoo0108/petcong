@@ -39,8 +39,9 @@ public class MemberStateAop {
     }
 
     private void changeCallable(boolean callable) {
-        FirebaseUserDetails userDetails = (FirebaseUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // uid
-        String uid = userDetails.getUid();
+        FirebaseUserDetails userDetails = (FirebaseUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String uid = userDetails.getUid(); // uid
+
         Member member = memberRepository.findMemberByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
         member.updateCallable(callable);
         memberRepository.save(member);

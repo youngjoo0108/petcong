@@ -83,7 +83,6 @@ class UserController extends GetxController {
 
   static User? get currentUser => user;
 
-
   void updateSelectedImage(int index, String newImage) {
     if (index >= 0 && index < 5) {
       // index가 5보다 작은 경우에만 업데이트

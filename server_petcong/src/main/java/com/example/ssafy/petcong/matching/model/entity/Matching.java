@@ -7,8 +7,8 @@ import jakarta.persistence.*;
 
 import lombok.*;
 
-@ToString
 @Entity
+@ToString
 @NoArgsConstructor
 @Getter
 public class Matching {
