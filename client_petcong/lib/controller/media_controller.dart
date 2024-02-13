@@ -10,5 +10,5 @@ import 'package:petcong/services/user_service.dart';
 class MediaController extends GetxController {
   static MediaController get to => Get.find();
 
-//TODO: make conroller
+//TODO: make controller
 }

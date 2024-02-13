@@ -1,5 +1,8 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:petcong/models/card_profile_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MatchedCard extends StatelessWidget {
   final CardProfileModel matchedUser;
@@ -55,7 +58,18 @@ class ProfileDetailPage extends StatelessWidget {
             const SizedBox(height: 10),
             Text(matchedUser.description!),
             const SizedBox(height: 10),
-            Text('Instagram: ${matchedUser.instagramId}'),
+            IconButton(
+              icon: const Icon(Icons.link),
+              onPressed: () async {
+                final url = Uri.parse(
+                    'http://www.instagram.com/${matchedUser.instagramId}');
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url);
+                } else {
+                  throw 'Could not launch https://instagram.com/${matchedUser.instagramId}}';
+                }
+              },
+            ),
             const SizedBox(height: 10),
             Text('Kakao ID: ${matchedUser.kakaoId}'),
           ],

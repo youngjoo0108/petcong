@@ -55,12 +55,17 @@ Future<List<CardProfileModel>> getMatchList() async {
   final response = await http.get(Uri.parse('$serverUrl/matchings/list'),
       headers: reqHeaders);
 
+  debugPrint("getMatchList request status: ${response.statusCode}");
   if (response.statusCode == 200) {
-    if (kDebugMode) print(jsonDecode(response.body));
     return (jsonDecode(response.body) as List)
         .map((e) => CardProfileModel.fromJson(e))
         .toList();
   } else {
+    if (kDebugMode) {
+      print("getMatchList request status: ${response.statusCode}");
+      print("getMatchList response body: ${response.body}");
+      print("getMatchList error");
+    }
     throw Exception("getMatchList request failed");
   }
 }
