@@ -4,9 +4,10 @@ import com.example.ssafy.petcong.AWS.service.AWSService;
 import com.example.ssafy.petcong.exception.NotRegisterdException;
 import com.example.ssafy.petcong.member.model.dto.*;
 import com.example.ssafy.petcong.member.model.entity.Member;
+import com.example.ssafy.petcong.member.model.enums.Status;
 import com.example.ssafy.petcong.member.repository.MemberRepository;
-
 import com.example.ssafy.petcong.util.S3KeyGenerator;
+
 import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -54,9 +55,13 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
-        MemberInfoDto memberInfo = signupRequestDto.getMemberInfo();
+    public SignupResponseDto signup(String uid, SignupRequestDto signupRequestDto) {
+        SignupMemberInfoDto signupMemberInfo = signupRequestDto.getSignupMemberInfo();
         PetInfoDto petInfo = signupRequestDto.getPetInfo();
+
+        MemberInfoDto memberInfo = MemberInfoDto.fromSignupMemberInfo(signupMemberInfo);
+        memberInfo.setUid(uid);
+        memberInfo.setStatus(Status.ACTIVE);
 
         MemberRecord savedMember = save(memberInfo);
 
@@ -74,6 +79,21 @@ public class MemberServiceImpl implements MemberService {
         Member result = memberRepository.save(member);
 
         return MemberRecord.fromMemberEntity(result);
+    }
+
+    @Override
+    @Transactional
+    public boolean signout(int memberId) {
+        Member signoutMember = memberRepository.findMemberByMemberId(memberId).orElseThrow(() -> new NoSuchElementException(String.valueOf(memberId)));
+        signoutMember.updateCallable(false);
+
+        Member member = memberRepository.save(signoutMember);
+
+        if (member != null && !member.isCallable()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

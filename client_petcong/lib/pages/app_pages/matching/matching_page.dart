@@ -36,7 +36,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
 
   // late Function onCallPressed;
   late SocketService socketService;
-  final MatchingService matchingService = MatchingService();
+  // final MatchingService matchingService = MatchingService();
   late StompClient client;
   String? uid;
 
@@ -154,8 +154,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   Future<void> onLike(String targetUid) async {
     ChoiceRes? choiceRes;
     try {
-      print(targetUid);
-      choiceRes = await matchingService.postMatching(targetUid);
+      choiceRes = await postMatching(targetUid);
     } catch (exception) {
       print("exception = $exception");
       print("alert: 잘못된 요청");

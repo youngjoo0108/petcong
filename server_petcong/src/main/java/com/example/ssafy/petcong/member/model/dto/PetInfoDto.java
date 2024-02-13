@@ -27,7 +27,6 @@ public class PetInfoDto {
     private String name;
 
     @Size(max = 25, message = "max length is 25")
-    @NotBlank(message = "breed is mandatory")
     @Schema(title = "breed")
     private String breed;
 
@@ -39,13 +38,13 @@ public class PetInfoDto {
     @Schema(implementation = Gender.class, title = "성별")
     private Gender gender;
 
+    @NotNull(message = "gender is mandatory")
     @Schema(title = "중성화 여부", example = "true", requiredMode = REQUIRED)
     private boolean neutered;
 
     @Schema(implementation = PetSize.class, title = "반려동물의 크기")
     private PetSize size;
 
-    @Positive(message = "weight should be greater than zero")
     @Schema(title = "반려동물의 무게")
     private int weight;
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'gender_page.dart';
 import 'nickname_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
-import 'package:petcong/controller/user_controller.dart';
 
 class ProgressProvider extends InheritedWidget {
   final double progress;
@@ -37,14 +37,16 @@ class BirthdayPage extends StatefulWidget {
 class BirthdayPageState extends State<BirthdayPage> {
   final _formKey = GlobalKey<FormState>();
   final _controller = TextEditingController();
+  final SignupController signupController = Get.put(SignupController());
+
   String? _errorMessage;
 
   final _inputFormatter = TextInputFormatter.withFunction((oldValue, newValue) {
-    // 새로운 값이 기존 값보다 짧고, 새로운 값의 마지막 문자가 '/'가 아닌 경우
+    // 새로운 값이 기존 값보다 짧고, 새로운 값의 마지막 문자가 '-'가 아닌 경우
     if (newValue.text.length < oldValue.text.length &&
-        !newValue.text.endsWith('/')) {
-      // 기존 값의 마지막 문자가 '/'인 경우
-      if (oldValue.text.endsWith('/')) {
+        !newValue.text.endsWith('-')) {
+      // 기존 값의 마지막 문자가 '-'인 경우
+      if (oldValue.text.endsWith('-')) {
         return TextEditingValue(
           text: newValue.text.substring(0, newValue.text.length - 1),
           selection: TextSelection.collapsed(offset: newValue.text.length - 1),
@@ -53,9 +55,9 @@ class BirthdayPageState extends State<BirthdayPage> {
     }
 
     if (newValue.text.length == 4 || newValue.text.length == 7) {
-      if (!newValue.text.endsWith('/')) {
+      if (!newValue.text.endsWith('-')) {
         return TextEditingValue(
-          text: '${newValue.text}/',
+          text: '${newValue.text}-',
           selection: TextSelection.collapsed(offset: newValue.text.length + 1),
         );
       }
@@ -68,10 +70,10 @@ class BirthdayPageState extends State<BirthdayPage> {
       _errorMessage = '생년월일을 입력해주세요!';
       return _errorMessage;
     }
-    const datePattern = r'^(\d{4})\/(\d{2})\/(\d{2})$';
+    const datePattern = r'^(\d{4})\-(\d{2})\-(\d{2})$';
     final match = RegExp(datePattern).firstMatch(value);
     if (match == null) {
-      _errorMessage = '유효한 날짜 형식이 아닙니다 (YYYY/MM/DD)';
+      _errorMessage = '유효한 날짜 형식이 아닙니다 (YYYY-MM-DD)';
       return _errorMessage;
     }
 
@@ -111,7 +113,7 @@ class BirthdayPageState extends State<BirthdayPage> {
 
   @override
   Widget build(BuildContext context) {
-    double progress = 2 / 12;
+    double progress = 0.1;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -123,18 +125,18 @@ class BirthdayPageState extends State<BirthdayPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: Column(
           children: <Widget>[
             Align(
               alignment: Alignment.centerLeft,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: () => Get.off(const NicknamePage(progress: 1 / 12)),
+                onPressed: () => Get.off(const NicknamePage(progress: 0)),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(0.0),
+              padding: const EdgeInsets.all(5.0),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -152,7 +154,7 @@ class BirthdayPageState extends State<BirthdayPage> {
                         keyboardType: TextInputType.number,
                         inputFormatters: [_inputFormatter],
                         decoration:
-                            const InputDecoration(hintText: 'YYYY/MM/DD'),
+                            const InputDecoration(hintText: 'YYYY-MM-DD'),
                         style: const TextStyle(
                             fontSize: 20.0, fontWeight: FontWeight.w400),
                         onChanged: (value) {
@@ -176,23 +178,11 @@ class BirthdayPageState extends State<BirthdayPage> {
                         onPressed: _controller.text.isNotEmpty &&
                                 _errorMessage == null
                             ? () {
-                                // 'CONTINUE' 버튼을 누르면 입력한 생년월일을 날짜 형식으로 변환하고, 만 나이를 계산하여 UserController의 birthday와 age에 저장
-                                DateTime? birthdayDate =
-                                    _convertToDate(_controller.text);
-                                if (birthdayDate != null) {
-                                  UserController userController =
-                                      Get.find(); // UserController의 인스턴스 가져오기
-                                  userController.birthday =
-                                      "${birthdayDate.toLocal()}".split(' ')[0];
-                                  int age =
-                                      userController.calculateAge(); // 만 나이 계산
-                                  userController.age = age; // 만 나이를 age에 저장
-                                }
-
-                                // 그 후에 GenderPage로 이동합니다.
+                                SignupController.to
+                                    .addBirthdayAndAge(_controller.text.trim());
                                 Get.to(
                                     GenderPage(
-                                      progress: widget.progress + 1 / 12,
+                                      progress: widget.progress + 0.1,
                                     ),
                                     transition: Transition.noTransition);
                               }
@@ -207,14 +197,5 @@ class BirthdayPageState extends State<BirthdayPage> {
         ),
       ),
     );
-  }
-}
-
-DateTime? _convertToDate(String input) {
-  try {
-    List<String> dateParts = input.split('/');
-    return DateTime.parse('${dateParts[0]}-${dateParts[1]}-${dateParts[2]}');
-  } catch (e) {
-    return null;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'introduce_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,7 @@ class PetGenderPage extends StatefulWidget {
 }
 
 class PetGenderPageState extends State<PetGenderPage> {
+  final SignupController signupController = Get.put(SignupController());
   String _gender = '';
   bool _isNeutered = false;
   late double _progress; // _progress를 late로 선언
@@ -39,7 +41,7 @@ class PetGenderPageState extends State<PetGenderPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -50,6 +52,7 @@ class PetGenderPageState extends State<PetGenderPage> {
                   onPressed: () => Get.back(),
                 ),
               ),
+              const SizedBox(height: 5.0),
               Text('${widget.petName}의 성별은?',
                   style: const TextStyle(
                       fontSize: 32.0, fontWeight: FontWeight.w600)),
@@ -59,11 +62,11 @@ class PetGenderPageState extends State<PetGenderPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _gender == '여자',
+                    isFilled: _gender == 'FEMALE',
                     buttonText: 'FEMALE',
                     onPressed: () {
                       setState(() {
-                        _gender = '여자';
+                        _gender = 'FEMALE';
                         _isButtonDisabled = false;
                       });
                     },
@@ -76,11 +79,11 @@ class PetGenderPageState extends State<PetGenderPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _gender == '남자',
+                    isFilled: _gender == 'MALE',
                     buttonText: 'MALE',
                     onPressed: () {
                       setState(() {
-                        _gender = '남자';
+                        _gender = 'MALE';
                         _isButtonDisabled = false;
                       });
                     },
@@ -121,7 +124,9 @@ class PetGenderPageState extends State<PetGenderPage> {
                 buttonText: 'CONTINUE',
                 onPressed: !_isButtonDisabled
                     ? () {
-                        Get.to(const IntroducePage(progress: 0.65),
+                        SignupController.to.addPetGender(_gender);
+                        SignupController.to.addNeutered(_isNeutered);
+                        Get.to(() => (const IntroducePage(progress: 0.7)),
                             transition: Transition.noTransition);
                       }
                     : null,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/models/card_profile_model.dart';
 import 'package:petcong/widgets/matched_card.dart';
-import 'package:petcong/widgets/matching_card.dart';
 
 const _images = [
   'assets/src/dog.jpg',
@@ -19,18 +19,16 @@ class HorizontalItem extends StatelessWidget {
   final String title;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
+  Widget build(BuildContext context) => const SizedBox(
         width: 140,
         child: ClipRRect(
           // borderRadius: BorderRadius.circular(4),
           child: Material(
-            // color: Colors.white,
-            child: Center(
-              child: MatchedCard(
-                  name: _names[1],
-                  profileImages: _images[0]),
-            ),
-          ),
+              // color: Colors.white,
+              child: Center(
+                  //   chile: MatchedCard(
+                  // matchedUser: CardProfileModel,
+                  )),
         ),
       );
 }

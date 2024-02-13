@@ -23,15 +23,17 @@ public class MemberStateAop {
     }
 
     // MakeCallable 어노테이션을 달지 않는 모든 컨트롤러 메소드 전에 callable = false로 바꾸는 로직 추가
-    @Before("execution(* com.example.ssafy.petcong.*.controller.*.*(..)) && !@annotation(com.example.ssafy.petcong.util.annotation.MakeCallable)")
+    @Before("!execution(* com.example.ssafy.petcong.member.controller.MemberController.signup(..)) && " +
+            "execution(* com.example.ssafy.petcong.*.controller.*.*(..)) && " +
+            "!@annotation(com.example.ssafy.petcong.util.annotation.MakeCallable)")
     public void changeToNotCallable() {
-        // signup() 시 에러 발생
-        // changeCallable(false);
+         changeCallable(false);
     }
 
 
     // MakeCallble을 단 메소드 전에 callable = true로 바꾸는 로직 추가
-    @Before("execution(* com.example.ssafy.petcong.*.controller.*.*(..)) && @annotation(com.example.ssafy.petcong.util.annotation.MakeCallable)")
+    @Before("execution(* com.example.ssafy.petcong.*.controller.*.*(..)) && " +
+            "@annotation(com.example.ssafy.petcong.util.annotation.MakeCallable)")
     public void changeToCallable() {
         changeCallable(true);
     }
@@ -39,6 +41,7 @@ public class MemberStateAop {
     private void changeCallable(boolean callable) {
         FirebaseUserDetails userDetails = (FirebaseUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String uid = userDetails.getUid(); // uid
+
         Member member = memberRepository.findMemberByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
         member.updateCallable(callable);
         memberRepository.save(member);

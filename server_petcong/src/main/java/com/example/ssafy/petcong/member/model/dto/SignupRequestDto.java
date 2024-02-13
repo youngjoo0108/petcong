@@ -16,8 +16,8 @@ import lombok.*;
 public class SignupRequestDto {
     @Valid
     @NotNull
-    @Schema(title = "유저 정보")
-    MemberInfoDto memberInfo;
+    @Schema(title = "회원가입 유저 정보")
+    SignupMemberInfoDto  signupMemberInfo;
     @Valid
     @NotNull
     @Schema(title = "펫 정보")

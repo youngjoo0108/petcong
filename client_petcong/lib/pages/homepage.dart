@@ -118,6 +118,15 @@ class _HomePageState extends State<HomePage> {
                         _overlayEntry?.remove();
                       },
                     ),
+                    // ListTile(
+                    //   leading: const Icon(Icons.exit_to_app),
+                    //   title: const Text('탈퇴'),
+                    //   onTap: () async {
+                    //     // await UserController.signOut(_client, uid!);
+                    //     await UserController.withdraw(uid!);
+                    //     _overlayEntry?.remove();
+                    //   },
+                    // )
                   ],
                 ),
               ),

@@ -7,7 +7,6 @@ import 'package:petcong/services/socket_service.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class MainVideoCallWidget extends StatefulWidget {
   final RTCVideoRenderer localRenderer;
   final RTCVideoRenderer remoteRenderer;
@@ -36,7 +35,6 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
     super.initState();
     MainVideoCallWidget.quizIdx = 0;
   }
-
 
   @override
   void dispose() {

@@ -9,22 +9,32 @@ class MediaPage extends StatefulWidget {
   MediaPageState createState() => MediaPageState();
 }
 
+//TODO: resolve img quality
 class MediaPageState extends State<MediaPage> {
   final ImagePicker _picker = ImagePicker();
-
   Future<void> _pickImageFromGallery() async {
-    final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
+    final List<XFile> images = await _picker.pickMultiImage(
+        requestFullMetadata: false, imageQuality: 30);
+    List<String> imagePaths = [];
+
+    for (XFile image in images) {
+      imagePaths.add(image.path);
+    }
+
     // 사진이 선택되었다면 이를 PhotoPage로 전달합니다.
-    if (photo != null) {
-      Get.back(result: photo.path);
+    if (imagePaths.isNotEmpty && imagePaths.length < 7) {
+      Get.back(result: imagePaths);
     }
   }
 
   Future<void> _takePicture() async {
     final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+    List<String> imagePaths = [];
+
     // 사진이 찍혔다면 이를 PhotoPage로 전달합니다.
     if (photo != null) {
-      Get.back(result: photo.path);
+      imagePaths.add(photo.path);
+      Get.back(result: imagePaths);
     }
   }
 
@@ -34,11 +44,13 @@ class MediaPageState extends State<MediaPage> {
       appBar: AppBar(
         leading: IconButton(
           padding: const EdgeInsets.only(left: 20.0),
-          icon: const Text('취소',
-              style: TextStyle(
-                  color: Color.fromARGB(255, 249, 113, 95),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500)),
+          icon: const Text(
+            '취소',
+            style: TextStyle(
+                color: Color.fromARGB(255, 249, 113, 95),
+                fontSize: 18,
+                fontWeight: FontWeight.w500),
+          ),
           onPressed: () => Get.back(),
         ),
       ),
@@ -56,9 +68,11 @@ class MediaPageState extends State<MediaPage> {
                   children: [
                     Icon(Icons.photo_library, size: 50),
                     SizedBox(width: 25),
-                    Text('Gallery',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600)),
+                    Text(
+                      'Gallery',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
                   ],
                 ),
               ),
@@ -75,9 +89,11 @@ class MediaPageState extends State<MediaPage> {
                   children: [
                     Icon(Icons.camera_alt, size: 50),
                     SizedBox(width: 25),
-                    Text('Camera',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600)),
+                    Text(
+                      'Camera',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
                   ],
                 ),
               ),

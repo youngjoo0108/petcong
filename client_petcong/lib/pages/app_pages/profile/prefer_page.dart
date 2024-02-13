@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
 import 'gender_page.dart';
@@ -14,6 +15,7 @@ class PreferPage extends StatefulWidget {
 }
 
 class PreferPageState extends State<PreferPage> {
+  final SignupController signupController = Get.put(SignupController());
   String _prefer = '';
   double _progress = 0.0;
   bool _isButtonDisabled = true; // _isButtonDisabled 변수 선언
@@ -37,7 +39,7 @@ class PreferPageState extends State<PreferPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -45,23 +47,25 @@ class PreferPageState extends State<PreferPage> {
                 alignment: Alignment.centerLeft,
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back_ios, size: 32),
-                  onPressed: () => Get.off(const GenderPage(progress: 3 / 12)),
+                  onPressed: () => Get.off(const GenderPage(progress: 0.2)),
                 ),
               ),
-              const SizedBox(height: 10.0),
+              const SizedBox(height: 5.0),
               const Center(
-                  child: Text('추천 상대!', style: TextStyle(fontSize: 32.0))),
+                  child: Text('추천 상대!',
+                      style: TextStyle(
+                          fontSize: 32.0, fontWeight: FontWeight.w600))),
               const SizedBox(height: 30.0),
               Center(
                 child: SizedBox(
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _prefer == '선호1',
-                    buttonText: '여자예요!',
+                    isFilled: _prefer == 'FEMALE',
+                    buttonText: '여자!',
                     onPressed: () {
                       setState(() {
-                        _prefer = '선호1';
+                        _prefer = 'FEMALE';
                         _isButtonDisabled = false;
                       });
                     },
@@ -74,11 +78,11 @@ class PreferPageState extends State<PreferPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _prefer == '선호2',
-                    buttonText: '남자예요!',
+                    isFilled: _prefer == 'MALE',
+                    buttonText: '남자!',
                     onPressed: () {
                       setState(() {
-                        _prefer = '선호2';
+                        _prefer = 'MALE';
                         _isButtonDisabled = false;
                       });
                     },
@@ -91,11 +95,11 @@ class PreferPageState extends State<PreferPage> {
                   width: 240.0,
                   height: 50.0,
                   child: ContinueButton(
-                    isFilled: _prefer == '선호3',
+                    isFilled: _prefer == 'BOTH',
                     buttonText: '상관 없어요!',
                     onPressed: () {
                       setState(() {
-                        _prefer = '선호3';
+                        _prefer = 'BOTH';
                         _isButtonDisabled = false;
                       });
                     },
@@ -108,9 +112,12 @@ class PreferPageState extends State<PreferPage> {
                 buttonText: 'CONTINUE',
                 onPressed: !_isButtonDisabled
                     ? () {
-                        Get.to(PetNamePage(
-                          progress: widget.progress + 1 / 12,
-                        ), transition: Transition.noTransition);
+                        SignupController.to.addPreference(_prefer);
+                        Get.to(
+                            PetNamePage(
+                              progress: widget.progress + 0.1,
+                            ),
+                            transition: Transition.noTransition);
                       }
                     : null,
               ),

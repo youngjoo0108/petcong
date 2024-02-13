@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'birthday_page.dart';
 import 'profile_page.dart'; // ProfilePage를 import 해주세요.
 import 'package:petcong/widgets/continue_button.dart';
@@ -18,8 +19,9 @@ class NicknamePageState extends State<NicknamePage> {
   final _controller = TextEditingController();
   bool _isButtonDisabled = true;
   double _progress = 0.0; // _progress 변수를 추가하여 초기화합니다.
-
+  String? _nickname;
   final UserController userController = Get.put(UserController());
+  final SignupController signupController = Get.put(SignupController());
   @override
   void initState() {
     super.initState();
@@ -50,7 +52,7 @@ class NicknamePageState extends State<NicknamePage> {
             Align(
               alignment: Alignment.centerLeft,
               child: IconButton(
-                icon: const Icon(Icons.close, size: 32),
+                icon: const Icon(Icons.arrow_back_ios, size: 32),
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
@@ -62,7 +64,7 @@ class NicknamePageState extends State<NicknamePage> {
                 },
               ),
             ),
-            const SizedBox(height: 10.0),
+            const SizedBox(height: 5.0),
             const Text('내 별명은?',
                 style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600)),
             const SizedBox(height: 30.0),
@@ -70,6 +72,11 @@ class NicknamePageState extends State<NicknamePage> {
               width: 200, // 원하는 너비 설정
               child: TextField(
                 controller: _controller,
+                onChanged: (value) {
+                  setState(() {
+                    _nickname = value;
+                  });
+                },
                 style: const TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.w400,
@@ -95,10 +102,11 @@ class NicknamePageState extends State<NicknamePage> {
               onPressed: !_isButtonDisabled
                   ? () {
                       // 'CONTINUE' 버튼을 누르면 UserController의 nickname을 업데이트하고, BirthdayPage로 이동합니다.
-                      userController.nickname = _controller.text.trim();
+                      // userController.nickname = _controller.text.trim();
+                      SignupController.to.addNickName(_nickname!);
                       Get.to(
                           BirthdayPage(
-                            progress: widget.progress + 1 / 12,
+                            progress: widget.progress + 0.1,
                           ),
                           transition: Transition.noTransition);
                     }
