@@ -75,7 +75,7 @@ class SocketService extends GetxController {
     if (client == null) {
       client = StompClient(
         config: StompConfig.sockJS(
-          url: 'http://i10a603.p.ssafy.io:8081/websocket',
+          url: 'https://i10a603.p.ssafy.io:/websocket',
           webSocketConnectHeaders: {
             // "Petcong-id-token": idToken,
             "transports": ["websocket"],
@@ -113,9 +113,9 @@ class SocketService extends GetxController {
                       await gotOffer(value['sdp'], value['type']);
                       await sendAnswer();
                       await Future.delayed(const Duration(milliseconds: 300));
-                      iceCandidates!.forEach((ice) {
+                      for (var ice in iceCandidates!) {
                         sendIce(ice);
-                      });
+                      }
                       break;
                     case 'answer':
                       Map<String, dynamic> value =
@@ -123,9 +123,9 @@ class SocketService extends GetxController {
                       print(
                           "gotAnswer============client ====================================${client.hashCode}");
                       await gotAnswer(value['sdp'], value['type']);
-                      iceCandidates!.forEach((ice) {
+                      for (var ice in iceCandidates!) {
                         sendIce(ice);
-                      });
+                      }
                       break;
                     case 'ice':
                       Map<String, dynamic> value =
