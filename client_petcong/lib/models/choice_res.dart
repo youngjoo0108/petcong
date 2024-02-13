@@ -9,7 +9,10 @@ class ChoiceRes extends Equatable {
   // ChoiceRes({this.targetUid, this.profileImgUrl, this.questions});
   ChoiceRes({this.targetUid});
 
-  ChoiceRes.fromJson(Map<dynamic, dynamic>? map) {
+  ChoiceRes.fromJson(Map<String, dynamic>? map) {
+    map!.forEach((key, value) {
+      print('Key: ${key.toString()}, Value: ${value.toString()}');
+    });
     if (map == null) {
       return;
     }
