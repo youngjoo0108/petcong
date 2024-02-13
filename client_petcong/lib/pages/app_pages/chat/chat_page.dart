@@ -1,46 +1,42 @@
-import 'package:auto_animated/auto_animated.dart';
 import 'package:flutter/material.dart';
-import 'package:petcong/controller/chat_controller.dart';
+import 'package:get/get.dart';
+import 'package:petcong/controller/history_controller.dart';
+import 'package:petcong/models/card_profile_model.dart';
+import 'package:petcong/services/matching_service.dart';
+import 'package:petcong/widgets/matched_card.dart';
 
 class MainChatPage extends StatefulWidget {
   const MainChatPage({super.key});
-
   @override
   State<MainChatPage> createState() => _MainChatPageState();
 }
 
 class _MainChatPageState extends State<MainChatPage> {
-  int itemsCount = 20;
-  @override
-  void initState() {
-    Future.delayed(const Duration(milliseconds: 500) * 5, () {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        itemsCount += 10;
-      });
-    });
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    Get.put(HistoryController());
+
+//TODO: fix getMatchedUsers api
+    HistoryController.to.getMatchedUsers();
+
+    RxList<CardProfileModel> matchedUsers = HistoryController.to.matchedUsers;
     return Scaffold(
       body: SafeArea(
-        child: LiveGrid(
-          padding: const EdgeInsets.all(1),
-          showItemInterval: const Duration(milliseconds: 50),
-          showItemDuration: const Duration(milliseconds: 150),
-          visibleFraction: 0.001,
-          itemCount: itemsCount,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 2,
-            mainAxisSpacing: 2,
-          ),
-          itemBuilder: animationItemBuilder(
-              (index) => HorizontalItem(title: index.toString())),
+        child: GridView.count(
+          crossAxisCount: 2,
+          childAspectRatio: 0.8, // Adjust this value as needed
+          children: List.generate(matchedUsers.length, (index) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => ProfileDetailPage(
+                            matchedUser: matchedUsers[index])));
+              },
+              child: MatchedCard(matchedUser: matchedUsers[index]),
+            );
+          }),
         ),
       ),
     );

@@ -204,6 +204,10 @@ class SignupController extends GetxController {
       uid: UserController.currentUser?.uid,
       instagramId: instagramId,
       kakaoId: kakaoId,
+
+      //TODO: needs to be removed
+      status: "ACTIVE"
+    
     );
 
     PetInfoModel petModel = PetInfoModel(

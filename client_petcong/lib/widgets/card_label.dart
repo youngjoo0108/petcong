@@ -32,8 +32,8 @@ class CardLabel extends StatelessWidget {
 
   factory CardLabel.up() {
     return const CardLabel._(
-      color: Colors.grey,
-      label: 'UP',
+      color: Colors.blueAccent,
+      label: 'PASS',
       angle: _labelAngle,
       alignment: Alignment(0, 0.5),
     );
@@ -41,8 +41,8 @@ class CardLabel extends StatelessWidget {
 
   factory CardLabel.down() {
     return const CardLabel._(
-      color: Colors.grey,
-      label: 'DOWN',
+      color: Colors.blueAccent,
+      label: 'PASS',
       angle: -_labelAngle,
       alignment: Alignment(0, -0.75),
     );

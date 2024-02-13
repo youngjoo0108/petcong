@@ -87,7 +87,7 @@ class MainProfilePage extends StatelessWidget {
                           shape: OvalBorder(),
                           shadows: [
                             BoxShadow(
-                              color: Colors.grey,
+                              color: Color.fromARGB(255, 171, 158, 158),
                               blurRadius: 1,
                               offset: Offset(0, 1),
                               spreadRadius: 1,
@@ -118,7 +118,7 @@ class MainProfilePage extends StatelessWidget {
                     int age = member?.memberInfo?.age ?? 0;
 
                     return Text(
-                      '${nickname}, ${age}',
+                      '$nickname, $age',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Colors.black,
@@ -415,11 +415,11 @@ class MainProfilePage extends StatelessWidget {
                             end: Alignment.bottomRight,
                           ),
                         ),
-                        child: GetBuilder<UserController>(
+                        child: GetBuilder<ProfileController>(
                           builder: (controller) {
                             // TextEditingController를 다이얼로그 밖에서 선언
                             final textEditingController = TextEditingController(
-                                text: controller.introText);
+                                text: controller.profile.value.petProfile?.petInfo?.description);
 
                             return Center(
                               child: GestureDetector(

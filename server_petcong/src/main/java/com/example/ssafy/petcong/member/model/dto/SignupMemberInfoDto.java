@@ -2,7 +2,6 @@ package com.example.ssafy.petcong.member.model.dto;
 
 import com.example.ssafy.petcong.member.model.enums.Gender;
 import com.example.ssafy.petcong.member.model.enums.Preference;
-import com.example.ssafy.petcong.member.model.enums.Status;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -14,12 +13,11 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Schema(title = "유저 정보", description = "member_id 값은 저장하지 않음")
-public class MemberInfoDto {
+@Schema(title = "회원가입 유저 정보", description = "member_id, uid, status, callable 값은 저장하지 않음")
+public class SignupMemberInfoDto {
     @Positive(message = "age should be greater than zero")
     @Schema(title = "나이", example = "1", minimum = "0")
     private int age;
@@ -39,11 +37,6 @@ public class MemberInfoDto {
     private String address;
 
     @Size(max = 30, message = "max length is 30")
-    @NotBlank(message = "uid is mandatory")
-    @Schema(title = "UID", example = "SA7q9H4r0WfIkvdah6OSIW7Y6XQ2", maxLength = 30)
-    private String uid;
-
-    @Size(max = 30, message = "max length is 30")
     @Schema(title = "인스타그램 아이디", nullable = true)
     private String instagramId;
 
@@ -59,41 +52,7 @@ public class MemberInfoDto {
     @Schema(implementation = Gender.class, title = "성별")
     private Gender gender;
 
-    @NotNull(message = "status is mandatory")
-    @Schema(implementation = Status.class, title = "활성 상태", description = "DELETED인 경우 탈퇴한 회원으로 나타남")
-    private Status status;
-
     @NotNull(message = "preference is mandatory")
     @Schema(implementation = Preference.class, title = "선호 상대")
     private Preference preference;
-
-    public static MemberInfoDto fromMemberRecord(MemberRecord member) {
-        return MemberInfoDto.builder()
-                .age(member.age())
-                .nickname(member.nickname())
-                .email(member.email())
-                .address(member.address())
-                .uid(member.uid())
-                .instagramId(member.instagramId())
-                .kakaoId(member.kakaoId())
-                .birthday(member.birthday())
-                .gender(member.gender())
-                .status(member.status())
-                .preference(member.preference())
-                .build();
-    }
-
-    public static MemberInfoDto fromSignupMemberInfo(SignupMemberInfoDto signupMemberInfo) {
-        return MemberInfoDto.builder()
-                .age(signupMemberInfo.getAge())
-                .nickname(signupMemberInfo.getNickname())
-                .email(signupMemberInfo.getEmail())
-                .address(signupMemberInfo.getAddress())
-                .instagramId(signupMemberInfo.getInstagramId())
-                .kakaoId(signupMemberInfo.getKakaoId())
-                .birthday(signupMemberInfo.getBirthday())
-                .gender(signupMemberInfo.getGender())
-                .preference(signupMemberInfo.getPreference())
-                .build();
-    }
 }

@@ -69,13 +69,13 @@ Future<bool> postSignin() async {
 
   if (response.statusCode == 200) {
     if (kDebugMode) {
-      print("success");
+      print("postSignin success");
     }
     return true;
   } else {
     if (kDebugMode) {
-      print(response.statusCode);
-      print(response.body);
+      print("postSignin response status code: ${response.statusCode}");
+      print("postSignin response body: ${response.body}");
       print("error");
     }
     return false;
@@ -122,6 +122,7 @@ Future<void> patchUserInfo(UserSignupModel user) async {
   }
 }
 
+// TODO: check image quality
 // POST /members/picture
 Future<void> postPicture(List<String> filePaths) async {
   Map<String, String> reqHeaders = await getIdToken();
@@ -142,7 +143,8 @@ Future<void> postPicture(List<String> filePaths) async {
       }
     } else if (kDebugMode) {
       print("pic posting failed");
-      print(response.statusCode);
+      print("postPicture response status code: ${response.statusCode}");
+      print("error");
       await for (var line in response.stream
           .transform(utf8.decoder)
           .transform(const LineSplitter())) {

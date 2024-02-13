@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petcong/models/card_profile_model.dart';
 import 'package:petcong/services/matching_service.dart';
@@ -5,12 +6,13 @@ import 'package:petcong/services/matching_service.dart';
 class HistoryController extends GetxController {
   static HistoryController get to => Get.find();
 
-  RxList<CardProfileModel> matched_users = <CardProfileModel>[].obs;
+  RxList<CardProfileModel> matchedUsers = <CardProfileModel>[].obs;
 
   void getMatchedUsers() async {
+    debugPrint("getMatchedUsers function called");
     getMatchList().then((profileList) {
-      matched_users.clear();
-      matched_users.addAll(profileList);
+      matchedUsers.clear();
+      matchedUsers.addAll(profileList);
     });
   }
 }
