@@ -58,12 +58,8 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
             String idToken = getTokenFromHeader(); // unauthenticated request
             idToken = (idToken != null) ? idToken.trim() : "";
             authentication = FirebaseAuthenticationToken.unauthenticated(idToken);
-            return authenticate(authentication);
+            return authenticationManager.authenticate(authentication);
         }
-    }
-
-    private Authentication authenticate(Authentication authentication) {
-        return authenticationManager.authenticate(authentication);
     }
 
     private void saveAuthentication(Authentication authentication) {
@@ -71,8 +67,8 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getTokenFromHeader() {
-        Assert.notNull(this.httpServletRequest, "HttpServletRequest must not be null.");
+        Assert.notNull(httpServletRequest, "HttpServletRequest must not be null.");
 
-        return this.httpServletRequest.getHeader(TOKEN);
+        return httpServletRequest.getHeader(TOKEN);
     }
 }
