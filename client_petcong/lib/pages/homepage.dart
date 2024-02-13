@@ -6,7 +6,6 @@ import 'package:petcong/widgets/navigations.dart';
 import 'package:petcong/pages/app_pages/chat/chat_page.dart';
 import 'package:petcong/pages/app_pages/profile/profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stomp_dart_client/stomp.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   final SocketService socketService =
       SocketService(); // State 객체가 하나 생성되고, socketService 인스턴스도 하나여야 하므로 final
+  StompClient? _client;
   String? uid;
   OverlayEntry? _overlayEntry;
 
@@ -50,6 +50,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> activateClient() async {
     await socketService.init();
+    _client = await socketService.initSocket();
   }
 
   @override

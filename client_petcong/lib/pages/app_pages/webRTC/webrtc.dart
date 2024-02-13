@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
 import 'package:petcong/pages/homepage.dart';
 import 'package:petcong/services/socket_service.dart';
-import 'package:stomp_dart_client/stomp.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MainVideoCallWidget extends StatefulWidget {
   final RTCVideoRenderer localRenderer;
