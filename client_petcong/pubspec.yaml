@@ -59,6 +59,7 @@ dependencies:
   auto_animated: ^3.2.0
   getwidget: ^4.0.0
   smooth_page_indicator: ^1.1.0
+  url_launcher: ^6.2.4
 
 dev_dependencies:
   flutter_test:

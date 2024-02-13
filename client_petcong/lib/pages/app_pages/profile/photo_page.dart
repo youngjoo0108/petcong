@@ -7,7 +7,7 @@ import 'video_page.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:petcong/services/user_service.dart' as user_service;
+import 'package:petcong/services/user_service.dart';
 
 // 이미지를 선택하고 화면에 표시되는 기능
 class DisplayImage extends StatelessWidget {
@@ -76,12 +76,7 @@ class PhotoPageState extends State<PhotoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Get.back(result: _progress);
-        return false;
-      },
-      child: Scaffold(
+    return  Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: LinearProgressIndicator(
@@ -184,8 +179,7 @@ class PhotoPageState extends State<PhotoPage> {
                     onPressed: _photoPaths.length >= 2
                         ? () async {
                             try {
-                              await user_service.postPicture(_photoPaths);
-                              print('postPicture 성공!'); // 성공했을 때 디버깅 메시지 출력
+                              await postPicture(_photoPaths);
                               Get.to(
                                 VideoPage(
                                   progress: _progress + 1 / 12,
@@ -194,7 +188,7 @@ class PhotoPageState extends State<PhotoPage> {
                               );
                             } catch (e) {
                               // postPicture 함수가 실패했을 때의 코드
-                              print('Error: $e');
+                              debugPrint('Error: $e');
                             }
                           }
                         : null,
@@ -206,7 +200,6 @@ class PhotoPageState extends State<PhotoPage> {
             ),
           ],
         ),
-      ),
     );
   }
 }
