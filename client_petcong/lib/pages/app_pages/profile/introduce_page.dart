@@ -113,8 +113,8 @@ class IntroducePageState extends State<IntroducePage> {
                   buttonText: 'CONTINUE',
                   onPressed: !_isButtonDisabled
                       ? () {
-                          SignupController().description =
-                              _controller.value.text;
+                          SignupController.to
+                              .addDescription(_controller.value.text);
                           Get.to(
                               SocialPage(
                                 progress: widget.progress + 0.1,
