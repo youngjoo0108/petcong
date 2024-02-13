@@ -7,6 +7,7 @@ import 'video_page.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:petcong/services/user_service.dart';
 
 // 이미지를 선택하고 화면에 표시되는 기능
 class DisplayImage extends StatelessWidget {
@@ -52,10 +53,11 @@ class PhotoPageState extends State<PhotoPage> {
   final List<String> _photoPaths = []; // 선택한 이미지들의 경로를 저장하는 리스트
 
   void navigateToMediaPage() async {
-    final result = await Get.to<String>(const MediaPage());
+    final result = await Get.to(() => const MediaPage());
+
     if (result != null) {
       setState(() {
-        _photoPaths.add(result);
+        _photoPaths.addAll(result);
       });
     }
   }
@@ -74,12 +76,7 @@ class PhotoPageState extends State<PhotoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Get.back(result: _progress);
-        return false;
-      },
-      child: Scaffold(
+    return  Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: LinearProgressIndicator(
@@ -90,7 +87,7 @@ class PhotoPageState extends State<PhotoPage> {
           ),
         ),
         body: ListView(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(5.0),
           children: <Widget>[
             Align(
               alignment: Alignment.centerLeft,
@@ -99,7 +96,7 @@ class PhotoPageState extends State<PhotoPage> {
                 onPressed: () => Get.back(result: _progress),
               ),
             ),
-            const SizedBox(height: 10.0),
+            const SizedBox(height: 5.0),
             const Center(
               child: Text(
                 '사진 첨부',
@@ -180,12 +177,19 @@ class PhotoPageState extends State<PhotoPage> {
                     isFilled: _photoPaths.length >= 2,
                     buttonText: 'CONTINUE',
                     onPressed: _photoPaths.length >= 2
-                        ? () {
-                            Get.to(
+                        ? () async {
+                            try {
+                              await postPicture(_photoPaths);
+                              Get.to(
                                 VideoPage(
                                   progress: _progress + 1 / 12,
                                 ),
-                                transition: Transition.noTransition);
+                                transition: Transition.noTransition,
+                              );
+                            } catch (e) {
+                              // postPicture 함수가 실패했을 때의 코드
+                              debugPrint('Error: $e');
+                            }
                           }
                         : null,
                     width: 240.0,
@@ -196,7 +200,6 @@ class PhotoPageState extends State<PhotoPage> {
             ),
           ],
         ),
-      ),
     );
   }
 }

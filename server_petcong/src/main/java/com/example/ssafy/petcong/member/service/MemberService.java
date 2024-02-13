@@ -10,8 +10,9 @@ public interface MemberService {
     MemberRecord findMemberByUid(String uid);
     MemberRecord findMemberByMemberId(int memberId);
     MemberRecord save(MemberInfoDto memberInfo);
-    SignupResponseDto signup(SignupRequestDto signupRequestDto);
+    SignupResponseDto signup(String uid, SignupRequestDto signupRequestDto);
     MemberRecord signin(int memberId, boolean state);
+    boolean signout(int memberId);
     ProfileDto getProfile(int memberId);
     MemberRecord updateMemberInfo(int memberId, MemberInfoDto memberInfo);
     List<MemberImgRecord> getMemberImageList(int memberId);

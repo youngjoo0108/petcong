@@ -1,4 +1,4 @@
-class ProfileModel {
+class CardProfileModel {
   late int userId;
   late int age;
   late String nickname;
@@ -6,10 +6,12 @@ class ProfileModel {
   late String petName;
   late String petGender;
   late int petAge;
+  late String? instagramId;
+  late String? kakaoId;
   String? description;
   List<String>? pictureUrls;
 
-  ProfileModel(
+  CardProfileModel(
       {required this.userId,
       required this.age,
       required this.nickname,
@@ -17,10 +19,12 @@ class ProfileModel {
       required this.petName,
       required this.petGender,
       required this.petAge,
+      this.instagramId,
+      this.kakaoId,
       this.description,
       this.pictureUrls});
 
-  ProfileModel.fromJson(Map<String, dynamic> map) {
+  CardProfileModel.fromJson(Map<String, dynamic> map) {
     userId = map['userId'];
     age = map['age'];
     nickname = map['nickname'];
@@ -28,6 +32,8 @@ class ProfileModel {
     petName = map['petName'];
     petGender = map['petGender'];
     petAge = map['petAge'];
+    instagramId = map['instagramId'];
+    kakaoId = map['kakaoId'];
     description = description != null ? map['description'] : '';
     pictureUrls = pictureUrls != null ? map['pictureUrls'] : [];
   }
@@ -40,6 +46,8 @@ class ProfileModel {
         petName,
         petGender,
         petAge,
+        instagramId,
+        kakaoId,
         description,
         pictureUrls
       ];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'package:petcong/pages/app_pages/profile/pet_name_page.dart';
 import 'pet_gender_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
@@ -21,6 +22,7 @@ class PetBirthdayPage extends StatefulWidget {
 
 class PetBirthdayPageState extends State<PetBirthdayPage> {
   final _controller = TextEditingController();
+  final SignupController signupController = Get.put(SignupController());
   final _dateValidator = ValueNotifier<String?>('Initial value');
   final double _progress = 6 / 12;
 
@@ -45,7 +47,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
     if (value == null || value.isEmpty) {
       return '생년월일을 입력해주세요';
     }
-    const datePattern = r'^(\d{4})\/(\d{2})\/(\d{2})$';
+    const datePattern = r'^(\d{4})\-(\d{2})\-(\d{2})$';
     final match = RegExp(datePattern).firstMatch(value);
     if (match == null) {
       return '유효한 날짜 형식이 아닙니다 (YYYY/MM/DD)';
@@ -79,6 +81,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
     return null;
   }
 
+//TODO: change to age
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +95,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: Column(
           children: <Widget>[
             Align(
@@ -103,7 +106,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(0.0),
+              padding: const EdgeInsets.all(5.0),
               child: Column(
                 children: <Widget>[
                   Text(
@@ -117,7 +120,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
                     child: TextField(
                         controller: _controller,
                         decoration: const InputDecoration(
-                          hintText: 'YYYY/MM/DD',
+                          hintText: 'YYYY-MM-DD',
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
                           ),
@@ -130,7 +133,7 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
                             fontWeight:
                                 FontWeight.w400), // 여기에 fontWeight를 추가했습니다.
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp('[0-9/]')),
+                          FilteringTextInputFormatter.allow(RegExp('[0-9-]')),
                           _DateInputFormatter(),
                         ],
                         keyboardType: TextInputType.number,
@@ -148,10 +151,13 @@ class PetBirthdayPageState extends State<PetBirthdayPage> {
                           onPressed:
                               value == null // value가 null인 경우에 버튼이 눌리도록 수정합니다.
                                   ? () {
-                                      Get.to(PetGenderPage(
-                                        petName: widget.petName,
-                                        progress: widget.progress + 1 / 12,
-                                      ), transition: Transition.noTransition);
+                                      SignupController.to.addPetAge(10);
+                                      Get.to(
+                                          PetGenderPage(
+                                            petName: widget.petName,
+                                            progress: widget.progress + 1 / 12,
+                                          ),
+                                          transition: Transition.noTransition);
                                     }
                                   : null,
                         ),
@@ -178,13 +184,13 @@ class _DateInputFormatter extends TextInputFormatter {
       return newValue;
     }
 
-    String newText = newValue.text.replaceAll('/', '');
+    String newText = newValue.text.replaceAll('-', '');
 
     if (newText.length > 4) {
-      newText = '${newText.substring(0, 4)}/${newText.substring(4)}';
+      newText = '${newText.substring(0, 4)}-${newText.substring(4)}';
     }
     if (newText.length > 7) {
-      newText = '${newText.substring(0, 7)}/${newText.substring(7)}';
+      newText = '${newText.substring(0, 7)}-${newText.substring(7)}';
     }
 
     return TextEditingValue(

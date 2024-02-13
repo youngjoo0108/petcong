@@ -42,19 +42,19 @@ class PetInfoModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['breed'] = this.breed;
-    data['age'] = this.age;
-    data['gender'] = this.gender;
-    data['neutered'] = this.neutered;
-    data['size'] = this.size;
-    data['weight'] = this.weight;
-    data['description'] = this.description;
-    data['dbti'] = this.dbti;
-    data['hobby'] = this.hobby;
-    data['snack'] = this.snack;
-    data['toy'] = this.toy;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['breed'] = breed;
+    data['age'] = age;
+    data['gender'] = gender;
+    data['neutered'] = neutered;
+    data['size'] = size;
+    data['weight'] = weight;
+    data['description'] = description;
+    data['dbti'] = dbti;
+    data['hobby'] = hobby;
+    data['snack'] = snack;
+    data['toy'] = toy;
     return data;
   }
 }
