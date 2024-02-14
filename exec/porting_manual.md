@@ -48,6 +48,18 @@ WebSocket
 
 SpringDoc
 + springdoc-openapi-starter-webmvc-ui : 2.1.0 
+
+Flutter
++ Flutter : 3.16.9
++ Dart : 3.2.6
++ DevTools 2.28.5
+
+Android
++ Kotlin : 1.7.10
++ minSDKVersion : 21
++ targetSDKVersion : 34
++ jvmTarget : 1.8
+
 ---
 # 도커 설치 
 https://www.hostwinds.kr/tutorials/install-docker-debian-based-operating-system
