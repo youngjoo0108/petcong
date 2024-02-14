@@ -8,7 +8,6 @@ import com.example.ssafy.petcong.security.userdetails.SignupUserDetails;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -70,9 +69,8 @@ public class MemberController {
     }
 
     @Operation(summary = "로그아웃", description = "로그아웃으로 상태를 변경",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "로그아웃 성공")
-            })
+            responses = @ApiResponse(responseCode = "200", description = "로그아웃 성공")
+    )
     @PostMapping("/signout")
     public ResponseEntity<?> signout(@AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId) {
         boolean isSignouted = memberService.signout(memberId);
@@ -96,6 +94,7 @@ public class MemberController {
     }
 
     @Operation(summary = "회원 정보 수정",
+            parameters = @Parameter(schema = @Schema(implementation = MemberInfoDto.class)),
             responses = @ApiResponse(responseCode = "200", description = "수정 성공",
                     content = @Content(schema = @Schema(implementation = MemberRecord.class)))
     )
@@ -130,6 +129,7 @@ public class MemberController {
     }
 
     @Operation(summary = "멀티미디어 다운로드 url 얻기", description = "생성된 presigned url 다운로드 링크 제공",
+            parameters = @Parameter(description = "S3 버킷 키"),
             responses = @ApiResponse(responseCode = "200", description = "url 생성 성공")
     )
     @GetMapping({"/picture", "/trick"})
@@ -142,45 +142,42 @@ public class MemberController {
     }
 
     @Operation(summary = "프로필 이미지 업로드", description = "이미지 파일은 S3, 메타데이터는 MySQL에 업로드",
-            responses = {
-                @ApiResponse(responseCode = "200", description = "업로드 성공",
-                        headers = @Header(name = "S3 Bucket Key"),
-                        content = @Content(schema = @Schema(implementation = MemberImgRecord.class)))
-    })
+            responses = @ApiResponse(responseCode = "200", description = "업로드 성공",
+                    content = @Content(schema = @Schema(implementation = MemberImgRecord.class)))
+    )
     @PostMapping("/picture")
     public ResponseEntity<?> postProfileImage(
             @AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId,
             @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
             @RequestParam MultipartFile[] files) {
 
-        List<MemberImgRecord> memberImgRecord = memberService.uploadMemberImage(memberId, uid, files);
+        List<MemberImgRecord> memberImgRecordList = memberService.uploadMemberImage(memberId, uid, files);
 
         return ResponseEntity
                 .created(null)
-                .body(memberImgRecord);
+                .body(memberImgRecordList);
     }
 
     @Operation(summary = "개 인기 업로드", description = "멀티미디어 파일은 S3, 메타데이터는 MySQL에 업로드",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "업로드 성공",
-                            headers = @Header(name = "S3 Bucket Key"),
-                            content = @Content(schema = @Schema(implementation = SkillMultimediaRecord.class)))
-    })
+            responses = @ApiResponse(responseCode = "200", description = "업로드 성공",
+                    content = @Content(schema = @Schema(implementation = SkillMultimediaRecord.class)))
+    )
     @PostMapping("/trick")
     public ResponseEntity<?> postDogTrick(
             @AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId,
             @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
             @RequestParam MultipartFile[] files) {
 
-        List<SkillMultimediaRecord> skillMultimediaRecord = memberService.uploadSkillMultimedia(memberId, uid, files);
+        List<SkillMultimediaRecord> skillMultimediaRecordList = memberService.uploadSkillMultimedia(memberId, uid, files);
 
         return ResponseEntity
                 .created(null)
-                .body(skillMultimediaRecord);
+                .body(skillMultimediaRecordList);
     }
 
     @Operation(summary = "프로필 이미지 수정", description = "이미지 파일은 S3, 메타데이터는 MySQL에 업로드",
-            responses = @ApiResponse(responseCode = "200", description = "수정 성공")
+            responses = @ApiResponse(responseCode = "200", description = "수정 성공",
+                    content = @Content(schema = @Schema(implementation = MemberImgRecord.class)))
     )
     @PatchMapping({"/picture", "/trick"})
     public ResponseEntity<?> patchProfileImage(
@@ -196,7 +193,8 @@ public class MemberController {
     }
 
     @Operation(summary = "개 인기 수정", description = "멀티미디어 파일은 S3, 메타데이터는 MySQL에 업로드",
-            responses = @ApiResponse(responseCode = "200", description = "수정 성공")
+            responses = @ApiResponse(responseCode = "200", description = "수정 성공",
+                    content = @Content(schema = @Schema(implementation = SkillMultimediaRecord.class)))
     )
     @PatchMapping("/trick")
     public ResponseEntity<?> patchDogTrick(
@@ -212,6 +210,7 @@ public class MemberController {
     }
 
     @Operation(summary = "프로필 이미지 삭제", description = "업로드 된 프로필 이미지 사진 삭제",
+            parameters = @Parameter(description = "삭제할 파일의 S3 버킷 키"),
             responses = @ApiResponse(responseCode = "200", description = "삭제 성공")
     )
     @DeleteMapping("/picture")
@@ -224,6 +223,7 @@ public class MemberController {
     }
 
     @Operation(summary = "개 인기 삭제", description = "업로드 된 개 인기 삭제",
+            parameters = @Parameter(description = "삭제할 파일의 S3 버킷 키"),
             responses = @ApiResponse(responseCode = "200", description = "삭제 성공")
     )
     @DeleteMapping("/picture")
