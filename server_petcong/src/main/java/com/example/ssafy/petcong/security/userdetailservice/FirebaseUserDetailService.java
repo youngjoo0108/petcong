@@ -1,9 +1,10 @@
-package com.example.ssafy.petcong.security;
+package com.example.ssafy.petcong.security.userdetailservice;
 
 import com.example.ssafy.petcong.member.model.dto.MemberRecord;
 import com.example.ssafy.petcong.member.model.entity.Member;
 import com.example.ssafy.petcong.member.repository.MemberRepository;
 
+import com.example.ssafy.petcong.security.userdetails.FirebaseUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

@@ -6,7 +6,7 @@ class ProfileController extends GetxController {
   static ProfileController get to => Get.find();
 
   Rx<ProfilePageModel> profile = ProfilePageModel().obs;
-
+  String introText = '';
   @override
   void onInit() {
     super.onInit();
@@ -22,5 +22,10 @@ class ProfileController extends GetxController {
     } catch (e) {
       print("Error in getProfile: $e");
     }
+  }
+
+  void updateIntroText(String newIntroText) {
+    introText = newIntroText;
+    update(); // GetX 컨트롤러를 업데이트하여 UI를 다시 빌드합니다.
   }
 }

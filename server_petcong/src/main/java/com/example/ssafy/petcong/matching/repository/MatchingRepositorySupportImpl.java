@@ -7,6 +7,8 @@ import com.example.ssafy.petcong.member.model.entity.Member;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 //@Repository
 @RequiredArgsConstructor
 public class MatchingRepositorySupportImpl implements MatchingRepositorySupport {
@@ -16,11 +18,13 @@ public class MatchingRepositorySupportImpl implements MatchingRepositorySupport 
     @Override
     public Matching findPendingByMembers(Member fromMember, Member toMember) {
         QMatching matching = QMatching.matching;
-        return jpaQueryFactory.select(matching)
+        List<Matching> pendings = jpaQueryFactory.select(matching)
                 .from(matching)
                 .where(matching.fromMember.memberId.eq(fromMember.getMemberId())
                         .and(matching.toMember.memberId.eq(toMember.getMemberId()))
                         .and((matching.callStatus.eq(CallStatus.PENDING)))
-                ).fetchOne();
+                ).fetch();
+
+        return pendings.isEmpty() ? null : pendings.get(0);
     }
 }

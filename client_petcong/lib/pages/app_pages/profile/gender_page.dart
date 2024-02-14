@@ -47,8 +47,7 @@ class GenderPageState extends State<GenderPage> {
                 alignment: Alignment.centerLeft,
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back_ios, size: 32),
-                  onPressed: () =>
-                      Get.off(const BirthdayPage(progress: 2 / 12)),
+                  onPressed: () => Get.off(const BirthdayPage(progress: 0.2)),
                 ),
               ),
               const SizedBox(height: 5.0),
@@ -99,7 +98,7 @@ class GenderPageState extends State<GenderPage> {
                         SignupController.to.addGender(_gender);
                         Get.to(
                             PreferPage(
-                              progress: widget.progress + 1 / 12,
+                              progress: widget.progress + 0.1,
                             ),
                             transition: Transition.noTransition);
                       }

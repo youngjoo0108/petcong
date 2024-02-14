@@ -3,30 +3,52 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/profile_page_model.dart';
 import 'package:petcong/models/user_signup_model.dart';
 
-const bool testing = true;
+const bool testing = false;
 
-User? currentUser = UserController.currentUser;
-String idTokenString = currentUser?.getIdToken().toString() ?? "";
+String idTokenString = "";
+
 const String serverUrl = 'https://i10a603.p.ssafy.io';
-Map<String, String> reqHeaders = checkTesting();
 
 // testing 중인지 확인하고 header에 tester 권한 추가
-Map<String, String> checkTesting() {
-  return testing ? {'tester': 'A603'} : {'Petcong-id-token': idTokenString};
+Future<Map<String, String>> getIdToken() async {
+  if (testing) return {'tester': 'A603'};
+  Map<String, String> postHeaders = {};
+  if (FirebaseAuth.instance.currentUser != null) {
+    if (kDebugMode) {
+      print("user exists");
+    }
+
+    try {
+      String? token = await FirebaseAuth.instance.currentUser!.getIdToken();
+      if (token!.isNotEmpty) {
+        postHeaders['Petcong-id-token'] = token;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+  return postHeaders;
 }
 
 // POST /members/signup
 Future<void> postSignup(UserSignupModel user) async {
+  Map<String, String> postHeaders = await getIdToken();
+  postHeaders['Content-Type'] = 'application/json';
+  print("headers");
+  postHeaders.forEach((key, value) {
+    print("$key : $value");
+  });
+
+  print("json body");
+  print(jsonEncode(user.toJson()));
+
   final response = await http.post(Uri.parse('$serverUrl/members/signup'),
-      headers: {
-        'tester': 'A603',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(user.toJson()));
+      headers: postHeaders, body: jsonEncode(user.toJson()));
 
   if (response.statusCode == 201) {
     if (kDebugMode) {
@@ -45,18 +67,19 @@ Future<void> postSignup(UserSignupModel user) async {
 // POST /members/signin
 // 가입한적이 있는 경우 true, 없는 경우 false를 반환합니다.
 Future<bool> postSignin() async {
+  Map<String, String> reqHeaders = await getIdToken();
   final response = await http.post(Uri.parse('$serverUrl/members/signin'),
       headers: reqHeaders);
 
   if (response.statusCode == 200) {
     if (kDebugMode) {
-      print("success");
+      print("postSignin success");
     }
     return true;
   } else {
     if (kDebugMode) {
-      print(response.statusCode);
-      print(response.body);
+      print("postSignin response status code: ${response.statusCode}");
+      print("postSignin response body: ${response.body}");
       print("error");
     }
     return false;
@@ -65,12 +88,13 @@ Future<bool> postSignin() async {
 
 // GET /members/info
 Future<ProfilePageModel> getUserInfo() async {
+  Map<String, String> reqHeaders = await getIdToken();
   final response =
       await http.get(Uri.parse('$serverUrl/members/info'), headers: reqHeaders);
 
   if (response.statusCode == 200) {
     return ProfilePageModel.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>);
+        jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>);
   } else {
     if (kDebugMode) {
       print(response.statusCode);
@@ -83,6 +107,8 @@ Future<ProfilePageModel> getUserInfo() async {
 
 // PATCH /members/update
 Future<void> patchUserInfo(UserSignupModel user) async {
+  Map<String, String> reqHeaders = await getIdToken();
+  reqHeaders['Content-Type'] = 'application/json';
   final response = await http.patch(Uri.parse('$serverUrl/members/update'),
       headers: reqHeaders, body: jsonEncode(user.toJson()));
 
@@ -100,8 +126,10 @@ Future<void> patchUserInfo(UserSignupModel user) async {
   }
 }
 
+// TODO: check image quality
 // POST /members/picture
 Future<void> postPicture(List<String> filePaths) async {
+  Map<String, String> reqHeaders = await getIdToken();
   const String endpoint = '$serverUrl/members/picture';
   var request = http.MultipartRequest('POST', Uri.parse(endpoint));
   request.headers.addAll(reqHeaders);
@@ -119,7 +147,8 @@ Future<void> postPicture(List<String> filePaths) async {
       }
     } else if (kDebugMode) {
       print("pic posting failed");
-      print(response.statusCode);
+      print("postPicture response status code: ${response.statusCode}");
+      print("error");
       await for (var line in response.stream
           .transform(utf8.decoder)
           .transform(const LineSplitter())) {
@@ -162,6 +191,7 @@ Future<void> patchPicture(List<String> keys, List<String> filePaths) async {
 }
 
 Future<void> withdrawUser() async {
+  Map<String, String> reqHeaders = await getIdToken();
   final response = await http.delete(Uri.parse('$serverUrl/members/withdraw'),
       headers: reqHeaders);
 
@@ -181,6 +211,7 @@ Future<void> withdrawUser() async {
 
 // GET /members/picture
 Future<String> getPicture(String key) async {
+  Map<String, String> reqHeaders = await getIdToken();
   final response = await http.get(
       Uri.parse('$serverUrl/members/picture?key=$key'),
       headers: reqHeaders);

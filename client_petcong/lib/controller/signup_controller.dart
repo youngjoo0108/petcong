@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,10 +20,8 @@ class SignupController extends GetxController {
   String? preference;
   String? email;
   String? address;
-  String? uid;
   String? instagramId;
   String? kakaoId;
-  String? status;
 
 // =============      petinfo      =============
 
@@ -43,7 +40,6 @@ class SignupController extends GetxController {
 
 //TODO: this function has to be refactored
   addCommon() {
-    uid = authentication.currentUser?.uid;
     email = authentication.currentUser?.email;
   }
 
@@ -174,10 +170,8 @@ class SignupController extends GetxController {
     debugPrint(preference);
     debugPrint(email);
     debugPrint(address);
-    debugPrint(uid);
     debugPrint(instagramId);
     debugPrint(kakaoId);
-    debugPrint(status);
     debugPrint(petName);
     debugPrint(breed);
     debugPrint(petGender);
@@ -201,9 +195,10 @@ class SignupController extends GetxController {
       preference: preference,
       email: UserController.currentUser?.email,
       address: address,
-      uid: UserController.currentUser?.uid,
       instagramId: instagramId,
       kakaoId: kakaoId,
+
+      //TODO: needs to be removed
     );
 
     PetInfoModel petModel = PetInfoModel(
@@ -223,7 +218,7 @@ class SignupController extends GetxController {
 
     UserSignupModel model =
         UserSignupModel(userInfoModel: userModel, petInfoModel: petModel);
-    debugPrint(model.toString());
+    print(model.toString());
 
     postSignup(model);
   }

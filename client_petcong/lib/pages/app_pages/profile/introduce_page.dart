@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/controller/signup_controller.dart';
 import 'social_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
@@ -66,7 +67,7 @@ class IntroducePageState extends State<IntroducePage> {
                         ),
                         onPressed: () {
                           Get.to(const SocialPage(
-                            progress: 9 / 12,
+                            progress: 0.9,
                           ));
                         },
                       ),
@@ -112,9 +113,11 @@ class IntroducePageState extends State<IntroducePage> {
                   buttonText: 'CONTINUE',
                   onPressed: !_isButtonDisabled
                       ? () {
+                          SignupController.to
+                              .addDescription(_controller.value.text);
                           Get.to(
                               SocialPage(
-                                progress: widget.progress + 1 / 12,
+                                progress: widget.progress + 0.1,
                               ),
                               transition: Transition.noTransition);
                         }

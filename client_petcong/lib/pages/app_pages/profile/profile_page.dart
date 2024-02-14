@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
 import 'package:petcong/controller/profile_controller.dart';
-import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/profile_page_model.dart';
 import 'package:petcong/pages/app_pages/profile/nickname_page.dart';
 import 'package:petcong/services/user_service.dart';
@@ -76,7 +75,7 @@ class MainProfilePage extends StatelessWidget {
                     right: 5,
                     child: GestureDetector(
                       onTap: () {
-                        Get.to(const NicknamePage(progress: 1 / 12));
+                        Get.to(const NicknamePage(progress: 0.1));
                       },
                       child: Container(
                         width: 45,
@@ -87,7 +86,7 @@ class MainProfilePage extends StatelessWidget {
                           shape: OvalBorder(),
                           shadows: [
                             BoxShadow(
-                              color: Colors.grey,
+                              color: Color.fromARGB(255, 171, 158, 158),
                               blurRadius: 1,
                               offset: Offset(0, 1),
                               spreadRadius: 1,
@@ -415,11 +414,12 @@ class MainProfilePage extends StatelessWidget {
                             end: Alignment.bottomRight,
                           ),
                         ),
-                        child: GetBuilder<UserController>(
+                        child: GetBuilder<ProfileController>(
                           builder: (controller) {
                             // TextEditingController를 다이얼로그 밖에서 선언
                             final textEditingController = TextEditingController(
-                                text: controller.introText);
+                                text: controller.profile.value.petProfile
+                                    ?.petInfo?.description);
 
                             return Center(
                               child: GestureDetector(

@@ -1,7 +1,7 @@
 package com.example.ssafy.petcong.security.filter;
 
 import com.example.ssafy.petcong.properties.AllowedUrlProperties;
-import com.example.ssafy.petcong.security.UserRole;
+import com.example.ssafy.petcong.security.role.UserRole;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -45,6 +45,11 @@ public class ExclusiveFilter extends OncePerRequestFilter {
         AntPathRequestMatcherProvider antPathRequestMatcherProvider = new AntPathRequestMatcherProvider(s -> s);
         if (allowedPatternList.stream().anyMatch(pattern -> antPathRequestMatcherProvider.getRequestMatcher(pattern).matches(request))) {
             setUserRoleToRequest(UserRole.ANONYMOUS, request);
+            return true;
+        }
+
+        if ("/members/signup".equals(requestUri)) {
+            setUserRoleToRequest(UserRole.SIGNUP, request);
             return true;
         }
 

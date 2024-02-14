@@ -1,8 +1,9 @@
 package com.example.ssafy.petcong.security.filter;
 
-import com.example.ssafy.petcong.security.FirebaseAuthenticationToken;
-import com.example.ssafy.petcong.security.FirebaseUserDetails;
-import com.example.ssafy.petcong.security.UserRole;
+import com.example.ssafy.petcong.security.token.FirebaseAuthenticationToken;
+import com.example.ssafy.petcong.security.userdetails.FirebaseUserDetails;
+import com.example.ssafy.petcong.security.token.SignupAuthenticationToken;
+import com.example.ssafy.petcong.security.role.UserRole;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -54,16 +55,15 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
             AbstractAuthenticationToken authenticatedToken = FirebaseAuthenticationToken.authenticated(anonymousUserDetails, anonymousUserDetails.getPassword(), null);
             authenticatedToken.setDetails(anonymousUserDetails);
             return authenticatedToken;
+        } else if (role.equals(UserRole.SIGNUP)) { // signup request
+            String idToken = getTokenFromHeader();
+            authentication = SignupAuthenticationToken.unauthenticated(idToken);
+            return authenticationManager.authenticate(authentication);
         } else {
             String idToken = getTokenFromHeader(); // unauthenticated request
-            idToken = (idToken != null) ? idToken.trim() : "";
             authentication = FirebaseAuthenticationToken.unauthenticated(idToken);
-            return authenticate(authentication);
+            return authenticationManager.authenticate(authentication);
         }
-    }
-
-    private Authentication authenticate(Authentication authentication) {
-        return authenticationManager.authenticate(authentication);
     }
 
     private void saveAuthentication(Authentication authentication) {
@@ -71,8 +71,10 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getTokenFromHeader() {
-        Assert.notNull(this.httpServletRequest, "HttpServletRequest must not be null.");
-
-        return this.httpServletRequest.getHeader(TOKEN);
+        Assert.notNull(httpServletRequest, "HttpServletRequest must not be null.");
+        String idToken = httpServletRequest.getHeader(TOKEN);
+        idToken = (idToken != null) ? idToken.trim() : "";
+        return idToken;
     }
+
 }
