@@ -12,7 +12,7 @@ class MainVideoCallWidget extends StatefulWidget {
   RTCPeerConnection? _pc;
   MediaStream? _localStream;
   List<RTCIceCandidate>? _iceCandidates;
-  static late int quizIdx;
+  RxInt? quizIdx = RxInt(0);
 
   MainVideoCallWidget({
     super.key,
@@ -93,7 +93,7 @@ class MainVideoCallWidget extends StatefulWidget {
       await _localRenderer!.initialize();
 
       final mediaConstraints = {
-        'audio': true,
+        'audio': false,
         'video': {'facingMode': 'user'}
       };
 
@@ -123,7 +123,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   late double scaleValue = 0.5;
   late double localRendererX = videoWidth * (6 / 7);
   late double localRendererY = videoHeight / 20;
-  // late double test = 0;
+
   // icebreakings
   List<String> quizs = [
     // "똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중",
@@ -142,7 +142,9 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   @override
   void initState() {
     super.initState();
-    MainVideoCallWidget.quizIdx = 0;
+    print(widget.quizIdx);
+    print(widget.quizIdx!.value);
+    widget.quizIdx!.value = 0;
   }
 
   @override
@@ -173,37 +175,34 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   void onIdxPlusBtnPressed() {
     setState(() {
       int maxIdx = quizs.length;
-      if (MainVideoCallWidget.quizIdx >= maxIdx) {
-        MainVideoCallWidget.quizIdx = maxIdx;
+      if (widget.quizIdx!.value >= maxIdx) {
+        widget.quizIdx!.value = maxIdx;
         print("===============index changed by me / max!!");
         return;
       }
-      MainVideoCallWidget.quizIdx++;
+      widget.quizIdx!.value++;
       print(
-          "===============index changed by me / index = ${MainVideoCallWidget.quizIdx}==");
-      SocketService.sendMessage("idx", MainVideoCallWidget.quizIdx.toString());
+          "===============index changed by me / index = ${widget.quizIdx!.value}==");
+      SocketService.sendMessage("idx", widget.quizIdx!.value.toString());
     });
   }
 
   void onIdxMinusBtnPressed() {
     setState(() {
-      if (MainVideoCallWidget.quizIdx <= 0) {
-        MainVideoCallWidget.quizIdx = 0;
+      if (widget.quizIdx!.value <= 0) {
+        widget.quizIdx!.value = 0;
         print("===============index changed by me / max!!");
         return;
       }
-      MainVideoCallWidget.quizIdx--;
+      widget.quizIdx!.value--;
       print(
-          "===============index changed by me / index = ${MainVideoCallWidget.quizIdx}==");
-      SocketService.sendMessage("idx", MainVideoCallWidget.quizIdx.toString());
+          "===============index changed by me / index = ${widget.quizIdx!.value}==");
+      SocketService.sendMessage("idx", widget.quizIdx!.value.toString());
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      int nowIdx = MainVideoCallWidget.quizIdx;
-    });
     final TransformationController controller = TransformationController();
     controller.value = Matrix4.identity()
       ..scale(scaleValue)
@@ -227,7 +226,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
             child: InteractiveViewer(
               transformationController: controller,
               minScale: 0.3,
-              maxScale: 0.6,
+              maxScale: 1,
               constrained: true,
               boundaryMargin: const EdgeInsets.all(double.infinity),
               onInteractionStart: (details) {},
@@ -254,25 +253,31 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           ),
         ],
       ),
-      floatingActionButton: Column(
-        children: [
-          Expanded(
-            child: Align(
+      floatingActionButton: Align(
+        alignment: Alignment.bottomRight,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Align(
               alignment: Alignment.bottomCenter,
-              child: SafeArea(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 100),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: AnimatedContainer(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      duration: const Duration(milliseconds: 200),
                       width: showMessage
                           ? MediaQuery.of(context).size.width - videoWidth / 3
                           : 0.0,
-                      height: showMessage ? 50.0 : 0.0,
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      // height: showMessage ? 50.0 : 0.0,
                       child: showMessage
                           ? Container(
-                              color: Colors.white.withOpacity(0.3),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white.withOpacity(0.3),
+                              ),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -282,17 +287,20 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                                     icon: const Icon(
                                         Icons.arrow_back_ios_new_rounded),
                                   ),
-                                  Text(
-                                    quizs.isNotEmpty &&
-                                            MainVideoCallWidget.quizIdx >= 0 &&
-                                            MainVideoCallWidget.quizIdx <
-                                                quizs.length
-                                        ? quizs[MainVideoCallWidget.quizIdx]
-                                        : 'No quiz available',
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
+                                  Flexible(
+                                    fit: FlexFit.loose,
+                                    child: Text(
+                                      quizs.isNotEmpty &&
+                                              widget.quizIdx!.value >= 0 &&
+                                              widget.quizIdx!.value <
+                                                  quizs.length
+                                          ? quizs[widget.quizIdx!.value]
+                                          : 'No quiz available',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                   IconButton(
@@ -305,45 +313,45 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                             )
                           : null,
                     ),
-                    Opacity(
-                      opacity: showMessage ? 1.0 : 0.2,
-                      child: FloatingActionButton(
-                        onPressed: _toggleMessageDialog,
-                        heroTag: 'text',
-                        backgroundColor: Colors.transparent, // 배경색을 투명으로 설정합니다.
-                        elevation: 5,
-                        child: Image.asset(
-                          'assets/src/petcong_c_logo.png',
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        ), // 그림자의 높이를 0으로 설정하여 그림자를 없앱니다.
-                      ),
+                  ),
+                  Opacity(
+                    opacity: showMessage ? 1.0 : 0.2,
+                    child: FloatingActionButton(
+                      onPressed: _toggleMessageDialog,
+                      heroTag: 'text',
+                      backgroundColor: Colors.transparent, // 배경색을 투명으로 설정합니다.
+                      elevation: 5,
+                      child: Image.asset(
+                        'assets/src/petcong_c_logo.png',
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ), // 그림자의 높이를 0으로 설정하여 그림자를 없앱니다.
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                ],
               ),
             ),
-          ),
-          // 통화 종료 버튼
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: FloatingActionButton(
-              onPressed: () async {
-                await disconnectCall(); // 다 꺼지면 이동
-                Get.offAll(const HomePage());
-              },
-              heroTag: 'stop_call_button',
-              shape: const CircleBorder(),
-              backgroundColor: MyColor.petCongColor4,
-              elevation: 3,
-              child: const Icon(Icons.call_end),
+            // 통화 종료 버튼
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: FloatingActionButton(
+                onPressed: () async {
+                  await disconnectCall(); // 다 꺼지면 이동
+                  Get.offAll(const HomePage());
+                },
+                heroTag: 'stop_call_button',
+                shape: const CircleBorder(),
+                backgroundColor: MyColor.petCongColor4,
+                elevation: 3,
+                child: const Icon(Icons.call_end),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

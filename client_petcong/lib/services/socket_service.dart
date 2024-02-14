@@ -139,9 +139,9 @@ class SocketService extends GetxController {
                       break;
                     case 'idx':
                       int newIdx = int.parse(response['value']);
-                      MainVideoCallWidget.quizIdx = newIdx;
+                      mainVideoCallWidget!.quizIdx?.value = newIdx;
                       debugPrint(
-                          "===============index changed by partner / index = ${MainVideoCallWidget.quizIdx}==");
+                          "===============index changed by partner / index = ${mainVideoCallWidget!.quizIdx?.value}==");
                       break;
                   }
                 }
