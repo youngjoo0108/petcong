@@ -147,7 +147,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       debugPrint(
           "onDislike {${MatchCardController.to.getMatchingQue().value.elementAt(index).nickname}, $direction}");
     }
-    MatchCardController.to.getCardProfile();
+    MatchCardController.to.fillQueue();
   }
 
   /// targetId = int
