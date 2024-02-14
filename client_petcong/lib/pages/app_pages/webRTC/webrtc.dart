@@ -25,8 +25,19 @@ class MainVideoCallWidget extends StatefulWidget {
 class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   late double videoWidth = MediaQuery.of(context).size.width;
   late double videoHeight = MediaQuery.of(context).size.height;
+  late double scaleValue = 0.5;
+  late double localRendererX = videoWidth * (6 / 7);
+  late double localRendererY = videoHeight / 20;
+
   // icebreakings
   List<String> quizs = ["sampleQuiz1", "sampleQuiz2", "sampleQuiz3"];
+  bool showMessage = false;
+
+  void _toggleMessageDialog() {
+    setState(() {
+      showMessage = !showMessage;
+    });
+  }
 
   @override
   void initState() {
@@ -55,7 +66,9 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   @override
   Widget build(BuildContext context) {
     final TransformationController controller = TransformationController();
-    controller.value = Matrix4.identity()..scale(0.5);
+    controller.value = Matrix4.identity()
+      ..scale(scaleValue)
+      ..translate(localRendererX, localRendererY);
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -70,6 +83,24 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
             ),
           ),
           //  내 화면
+          // ClipRect(
+          //   child: InteractiveViewer(
+          //     transformationController: controller,
+          //     minScale: 0.3,
+          //     maxScale: 0.5,
+          //     constrained: true,
+          //     boundaryMargin: const EdgeInsets.all(double.infinity),
+          //     child: SizedBox(
+          //       width: videoWidth,
+          //       height: videoHeight,
+          //       child: ClipRRect(
+          //         borderRadius: BorderRadius.circular(20),
+          //         child: RTCVideoView(
+          //           widget.localRenderer,
+          //           objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+          //           mirror: true,
+          //         ),
+          // 내 화면
           ClipRect(
             child: InteractiveViewer(
               transformationController: controller,
@@ -77,6 +108,13 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
               maxScale: 0.5,
               constrained: true,
               boundaryMargin: const EdgeInsets.all(double.infinity),
+              onInteractionUpdate: ((details) {
+                // setState(() {});
+                localRendererX = details.focalPointDelta.dx;
+                localRendererY = details.focalPointDelta.dy;
+                scaleValue = details.scale;
+                print(scaleValue);
+              }),
               child: SizedBox(
                 width: videoWidth,
                 height: videoHeight,
