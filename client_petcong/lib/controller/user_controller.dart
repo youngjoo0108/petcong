@@ -4,6 +4,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:petcong/controller/history_controller.dart';
+import 'package:petcong/controller/match_card_controller.dart';
 import 'package:petcong/controller/profile_controller.dart';
 import 'package:petcong/pages/homepage.dart';
 import 'package:petcong/pages/signin_pages/sign_in_page.dart';
@@ -42,6 +44,8 @@ class UserController extends GetxController {
     if (user == null) {
       Get.offAll(() => const SignInPage());
     } else {
+      HistoryController.to.onInit();
+      MatchCardController.to.onInit();
       ProfileController.to.onInit();
       Get.offAll(() => const HomePage());
     }
