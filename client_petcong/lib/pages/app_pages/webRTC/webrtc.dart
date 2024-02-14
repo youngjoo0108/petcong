@@ -16,9 +16,6 @@ class MainVideoCallWidget extends StatefulWidget {
 
   MainVideoCallWidget({
     super.key,
-    // required this._localRenderer,
-    // required this._remoteRenderer,
-    // required this._pc,
   });
 
   Future<void> init() async {
@@ -54,11 +51,6 @@ class MainVideoCallWidget extends StatefulWidget {
     };
 
     _pc = await createPeerConnection(config, sdpConstraints);
-
-    // print("=======================makeCall start");
-    // print("_pc is null = ${_pc == null} ===");
-    // print("_localRenderer is null = ${_localRenderer == null}");
-    // print("_remoteRenderer is null = ${_remoteRenderer == null}");
   }
 
   Future<RTCSessionDescription> createOffer() async {
@@ -79,7 +71,6 @@ class MainVideoCallWidget extends StatefulWidget {
 
   Future joinRoom() async {
     _iceCandidates = [];
-    print("=======================joinRoom start");
     try {
       _pc!.onIceCandidate = (ice) {
         _iceCandidates!.add(ice);
@@ -113,8 +104,6 @@ class MainVideoCallWidget extends StatefulWidget {
 
       // 스트림의 트랙(카메라 정보가 들어오는 연결)을 peerConnection(정보를 전송할 connection)에 추가
       _localStream!.getTracks().forEach((track) {
-        print(
-            "================================on joinRoom(), track = ${track.toString()} =====");
         _pc!.addTrack(track, _localStream!);
       });
 
@@ -122,16 +111,6 @@ class MainVideoCallWidget extends StatefulWidget {
     } catch (exception) {
       print(exception);
     }
-    // // print rtc objects (reconnect test)
-    // print(
-    //     "================================= _localRenderer.hashCode = ${_localRenderer.hashCode}=======================");
-    // print(
-    //     "================================= _remoteRenderer.hashCode = ${_remoteRenderer.hashCode}=======================");
-    // print(
-    //     "================================= _localStream.hashCode = ${_localStream.hashCode}=======================");
-    // print(
-    //     "================================= _pc.hashCode = ${_pc.hashCode}=======================");
-    print("=======================joinRoom end");
   }
 
   @override
@@ -174,30 +153,17 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   Future<void> disconnectCall() async {
     widget._localRenderer!.srcObject!.getTracks().forEach((track) {
       track.stop();
-      // widget._localRenderer!.srcObject!.removeTrack(track);
-      print(
-          "================================after removeTrack(), track = ${track.toString()} =====");
     });
-    print("tracks.removeTrack() 완료됨");
-    // remoteRendere의 Track 객체는 상대방이 끊었을 때 알아서 stop된다?
     widget._remoteRenderer!.srcObject!.getTracks().forEach((track) {
       track.stop();
-      // widget._remoteRenderer!.srcObject!.removeTrack(track);
     });
-    // await widget._localRenderer.srcObject!.dispose();
-    // await widget._remoteRenderer.srcObject!.dispose();
+
     widget._localRenderer!.srcObject = null;
     widget._remoteRenderer!.srcObject = null;
-    print("srcObject = null 완료됨");
     widget._pc!.close();
-    print("pc.close 완료됨");
-    // print(
-    //     "end btn.onPressed - localRederer.hashCode = ${widget._localRenderer.hashCode}");
-    // print(
-    //     "end btn.onPressed - _remoteRenderer.hashCode = ${widget._remoteRenderer.hashCode}");
+
     widget._localRenderer = null;
     widget._remoteRenderer = null;
-    print("renderer = null 완료됨");
     // disconnect end
     SocketService().setCallPressed(false); // flag false로
     SocketService().disposeSocket(SocketService.uid);
