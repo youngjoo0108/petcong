@@ -24,14 +24,16 @@ class SocketService extends GetxController {
   VoidCallback? onInitComplete;
   // RTC 변수
   // late MainVideoCall webrtc;
-  RTCPeerConnection? pc;
+  // RTCPeerConnection? pc;
   static late String targetUid; // matched 메시지 받았을 때 초기화됨. static 함수에서 사용함.
   String subsPrefix = "/queue/";
-  RTCVideoRenderer? _localRenderer;
-  RTCVideoRenderer? _remoteRenderer;
+  // RTCVideoRenderer? _localRenderer;
+  // RTCVideoRenderer? _remoteRenderer;
   MediaStream? _localStream;
   static bool callPressed = false;
   List<RTCIceCandidate>? iceCandidates;
+  MainVideoCallWidget?
+      mainVideoCallWidget; // 인스턴스 변수로 들고있고, callWaiting 진입 / 통화종료 시 생성/삭제 (동시에 한 통화만 가능하므로 겹칠 일 X)
 
   Future<void> initPrefs() async {
     try {
@@ -47,6 +49,13 @@ class SocketService extends GetxController {
 
   void setCallPressed(bool flag) {
     callPressed = flag;
+  }
+
+  void sendAllIces() {
+    List<RTCIceCandidate> ices = mainVideoCallWidget!.getIceCandidates();
+    for (var ice in ices) {
+      sendIce(ice);
+    }
   }
 
   Future<void> init() async {
@@ -112,9 +121,7 @@ class SocketService extends GetxController {
                       await gotOffer(value['sdp'], value['type']);
                       await sendAnswer();
                       await Future.delayed(const Duration(milliseconds: 300));
-                      for (var ice in iceCandidates!) {
-                        sendIce(ice);
-                      }
+                      sendAllIces();
                       break;
                     case 'answer':
                       Map<String, dynamic> value =
@@ -122,9 +129,7 @@ class SocketService extends GetxController {
                       print(
                           "gotAnswer============client ====================================${client.hashCode}");
                       await gotAnswer(value['sdp'], value['type']);
-                      for (var ice in iceCandidates!) {
-                        sendIce(ice);
-                      }
+                      sendAllIces();
                       break;
                     case 'ice':
                       Map<String, dynamic> value =
@@ -164,33 +169,37 @@ class SocketService extends GetxController {
   }
 
   Future<void> makeCall(String targetUidParam) async {
-    final config = {
-      'iceServers': [
-        {"url": "stun:stun.l.google.com:19302"},
-        {
-          "url": "turn:i10a603.p.ssafy.io:3478",
-          "username": "ehigh",
-          "credential": "1234",
-        },
-      ],
-    };
+    // final config = {
+    //   'iceServers': [
+    //     {"url": "stun:stun.l.google.com:19302"},
+    //     {
+    //       "url": "turn:i10a603.p.ssafy.io:3478",
+    //       "username": "ehigh",
+    //       "credential": "1234",
+    //     },
+    //   ],
+    // };
 
-    final sdpConstraints = {
-      'mandatory': {
-        'OfferToReceiveAudio': true,
-        'OfferToReceiveVideo': true,
-      },
-      'optional': []
-    };
+    // final sdpConstraints = {
+    //   'mandatory': {
+    //     'OfferToReceiveAudio': true,
+    //     'OfferToReceiveVideo': true,
+    //   },
+    //   'optional': []
+    // };
+    // print("=======================makeCall start");
+    // print("pc is null = ${pc == null} ===");
+    // print("localRenderer is null = ${_localRenderer == null}");
+    // print("remoteRenderer is null = ${_remoteRenderer == null}");
 
-    pc = await createPeerConnection(config, sdpConstraints);
-    print("=======================makeCall start");
-    print("localRenderer is null = ${_localRenderer == null}");
-    print("remoteRenderer is null = ${_remoteRenderer == null}");
+    // pc = await createPeerConnection(config, sdpConstraints);
+    mainVideoCallWidget = MainVideoCallWidget();
+    await mainVideoCallWidget!.init();
+
     targetUid = targetUidParam;
     // matched
     // 전화 오는 화면으로
-    Get.to(CallWaiting(this));
+    Get.to(CallWaiting(this, mainVideoCallWidget!));
     // rtc 연결 & 화면 띄우기 합쳐서 onCallPressed로 옮김
     // // 화면 띄워주면서, rtc 연결 시작
     // // 화면 띄워주면서, rtc 연결 시작
@@ -202,20 +211,14 @@ class SocketService extends GetxController {
     client.activate();
   }
 
-  Future<void> onCallPressed(call) async {
+  Future<void> onCallPressed() async {
     print("=======================onCallPressed start");
-    if (call == 'on') {
-      await sendOffer(targetUid);
-      await Future.delayed(const Duration(seconds: 5));
+    await sendOffer(targetUid);
+    await Future.delayed(const Duration(seconds: 5));
 
-      Get.to(
-        MainVideoCallWidget(
-          localRenderer: _localRenderer!,
-          remoteRenderer: _remoteRenderer!,
-          pc: pc!,
-        ),
-      );
-    }
+    Get.to(
+      mainVideoCallWidget,
+    );
     print("=======================onCallPressed end");
   }
 
@@ -248,50 +251,59 @@ class SocketService extends GetxController {
     }
   }
 
-  Future joinRoom() async {
-    iceCandidates = [];
-    print("=======================joinRoom start");
-    try {
-      pc!.onIceCandidate = (ice) {
-        iceCandidates!.add(ice);
-      };
+  // Future joinRoom() async {
+  //   iceCandidates = [];
+  //   print("=======================joinRoom start");
+  //   try {
+  //     pc!.onIceCandidate = (ice) {
+  //       iceCandidates!.add(ice);
+  //     };
 
-      // remoteRenderer 세팅
-      _remoteRenderer = RTCVideoRenderer();
-      try {
-        await _remoteRenderer!.initialize();
-      } catch (exception) {
-        print("exception = $exception");
-      }
+  //     // remoteRenderer 세팅
+  //     _remoteRenderer = RTCVideoRenderer();
+  //     try {
+  //       await _remoteRenderer!.initialize();
+  //     } catch (exception) {
+  //       print("exception = $exception");
+  //     }
 
-      pc!.onAddStream = (stream) {
-        _remoteRenderer!.srcObject = stream;
-      };
+  //     pc!.onAddStream = (stream) {
+  //       _remoteRenderer!.srcObject = stream;
+  //     };
 
-      // localRenderer 세팅
-      _localRenderer = RTCVideoRenderer();
-      await _localRenderer!.initialize();
-      final mediaConstraints = {
-        'audio': true,
-        'video': {'facingMode': 'user'}
-      };
+  //     // localRenderer 세팅
+  //     _localRenderer = RTCVideoRenderer();
+  //     await _localRenderer!.initialize();
+  //     final mediaConstraints = {
+  //       'audio': true,
+  //       'video': {'facingMode': 'user'}
+  //     };
 
-      _localStream = await Helper.openCamera(mediaConstraints);
+  //     _localStream = await Helper.openCamera(mediaConstraints);
 
-      // (화면에 띄울) localRenderer의 데이터 소스를 내 localStream으로 설정
-      _localRenderer!.srcObject = _localStream;
+  //     // (화면에 띄울) localRenderer의 데이터 소스를 내 localStream으로 설정
+  //     _localRenderer!.srcObject = _localStream;
 
-      // 스트림의 트랙(카메라 정보가 들어오는 연결)을 peerConnection(정보를 전송할 connection)에 추가
-      _localStream!.getTracks().forEach((track) {
-        pc!.addTrack(track, _localStream!);
-      });
+  //     // 스트림의 트랙(카메라 정보가 들어오는 연결)을 peerConnection(정보를 전송할 connection)에 추가
+  //     _localStream!.getTracks().forEach((track) {
+  //       pc!.addTrack(track, _localStream!);
+  //     });
 
-      await Future.delayed(const Duration(seconds: 1));
-    } catch (exception) {
-      print(exception);
-    }
-    print("=======================joinRoom end");
-  }
+  //     await Future.delayed(const Duration(seconds: 1));
+  //   } catch (exception) {
+  //     print(exception);
+  //   }
+  //   // print rtc objects (reconnect test)
+  //   print(
+  //       "================================= localRenderer.hashCode = ${localRenderer.hashCode}=======================");
+  //   print(
+  //       "================================= remoteRenderer.hashCode = ${remoteRenderer.hashCode}=======================");
+  //   print(
+  //       "================================= _localStream.hashCode = ${_localStream.hashCode}=======================");
+  //   print(
+  //       "================================= pc.hashCode = ${pc.hashCode}=======================");
+  //   print("=======================joinRoom end");
+  // }
 
   static void sendMessage(String type, String value) {
     client!.send(
@@ -313,38 +325,38 @@ class SocketService extends GetxController {
     callPressed = true;
     // block target's sendOffer
     sendMessage("block", ".");
-    await joinRoom();
+    await mainVideoCallWidget!.joinRoom();
     await Future.delayed(const Duration(milliseconds: 500));
 
     targetUid = targetUidLocal;
 
     await Future.delayed(const Duration(milliseconds: 1000));
 
-    var offer = await pc!.createOffer();
-    pc!.setLocalDescription(offer);
+    var offer = await mainVideoCallWidget!.createOffer();
+    mainVideoCallWidget!.setLocalDescription(offer);
     sendMessage("offer", jsonEncode(offer.toMap()));
   }
 
   Future gotOffer(String sdp, String type) async {
     update();
-    await joinRoom();
+    await mainVideoCallWidget!.joinRoom();
     await Future.delayed(const Duration(milliseconds: 500));
     // await joinRoom(); // 받는 쪽은 gotOffer()에서
     RTCSessionDescription offer = RTCSessionDescription(sdp, type);
-    pc!.setRemoteDescription(offer);
+    mainVideoCallWidget!.setRemoteDescription(offer);
     callPressed = true;
   }
 
   Future sendAnswer() async {
-    var answer = await pc!.createAnswer({});
-    pc!.setLocalDescription(answer);
+    var answer = await mainVideoCallWidget!.createAnswer();
+    mainVideoCallWidget!.setLocalDescription(answer);
     sendMessage("answer", jsonEncode(answer.toMap()));
   }
 
   Future gotAnswer(String sdp, String type) async {
     update();
     RTCSessionDescription answer = RTCSessionDescription(sdp, type);
-    pc!.setRemoteDescription(answer);
+    mainVideoCallWidget!.setRemoteDescription(answer);
   }
 
   Future sendIce(RTCIceCandidate ice) async {
@@ -355,9 +367,9 @@ class SocketService extends GetxController {
   Future gotIce(String candidate, String sdpMid, int sdpMLineIndex) async {
     update();
     RTCIceCandidate ice = RTCIceCandidate(candidate, sdpMid, sdpMLineIndex);
-    pc!.addCandidate(ice);
+    mainVideoCallWidget!.addCandidate(ice);
   }
 
-  RTCVideoRenderer get localRenderer => _localRenderer!;
-  RTCVideoRenderer get remoteRenderer => _remoteRenderer!;
+  // RTCVideoRenderer get localRenderer => _localRenderer!;
+  // RTCVideoRenderer get remoteRenderer => _remoteRenderer!;
 }
