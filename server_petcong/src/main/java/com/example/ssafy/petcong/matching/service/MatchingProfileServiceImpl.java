@@ -120,7 +120,7 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
 
     @Override
     public List<ProfileRecord> findMatchingList(int myId) {
-        List<Matching> matchingList = matchingRepository.findMatchingByFromMember_MemberIdOrToMember_MemberIdAndCallStatus(myId, myId, CallStatus.MATCHED);
+        List<Matching> matchingList = matchingRepository.findByFromMember_MemberIdOrToMember_MemberIdAndCallStatus(myId, myId, CallStatus.MATCHED);
         return matchingList.stream()
                 .map(matching -> {
                     Member member = matching.getFromMember().getMemberId() == myId? matching.getToMember() : matching.getFromMember();
