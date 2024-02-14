@@ -90,9 +90,9 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
                   onSwipeCompleted: _onSwipe,
                   horizontalSwipeThreshold: 0.15,
                   verticalSwipeThreshold: 0.15,
+                  // itemCount: 3,
                   builder: (context, properties) {
                     final itemIndex = properties.index % 2;
-                    
                     return Stack(
                       children: [
                         MatchingCard(
@@ -134,8 +134,12 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
 
   void _onSwipe(int index, SwipeDirection direction) {
     if (direction == SwipeDirection.right) {
-      // onLike(targetUid);
-      // MatchCardController.to.removeCardProfile();
+      onLike(MatchCardController.to
+          .getMatchingQue()
+          .value
+          .elementAt(index)
+          .memberId);
+      MatchCardController.to.removeCardProfile();
       debugPrint(
           "onLike ${MatchCardController.to.getMatchingQue().value.elementAt(index).nickname}, $direction}");
     } else if (direction == SwipeDirection.left) {
