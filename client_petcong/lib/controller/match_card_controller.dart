@@ -44,7 +44,7 @@ class MatchCardController extends GetxController {
   }
 
   Future<void> fillQueue() async {
-    while (_cardQueue.value.length < 4) {
+    while (_cardQueue.value.length < 10) {
       await getCardProfile();
     }
   }
