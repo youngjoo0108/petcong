@@ -50,7 +50,11 @@ WebSocket
 SpringDoc
 + springdoc-openapi-starter-webmvc-ui : 2.1.0 
 
+
+
 ---
+
+
 
 # 도커 설치 
 # https://www.hostwinds.kr/tutorials/install-docker-debian-based-operating-system
@@ -84,7 +88,11 @@ sudo apt-get update
 # Docker 엔진 설치
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 
+
+
 ---
+
+
 
 # 도커에 젠킨스 올리기
 
@@ -102,7 +110,11 @@ docker run --restart=on-failure --user='root' \
 -v /var/run/docker.sock:/var/run/docker.sock \
 -d --name jenkins jenkins/jenkins:lts
 
+
+
 ---
+
+
 
 # 젠킨스 컨테이너 환경에서 java와 docker를 설치(Dood)
 
@@ -133,7 +145,11 @@ stable"
 apt-get update
 apt-get install docker-ce docker-ce-cli containerd.io
 
+
+
 ---
+
+
 
 # 다음 내용을 갖는 Dockerfile을 작성한 후 /var/jenkins_home/workspace/petcong/server_petcong 에 위치시키기
 
@@ -167,7 +183,11 @@ ENTRYPOINT [ \
         "petcong-0.0.1-SNAPSHOT.jar" \
 ]
 
+
+
 ---
+
+
 
 # Firebase sdk 설정
 https://firebase.google.com/docs/admin/setup?hl=ko#initialize-sdk
@@ -176,7 +196,7 @@ https://firebase.google.com/docs/admin/setup?hl=ko#initialize-sdk
 + GOOGLE_APPLICATION_CREDENTIALS="서비스 계정으로 만든 비공개 키 경로"
 
 
-AWS sdk 설정
+# AWS sdk 설정
 https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/Welcome.html
 
 + 환경변수
