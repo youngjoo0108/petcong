@@ -366,34 +366,40 @@ public class MemberIntegrationTest {
     @Test
     @DisplayName("PostDogTrick Test")
     void testPostDogTrick() throws Exception {
-        try(FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\video_sample.mp4")) {
-            //given
-            byte[] bytes = fileInputStream.readAllBytes();
-            MockMultipartFile multipartFile = new MockMultipartFile(
-                    "files",
-                    "video_sample.mp4",
-                    MediaType.MULTIPART_FORM_DATA_VALUE,
-                    bytes);
+        for (int i = 1; i <= 10; i++) {
+            String memberId = femaleMemberIds[i - 1];
+            String uid = femaleUids[i - 1];
 
-            //when
-            var request = MockMvcRequestBuilders
-                    .multipart(HttpMethod.POST, "/members/trick")
-                    .file(multipartFile)
-                    .header("tester", "A603")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+            try(FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\female_pet\\" + i + ".jpg")) {
+                //given
+                byte[] bytes = fileInputStream.readAllBytes();
+                MockMultipartFile multipartFile = new MockMultipartFile(
+                        "files",
+                        i + ".jpg",
+                        MediaType.MULTIPART_FORM_DATA_VALUE,
+                        bytes);
 
-            //then
-            MvcResult mvcResult = mockMvc
-                    .perform(request)
-                    .andExpect(status().isCreated())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andReturn();
+                //when
+                var request = MockMvcRequestBuilders
+                        .multipart(HttpMethod.POST, "/members/trick")
+                        .file(multipartFile)
+                        .param("memberId", memberId)
+                        .param("uid", uid)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-            String response = mvcResult.getResponse().getContentAsString();
+                //then
+                MvcResult mvcResult = mockMvc
+                        .perform(request)
+                        .andExpect(status().isCreated())
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                        .andReturn();
 
-            assertThat(response).isNotNull();
+                String response = mvcResult.getResponse().getContentAsString();
 
-            log.info("PostDogTrick Test: " + response);
+                assertThat(response).isNotNull();
+
+                log.info("PostDogTrick Test: " + response);
+            }
         }
     }
 
