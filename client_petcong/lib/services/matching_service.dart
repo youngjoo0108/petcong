@@ -69,10 +69,14 @@ Future<CardProfileModel> getProfile() async {
 
   if (response.statusCode == 200) {
     if (kDebugMode) {
-      print("getProfile success: ${jsonDecode(response.body)}");
-      print(CardProfileModel.fromJson(jsonDecode(response.body)).nickname);
+      print(
+          "getProfile success: ${jsonDecode(utf8.decode(response.bodyBytes))}");
+      print(
+          CardProfileModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)))
+              .nickname);
     }
-    return CardProfileModel.fromJson(jsonDecode(response.body));
+    return CardProfileModel.fromJson(
+        jsonDecode(utf8.decode(response.bodyBytes)));
   } else {
     if (kDebugMode) {
       print("getProfile failed response.body: ${jsonDecode(response.body)}");
