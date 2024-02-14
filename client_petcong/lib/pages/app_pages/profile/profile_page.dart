@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
@@ -63,7 +64,15 @@ class MainProfilePage extends StatelessWidget {
                                   imgUrl = url;
                                 });
                               }
-                              return Image.network(imgUrl);
+                              return CachedNetworkImage(
+                                imageUrl: imgUrl,
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(
+                                  color: MyColor.myColor1,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              );
                             },
                           ),
                         ),
@@ -111,7 +120,6 @@ class MainProfilePage extends StatelessWidget {
                   builder: (controller) {
                     MemberProfile? member =
                         controller.profile.value.memberProfile;
-                    PetProfile? pet = controller.profile.value.petProfile;
                     String nickname =
                         member?.memberInfo?.nickname ?? 'no response';
                     int age = member?.memberInfo?.age ?? 0;
@@ -414,12 +422,15 @@ class MainProfilePage extends StatelessWidget {
                             end: Alignment.bottomRight,
                           ),
                         ),
-                        child: GetBuilder<ProfileController>(
+                        child: MixinBuilder<ProfileController>(
                           builder: (controller) {
                             // TextEditingController를 다이얼로그 밖에서 선언
-                            final textEditingController = TextEditingController(
-                                text: controller.profile.value.petProfile
-                                    ?.petInfo?.description);
+                            PetProfile? pet =
+                                controller.profile.value.petProfile;
+                            // final textEditingController = TextEditingController(
+                            //     text: pet?.petInfo?.description ?? '');
+                            final textEditingController =
+                                TextEditingController(text: "knee amy");
 
                             return Center(
                               child: GestureDetector(

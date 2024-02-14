@@ -17,8 +17,6 @@ Future<Map<String, String>> getIdToken() async {
   if (testing) return {'tester': 'A603'};
   Map<String, String> postHeaders = {};
   if (FirebaseAuth.instance.currentUser != null) {
-    print("user exists");
-
     try {
       String? token = await FirebaseAuth.instance.currentUser!.getIdToken();
       if (token!.isNotEmpty) {
@@ -37,13 +35,6 @@ Future<Map<String, String>> getIdToken() async {
 Future<void> postSignup(UserSignupModel user) async {
   Map<String, String> postHeaders = await getIdToken();
   postHeaders['Content-Type'] = 'application/json';
-  print("headers");
-  postHeaders.forEach((key, value) {
-    print("$key : $value");
-  });
-
-  print("json body");
-  print(jsonEncode(user.toJson()));
 
   final response = await http.post(Uri.parse('$serverUrl/members/signup'),
       headers: postHeaders, body: jsonEncode(user.toJson()));
@@ -124,7 +115,6 @@ Future<void> patchUserInfo(UserSignupModel user) async {
   }
 }
 
-// TODO: check image quality
 // POST /members/picture
 Future<void> postPicture(List<String> filePaths) async {
   Map<String, String> reqHeaders = await getIdToken();
