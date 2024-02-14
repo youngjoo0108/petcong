@@ -86,6 +86,15 @@ public class MemberController {
     )
     @GetMapping("/info")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId) {
+        return getUserInfoByMemberId(memberId);
+    }
+
+    @Operation(summary = "Member Id로 회원 상세 정보 조회",
+            responses = @ApiResponse(responseCode = "200", description = "조회 성공",
+                    content = @Content(schema = @Schema(implementation = ProfileDto.class)))
+    )
+    @GetMapping("/info/{memberId}")
+    public ResponseEntity<?> getUserInfoByMemberId(@PathVariable int memberId) {
         ProfileDto profile = memberService.getProfile(memberId);
 
         return ResponseEntity

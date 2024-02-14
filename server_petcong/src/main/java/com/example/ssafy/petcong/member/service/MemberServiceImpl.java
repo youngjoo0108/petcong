@@ -103,14 +103,14 @@ public class MemberServiceImpl implements MemberService {
         MemberInfoDto memberInfo = MemberInfoDto.fromMemberRecord(memberRecord);
         List<MemberImgInfoDto> memberImgInfoList = getMemberImageList(memberId).stream()
                 .map(MemberImgInfoDto::fromMemberImgRecord)
-                .peek(MemberImg -> MemberImg.setBucketKey(awsService.createPresignedUrl(MemberImg.getBucketKey())))
+                .peek(memberImgInfoDto -> memberImgInfoDto.setBucketKey(awsService.createPresignedUrl(memberImgInfoDto.getBucketKey())))
                 .toList();
 
         PetRecord petRecord = petService.findPetByMemberId(memberId);
         PetInfoDto petInfo = PetInfoDto.fromPetRecord(petRecord);
         List<SkillMultimediaInfoDto> skillMultimediaInfoList = getSkillMultimediaList(memberId).stream()
                 .map(SkillMultimediaInfoDto::fromSkillMultimediaRecord)
-                .peek(SkillMultimedia -> SkillMultimedia.setBucketKey(awsService.createPresignedUrl(SkillMultimedia.getBucketKey())))
+                .peek(skillMultimediaInfoDto -> skillMultimediaInfoDto.setBucketKey(awsService.createPresignedUrl(skillMultimediaInfoDto.getBucketKey())))
                 .toList();
 
         ProfileDto profileDto = ProfileDto.builder()
