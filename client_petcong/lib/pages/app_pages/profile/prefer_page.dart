@@ -47,7 +47,7 @@ class PreferPageState extends State<PreferPage> {
                 alignment: Alignment.centerLeft,
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back_ios, size: 32),
-                  onPressed: () => Get.off(const GenderPage(progress: 0.2)),
+                  onPressed: () => Get.off(const GenderPage(progress: 0.3)),
                 ),
               ),
               const SizedBox(height: 5.0),
