@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Setter
 @NoArgsConstructor
 public class ChoiceReq {
-    private String partnerUid;
+    private int partnerId;
 }
