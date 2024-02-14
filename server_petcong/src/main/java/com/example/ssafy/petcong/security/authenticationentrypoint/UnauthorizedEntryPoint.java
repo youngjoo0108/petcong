@@ -1,4 +1,4 @@
-package com.example.ssafy.petcong.security;
+package com.example.ssafy.petcong.security.authenticationentrypoint;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

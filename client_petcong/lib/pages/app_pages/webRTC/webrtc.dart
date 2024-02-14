@@ -6,17 +6,133 @@ import 'package:petcong/pages/homepage.dart';
 import 'package:petcong/services/socket_service.dart';
 
 class MainVideoCallWidget extends StatefulWidget {
-  final RTCVideoRenderer localRenderer;
-  final RTCVideoRenderer remoteRenderer;
-  RTCPeerConnection? pc;
+  // rtc 관련 변수들은, 한번 할당된 후 페이지가 있는 동안 바뀔 일 없음
+  RTCVideoRenderer? _localRenderer;
+  RTCVideoRenderer? _remoteRenderer;
+  RTCPeerConnection? _pc;
+  MediaStream? _localStream;
+  List<RTCIceCandidate>? _iceCandidates;
   static late int quizIdx;
 
   MainVideoCallWidget({
     super.key,
-    required this.localRenderer,
-    required this.remoteRenderer,
-    required this.pc,
+    // required this._localRenderer,
+    // required this._remoteRenderer,
+    // required this._pc,
   });
+
+  Future<void> init() async {
+    await initPeerConnection();
+  }
+
+  List<RTCIceCandidate> getIceCandidates() {
+    return _iceCandidates!;
+  }
+
+  void addCandidate(RTCIceCandidate ice) {
+    _pc!.addCandidate(ice);
+  }
+
+  Future<void> initPeerConnection() async {
+    final config = {
+      'iceServers': [
+        {"url": "stun:stun.l.google.com:19302"},
+        {
+          "url": "turn:i10a603.p.ssafy.io:3478",
+          "username": "ehigh",
+          "credential": "1234",
+        },
+      ],
+    };
+
+    final sdpConstraints = {
+      'mandatory': {
+        'OfferToReceiveAudio': true,
+        'OfferToReceiveVideo': true,
+      },
+      'optional': []
+    };
+
+    _pc = await createPeerConnection(config, sdpConstraints);
+
+    // print("=======================makeCall start");
+    // print("_pc is null = ${_pc == null} ===");
+    // print("_localRenderer is null = ${_localRenderer == null}");
+    // print("_remoteRenderer is null = ${_remoteRenderer == null}");
+  }
+
+  Future<RTCSessionDescription> createOffer() async {
+    return _pc!.createOffer();
+  }
+
+  Future<RTCSessionDescription> createAnswer() async {
+    return _pc!.createAnswer({});
+  }
+
+  Future<void> setLocalDescription(RTCSessionDescription description) async {
+    _pc!.setLocalDescription(description);
+  }
+
+  Future<void> setRemoteDescription(RTCSessionDescription description) async {
+    _pc!.setRemoteDescription(description);
+  }
+
+  Future joinRoom() async {
+    _iceCandidates = [];
+    print("=======================joinRoom start");
+    try {
+      _pc!.onIceCandidate = (ice) {
+        _iceCandidates!.add(ice);
+      };
+
+      // _remoteRenderer 세팅
+      _remoteRenderer = RTCVideoRenderer();
+      try {
+        await _remoteRenderer!.initialize();
+      } catch (exception) {
+        print("exception = $exception");
+      }
+
+      _pc!.onAddStream = (stream) {
+        _remoteRenderer!.srcObject = stream;
+      };
+
+      // _localRenderer 세팅
+      _localRenderer = RTCVideoRenderer();
+      await _localRenderer!.initialize();
+
+      final mediaConstraints = {
+        'audio': true,
+        'video': {'facingMode': 'user'}
+      };
+
+      _localStream = await Helper.openCamera(mediaConstraints);
+
+      // (화면에 띄울) _localRenderer의 데이터 소스를 내 _localStream으로 설정
+      _localRenderer!.srcObject = _localStream;
+
+      // 스트림의 트랙(카메라 정보가 들어오는 연결)을 peerConnection(정보를 전송할 connection)에 추가
+      _localStream!.getTracks().forEach((track) {
+        print(
+            "================================on joinRoom(), track = ${track.toString()} =====");
+        _pc!.addTrack(track, _localStream!);
+      });
+
+      await Future.delayed(const Duration(seconds: 1));
+    } catch (exception) {
+      print(exception);
+    }
+    // // print rtc objects (reconnect test)
+    // print(
+    //     "================================= _localRenderer.hashCode = ${_localRenderer.hashCode}=======================");
+    // print(
+    //     "================================= _remoteRenderer.hashCode = ${_remoteRenderer.hashCode}=======================");
+    // print(
+    //     "================================= _localStream.hashCode = ${_localStream.hashCode}=======================");
+    // print(
+    //     "================================= _pc.hashCode = ${_pc.hashCode}=======================");
+    print("=======================joinRoom end");
+  }
 
   @override
   _MainVideoCallWidgetState createState() => _MainVideoCallWidgetState();
@@ -52,6 +168,39 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> disconnectCall() async {
+    widget._localRenderer!.srcObject!.getTracks().forEach((track) {
+      track.stop();
+      // widget._localRenderer!.srcObject!.removeTrack(track);
+      print(
+          "================================after removeTrack(), track = ${track.toString()} =====");
+    });
+    print("tracks.removeTrack() 완료됨");
+    // remoteRendere의 Track 객체는 상대방이 끊었을 때 알아서 stop된다?
+    widget._remoteRenderer!.srcObject!.getTracks().forEach((track) {
+      track.stop();
+      // widget._remoteRenderer!.srcObject!.removeTrack(track);
+    });
+    // await widget._localRenderer.srcObject!.dispose();
+    // await widget._remoteRenderer.srcObject!.dispose();
+    widget._localRenderer!.srcObject = null;
+    widget._remoteRenderer!.srcObject = null;
+    print("srcObject = null 완료됨");
+    widget._pc!.close();
+    print("pc.close 완료됨");
+    // print(
+    //     "end btn.onPressed - localRederer.hashCode = ${widget._localRenderer.hashCode}");
+    // print(
+    //     "end btn.onPressed - _remoteRenderer.hashCode = ${widget._remoteRenderer.hashCode}");
+    widget._localRenderer = null;
+    widget._remoteRenderer = null;
+    print("renderer = null 완료됨");
+    // disconnect end
+    SocketService().setCallPressed(false); // flag false로
+    SocketService().disposeSocket(SocketService.uid);
+    await Future.delayed(const Duration(seconds: 2));
   }
 
   void onIdxPlusBtnPressed() {
@@ -90,55 +239,49 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
       ..scale(scaleValue)
       ..translate(localRendererX, localRendererY);
     return Scaffold(
-      body: GestureDetector(
-        onTapDown: (position) {
-          print(position.globalPosition);
-        },
-        child: Stack(
-          children: <Widget>[
-            // 상대방 화면
-            SizedBox.expand(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: RTCVideoView(
-                  widget.remoteRenderer,
-                  mirror: false,
-                ),
+      body: Stack(
+        children: <Widget>[
+          // 상대방 화면
+          SizedBox.expand(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: RTCVideoView(
+                widget._remoteRenderer!,
+                mirror: false,
               ),
             ),
-            //  내 화면
-            ClipRect(
-              child: InteractiveViewer(
-                transformationController: controller,
-                minScale: 0.2,
-                maxScale: 0.5,
-                constrained: true,
-                boundaryMargin: const EdgeInsets.all(double.infinity),
-                onInteractionStart: (details) {},
-                onInteractionUpdate: (details) {
-                  scaleValue = controller.value.getMaxScaleOnAxis();
-                  localRendererX =
-                      controller.value.getTranslation().x / scaleValue;
-                  localRendererY =
-                      controller.value.getTranslation().y / scaleValue;
-                },
-                child: SizedBox(
-                  width: videoWidth,
-                  height: videoHeight,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: RTCVideoView(
-                      widget.localRenderer,
-                      objectFit:
-                          RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
-                      mirror: true,
-                    ),
+          ),
+          //  내 화면
+          ClipRect(
+            child: InteractiveViewer(
+              transformationController: controller,
+              minScale: 0.2,
+              maxScale: 0.5,
+              constrained: true,
+              boundaryMargin: const EdgeInsets.all(double.infinity),
+              onInteractionStart: (details) {},
+              onInteractionUpdate: (details) {
+                scaleValue = controller.value.getMaxScaleOnAxis();
+                localRendererX =
+                    controller.value.getTranslation().x / scaleValue;
+                localRendererY =
+                    controller.value.getTranslation().y / scaleValue;
+              },
+              child: SizedBox(
+                width: videoWidth,
+                height: videoHeight,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: RTCVideoView(
+                    widget._localRenderer!,
+                    objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                    mirror: true,
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       floatingActionButton: Column(
         children: [
@@ -212,22 +355,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
             alignment: Alignment.bottomCenter,
             child: FloatingActionButton(
               onPressed: () async {
-                widget.localRenderer.srcObject!.getTracks().forEach((track) {
-                  track.stop();
-                });
-                // disconnectCall 로직
-                await widget.localRenderer.srcObject!.dispose();
-                await widget.pc!.close();
-                widget.pc = null;
-                print(
-                    "end btn.onPressed - localRederer.hashCode = ${widget.localRenderer.hashCode}");
-                print(
-                    "end btn.onPressed - remoteRenderer.hashCode = ${widget.remoteRenderer.hashCode}");
-                await widget.localRenderer.dispose();
-                await widget.remoteRenderer.dispose();
-                // disconnect end
-                SocketService().setCallPressed(false); // flag false로
-                await Future.delayed(const Duration(seconds: 2));
+                await disconnectCall(); // 다 꺼지면 이동
                 Get.offAll(const HomePage());
               },
               heroTag: 'stop_call_button',

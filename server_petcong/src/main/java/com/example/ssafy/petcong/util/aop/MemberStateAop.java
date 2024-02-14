@@ -3,7 +3,7 @@ package com.example.ssafy.petcong.util.aop;
 import com.example.ssafy.petcong.member.model.entity.Member;
 import com.example.ssafy.petcong.member.repository.MemberRepository;
 
-import com.example.ssafy.petcong.security.FirebaseUserDetails;
+import com.example.ssafy.petcong.security.userdetails.FirebaseUserDetails;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 

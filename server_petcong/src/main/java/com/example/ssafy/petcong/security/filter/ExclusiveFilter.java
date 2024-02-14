@@ -1,7 +1,7 @@
 package com.example.ssafy.petcong.security.filter;
 
 import com.example.ssafy.petcong.properties.AllowedUrlProperties;
-import com.example.ssafy.petcong.security.UserRole;
+import com.example.ssafy.petcong.security.role.UserRole;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
