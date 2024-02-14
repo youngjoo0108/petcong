@@ -147,7 +147,8 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   // late double test = 0;
   // icebreakings
   List<String> quizs = [
-    "똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중",
+    // "똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중",
+    '1',
     "sampleQuiz2",
     "sampleQuiz3"
   ];
@@ -234,6 +235,9 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      int nowIdx = MainVideoCallWidget.quizIdx;
+    });
     final TransformationController controller = TransformationController();
     controller.value = Matrix4.identity()
       ..scale(scaleValue)
@@ -244,8 +248,9 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           // 상대방 화면
           SizedBox.expand(
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(10),
               child: RTCVideoView(
+                objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
                 widget._remoteRenderer!,
                 mirror: false,
               ),
@@ -255,8 +260,8 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           ClipRect(
             child: InteractiveViewer(
               transformationController: controller,
-              minScale: 0.2,
-              maxScale: 0.5,
+              minScale: 0.3,
+              maxScale: 0.6,
               constrained: true,
               boundaryMargin: const EdgeInsets.all(double.infinity),
               onInteractionStart: (details) {},
@@ -336,10 +341,17 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                     ),
                     Opacity(
                       opacity: showMessage ? 1.0 : 0.2,
-                      child: FloatingActionButton.small(
+                      child: FloatingActionButton(
                         onPressed: _toggleMessageDialog,
                         heroTag: 'text',
-                        child: const Icon(Icons.message),
+                        backgroundColor: Colors.transparent, // 배경색을 투명으로 설정합니다.
+                        elevation: 5,
+                        child: Image.asset(
+                          'assets/src/petcong_c_logo.png',
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        ), // 그림자의 높이를 0으로 설정하여 그림자를 없앱니다.
                       ),
                     ),
                     const SizedBox(
@@ -361,7 +373,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
               heroTag: 'stop_call_button',
               shape: const CircleBorder(),
               backgroundColor: MyColor.petCongColor4,
-              elevation: 5,
+              elevation: 3,
               child: const Icon(Icons.call_end),
             ),
           ),
@@ -371,41 +383,3 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
     );
   }
 }
-
-// floatingActionButton: Row(
-//   children: [
-//     FloatingActionButton(
-//       onPressed: () async {
-//         widget.localRenderer.srcObject!.getTracks().forEach((track) {
-//           track.stop();
-//         });
-//         // disconnectCall 로직
-//         await widget.localRenderer.srcObject!.dispose();
-//         await widget.pc!.close();
-//         widget.pc = null;
-//         print(
-//             "end btn.onPressed - localRederer.hashCode = ${widget.localRenderer.hashCode}");
-//         print(
-//             "end btn.onPressed - remoteRenderer.hashCode = ${widget.remoteRenderer.hashCode}");
-//         await widget.localRenderer.dispose();
-//         await widget.remoteRenderer.dispose();
-//         // disconnect end
-//         SocketService().setCallPressed(false); // flag false로
-//         await Future.delayed(const Duration(seconds: 2));
-//         Get.offAll(const HomePage());
-//       },
-//       heroTag: 'stop_call_button',
-//       shape: const CircleBorder(eccentricity: 0),
-//       backgroundColor: MyColor.petCongColor4,
-//       child: const Icon(Icons.call_end),
-//     ),
-//     FloatingActionButton(
-//       onPressed: onIdxbtnPressed,
-//       shape: const CircleBorder(eccentricity: 0),
-//       backgroundColor: Colors.blue,
-//       heroTag: 'next_button',
-//       child: const Icon(Icons.call_end),
-//     ),
-//   ],
-// ),
-// floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
