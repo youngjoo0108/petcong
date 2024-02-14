@@ -1,13 +1,5 @@
 import 'package:flutter/material.dart';
 
-const _images = [
-  'assets/src/dog.jpg',
-  'assets/src/test_1.jpg',
-  'assets/src/test_5.jpg',
-];
-
-const _names = ['하나', '둘리', '세르시'];
-
 class HorizontalItem extends StatelessWidget {
   const HorizontalItem({
     required this.title,

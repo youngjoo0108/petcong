@@ -84,7 +84,7 @@ class MainProfilePage extends StatelessWidget {
                     right: 5,
                     child: GestureDetector(
                       onTap: () {
-                        Get.to(const NicknamePage(progress: 0));
+                        Get.to(const NicknamePage(progress: 0.1));
                       },
                       child: Container(
                         width: 45,

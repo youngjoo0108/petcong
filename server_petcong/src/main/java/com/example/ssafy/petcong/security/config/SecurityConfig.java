@@ -1,5 +1,6 @@
-package com.example.ssafy.petcong.security;
+package com.example.ssafy.petcong.security.config;
 
+import com.example.ssafy.petcong.security.authenticationentrypoint.UnauthorizedEntryPoint;
 import com.example.ssafy.petcong.security.filter.ExclusiveFilter;
 import com.example.ssafy.petcong.security.filter.FirebaseAuthenticationFilter;
 import com.example.ssafy.petcong.properties.AllowedUrlProperties;

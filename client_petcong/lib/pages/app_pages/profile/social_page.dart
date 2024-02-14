@@ -66,7 +66,7 @@ class SocialPageState extends State<SocialPage> {
                     IconButton(
                       icon: const Icon(Icons.arrow_back_ios, size: 32),
                       onPressed: () =>
-                          Get.off(const IntroducePage(progress: 0.7)),
+                          Get.off(const IntroducePage(progress: 0.8)),
                     ),
                     TextButton(
                       child: const Text(
@@ -78,7 +78,7 @@ class SocialPageState extends State<SocialPage> {
                       ),
                       onPressed: () {
                         Get.to(const PhotoPage(
-                          progress: 0.9,
+                          progress: 1.0,
                         ));
                       },
                     ),
@@ -107,7 +107,9 @@ class SocialPageState extends State<SocialPage> {
                         borderSide: BorderSide(color: Colors.grey),
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 249, 113, 95),
+                        ),
                       ),
                     ),
                     textAlign: TextAlign.center),
@@ -129,7 +131,9 @@ class SocialPageState extends State<SocialPage> {
                         borderSide: BorderSide(color: Colors.grey),
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 249, 113, 95),
+                        ),
                       ),
                     ),
                     textAlign: TextAlign.center),
@@ -142,7 +146,7 @@ class SocialPageState extends State<SocialPage> {
                     ? () {
                         SignupController.to.addKakaoId(_controller1.text);
                         SignupController.to.addInstagramId(_controller2.text);
-                        
+
                         Get.to(
                             PhotoPage(
                               progress: widget.progress + 0.1,

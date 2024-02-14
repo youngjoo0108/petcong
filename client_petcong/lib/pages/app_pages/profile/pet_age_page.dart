@@ -34,7 +34,7 @@ class PetAgePageState extends State<PetAgePage> {
   final _controller = TextEditingController();
   final SignupController signupController = Get.put(SignupController());
   final numberValidator = ValueNotifier<String?>('Initial value');
-  final double _progress = 0.5;
+  final double _progress = 0.6;
 
   @override
   void initState() {
@@ -88,7 +88,7 @@ class PetAgePageState extends State<PetAgePage> {
               alignment: Alignment.centerLeft,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: () => Get.off(const PetNamePage(progress: 5 / 12)),
+                onPressed: () => Get.off(const PetNamePage(progress: 0.5)),
               ),
             ),
             Padding(
@@ -111,7 +111,9 @@ class PetAgePageState extends State<PetAgePage> {
                           borderSide: BorderSide(color: Colors.grey),
                         ),
                         focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(255, 249, 113, 95),
+                          ),
                         ),
                       ),
                       style: const TextStyle(

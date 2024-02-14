@@ -8,4 +8,5 @@ public interface AWSService {
     void upload(String key, MultipartFile file);
     String createPresignedUrl(String key);
     String createPresignedUrl(String key, Duration duration);
+    void delete(String key);
 }

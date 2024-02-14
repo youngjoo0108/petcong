@@ -2,13 +2,12 @@ package com.example.ssafy.petcong.matching.controller;
 
 import com.example.ssafy.petcong.matching.model.ChoiceRes;
 import com.example.ssafy.petcong.matching.model.entity.ChoiceReq;
-import com.example.ssafy.petcong.matching.model.entity.Matching;
 import com.example.ssafy.petcong.matching.model.entity.ProfileRecord;
 import com.example.ssafy.petcong.matching.service.MatchingRequestService;
 import com.example.ssafy.petcong.matching.service.MatchingProfileService;
 import com.example.ssafy.petcong.member.service.MemberService;
 import com.example.ssafy.petcong.member.model.dto.MemberRecord;
-import com.example.ssafy.petcong.security.FirebaseUserDetails;
+import com.example.ssafy.petcong.security.userdetails.FirebaseUserDetails;
 import com.example.ssafy.petcong.util.annotation.MakeCallable;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,7 +46,7 @@ public class MatchingController {
     @PostMapping("/choice")
     public ResponseEntity<?> choice(@AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
                                     @RequestBody ChoiceReq choiceReq) {
-        ChoiceRes res = matchingRequestService.choice(uid, choiceReq.getPartnerUid());
+        ChoiceRes res = matchingRequestService.choice(uid, choiceReq.getPartnerId());
         if (res != null) {
             return ResponseEntity.ok(res);
         } else {
