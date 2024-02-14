@@ -21,7 +21,9 @@ class UserController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance; // Firestore 인스턴스 추가
   final FirebaseStorage storage = FirebaseStorage.instance;
   final ProfileController profileController = Get.put(ProfileController());
-
+  final HistoryController historyController = Get.put(HistoryController());
+  final MatchCardController matchCardController =
+      Get.put(MatchCardController());
   List<String> selectedImages = [
     'assets/src/test_4.jpg',
     'assets/src/test_5.jpg',
