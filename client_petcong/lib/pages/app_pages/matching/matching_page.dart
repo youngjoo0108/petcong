@@ -143,7 +143,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       debugPrint(
           "onLike ${MatchCardController.to.getMatchingQue().value.elementAt(index).nickname}, $direction}");
     } else if (direction == SwipeDirection.left) {
-      // MatchCardController.to.removeCardProfile();
+      MatchCardController.to.removeCardProfile();
       debugPrint(
           "onDislike {${MatchCardController.to.getMatchingQue().value.elementAt(index).nickname}, $direction}");
     }
