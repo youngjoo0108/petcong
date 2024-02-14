@@ -188,3 +188,11 @@ https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/Welcome.html
 + S3_BUCKET_NAME="S3 버킷 이름"
 + AWS_ACCESS_KEY_ID="엑세스 키 아이디"
 + AWS_SECRET_ACCESS_KEY="시크릿 엑세스 키"
+
+# Firebase Flutter 설정
+
+[Flutter에서 Firebase 인증 시작하기](https://firebase.google.com/docs/auth/flutter/start?hl=ko)
+
+[Flutter 앱에 Firebase 추가](https://firebase.google.com/docs/flutter/setup?hl=ko&_gl=1*1fwwexv*_up*MQ..*_ga*MTgxNzI5NTA5OS4xNzA3OTIxMDg3*_ga_CW55HF8NVT*MTcwNzkyMTA4Ni4xLjAuMTcwNzkyMTA4Ni4wLjAuMA..&platform=android)
+
+[안드로이드 앱 설치 링크](https://linkhere/)
