@@ -47,7 +47,7 @@ class GenderPageState extends State<GenderPage> {
                 alignment: Alignment.centerLeft,
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back_ios, size: 32),
-                  onPressed: () => Get.off(const BirthdayPage(progress: 0.1)),
+                  onPressed: () => Get.off(const BirthdayPage(progress: 0.2)),
                 ),
               ),
               const SizedBox(height: 5.0),

@@ -35,6 +35,7 @@ class BirthdayPage extends StatefulWidget {
 }
 
 class BirthdayPageState extends State<BirthdayPage> {
+  final Color _color = Colors.transparent;
   final _formKey = GlobalKey<FormState>();
   final _controller = TextEditingController();
   final SignupController signupController = Get.put(SignupController());
@@ -113,7 +114,7 @@ class BirthdayPageState extends State<BirthdayPage> {
 
   @override
   Widget build(BuildContext context) {
-    double progress = 0.1;
+    double progress = 0.2;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -132,7 +133,7 @@ class BirthdayPageState extends State<BirthdayPage> {
               alignment: Alignment.centerLeft,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: () => Get.off(const NicknamePage(progress: 0)),
+                onPressed: () => Get.off(const NicknamePage(progress: 0.1)),
               ),
             ),
             Padding(
@@ -153,8 +154,18 @@ class BirthdayPageState extends State<BirthdayPage> {
                         controller: _controller,
                         keyboardType: TextInputType.number,
                         inputFormatters: [_inputFormatter],
-                        decoration:
-                            const InputDecoration(hintText: 'YYYY-MM-DD'),
+                        decoration: InputDecoration(
+                          hintText: 'YYYY-MM-DD',
+                          filled: true,
+                          fillColor: _color, // 색상 적용
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromARGB(255, 249, 113, 95)),
+                          ),
+                        ),
                         style: const TextStyle(
                             fontSize: 20.0, fontWeight: FontWeight.w400),
                         onChanged: (value) {
