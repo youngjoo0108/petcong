@@ -5,7 +5,7 @@
 //import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 //import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 //
-//import com.example.ssafy.petcong.security.UserRole;
+//import com.example.ssafy.petcong.security.role.UserRole;
 //
 //import jakarta.transaction.Transactional;
 //

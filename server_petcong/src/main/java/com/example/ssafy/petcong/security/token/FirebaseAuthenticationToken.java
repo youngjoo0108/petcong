@@ -1,4 +1,4 @@
-package com.example.ssafy.petcong.security;
+package com.example.ssafy.petcong.security.token;
 
 import lombok.Getter;
 
