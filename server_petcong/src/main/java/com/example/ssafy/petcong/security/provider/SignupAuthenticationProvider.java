@@ -1,5 +1,7 @@
-package com.example.ssafy.petcong.security;
+package com.example.ssafy.petcong.security.provider;
 
+import com.example.ssafy.petcong.security.token.SignupAuthenticationToken;
+import com.example.ssafy.petcong.security.userdetails.SignupUserDetails;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
