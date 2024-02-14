@@ -57,7 +57,7 @@ SpringDoc
 
 
 # 도커 설치 
-# https://www.hostwinds.kr/tutorials/install-docker-debian-based-operating-system
+https://www.hostwinds.kr/tutorials/install-docker-debian-based-operating-system
 
 # apt 패키지 색인 업데이트
 sudo apt-get update
@@ -95,7 +95,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io
 
 
 # 도커에 젠킨스 올리기
-
+```
 # 젠킨스 저장소 설치
 mkdir -p /var/jenkins_home
 
@@ -109,7 +109,7 @@ docker run --restart=on-failure --user='root' \
 -v /var/jenkins_home:/var/jenkins_home \
 -v /var/run/docker.sock:/var/run/docker.sock \
 -d --name jenkins jenkins/jenkins:lts
-
+```
 
 
 ---
@@ -117,7 +117,7 @@ docker run --restart=on-failure --user='root' \
 
 
 # 젠킨스 컨테이너 환경에서 java와 docker를 설치(Dood)
-
+```
 # 젠킨스 컨테이너 내부의 프로세스와 환경에 대해 명령을 실행시키기 위해 인터랙티브 모드로 쉘 실행
 docker exec -it jenkins bash
 
@@ -144,7 +144,7 @@ stable"
 
 apt-get update
 apt-get install docker-ce docker-ce-cli containerd.io
-
+```
 
 
 ---
@@ -152,7 +152,7 @@ apt-get install docker-ce docker-ce-cli containerd.io
 
 
 # 다음 내용을 갖는 Dockerfile을 작성한 후 /var/jenkins_home/workspace/petcong/server_petcong 에 위치시키기
-
+```
 FROM gradle:7.4-jdk17 as builder
 WORKDIR /build
 
@@ -182,7 +182,7 @@ ENTRYPOINT [ \
         "-Dsun.net.inetaddr.ttl=0", \
         "petcong-0.0.1-SNAPSHOT.jar" \
 ]
-
+```
 
 
 ---
