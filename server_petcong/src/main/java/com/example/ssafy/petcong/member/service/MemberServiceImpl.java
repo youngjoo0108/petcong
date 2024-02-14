@@ -103,14 +103,14 @@ public class MemberServiceImpl implements MemberService {
         MemberInfoDto memberInfo = MemberInfoDto.fromMemberRecord(memberRecord);
         List<MemberImgInfoDto> memberImgInfoList = getMemberImageList(memberId).stream()
                 .map(MemberImgInfoDto::fromMemberImgRecord)
-                .peek(MemberImg -> MemberImg.setBucketKey(awsService.createPresignedUrl(MemberImg.getBucketKey())))
+                .peek(memberImgInfoDto -> memberImgInfoDto.setBucketKey(awsService.createPresignedUrl(memberImgInfoDto.getBucketKey())))
                 .toList();
 
         PetRecord petRecord = petService.findPetByMemberId(memberId);
         PetInfoDto petInfo = PetInfoDto.fromPetRecord(petRecord);
         List<SkillMultimediaInfoDto> skillMultimediaInfoList = getSkillMultimediaList(memberId).stream()
                 .map(SkillMultimediaInfoDto::fromSkillMultimediaRecord)
-                .peek(SkillMultimedia -> SkillMultimedia.setBucketKey(awsService.createPresignedUrl(SkillMultimedia.getBucketKey())))
+                .peek(skillMultimediaInfoDto -> skillMultimediaInfoDto.setBucketKey(awsService.createPresignedUrl(skillMultimediaInfoDto.getBucketKey())))
                 .toList();
 
         ProfileDto profileDto = ProfileDto.builder()
@@ -175,23 +175,31 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public List<MemberImgRecord> updateMemberImage(int memberId, String uid, MultipartFile[] files) {
-        for (MultipartFile file : files) {
-            String key = S3KeyGenerator.generateKey(uid, file);
-            memberImgService.deleteMemberImgByBucketKey(key);
-        }
-
         return uploadMemberImage(memberId, uid, files);
     }
 
     @Override
     @Transactional
     public List<SkillMultimediaRecord> updateSkillMultimedia(int memberId, String uid, MultipartFile[] files) {
-        for (MultipartFile file : files) {
-            String key = S3KeyGenerator.generateKey(uid, file);
-            skillMultimediaService.deleteSkillMultimediaByBucketKey(key);
-        }
-
         return uploadSkillMultimedia(memberId, uid, files);
+    }
+
+    @Override
+    @Transactional
+    public void deleteMemberImage(String[] keys) {
+        for (String key : keys) {
+            memberImgService.deleteMemberImgByBucketKey(key);
+            awsService.delete(key);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteSkillMultimedia(String[] keys) {
+        for (String key : keys) {
+            skillMultimediaService.deleteSkillMultimediaByBucketKey(key);
+            awsService.delete(key);
+        }
     }
 
     @Override

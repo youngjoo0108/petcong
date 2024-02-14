@@ -67,7 +67,7 @@ class IntroducePageState extends State<IntroducePage> {
                         ),
                         onPressed: () {
                           Get.to(const SocialPage(
-                            progress: 0.8,
+                            progress: 0.9,
                           ));
                         },
                       ),

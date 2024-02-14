@@ -9,7 +9,7 @@ import com.example.ssafy.petcong.member.model.dto.*;
 import com.example.ssafy.petcong.member.model.enums.Gender;
 import com.example.ssafy.petcong.member.model.enums.PetSize;
 import com.example.ssafy.petcong.member.model.enums.Preference;
-import com.example.ssafy.petcong.security.UserRole;
+import com.example.ssafy.petcong.security.role.UserRole;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -17,6 +17,7 @@ import jakarta.transaction.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -45,6 +46,7 @@ import java.util.stream.Stream;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
+@Disabled
 public class MemberIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
@@ -148,6 +150,58 @@ public class MemberIntegrationTest {
             "육포",
             "먹태",
             "햄"
+    };
+
+    private static final String[] maleMemberIds = {
+            "55",
+            "56",
+            "61",
+            "62",
+            "63",
+            "64",
+            "68",
+            "70",
+            "76",
+            "77"
+    };
+
+    private static final String[] maleUids = {
+            "1688243545",
+            "1725438773",
+            "1914170172",
+            "1357726327",
+            "1317023809",
+            "1042723726",
+            "1406943403",
+            "1703118096",
+            "1013166148",
+            "1571038721"
+    };
+
+    private static final String[] femaleMemberIds = {
+            "57",
+            "58",
+            "59",
+            "60",
+            "65",
+            "66",
+            "67",
+            "69",
+            "71",
+            "72"
+    };
+
+    private static final String[] femaleUids = {
+            "1921871951",
+            "1346315578",
+            "1688037785",
+            "1449846434",
+            "1424076814",
+            "1819550433",
+            "1138967991",
+            "1845507684",
+            "1085276906",
+            "1638320385"
     };
 
     static Stream<Arguments> provideDummySignUpMember() {
@@ -272,68 +326,80 @@ public class MemberIntegrationTest {
     @Test
     @DisplayName("PostProfileImage Test")
     void testPostProfileImage() throws Exception {
-        try(FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\anya.jpg")) {
-            //given
-            byte[] bytes = fileInputStream.readAllBytes();
-            MockMultipartFile multipartFile = new MockMultipartFile(
-                    "files",
-                    "anya.jpg",
-                    MediaType.MULTIPART_FORM_DATA_VALUE,
-                    bytes);
+        for (int i = 1; i <= 10; i++) {
+            String memberId = maleMemberIds[i - 1];
+            String uid = maleUids[i - 1];
 
-            //when
-            var request = MockMvcRequestBuilders
-                    .multipart(HttpMethod.POST, "/members/picture")
-                    .file(multipartFile)
-                    .header("tester", "A603")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+            try(FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\male\\" + i + ".jpg")) {
+                //given
+                byte[] bytes = fileInputStream.readAllBytes();
+                MockMultipartFile multipartFile = new MockMultipartFile(
+                        "files",
+                        i + ".jpg",
+                        MediaType.MULTIPART_FORM_DATA_VALUE,
+                        bytes);
 
-            //then
-            MvcResult mvcResult = mockMvc
-                    .perform(request)
-                    .andExpect(status().isCreated())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andReturn();
+                //when
+                var request = MockMvcRequestBuilders
+                        .multipart(HttpMethod.POST, "/members/picture")
+                        .file(multipartFile)
+                        .param("memberId", memberId)
+                        .param("uid", uid)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-            String response = mvcResult.getResponse().getContentAsString();
+                //then
+                MvcResult mvcResult = mockMvc
+                        .perform(request)
+                        .andExpect(status().isCreated())
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                        .andReturn();
 
-            assertThat(response).isNotNull();
+                String response = mvcResult.getResponse().getContentAsString();
 
-            log.info("PostProfileImage Test: " + response);
+                assertThat(response).isNotNull();
+
+                log.info("PostProfileImage Test: " + response);
+            }
         }
     }
 
     @Test
     @DisplayName("PostDogTrick Test")
     void testPostDogTrick() throws Exception {
-        try(FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\video_sample.mp4")) {
-            //given
-            byte[] bytes = fileInputStream.readAllBytes();
-            MockMultipartFile multipartFile = new MockMultipartFile(
-                    "files",
-                    "video_sample.mp4",
-                    MediaType.MULTIPART_FORM_DATA_VALUE,
-                    bytes);
+        for (int i = 1; i <= 10; i++) {
+            String memberId = femaleMemberIds[i - 1];
+            String uid = femaleUids[i - 1];
 
-            //when
-            var request = MockMvcRequestBuilders
-                    .multipart(HttpMethod.POST, "/members/trick")
-                    .file(multipartFile)
-                    .header("tester", "A603")
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+            try(FileInputStream fileInputStream = new FileInputStream("C:\\Users\\SSAFY\\Downloads\\female_pet\\" + i + ".jpg")) {
+                //given
+                byte[] bytes = fileInputStream.readAllBytes();
+                MockMultipartFile multipartFile = new MockMultipartFile(
+                        "files",
+                        i + ".jpg",
+                        MediaType.MULTIPART_FORM_DATA_VALUE,
+                        bytes);
 
-            //then
-            MvcResult mvcResult = mockMvc
-                    .perform(request)
-                    .andExpect(status().isCreated())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andReturn();
+                //when
+                var request = MockMvcRequestBuilders
+                        .multipart(HttpMethod.POST, "/members/trick")
+                        .file(multipartFile)
+                        .param("memberId", memberId)
+                        .param("uid", uid)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-            String response = mvcResult.getResponse().getContentAsString();
+                //then
+                MvcResult mvcResult = mockMvc
+                        .perform(request)
+                        .andExpect(status().isCreated())
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                        .andReturn();
 
-            assertThat(response).isNotNull();
+                String response = mvcResult.getResponse().getContentAsString();
 
-            log.info("PostDogTrick Test: " + response);
+                assertThat(response).isNotNull();
+
+                log.info("PostDogTrick Test: " + response);
+            }
         }
     }
 

@@ -58,7 +58,7 @@ class PetNamePageState extends State<PetNamePage> {
               alignment: Alignment.centerLeft,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios, size: 32),
-                onPressed: () => Get.off(const PreferPage(progress: 0.3)),
+                onPressed: () => Get.off(const PreferPage(progress: 0.4)),
               ),
             ),
             const SizedBox(height: 5.0),
@@ -83,7 +83,9 @@ class PetNamePageState extends State<PetNamePage> {
                       borderSide: BorderSide(color: Colors.grey),
                     ),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 249, 113, 95),
+                      ),
                     ),
                   ),
                   textAlign: TextAlign.center),

@@ -41,7 +41,7 @@ public class Pet {
     @Enumerated(EnumType.STRING)
     private PetSize size;
 
-    private int weight;
+    private Integer weight;
 
     private String description;
 
