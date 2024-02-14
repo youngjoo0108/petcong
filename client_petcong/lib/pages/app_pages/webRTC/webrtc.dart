@@ -126,7 +126,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
 
   // icebreakings
   List<String> quizs = [
-    // "똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중",
+    "똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중",
     '1',
     "sampleQuiz2",
     "sampleQuiz3"
@@ -225,8 +225,8 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           ClipRect(
             child: InteractiveViewer(
               transformationController: controller,
-              minScale: 0.3,
-              maxScale: 1,
+              minScale: 0.25,
+              maxScale: 0.5,
               constrained: true,
               boundaryMargin: const EdgeInsets.all(double.infinity),
               onInteractionStart: (details) {},
@@ -265,15 +265,16 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                 children: [
                   Flexible(
                     fit: FlexFit.loose,
-                    child: AnimatedContainer(
+                    child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      duration: const Duration(milliseconds: 200),
-                      width: showMessage
-                          ? MediaQuery.of(context).size.width - videoWidth / 3
-                          : 0.0,
-                      // height: showMessage ? 50.0 : 0.0,
+                      width:
+                          showMessage ? MediaQuery.of(context).size.width : 0.0,
                       child: showMessage
                           ? Container(
+                              padding: const EdgeInsets.only(
+                                top: 10,
+                                bottom: 10,
+                              ),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.white.withOpacity(0.3),
@@ -285,7 +286,8 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                                   IconButton(
                                     onPressed: onIdxMinusBtnPressed,
                                     icon: const Icon(
-                                        Icons.arrow_back_ios_new_rounded),
+                                      Icons.arrow_back_ios_new_rounded,
+                                    ),
                                   ),
                                   Flexible(
                                     fit: FlexFit.loose,
@@ -306,7 +308,8 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                                   IconButton(
                                     onPressed: onIdxPlusBtnPressed,
                                     icon: const Icon(
-                                        Icons.arrow_forward_ios_rounded),
+                                      Icons.arrow_forward_ios_rounded,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -315,22 +318,22 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                     ),
                   ),
                   Opacity(
-                    opacity: showMessage ? 1.0 : 0.2,
+                    opacity: showMessage ? 1.0 : 0.5,
                     child: FloatingActionButton(
                       onPressed: _toggleMessageDialog,
                       heroTag: 'text',
-                      backgroundColor: Colors.transparent, // 배경색을 투명으로 설정합니다.
-                      elevation: 5,
+                      backgroundColor: Colors.transparent,
+                      // elevation: 2,
                       child: Image.asset(
                         'assets/src/petcong_c_logo.png',
                         width: 50,
                         height: 50,
                         fit: BoxFit.cover,
-                      ), // 그림자의 높이를 0으로 설정하여 그림자를 없앱니다.
+                      ),
                     ),
                   ),
                   const SizedBox(
-                    width: 10,
+                    width: 20,
                   ),
                 ],
               ),
