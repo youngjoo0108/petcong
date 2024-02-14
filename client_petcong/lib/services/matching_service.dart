@@ -29,7 +29,7 @@ Future<void> initPrefs() async {
   }
 }
 
-Future<dynamic> postMatching(String targetUid) async {
+Future<dynamic> postMatching(int targetId) async {
   print("postMatching 실행됨");
   // await initPrefs();
   // Map<String, String> reqHeaders = await getIdToken();
@@ -43,7 +43,8 @@ Future<dynamic> postMatching(String targetUid) async {
 
   String endpoint = '$serverUrl/matchings/choice';
   final response = await http.post(Uri.parse(endpoint),
-      headers: reqHeaders, body: jsonEncode({'partnerUid': targetUid}));
+      headers: reqHeaders,
+      body: jsonEncode({'partnerId': targetId.toString()}));
   if (response.statusCode == 200) {
     String body = response.body;
     return ChoiceRes.fromJson(jsonDecode(body));

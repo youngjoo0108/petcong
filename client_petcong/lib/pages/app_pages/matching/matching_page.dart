@@ -120,11 +120,10 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
         // 매칭페이지의 call버튼 -> onLike() -> makeCall()을 통해 통화대기화면 이동까지만.
         heroTag: 'call',
         onPressed: () {
-          if (uid == 'kS95PNT8RUc78Qr7TQ4uRaJmbw23') {
-            // cebu13@gmail.com
-            onLike('gHVcvjllueRTdd9F6P1M6ZUVi283'); //
+          if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
+            onLike(39); // 패드
           } else {
-            onLike('kS95PNT8RUc78Qr7TQ4uRaJmbw23'); // perucebu13@gmail.com
+            onLike(147); // 영주폰
           }
         },
         label: const Text('call'),
@@ -148,10 +147,10 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
 
   /// targetId = int
 
-  Future<void> onLike(String targetUid) async {
+  Future<void> onLike(int targetId) async {
     ChoiceRes? choiceRes;
     try {
-      choiceRes = await postMatching(targetUid);
+      choiceRes = await postMatching(targetId);
     } catch (exception) {
       print("exception = $exception");
       print("alert: 잘못된 요청");

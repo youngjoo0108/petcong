@@ -1,9 +1,9 @@
 package com.example.ssafy.petcong.security.filter;
 
-import com.example.ssafy.petcong.security.FirebaseAuthenticationToken;
-import com.example.ssafy.petcong.security.FirebaseUserDetails;
-import com.example.ssafy.petcong.security.SignupAuthenticationToken;
-import com.example.ssafy.petcong.security.UserRole;
+import com.example.ssafy.petcong.security.token.FirebaseAuthenticationToken;
+import com.example.ssafy.petcong.security.userdetails.FirebaseUserDetails;
+import com.example.ssafy.petcong.security.token.SignupAuthenticationToken;
+import com.example.ssafy.petcong.security.role.UserRole;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
