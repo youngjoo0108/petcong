@@ -130,9 +130,9 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
         heroTag: 'call',
         onPressed: () {
           if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
-            onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2'); // 패드
+            onLike(39); // 패드
           } else {
-            onLike('4GtzqrsSDBVSC1FkOWXXJ2i7CfA3'); // 영주폰
+            onLike(147); // 영주폰
           }
         },
         label: const Text('call'),
@@ -155,10 +155,10 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
 
   /// targetId = int
 
-  Future<void> onLike(String targetUid) async {
+  Future<void> onLike(int targetId) async {
     ChoiceRes? choiceRes;
     try {
-      choiceRes = await postMatching(targetUid);
+      choiceRes = await postMatching(targetId);
     } catch (exception) {
       print("exception = $exception");
       print("alert: 잘못된 요청");
