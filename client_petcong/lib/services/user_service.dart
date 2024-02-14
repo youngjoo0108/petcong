@@ -94,7 +94,7 @@ Future<ProfilePageModel> getUserInfo() async {
 
   if (response.statusCode == 200) {
     return ProfilePageModel.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>);
+        jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>);
   } else {
     if (kDebugMode) {
       print(response.statusCode);

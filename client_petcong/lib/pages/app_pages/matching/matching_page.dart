@@ -92,7 +92,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
                   verticalSwipeThreshold: 0.15,
                   // itemCount: 3,
                   builder: (context, properties) {
-                    final itemIndex = properties.index % 2;
+                    final itemIndex = properties.index % 3;
                     return Stack(
                       children: [
                         MatchingCard(
