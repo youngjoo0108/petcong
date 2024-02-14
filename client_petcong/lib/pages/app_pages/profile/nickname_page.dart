@@ -18,7 +18,7 @@ class NicknamePage extends StatefulWidget {
 class NicknamePageState extends State<NicknamePage> {
   final _controller = TextEditingController();
   bool _isButtonDisabled = true;
-  double _progress = 0.0; // _progress 변수를 추가하여 초기화합니다.
+  double _progress = 0.1; // _progress 변수를 추가하여 초기화합니다.
   String? _nickname;
   final UserController userController = Get.put(UserController());
   final SignupController signupController = Get.put(SignupController());
@@ -89,7 +89,8 @@ class NicknamePageState extends State<NicknamePage> {
                     borderSide: BorderSide(color: Colors.grey),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
+                    borderSide:
+                        BorderSide(color: Color.fromARGB(255, 249, 113, 95)),
                   ),
                 ),
                 textAlign: TextAlign.center,

@@ -13,7 +13,7 @@ public class S3KeyGenerator {
         if (lastDotIndex > 0) {
             return uid +
                     "/" +
-                    DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss").format(LocalDateTime.now()) +
+                    DateTimeFormatter.ofPattern("yyyyMMdd-HHmmssSSS").format(LocalDateTime.now()) +
                     fileName.substring(lastDotIndex);
         } else {
             throw new InvalidPathException(fileName, "Path contains invalid character.");
