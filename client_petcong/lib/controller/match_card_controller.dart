@@ -40,4 +40,8 @@ class MatchCardController extends GetxController {
       await getCardProfile();
     }
   }
+
+  Rx<DoubleLinkedQueue> getMatchingQue() {
+    return _cardQueue;
+  }
 }

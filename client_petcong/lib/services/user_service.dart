@@ -17,7 +17,9 @@ Future<Map<String, String>> getIdToken() async {
   if (testing) return {'tester': 'A603'};
   Map<String, String> postHeaders = {};
   if (FirebaseAuth.instance.currentUser != null) {
-    print("user exists");
+    if (kDebugMode) {
+      print("user exists");
+    }
 
     try {
       String? token = await FirebaseAuth.instance.currentUser!.getIdToken();
