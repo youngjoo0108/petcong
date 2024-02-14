@@ -24,7 +24,6 @@ class _MatchingCardState extends State<MatchingCard> {
         "${widget.matchingUser.nickname}, ${widget.matchingUser.age}";
     final String petProfile =
         "${widget.matchingUser.petName}, ${widget.matchingUser.petAge}";
-
     return ClipRRect(
       child: Stack(
         children: [
@@ -33,7 +32,8 @@ class _MatchingCardState extends State<MatchingCard> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
                 image: DecorationImage(
-                  image: NetworkImage(widget.matchingUser.pictureUrls!.first),
+                  image:
+                      NetworkImage(widget.matchingUser.profileImageUrls!.first),
                   fit: BoxFit.cover,
                 ),
                 boxShadow: [

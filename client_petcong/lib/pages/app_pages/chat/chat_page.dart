@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petcong/controller/history_controller.dart';
@@ -17,9 +18,7 @@ class _MainChatPageState extends State<MainChatPage> {
 
 //TODO: fix getMatchedUsers api
     HistoryController.to.getMatchedUsers();
-
     RxList<CardProfileModel> matchedUsers = HistoryController.to.matchedUsers;
-    print("matchedUsers: ${matchedUsers.elementAt(0)}");
     return Scaffold(
       body: SafeArea(
         child: GridView.count(
@@ -28,6 +27,10 @@ class _MainChatPageState extends State<MainChatPage> {
           children: List.generate(matchedUsers.length, (index) {
             return GestureDetector(
               onTap: () {
+                if (kDebugMode) {
+                  print(
+                      "matchedUser nickname onTap: ${matchedUsers[index].nickname}");
+                }
                 Navigator.push(
                   context,
                   MaterialPageRoute(

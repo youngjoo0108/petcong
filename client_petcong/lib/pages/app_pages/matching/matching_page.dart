@@ -120,10 +120,11 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
         // 매칭페이지의 call버튼 -> onLike() -> makeCall()을 통해 통화대기화면 이동까지만.
         heroTag: 'call',
         onPressed: () {
-          if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
-            onLike('Z8RNqMBdk6SuBAuA9i0shV19QSR2'); // 패드
+          if (uid == 'kS95PNT8RUc78Qr7TQ4uRaJmbw23') {
+            // cebu13@gmail.com
+            onLike('gHVcvjllueRTdd9F6P1M6ZUVi283'); //
           } else {
-            onLike('4GtzqrsSDBVSC1FkOWXXJ2i7CfA3'); // 영주폰
+            onLike('kS95PNT8RUc78Qr7TQ4uRaJmbw23'); // perucebu13@gmail.com
           }
         },
         label: const Text('call'),
