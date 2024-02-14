@@ -1,39 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/models/card_profile_model.dart';
 
 class MatchingCard extends StatefulWidget {
-  const MatchingCard({
-    required this.nickname,
-    required this.description,
-    required this.profileImages,
-    required this.age,
-    required this.petName,
-    required this.petAge,
-    super.key,
-  });
+  final CardProfileModel matchingUser;
 
-  final String nickname;
-  final int age;
-  final String petName;
-  final int petAge;
-  final String description;
-  final String profileImages;
+  const MatchingCard({Key? key, required this.matchingUser}) : super(key: key);
 
   @override
   State<MatchingCard> createState() => _MatchingCardState();
 }
 
+bool isPet = true;
+
+void onTap() {
+  isPet = !isPet;
+}
+
 class _MatchingCardState extends State<MatchingCard> {
-  bool isPet = true;
-
-  void onTap() {
-    isPet = !isPet;
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final String humanProfile = "${widget.nickname}, ${widget.age}";
-    final String petProfile = "${widget.petName}, ${widget.petAge}";
+    final String humanProfile =
+        "${widget.matchingUser.nickname}, ${widget.matchingUser.age}";
+    final String petProfile =
+        "${widget.matchingUser.petName}, ${widget.matchingUser.petAge}";
     return ClipRRect(
       child: Stack(
         children: [
@@ -42,7 +32,8 @@ class _MatchingCardState extends State<MatchingCard> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
                 image: DecorationImage(
-                  image: AssetImage(widget.profileImages),
+                  image:
+                      NetworkImage(widget.matchingUser.profileImageUrls!.first),
                   fit: BoxFit.cover,
                 ),
                 boxShadow: [
@@ -94,7 +85,7 @@ class _MatchingCardState extends State<MatchingCard> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    widget.description,
+                    widget.matchingUser.description!,
                     style: const TextStyle(
                       color: Color.fromARGB(255, 191, 190, 190),
                       fontSize: 15,

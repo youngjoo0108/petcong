@@ -1,5 +1,5 @@
 class CardProfileModel {
-  late int userId;
+  late int memberId;
   late int age;
   late String nickname;
   late String gender;
@@ -9,10 +9,10 @@ class CardProfileModel {
   late String? instagramId;
   late String? kakaoId;
   String? description;
-  List<String>? pictureUrls;
+  List<String>? profileImageUrls;
 
   CardProfileModel(
-      {required this.userId,
+      {required this.memberId,
       required this.age,
       required this.nickname,
       required this.gender,
@@ -22,10 +22,10 @@ class CardProfileModel {
       this.instagramId,
       this.kakaoId,
       this.description,
-      this.pictureUrls});
+      this.profileImageUrls});
 
   CardProfileModel.fromJson(Map<String, dynamic> map) {
-    userId = map['userId'];
+    memberId = map['memberId'];
     age = map['age'];
     nickname = map['nickname'];
     gender = map['gender'];
@@ -34,12 +34,12 @@ class CardProfileModel {
     petAge = map['petAge'];
     instagramId = map['instagramId'];
     kakaoId = map['kakaoId'];
-    description = description != null ? map['description'] : '';
-    pictureUrls = pictureUrls != null ? map['pictureUrls'] : [];
+    description = description == null ? map['description'] : '';
+    profileImageUrls = List<String>.from(map['profileImageUrls']);
   }
 
   List<Object?> get props => [
-        userId,
+        memberId,
         age,
         nickname,
         gender,
@@ -49,6 +49,6 @@ class CardProfileModel {
         instagramId,
         kakaoId,
         description,
-        pictureUrls
+        profileImageUrls
       ];
 }
