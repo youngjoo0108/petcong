@@ -8,21 +8,21 @@ import 'package:petcong/services/socket_service.dart';
 class MainVideoCallWidget extends StatefulWidget {
   final RTCVideoRenderer localRenderer;
   final RTCVideoRenderer remoteRenderer;
-  RTCPeerConnection? pc;
+  RTCPeerConnection? pc; // final 키워드 추가
   static late int quizIdx;
 
   MainVideoCallWidget({
-    super.key,
+    Key? key,
     required this.localRenderer,
     required this.remoteRenderer,
     required this.pc,
-  });
+  }) : super(key: key);
 
   @override
-  _MainVideoCallWidgetState createState() => _MainVideoCallWidgetState();
+  MainVideoCallWidgetState createState() => MainVideoCallWidgetState();
 }
 
-class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
+class MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   late double videoWidth = MediaQuery.of(context).size.width;
   late double videoHeight = MediaQuery.of(context).size.height;
   // icebreakings

@@ -49,8 +49,8 @@ class ContinueButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
-          disabledForegroundColor: Colors.transparent.withOpacity(0.38),
-          disabledBackgroundColor: Colors.transparent.withOpacity(0.12),
+          disabledForegroundColor: Colors.transparent.withOpacity(0.0),
+          disabledBackgroundColor: Colors.transparent.withOpacity(0.0),
           shadowColor: Colors.transparent,
           minimumSize: Size(width, height), // minimumSize 수정
         ),
