@@ -235,7 +235,7 @@ public class MemberController {
             parameters = @Parameter(description = "삭제할 파일의 S3 버킷 키"),
             responses = @ApiResponse(responseCode = "200", description = "삭제 성공")
     )
-    @DeleteMapping("/picture")
+    @DeleteMapping("/trick")
     public ResponseEntity<?> deleteDogTrick(String[] keys) {
         memberService.deleteSkillMultimedia(keys);
 
