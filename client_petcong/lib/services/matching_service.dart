@@ -30,7 +30,9 @@ Future<void> initPrefs() async {
 }
 
 Future<dynamic> postMatching(int targetId) async {
-  print("postMatching 실행됨");
+  if (kDebugMode) {
+    print("postMatching 실행됨");
+  }
   // await initPrefs();
   // Map<String, String> reqHeaders = await getIdToken();
   // make headers
@@ -52,8 +54,8 @@ Future<dynamic> postMatching(int targetId) async {
     return;
   } else {
     if (kDebugMode) {
-      print('code = ${response.statusCode}');
-      print('errMsg = ${response.body}');
+      print('post matching error code = ${response.statusCode}');
+      print('post matching errMsg = ${response.body}');
     } else {
       throw Exception("invalid matching request");
     }
@@ -69,9 +71,21 @@ Future<CardProfileModel> getProfile() async {
       headers: reqHeaders);
 
   if (response.statusCode == 200) {
-    if (kDebugMode) print(jsonDecode(response.body));
-    return CardProfileModel.fromJson(jsonDecode(response.body));
+    if (kDebugMode) {
+      print(
+          "getProfile success: ${jsonDecode(utf8.decode(response.bodyBytes))}");
+      print(
+          CardProfileModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)))
+              .nickname);
+    }
+    return CardProfileModel.fromJson(
+        jsonDecode(utf8.decode(response.bodyBytes)));
   } else {
+    if (kDebugMode) {
+      print(
+          "getProfile failed response.body: ${jsonDecode(utf8.decode(response.bodyBytes))}");
+      print("getProfile failed response.statuscode: ${response.statusCode}");
+    }
     throw Exception("getProfile request failed");
   }
 }
@@ -84,13 +98,18 @@ Future<List<CardProfileModel>> getMatchList() async {
 
   debugPrint("getMatchList request status: ${response.statusCode}");
   if (response.statusCode == 200) {
-    return (jsonDecode(response.body) as List)
+    if (kDebugMode) {
+      print(
+          "getMatchList success: ${jsonDecode(utf8.decode(response.bodyBytes))}");
+    }
+    return (jsonDecode(utf8.decode(response.bodyBytes)) as List)
         .map((e) => CardProfileModel.fromJson(e))
         .toList();
   } else {
     if (kDebugMode) {
       print("getMatchList request status: ${response.statusCode}");
-      print("getMatchList response body: ${response.body}");
+      print(
+          "getMatchList response body: ${jsonDecode(utf8.decode(response.bodyBytes))}");
       print("getMatchList error");
     }
     throw Exception("getMatchList request failed");
