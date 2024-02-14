@@ -20,6 +20,10 @@ import java.time.LocalDate;
 @ToString
 @Schema(title = "유저 정보", description = "member_id 값은 저장하지 않음")
 public class MemberInfoDto {
+    @Positive(message = "id should be greater than zero")
+    @Schema(title = "Member Id", example = "1", minimum = "0")
+    private int memberId;
+
     @Positive(message = "age should be greater than zero")
     @Schema(title = "나이", example = "1", minimum = "0")
     private int age;
@@ -69,6 +73,7 @@ public class MemberInfoDto {
 
     public static MemberInfoDto fromMemberRecord(MemberRecord member) {
         return MemberInfoDto.builder()
+                .memberId(member.memberId())
                 .age(member.age())
                 .nickname(member.nickname())
                 .email(member.email())

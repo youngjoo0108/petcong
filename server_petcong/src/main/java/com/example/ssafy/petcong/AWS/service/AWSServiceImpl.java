@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.Bucket;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
@@ -55,26 +56,39 @@ public class AWSServiceImpl implements AWSService{
 
     @Override
     public String createPresignedUrl(String key, Duration duration) {
-        GetObjectRequest getObjectRequest = getObjectRequest(key);
+        GetObjectRequest getObjectRequest = createGetObjectRequest(key);
 
-        GetObjectPresignRequest presignRequest = getObjectPresignRequest(getObjectRequest, duration);
+        GetObjectPresignRequest presignRequest = createGetObjectPresignRequest(getObjectRequest, duration);
 
         String presignedUrl = s3Presigner.presignGetObject(presignRequest).url().toString();
 
         return presignedUrl;
     }
 
-    private GetObjectRequest getObjectRequest(String key) {
+    private GetObjectRequest createGetObjectRequest(String key) {
         return GetObjectRequest.builder()
                 .bucket(bucket.name())
                 .key(key)
                 .build();
     }
 
-    private GetObjectPresignRequest getObjectPresignRequest(GetObjectRequest getObjectRequest, Duration duration) {
+    private GetObjectPresignRequest createGetObjectPresignRequest(GetObjectRequest getObjectRequest, Duration duration) {
         return GetObjectPresignRequest.builder()
                 .getObjectRequest(getObjectRequest)
                 .signatureDuration(duration)
+                .build();
+    }
+
+    @Override
+    public void delete(String key) {
+        DeleteObjectRequest deleteObjectRequest = createDeleteObjectRequest(key);
+        s3Client.deleteObject(deleteObjectRequest);
+    }
+
+    private DeleteObjectRequest createDeleteObjectRequest(String key) {
+        return DeleteObjectRequest.builder()
+                .bucket(bucket.name())
+                .key(key)
                 .build();
     }
 }
