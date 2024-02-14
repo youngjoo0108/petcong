@@ -8,6 +8,11 @@ spring:
       jdbc-url: jdbc:mysql://i10a603.p.ssafy.io:3306/petcongdb?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
       username: ssafy
       password: ssafy
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
 
 logging:
   level:
