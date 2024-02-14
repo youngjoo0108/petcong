@@ -175,23 +175,31 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public List<MemberImgRecord> updateMemberImage(int memberId, String uid, MultipartFile[] files) {
-        for (MultipartFile file : files) {
-            String key = S3KeyGenerator.generateKey(uid, file);
-            memberImgService.deleteMemberImgByBucketKey(key);
-        }
-
         return uploadMemberImage(memberId, uid, files);
     }
 
     @Override
     @Transactional
     public List<SkillMultimediaRecord> updateSkillMultimedia(int memberId, String uid, MultipartFile[] files) {
-        for (MultipartFile file : files) {
-            String key = S3KeyGenerator.generateKey(uid, file);
-            skillMultimediaService.deleteSkillMultimediaByBucketKey(key);
-        }
-
         return uploadSkillMultimedia(memberId, uid, files);
+    }
+
+    @Override
+    @Transactional
+    public void deleteMemberImage(String[] keys) {
+        for (String key : keys) {
+            memberImgService.deleteMemberImgByBucketKey(key);
+            awsService.delete(key);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteSkillMultimedia(String[] keys) {
+        for (String key : keys) {
+            skillMultimediaService.deleteSkillMultimediaByBucketKey(key);
+            awsService.delete(key);
+        }
     }
 
     @Override
