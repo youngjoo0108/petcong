@@ -56,7 +56,6 @@ class ProfileDetailPage extends StatelessWidget {
                     fit: BoxFit.cover),
               ),
             ),
-            Text(matchedUser.nickname, style: const TextStyle(fontSize: 24)),
             const SizedBox(height: 10),
             Text(matchedUser.description!),
             const SizedBox(height: 10),
