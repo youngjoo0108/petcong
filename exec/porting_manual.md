@@ -62,8 +62,6 @@ Android
 + minSDKVersion : 21
 + targetSDKVersion : 34
 + jvmTarget : 1.8
-
-
 ---
 # application.yml
 ```
@@ -160,21 +158,21 @@ cat /etc/nginx/sites-available/default
 # ...
 # listen [::]:443 ssl ipv6only=on; # managed by Certbot
 # listen 443 ssl; # managed by Certbot
-# ssl_certificate /etc/letsencrypt/live/i10a603.p.ssafy.io/fullchain.pem; # managed by Certbot
-# ssl_certificate_key /etc/letsencrypt/live/i10a603.p.ssafy.io/privkey.pem; # managed by Certbot
+# ssl_certificate /etc/letsencrypt/live/{서버 주소}/fullchain.pem; # managed by Certbot
+# ssl_certificate_key /etc/letsencrypt/live/{서버 주소}/privkey.pem; # managed by Certbot
 # include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
 # ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 # ...
 #
 # server {
-#     if ($host = i10a603.p.ssafy.io) {
+#     if ($host = {서버 주소}) {
 #         return 301 https://$host$request_uri;
 #     } # managed by Certbot
 #
 #
 #         listen 80 ;
 #         listen [::]:80 ;
-#     server_name i10a603.p.ssafy.io;
+#     server_name {서버 주소};
 #     return 404; # managed by Certbot
 #}
 
