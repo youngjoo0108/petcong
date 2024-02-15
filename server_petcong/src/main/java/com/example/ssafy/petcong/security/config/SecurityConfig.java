@@ -5,6 +5,7 @@ import com.example.ssafy.petcong.security.filter.ExclusiveFilter;
 import com.example.ssafy.petcong.security.filter.FirebaseAuthenticationFilter;
 import com.example.ssafy.petcong.properties.AllowedUrlProperties;
 
+import com.mysema.commons.lang.Assert;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,8 +31,10 @@ public class SecurityConfig {
     private final String[] allowedPatterns;
 
     public SecurityConfig(AllowedUrlProperties allowedUrlProperties) {
-        assert allowedUrlProperties.getUrls() != null;
-        assert allowedUrlProperties.getPatterns() != null;
+        Assert.notNull(allowedUrlProperties, "allowedUrlProperties must not be null");
+        Assert.notNull(allowedUrlProperties.getUrls(), "urls must not be null");
+        Assert.notNull(allowedUrlProperties.getPatterns(), "patterns must not be null");
+
         this.allowedUrls = allowedUrlProperties.getUrls().toArray(new String[0]);
         this.allowedPatterns = allowedUrlProperties.getPatterns().toArray(new String[0]);
     }
