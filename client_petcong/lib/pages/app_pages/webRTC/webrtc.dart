@@ -127,6 +127,8 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   late double scaleValue = 0.5;
   late double localRendererX = videoWidth * (6 / 7);
   late double localRendererY = videoHeight / 20;
+  bool showMessage = false;
+  bool isIdxChanged = false;
 
   // icebreakings
   List<String> quizs = [
@@ -135,7 +137,6 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
     "sampleQuiz2",
     "sampleQuiz3"
   ];
-  bool showMessage = false;
 
   void _toggleMessageDialog() {
     setState(() {
@@ -324,26 +325,45 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                           : null,
                     ),
                   ),
-                  Opacity(
-                    opacity: showMessage ? 1.0 : 0.5,
-                    child: FloatingActionButton(
-                      onPressed: _toggleMessageDialog,
-                      heroTag: 'text',
-                      backgroundColor: Colors.transparent,
-                      // elevation: 2,
-                      child: Image.asset(
-                        'assets/src/petcong_c_logo.png',
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
+                  Stack(
+                    children: [
+                      Opacity(
+                        opacity: showMessage ? 1.0 : 0.5,
+                        child: FloatingActionButton(
+                          onPressed: _toggleMessageDialog,
+                          heroTag: 'text',
+                          backgroundColor: Colors.transparent,
+                          // elevation: 2,
+                          child: Image.asset(
+                            'assets/src/petcong_c_logo.png',
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                    ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Opacity(
+                          opacity: isIdxChanged ? 0.0 : 1.0,
+                          child: const Icon(
+                            Icons.circle,
+                            color: MyColor.petCongColor4,
+                            size: 15,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(
-                    width: 20,
+                    width: 10,
                   ),
                 ],
               ),
+            ),
+
+            const SizedBox(
+              height: 20,
             ),
             // 통화 종료 버튼
             Align(
