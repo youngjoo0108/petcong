@@ -61,8 +61,6 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                     fit: BoxFit.cover),
               ),
             ),
-            Text(widget.matchedUser.nickname,
-                style: const TextStyle(fontSize: 24)),
             const SizedBox(height: 10),
             Text(widget.matchedUser.description!),
             const SizedBox(height: 10),
