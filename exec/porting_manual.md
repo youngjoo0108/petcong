@@ -195,7 +195,7 @@ https://www.hostwinds.kr/tutorials/install-docker-debian-based-operating-system
 # apt 패키지 색인 업데이트
 sudo apt-get update
 
-# debian용 docker 필수 패키지 설치
+# Debian용 Docker 필수 패키지 설치
 sudo apt-get install \
 apt-transport-https \
 ca-certificates \
@@ -248,10 +248,10 @@ docker exec -it jenkins bash
 # apt 색인 업데이트
 apt-get update
 
-# 자바 설치
+# Java 설치
 apt-get install openjdk-17-jdk -y
 
-# 도커 설치
+# Docker 설치
 apt-get install -y \
 apt-transport-https \
 ca-certificates \
@@ -269,7 +269,7 @@ stable"
 apt-get update
 apt-get install docker-ce docker-ce-cli containerd.io
 
-# 설치 다 했으면 빠져나오기
+# 설치 다 했으면 쉘에서 exit
 exit
 ```
 ---
@@ -411,4 +411,22 @@ pipeline
         }
     }
 }
+```
+---
+# 7. MySQL 설치
+```
+# Docker로 MySQL 컨테이너 띄우기
+docker run -d \
+-e MYSQL_ROOT_PASSWORD={root 계정 비밀번호} \
+-v mysql_data:/var/lib/mysql \
+-p 3306:3306 \
+--character-set-server=utf8mb4 \
+--collation-server=utf8mb4_unicode_ci \
+--name mysql-container mysql:8.1.0
+
+# MySQL 컨테이너 인터렉티브 모드로 쉘 실행
+docker exec -it mysql-container bash
+
+# MySQL root 계정으로 연결
+mysql -uroot -p{root 계정 비밀번호}
 ```
