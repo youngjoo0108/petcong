@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,25 +49,28 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
     }
 
     protected Authentication attemptAuthenticate(UserRole role) {
-        return switch (role) {
+        switch (role) {
             case UNAUTHENTICATED -> {
                 String idToken = getTokenFromHeader();
                 Authentication authentication = FirebaseAuthenticationToken.unauthenticated(idToken);
-                yield authenticationManager.authenticate(authentication);
+                return authenticationManager.authenticate(authentication);
             }
             case SIGNUP -> {
                 String idToken = getTokenFromHeader();
                 Authentication authentication = SignupAuthenticationToken.unauthenticated(idToken);
-                yield authenticationManager.authenticate(authentication);
+                return authenticationManager.authenticate(authentication);
             }
             case TESTER -> {
                 UserDetails anonymousUserDetails = new FirebaseUserDetails(role.getUid(), role.getMemberId(), role.isStatus());
                 AbstractAuthenticationToken authenticatedToken = FirebaseAuthenticationToken.authenticated(anonymousUserDetails, anonymousUserDetails.getPassword(), null);
                 authenticatedToken.setDetails(anonymousUserDetails);
-                yield authenticatedToken;
+                return authenticatedToken;
             }
-            case ANONYMOUS -> null;
-        };
+            case ANONYMOUS -> {
+                return null;
+            }
+            default -> throw new AuthenticationServiceException("Can not process " + role.getClass() + " type.");
+        }
     }
 
     private void saveAuthentication(Authentication authentication) {
