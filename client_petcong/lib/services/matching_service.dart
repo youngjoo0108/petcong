@@ -16,7 +16,7 @@ User? currentUser = UserController.currentUser;
 // String idTokenString = currentUser?.getIdToken().toString() ?? "";
 // User user = FirebaseAuth.instance.currentUser!;
 // String? idToken;
-const String serverUrl = 'http://i10a603.p.ssafy.io:8081';
+const String serverUrl = 'https://i10a603.p.ssafy.io';
 // Map<String, String>? reqHeaders;
 
 Future<void> initPrefs() async {

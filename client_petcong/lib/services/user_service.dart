@@ -10,7 +10,7 @@ const bool testing = false;
 
 String idTokenString = "";
 
-const String serverUrl = 'http://i10a603.p.ssafy.io:8081';
+const String serverUrl = 'https://i10a603.p.ssafy.io';
 
 // testing 중인지 확인하고 header에 tester 권한 추가
 Future<Map<String, String>> getIdToken() async {
