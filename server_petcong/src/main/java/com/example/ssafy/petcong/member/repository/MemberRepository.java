@@ -13,7 +13,5 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     Optional<Member> findMemberByMemberId(int memberId);
     Optional<Member> findMemberByUid(String uid);
     Member save(Member member);
-    int deleteMemberByMemberId(int memberId);
-    int deleteMemberByUid(String uid);
     List<Member> findByCallableIsTrue();
 }

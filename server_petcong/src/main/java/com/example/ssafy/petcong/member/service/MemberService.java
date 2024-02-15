@@ -23,5 +23,5 @@ public interface MemberService {
     List<SkillMultimediaRecord> updateSkillMultimedia(int memberId, String uid, MultipartFile[] files);
     void deleteMemberImage(String[] keys);
     void deleteSkillMultimedia(String[] keys);
-    int deleteMemberByMemberId(int memberId);
+    void deleteMemberByMemberId(int memberId);
 }

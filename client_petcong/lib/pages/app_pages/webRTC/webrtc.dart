@@ -30,6 +30,10 @@ class MainVideoCallWidget extends StatefulWidget {
     _pc!.addCandidate(ice);
   }
 
+  Future<void> closePeerConnection() async {
+    await _pc!.close();
+  }
+
   Future<void> initPeerConnection() async {
     final config = {
       'iceServers': [
