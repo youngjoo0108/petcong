@@ -157,9 +157,14 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   Future<void> onLike(int targetId) async {
     CardWaitController cardWaitController = Get.put(CardWaitController());
     CardProfileModel? targetUserInfo;
+    String? targetUid;
     try {
-      targetUserInfo = await postMatching(targetId);
-      cardWaitController.setCardProfile(targetUserInfo!);
+      Map<String, dynamic>? response = await postMatching(targetId);
+      if (response != null) {
+        targetUserInfo = response['profile'];
+        targetUid = response['targetUid'];
+        cardWaitController.setCardProfile(targetUserInfo!);
+      }
     } catch (exception) {
       if (kDebugMode) {
         print("exception = $exception");
@@ -170,8 +175,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     // when matched
     if (targetUserInfo != null) {
       // 로직 변경될 부분 ----
-      await socketService
-          .makeCall(targetId.toString()); // callWaitingPage로 이동만.
+      await socketService.makeCall(targetUid!); // callWaitingPage로 이동만.
 
       // ---- /
     }
