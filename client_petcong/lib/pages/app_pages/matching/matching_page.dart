@@ -169,6 +169,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       // 로직 변경될 부분 ----
       await socketService
           .makeCall(targetId.toString()); // callWaitingPage로 이동만.
+
       // ---- /
     }
   }
