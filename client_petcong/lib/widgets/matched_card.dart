@@ -28,6 +28,10 @@ class _MatchedCardState extends State<MatchedCard> {
         );
       },
       child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Column(
           children: <Widget>[
             Hero(
@@ -40,7 +44,7 @@ class _MatchedCardState extends State<MatchedCard> {
                     imageUrl: widget.matchedUser.profileImageUrls![0],
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
-                    fit: BoxFit.fill),
+                    fit: BoxFit.cover),
               ),
             ),
             Text(widget.matchedUser.nickname,

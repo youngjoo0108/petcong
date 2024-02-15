@@ -26,14 +26,6 @@ class UserController extends GetxController {
   final HistoryController historyController = Get.put(HistoryController());
   final MatchCardController matchCardController =
       Get.put(MatchCardController());
-  List<String> selectedImages = [
-    'assets/src/test_4.jpg',
-    'assets/src/test_5.jpg',
-    'assets/src/test_1.jpg',
-    'assets/src/test_3.png',
-    'assets/src/test_2.png',
-    'Add Picture', // 마지막 요소를 'Add Picture' 텍스트로 설정
-  ];
 
   @override
   void onReady() {
@@ -94,12 +86,4 @@ class UserController extends GetxController {
   }
 
   static User? get currentUser => user;
-
-  void updateSelectedImage(int index, String newImage) {
-    if (index >= 0 && index < 5) {
-      // index가 5보다 작은 경우에만 업데이트
-      selectedImages[index] = newImage;
-      update();
-    }
-  }
 }

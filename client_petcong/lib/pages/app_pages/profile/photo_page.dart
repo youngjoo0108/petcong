@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:petcong/controller/match_card_controller.dart';
+import 'package:petcong/controller/profile_controller.dart';
 import 'package:petcong/controller/signup_controller.dart';
+import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:petcong/widgets/create_button.dart';
 import 'package:petcong/widgets/delete_button.dart';
@@ -182,6 +185,8 @@ class PhotoPageState extends State<PhotoPage> {
                           SignupController.to.signUpUser(context);
                           try {
                             await postPicture(_photoPaths);
+                            await MatchCardController.to.onInit();
+                            ProfileController.to.onInit();
                             Get.offAll(
                               const HomePage(),
                               transition: Transition.fade,
