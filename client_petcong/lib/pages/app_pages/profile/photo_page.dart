@@ -182,9 +182,9 @@ class PhotoPageState extends State<PhotoPage> {
                           SignupController.to.signUpUser(context);
                           try {
                             await postPicture(_photoPaths);
-                            Get.to(
+                            Get.offAll(
                               const HomePage(),
-                              transition: Transition.noTransition,
+                              transition: Transition.fade,
                             );
                           } catch (e) {
                             // postPicture 함수가 실패했을 때의 코드
