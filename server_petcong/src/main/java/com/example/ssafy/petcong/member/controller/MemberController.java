@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
-@Tag(name = "UserController API")
+@Tag(name = "MemberController API")
 public class MemberController {
     private final AWSService awsService;
     private final MemberService memberService;
