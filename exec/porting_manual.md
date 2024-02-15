@@ -420,8 +420,6 @@ docker run -d \
 -e MYSQL_ROOT_PASSWORD={root 계정 비밀번호} \
 -v mysql_data:/var/lib/mysql \
 -p 3306:3306 \
---character-set-server=utf8mb4 \
---collation-server=utf8mb4_unicode_ci \
 --name mysql-container mysql:8.1.0
 
 # MySQL 컨테이너 인터렉티브 모드로 쉘 실행
