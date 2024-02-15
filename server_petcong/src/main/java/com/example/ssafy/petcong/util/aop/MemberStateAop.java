@@ -45,5 +45,6 @@ public class MemberStateAop {
         Member member = memberRepository.findMemberByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
         member.updateCallable(callable);
         memberRepository.save(member);
+        System.out.println("MemberStateAop.changeCallable run. callable = " + (callable ? "true" : "false") + " / uid = " + uid + " //");
     }
 }
