@@ -157,16 +157,6 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     CardProfileModel? targetUserInfo;
     try {
       targetUserInfo = await postMatching(targetId);
-      // 응답 테스트
-      debugPrint("targetUserInfo = \n");
-      debugPrint(targetUserInfo!.description);
-      debugPrint(targetUserInfo.petName);
-      for (var imgurl in targetUserInfo.profileImageUrls!) {
-        debugPrint(imgurl);
-      }
-      debugPrint(targetUserInfo.memberId.toString());
-      debugPrint(targetUserInfo.gender);
-      debugPrint(targetUserInfo.petGender);
     } catch (exception) {
       print("exception = $exception");
       print("alert: 잘못된 요청");
@@ -174,8 +164,11 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     }
     // when matched
     if (targetUserInfo != null) {
+      // 로직 변경될 부분 ----
       await socketService
           .makeCall(targetId.toString()); // callWaitingPage로 이동만.
+
+      // ---- /
     }
   }
 }
