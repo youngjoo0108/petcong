@@ -64,32 +64,45 @@ class CallWaiting extends StatelessWidget {
         ]),
       ),
       floatingActionButton: Stack(
-        //  MainAxisAlignment.spaceEvenly,
         alignment: Alignment.bottomCenter,
         children: [
-          FloatingActionButton(
-            heroTag: 'call_button',
-            onPressed: () async {
-              // socketService!
-              //     .onCallPressed('on'); // 통화대기화면 call버튼 -> rtc 연결 시작 ~ 화면 on
-              socketService!.onCallPressed();
-            },
-            shape: const CircleBorder(eccentricity: 0),
-            backgroundColor: MyColor.myColor1,
-            child: const Icon(
-              Icons.call,
-              size: 40,
+          Positioned(
+            left: MediaQuery.of(context).size.width / 4,
+            child: SizedBox(
+              width: 80,
+              height: 80,
+              child: FloatingActionButton(
+                heroTag: 'call_button',
+                onPressed: () async {
+                  // socketService!
+                  //     .onCallPressed('on'); // 통화대기화면 call버튼 -> rtc 연결 시작 ~ 화면 on
+                  socketService!.onCallPressed();
+                },
+                shape: const CircleBorder(eccentricity: 0),
+                backgroundColor: MyColor.myColor1,
+                child: const Icon(
+                  Icons.call,
+                  size: 40,
+                ),
+              ),
             ),
           ),
-          FloatingActionButton(
-            heroTag: 'call_reject_button',
-            onPressed: () {
-              mainVideoCallWidget.closePeerConnection();
-              Get.to(const MainMatchingPage());
-            },
-            shape: const CircleBorder(eccentricity: 0),
-            backgroundColor: MyColor.petCongColor4,
-            child: const Icon(Icons.call_end, size: 40),
+          Positioned(
+            right: MediaQuery.of(context).size.width / 5,
+            child: SizedBox(
+              width: 80,
+              height: 80,
+              child: FloatingActionButton(
+                heroTag: 'call_reject_button',
+                onPressed: () {
+                  mainVideoCallWidget.closePeerConnection();
+                  Get.to(const MainMatchingPage());
+                },
+                shape: const CircleBorder(eccentricity: 0),
+                backgroundColor: MyColor.petCongColor4,
+                child: const Icon(Icons.call_end, size: 40),
+              ),
+            ),
           ),
         ],
       ),
