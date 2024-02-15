@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
@@ -139,9 +141,11 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   ];
 
   void toggleMessageDialog() {
-    showMessage.value = !showMessage.value;
-    if (!showMessage.value) {
+    if (showMessage.value == true) {
+      showMessage.value = false;
+    } else {
       isIdxChanged.value = false;
+      showMessage.value = true;
     }
   }
 
@@ -151,29 +155,13 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
 
     widget.quizIdx!.listen((_) {
       setState(() {
-        if (!showMessage.value && !isIdxChanged.value) {
+        if (!showMessage.value) {
           isIdxChanged.value = true;
-        } else {
-          isIdxChanged.value = false;
         }
       });
     });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showMessageListener();
-    });
   }
-  // widget.quizIdx!.value = 0;
-
-  void showMessageListener() {
-    setState(() {
-      if (!showMessage.value) {
-        isIdxChanged.value = false;
-      } else {
-        isIdxChanged = isIdxChanged;
-      }
-    });
-  }
+  // widget.quizIdx!.value = 0;}
 
   @override
   void dispose() {
@@ -184,9 +172,6 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
     widget._localRenderer!.srcObject!.getTracks().forEach((track) {
       track.stop();
     });
-    // widget._remoteRenderer!.srcObject!.getTracks().forEach((track) {
-    //   track.stop();
-    // });
 
     widget._localRenderer!.srcObject = null;
     widget._remoteRenderer!.srcObject = null;
@@ -229,6 +214,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   @override
   Widget build(BuildContext context) {
     Get.put(MainVideoCallWidget());
+    Get.put(_MainVideoCallWidgetState());
     final TransformationController controller = TransformationController();
     controller.value = Matrix4.identity()
       ..scale(scaleValue)
@@ -291,86 +277,92 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                 children: [
                   Flexible(
                     fit: FlexFit.loose,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      width: showMessage.value
-                          ? MediaQuery.of(context).size.width
-                          : 0.0,
-                      child: showMessage.value
-                          ? Container(
-                              padding: const EdgeInsets.only(
-                                top: 10,
-                                bottom: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white.withOpacity(0.3),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                    onPressed: onIdxMinusBtnPressed,
-                                    icon: const Icon(
-                                      Icons.arrow_back_ios_new_rounded,
+                    child: Obx(
+                      () => Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        width: showMessage.value
+                            ? MediaQuery.of(context).size.width
+                            : 0.0,
+                        child: showMessage.value
+                            ? Container(
+                                padding: const EdgeInsets.only(
+                                  top: 10,
+                                  bottom: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white.withOpacity(0.3),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(
+                                      onPressed: onIdxMinusBtnPressed,
+                                      icon: const Icon(
+                                        Icons.arrow_back_ios_new_rounded,
+                                      ),
                                     ),
-                                  ),
-                                  Flexible(
-                                    fit: FlexFit.loose,
-                                    child: Obx(
-                                      () => Text(
-                                        quizs.isNotEmpty &&
-                                                widget.quizIdx!.value >= 0 &&
-                                                widget.quizIdx!.value <
-                                                    quizs.length
-                                            ? quizs[widget.quizIdx!.value]
-                                            : 'No quiz available',
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
+                                    Flexible(
+                                      fit: FlexFit.loose,
+                                      child: Obx(
+                                        () => Text(
+                                          quizs.isNotEmpty &&
+                                                  widget.quizIdx!.value >= 0 &&
+                                                  widget.quizIdx!.value <
+                                                      quizs.length
+                                              ? quizs[widget.quizIdx!.value]
+                                              : 'No quiz available',
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  IconButton(
-                                    onPressed: onIdxPlusBtnPressed,
-                                    icon: const Icon(
-                                      Icons.arrow_forward_ios_rounded,
+                                    IconButton(
+                                      onPressed: onIdxPlusBtnPressed,
+                                      icon: const Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : null,
+                                  ],
+                                ),
+                              )
+                            : null,
+                      ),
                     ),
                   ),
                   Stack(
                     children: [
-                      Opacity(
-                        opacity: showMessage.value ? 1.0 : 0.5,
-                        child: FloatingActionButton(
-                          onPressed: toggleMessageDialog,
-                          heroTag: 'text',
-                          backgroundColor: Colors.transparent,
-                          // elevation: 2,
-                          child: Image.asset(
-                            'assets/src/petcong_c_logo.png',
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
+                      Obx(
+                        () => Opacity(
+                          opacity: showMessage.value ? 1.0 : 0.5,
+                          child: FloatingActionButton(
+                            onPressed: toggleMessageDialog,
+                            heroTag: 'text',
+                            backgroundColor: Colors.transparent,
+                            // elevation: 2,
+                            child: Image.asset(
+                              'assets/src/petcong_c_logo.png',
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Opacity(
-                          opacity: isIdxChanged.value ? 1.0 : 0.0,
-                          child: const Icon(
-                            Icons.circle,
-                            color: MyColor.petCongColor4,
-                            size: 15,
+                      Obx(
+                        () => Align(
+                          alignment: Alignment.bottomRight,
+                          child: Opacity(
+                            opacity: isIdxChanged.value ? 1.0 : 0.0,
+                            child: const Icon(
+                              Icons.circle,
+                              color: MyColor.petCongColor4,
+                              size: 15,
+                            ),
                           ),
                         ),
                       ),

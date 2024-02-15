@@ -7,6 +7,7 @@ import 'package:petcong/pages/app_pages/matching/matching_page.dart';
 import 'package:petcong/controller/call_wait_controller.dart';
 
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
+import 'package:petcong/pages/homepage.dart';
 import 'package:petcong/services/socket_service.dart';
 import 'package:slidable_button/slidable_button.dart';
 
@@ -28,31 +29,52 @@ class CallWaiting extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
             ),
-            HorizontalSlidableButton(
-              width: MediaQuery.of(context).size.width / 3,
-              buttonWidth: 60.0,
-              color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-              buttonColor: Theme.of(context).primaryColor,
-              dismissible: false,
-              label: const Center(child: Text('Slide Me')),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Left'),
-                    Text('Right'),
-                  ],
+            Positioned(
+              bottom: MediaQuery.of(context).size.height / 10,
+              left: MediaQuery.of(context).size.width / 6,
+              child: HorizontalSlidableButton(
+                initialPosition: SlidableButtonPosition.center,
+                autoSlide: false,
+                width: MediaQuery.of(context).size.width * (2 / 3),
+                height: 60,
+                buttonWidth: 60.0,
+                color: Colors.white.withOpacity(0.3),
+                buttonColor: MyColor.myColor4,
+                dismissible: false,
+                label: const Center(
+                  child: Icon(Icons.call),
                 ),
+                child: const Padding(
+                  padding: EdgeInsets.all(15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Call',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        'Reject',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                onChanged: (position) async {
+                  if (position == SlidableButtonPosition.start) {
+                    socketService!.onCallPressed();
+                  } else {
+                    // mainVideoCallWidget.closePeerConnection();
+                    Get.offAll(const HomePage());
+                  }
+                },
               ),
-              onChanged: (position) async {
-                if (position == SlidableButtonPosition.end) {
-                  socketService!.onCallPressed();
-                } else {
-                  // mainVideoCallWidget.closePeerConnection();
-                  Get.to(const MainMatchingPage());
-                }
-              },
             ),
           ],
         ),
@@ -60,50 +82,3 @@ class CallWaiting extends StatelessWidget {
     );
   }
 }
-         
-            
-
-      // floatingActionButton: Stack(
-      //   alignment: Alignment.bottomCenter,
-      //   children: [
-      //     Positioned(
-      //       left: MediaQuery.of(context).size.width / 4,
-      //       child: SizedBox(
-      //         width: 80,
-      //         height: 80,
-      //         child: FloatingActionButton(
-      //           heroTag: 'call_button',
-      //           onPressed: () async {
-      //             // socketService!
-      //             //     .onCallPressed('on'); // 통화대기화면 call버튼 -> rtc 연결 시작 ~ 화면 on
-      //             socketService!.onCallPressed();
-      //           },
-      //           shape: const CircleBorder(eccentricity: 0),
-      //           backgroundColor: MyColor.myColor1,
-      //           child: const Icon(
-      //             Icons.call,
-      //             size: 40,
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //     Positioned(
-      //       right: MediaQuery.of(context).size.width / 5,
-      //       child: SizedBox(
-      //         width: 80,
-      //         height: 80,
-      //         child: FloatingActionButton(
-      //           heroTag: 'call_reject_button',
-      //           onPressed: () {
-      //             mainVideoCallWidget.closePeerConnection();
-      //             Get.to(const MainMatchingPage());
-      //           },
-      //           shape: const CircleBorder(eccentricity: 0),
-      //           backgroundColor: MyColor.petCongColor4,
-      //           child: const Icon(Icons.call_end, size: 40),
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
-
