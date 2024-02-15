@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
+import 'package:petcong/pages/app_pages/matching/matching_page.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
 import 'package:petcong/services/socket_service.dart';
 
@@ -48,7 +50,10 @@ class CallWaiting extends StatelessWidget {
             right: MediaQuery.of(context).size.width / 5,
             child: FloatingActionButton(
               heroTag: 'call_reject_button',
-              onPressed: () {},
+              onPressed: () async {
+                await mainVideoCallWidget.closePeerConnection();
+                Get.to(const MainMatchingPage());
+              },
               shape: const CircleBorder(eccentricity: 0),
               backgroundColor: MyColor.petCongColor4,
               child: const Icon(Icons.call_end),
