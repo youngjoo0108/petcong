@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:petcong/models/card_profile_model.dart';
 import 'package:petcong/models/profile_page_model.dart';
@@ -15,16 +16,18 @@ class MatchCardController extends GetxController {
   final Rx<ProfilePageModel> _callWaitUser = ProfilePageModel().obs;
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
-    fillQueue();
+    await fillQueue();
   }
 
   Future<void> getCardProfile() async {
     try {
       _cardQueue.value.add(await getProfile());
     } catch (e) {
-      print("Error in getCardProfile: $e");
+      if (kDebugMode) {
+        print("Error in getCardProfile: $e");
+      }
     }
   }
 
