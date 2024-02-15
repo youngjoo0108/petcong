@@ -112,7 +112,7 @@ https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/Welcome.html
 2. Docker를 통해 Jenkins 컨테이너 띄우기
 3. Jenkins 컨테이너 환경에 Java와 Docker를 설치
 4. 파이프라인 설정
-5. Repository에서 deploy 브랜치에 merge request가 accepted 된 경우 젠킨스가 인식하고 자동 배포
+5. Repository에서 deploy 브랜치에 merge request가 accepted 된 경우 젠킨스가 인식하고 서버에 자동 배포
 ---
 # 1. 도커 설치 
 https://www.hostwinds.kr/tutorials/install-docker-debian-based-operating-system
@@ -222,7 +222,7 @@ apt-get install docker-ce docker-ce-cli containerd.io
 6. test connection을 눌러 연결 되는지 확인하고 저장
 
 ##### 파이프라인 설정
-1. Dashboard에서 새로운 Item을 만들어서 Pipeline 생성
+1. Dashboard에서 새로운 Item을 만들어서 파이프라인 생성
 2. 구성 화면에서 GitHub project 체크 후, Project url에 레포지토리 주소 입력
 3. Build Triggers 항목에서 Build when a change is pushed to GitLab. 체크
 4. Enabled GitLab triggers에서 Accepted Merge Request Events 체크 (다른 트리거를 쓰고 싶으면 다른 항목 체크)
@@ -232,6 +232,76 @@ apt-get install docker-ce docker-ce-cli containerd.io
 8. URL 칸에 http://{서버 주소}:8001/project/{파이프라인 이름} 입력
 9. Secret token 칸에는 파이프라인에서 발급받은 Secret token 입력
 10. Trigger 항목에서 Merge request events 체크 후 test 해본 뒤 Add webhook
+
+##### 파이프라인 스크립트 작성 (파이프라인 구성에서 Pipeline 항목에 있는 Script 칸에 작성)
+```
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('gitlab connection')
+        {
+            steps
+            {
+                git branch: 'master',
+                credentialsId: 'Username with password로 만든 credentials의 ID',
+                url: '깃 url'
+            }
+        }
+        stage('build server')
+        {
+            steps
+            {
+                dir('server_petcong') {
+                    sh 'cd /var/jenkins_home/workspace/petcong/server_petcong/'
+                    sh 'chmod +x gradlew'
+                    sh './gradlew clean build -x test'
+                }
+            }
+        }
+        stage('server deploy')
+        {
+            steps
+            {
+                script 
+                {
+                    try {
+                        sh 'docker stop spring'
+                    } catch(e) {
+                        print(e)
+                    }
+                    try {
+                        sh 'docker rm spring'
+                    } catch(e) {
+                        print(e)
+                    }
+                    try {
+                        sh 'docker rmi backend'
+                    } catch(e) {
+                        print(e)
+                    }
+                }
+                dir('server_petcong')
+                {
+                    sh 'cp /var/jenkins_home/workspace/petcong/server_petcong/Dockerfile ./build/libs'
+                    sh 'pwd'
+                    sh 'docker build -t backend .'
+                    sh '''
+                        docker run -d\
+                        -p 8080:8080\
+                        -v `Firebase credentails json 파일 경로`:/app/petcong-firebase-credentials.json\
+                        -e GOOGLE_APPLICATION_CREDENTIALS=/app/petcong-firebase-credentials.json\
+                        -e AWS_ACCESS_KEY_ID=`AWS 엑세스 키`\
+                        -e AWS_SECRET_ACCESS_KEY=`AWS 시크릿 엑세스 키`\
+                        -e S3_BUCKET_NAME=`S3 버킷 이름` --name spring backend
+                    '''
+                }
+            }
+        }
+    }
+}
+```
 ---
 # 5. 다음 내용을 갖는 Dockerfile을 작성한 후 /var/jenkins_home/workspace/petcong/server_petcong 에 위치시키기
 ```
