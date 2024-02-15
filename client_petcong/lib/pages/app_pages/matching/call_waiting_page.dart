@@ -25,7 +25,7 @@ class CallWaiting extends StatelessWidget {
       body: Center(
         child: MixinBuilder<CardWaitController>(builder: (controller) {
           String profileUrl = controller.cardProfile.value.profileImageUrls![0];
-          String partnerNickname = controller.cardProfile.value.nickname!;
+          String partnerNickname = controller.cardProfile.value.nickname;
           return Stack(children: [
             Image.network(
               profileUrl,
@@ -35,7 +35,7 @@ class CallWaiting extends StatelessWidget {
             ),
             Positioned.fill(
               child: Padding(
-                padding: EdgeInsets.all(50.0),
+                padding: const EdgeInsets.all(50.0),
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: Column(
@@ -79,7 +79,7 @@ class CallWaiting extends StatelessWidget {
                 onPressed: () async {
                   // socketService!
                   //     .onCallPressed('on'); // 통화대기화면 call버튼 -> rtc 연결 시작 ~ 화면 on
-                  // socketService!.onCallPressed();
+                  socketService!.onCallPressed();
                 },
                 shape: const CircleBorder(eccentricity: 0),
                 backgroundColor: MyColor.myColor1,
