@@ -51,6 +51,19 @@ WebSocket
 
 SpringDoc
 + springdoc-openapi-starter-webmvc-ui : 2.1.0 
+
+Flutter
++ Flutter : 3.16.9
++ Dart : 3.2.6
++ DevTools 2.28.5
+
+Android
++ Kotlin : 1.7.10
++ minSDKVersion : 21
++ targetSDKVersion : 34
++ jvmTarget : 1.8
+
+
 ---
 # application.yml
 ```
@@ -428,3 +441,11 @@ docker exec -it mysql-container bash
 # MySQL 연결 후 덤핑
 mysql -uroot -p{root 계정 비밀번호} < {덤프 파일 위치}
 ```
+
+# 8. Firebase Flutter 설정
+
+[Flutter에서 Firebase 인증 시작하기](https://firebase.google.com/docs/auth/flutter/start?hl=ko)
+
+[Flutter 앱에 Firebase 추가](https://firebase.google.com/docs/flutter/setup?hl=ko&_gl=1*1fwwexv*_up*MQ..*_ga*MTgxNzI5NTA5OS4xNzA3OTIxMDg3*_ga_CW55HF8NVT*MTcwNzkyMTA4Ni4xLjAuMTcwNzkyMTA4Ni4wLjAuMA..&platform=android)
+
+[안드로이드 앱 설치 링크](https://linkhere/)
