@@ -93,7 +93,7 @@ class MainVideoCallWidget extends StatefulWidget {
       await _localRenderer!.initialize();
 
       final mediaConstraints = {
-        'audio': false,
+        'audio': true,
         'video': {'facingMode': 'user'}
       };
 
