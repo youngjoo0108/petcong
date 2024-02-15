@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class SocketService extends GetxController {
   User user = FirebaseAuth.instance.currentUser!;
   VoidCallback? onInitComplete;
   static late String targetUid; // matched 메시지 받았을 때 초기화됨. static 함수에서 사용함.
+  static late int targetId;
   String subsPrefix = "/queue/";
   static bool callPressed = false;
   List<RTCIceCandidate>? iceCandidates;
@@ -102,7 +104,7 @@ class SocketService extends GetxController {
                       Map<String, dynamic> value = response['value'];
                       // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
                       targetUid = value['targetUid'];
-                      await makeCall(targetUid);
+                      await makeCall(targetUid, targetId);
                       break;
                     case 'offer':
                       Map<String, dynamic> value =
@@ -167,11 +169,13 @@ class SocketService extends GetxController {
     await mainVideoCallWidget!.init();
   }
 
-  Future<void> makeCall(String targetUidParam) async {
+  Future<void> makeCall(String targetUidParam, int targetIdParam) async {
     // mainVideoCallWidget = MainVideoCallWidget();
     // await mainVideoCallWidget!.init();
 
     targetUid = targetUidParam;
+    targetId = targetId;
+    print('debug target id is coming $targetId');
     // matched
     // 전화 오는 화면으로
     Get.to(CallWaiting(this, mainVideoCallWidget!));

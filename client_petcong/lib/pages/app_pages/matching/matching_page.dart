@@ -167,6 +167,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       return;
     }
     // when matched
-    await socketService.makeCall(choiceRes.targetUid!); // callWaitingPage로 이동만.
+    await socketService.makeCall(
+        choiceRes.targetUid!, targetId); // callWaitingPage로 이동만.
   }
 }
