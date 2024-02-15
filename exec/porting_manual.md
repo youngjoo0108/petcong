@@ -1,4 +1,7 @@
 # 개발 환경
+Server OS
++ Ubuntu 20.04.6 LTS
+
 Java
 + jdk : openjdk version "17.0.9" 2023-10-17
 + jre : OpenJDK Runtime Environment (build 17.0.9+9-Ubuntu-120.04)
@@ -30,13 +33,13 @@ Container
 Deploy
 + jenkins : 2.426.2
 
-SSL
+SSL/TLS
 + Let's Encrypt : certbot 0.40.0
 
-Firebase
+Firebase SDK
 + firebase-admin : 9.2.0
 
-AWS
+AWS SDK
 + awssdk : 2.21.1
 
 QueryDSL
@@ -49,7 +52,70 @@ WebSocket
 SpringDoc
 + springdoc-openapi-starter-webmvc-ui : 2.1.0 
 ---
-# 도커 설치 
+# application.yml
+```
+server:
+  port: 8080
+
+spring:
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://{서버 주소}:{포트 번호}/petcongdb?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+      username: {MySQL 접속 계정 이름}
+      password: {MySQL 접속 계정 비밀번호}
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs/json
+  swagger-ui:
+    enabled: true
+    path: /api-docs
+    tags-sorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
+  cache:
+    disabled: true
+  packages-to-scan: com.example.ssafy.petcong
+
+allowed-url:
+  urls:
+    - /members/signin
+  patterns:
+    - /api-docs/**
+    - /swagger-ui/**
+    - /websocket/**
+```
+---
+# Firebase sdk 설정
+https://firebase.google.com/docs/admin/setup?hl=ko#initialize-sdk
+
+##### 환경변수 (윈도우: 시스템 환경 변수 편집 -> 환경 변수 -> 사용자 변수 새로 만들기, 리눅스: export)
++ GOOGLE_APPLICATION_CREDENTIALS="서비스 계정으로 만든 비공개 키 경로"
+
+
+# AWS S3 설정
+https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/Welcome.html
+
+##### 환경변수 (윈도우: 시스템 환경 변수 편집 -> 환경 변수 -> 사용자 변수 새로 만들기, 리눅스: export)
++ S3_BUCKET_NAME="S3 버킷 이름"
++ AWS_ACCESS_KEY_ID="엑세스 키 아이디"
++ AWS_SECRET_ACCESS_KEY="시크릿 엑세스 키"
+---
+# 배포 시나리오
+1. 서버에 Docker, MySQL, Nginx, Certbot 등 필요한 프로그램 설치
+2. Docker를 통해 Jenkins 컨테이너 띄우기
+3. Jenkins 컨테이너 환경에 Java와 Docker를 설치
+4. 파이프라인 설정
+5. https 설정
+---
+# 1. 도커 설치 
 https://www.hostwinds.kr/tutorials/install-docker-debian-based-operating-system
 ```
 # apt 패키지 색인 업데이트
@@ -82,7 +148,7 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
 ---
-# 도커에 젠킨스 올리기
+# 2. 도커에 젠킨스 올리기
 ```
 # 젠킨스 저장소 설치
 mkdir -p /var/jenkins_home
@@ -90,16 +156,17 @@ mkdir -p /var/jenkins_home
 # 권한 설정
 chown -R 1000:1000 /var/jenkins_home/
 
-# 호스트 8888:컨테이너8080 매핑/ 포트50000을 도커 소켓 통신 위해 매핑
+# 호스트 8001:컨테이너 8080 매핑
+# 호스트 50000:컨테이너 50000을 도커 소켓 통신 위해 매핑
 docker run --restart=on-failure --user='root' \
--p 8888:8080 -p 50000:50000 \
+-p 8001:8080 -p 50000:50000 \
 --env JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 \
 -v /var/jenkins_home:/var/jenkins_home \
 -v /var/run/docker.sock:/var/run/docker.sock \
 -d --name jenkins jenkins/jenkins:lts
 ```
 ---
-# 젠킨스 컨테이너 환경에서 java와 docker를 설치(Dood)
+# 3. 젠킨스 컨테이너 환경에서 java와 docker를 설치(Dood)
 ```
 # 젠킨스 컨테이너 내부의 프로세스와 환경에 대해 명령을 실행시키기 위해 인터랙티브 모드로 쉘 실행
 docker exec -it jenkins bash
@@ -129,7 +196,23 @@ apt-get update
 apt-get install docker-ce docker-ce-cli containerd.io
 ```
 ---
-# 다음 내용을 갖는 Dockerfile을 작성한 후 /var/jenkins_home/workspace/petcong/server_petcong 에 위치시키기
+# 4. 젠킨스 설정하기
+먼저 {서버 주소}:8001으로 접속해서 jenkins를 unlock 후 Install suggested plugins
+
+###### 플러그인 설치 
+1. Dashboard에서 jenkins 관리
+2. Plugins에서 gitlab으로 검색
+3. GitLab API Plugin, GitLab Authentication plugin, GitLab Branch Source, GitLab Plugin 설치
+
+###### Credentials 설정
+1. Dashboard에서 jenkins 관리
+2. Security 항목에 있는 Credentials
+3. Stores scoped to Jenkins에서 (global) 클릭
+4. Add Credentials 클릭
+5. 
+
+---
+# 5. 다음 내용을 갖는 Dockerfile을 작성한 후 /var/jenkins_home/workspace/petcong/server_petcong 에 위치시키기
 ```
 FROM gradle:7.4-jdk17 as builder
 WORKDIR /build
@@ -161,18 +244,3 @@ ENTRYPOINT [ \
         "petcong-0.0.1-SNAPSHOT.jar" \
 ]
 ```
----
-# Firebase sdk 설정
-https://firebase.google.com/docs/admin/setup?hl=ko#initialize-sdk
-
-+ 환경변수
-+ GOOGLE_APPLICATION_CREDENTIALS="서비스 계정으로 만든 비공개 키 경로"
-
-
-# AWS sdk 설정
-https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/Welcome.html
-
-+ 환경변수
-+ S3_BUCKET_NAME="S3 버킷 이름"
-+ AWS_ACCESS_KEY_ID="엑세스 키 아이디"
-+ AWS_SECRET_ACCESS_KEY="시크릿 엑세스 키"

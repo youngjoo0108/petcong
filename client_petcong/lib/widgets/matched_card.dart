@@ -32,48 +32,54 @@ class _MatchedCardState extends State<MatchedCard> {
   }
 }
 
-class ProfileDetailPage extends StatelessWidget {
+class ProfileDetailPage extends StatefulWidget {
   final CardProfileModel matchedUser;
 
   const ProfileDetailPage({Key? key, required this.matchedUser})
       : super(key: key);
 
   @override
+  State<ProfileDetailPage> createState() => _ProfileDetailPageState();
+}
+
+class _ProfileDetailPageState extends State<ProfileDetailPage> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(matchedUser.nickname),
+        title: Text(widget.matchedUser.nickname),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
             Hero(
-              tag: matchedUser.profileImageUrls![0],
+              tag: widget.matchedUser.profileImageUrls![0],
               child: AspectRatio(
                 aspectRatio: 1,
-                child: Image.network(matchedUser.profileImageUrls![0],
+                child: Image.network(widget.matchedUser.profileImageUrls![0],
                     fit: BoxFit.cover),
               ),
             ),
-            Text(matchedUser.nickname, style: const TextStyle(fontSize: 24)),
+            Text(widget.matchedUser.nickname,
+                style: const TextStyle(fontSize: 24)),
             const SizedBox(height: 10),
-            Text(matchedUser.description!),
+            Text(widget.matchedUser.description!),
             const SizedBox(height: 10),
             IconButton(
               icon: const Icon(Icons.link),
               onPressed: () async {
                 final url = Uri.parse(
-                    'http://www.instagram.com/${matchedUser.instagramId}');
+                    'http://www.instagram.com/${widget.matchedUser.instagramId}');
                 if (await canLaunchUrl(url)) {
                   await launchUrl(url);
                 } else {
-                  throw 'Could not launch https://instagram.com/${matchedUser.instagramId}}';
+                  throw 'Could not launch https://instagram.com/${widget.matchedUser.instagramId}}';
                 }
               },
             ),
             const SizedBox(height: 10),
-            Text('Kakao ID: ${matchedUser.kakaoId}'),
+            Text('Kakao ID: ${widget.matchedUser.kakaoId}'),
           ],
         ),
       ),
