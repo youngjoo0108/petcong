@@ -184,9 +184,9 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
     widget._localRenderer!.srcObject!.getTracks().forEach((track) {
       track.stop();
     });
-    widget._remoteRenderer!.srcObject!.getTracks().forEach((track) {
-      track.stop();
-    });
+    // widget._remoteRenderer!.srcObject!.getTracks().forEach((track) {
+    //   track.stop();
+    // });
 
     widget._localRenderer!.srcObject = null;
     widget._remoteRenderer!.srcObject = null;
