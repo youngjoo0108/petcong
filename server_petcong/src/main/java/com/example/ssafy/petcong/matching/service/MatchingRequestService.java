@@ -1,15 +1,14 @@
 package com.example.ssafy.petcong.matching.service;
 
 import com.example.ssafy.petcong.AWS.service.AWSService;
-import com.example.ssafy.petcong.AWS.service.AWSServiceImpl;
 import com.example.ssafy.petcong.matching.model.CallStatus;
 import com.example.ssafy.petcong.matching.model.ChoiceRes;
-import com.example.ssafy.petcong.matching.model.entity.Icebreaking;
 import com.example.ssafy.petcong.matching.model.entity.Matching;
-import com.example.ssafy.petcong.matching.repository.IcebreakingRepository;
+import com.example.ssafy.petcong.matching.model.entity.ProfileRecord;
 import com.example.ssafy.petcong.matching.repository.MatchingRepository;
 import com.example.ssafy.petcong.member.model.entity.Member;
 import com.example.ssafy.petcong.member.model.entity.MemberImg;
+import com.example.ssafy.petcong.member.model.entity.Pet;
 import com.example.ssafy.petcong.member.model.entity.SkillMultimedia;
 import com.example.ssafy.petcong.member.repository.MemberRepository;
 import com.example.ssafy.petcong.member.repository.SkillMultimediaRepository;
@@ -25,15 +24,15 @@ import java.util.*;
 public class MatchingRequestService {
 
     private final MatchingRepository matchingRepository;
-    private final IcebreakingRepository icebreakingRepository;
     private final MemberRepository memberRepository;
+    private final MatchingProfileService matchingProfileService;
     private final SkillMultimediaRepository skillRepository;
     private final AWSService awsService;
     private final SimpMessageSendingOperations sendingOperations;
 
-    public MatchingRequestService(MatchingRepository matchingRepository, IcebreakingRepository icebreakingRepository, MemberRepository memberRepository, SkillMultimediaRepository skillRepository, AWSService awsService, SimpMessageSendingOperations sendingOperations) {
+    public MatchingRequestService(MatchingRepository matchingRepository, MemberRepository memberRepository, MatchingProfileService matchingProfileService, SkillMultimediaRepository skillRepository, AWSService awsService, SimpMessageSendingOperations sendingOperations) {
         this.matchingRepository = matchingRepository;
-        this.icebreakingRepository = icebreakingRepository;
+        this.matchingProfileService = matchingProfileService;
         this.skillRepository = skillRepository;
         this.awsService = awsService;
         this.sendingOperations = sendingOperations;
@@ -41,29 +40,24 @@ public class MatchingRequestService {
     }
 
     @Transactional
-    public ChoiceRes choice(String uid, int partnerId){
+    public ProfileRecord choice(String uid, int partnerId){
         Member fromMember = memberRepository.findMemberByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
         // DB에서 requestMemberId, partnerMemberId인 데이터 가져오기
         Member toMember = memberRepository.findMemberByMemberId(partnerId).orElseThrow(() -> new NoSuchElementException(partnerId + ""));
 
         // invalid memberId
         if (fromMember == null || toMember == null || fromMember.getMemberId() == toMember.getMemberId()) {
-            System.out.println("memberId null or same");
             throw new RuntimeException();
         }
 
         // 이전에 이미 요청을 보냈던 상태라면, 에러 반환 (pending이든, matched든, rejected든)
         Matching prevMatching = matchingRepository.findByFromMemberAndToMember(fromMember, toMember);
         if (prevMatching != null) {
-            System.out.println("prev matching exist");
             throw new RuntimeException();
         }
 
         // 상대가 나에게 보낸 요청이 있는지 찾기
         Matching matching = matchingRepository.findByFromMemberAndToMember(toMember, fromMember);
-        System.out.println("matching = " + matching);
-        System.out.println("fromMember.getMemberId() = " + fromMember.getMemberId());
-        System.out.println("toMember.getMemberId() = " + toMember.getMemberId());
 
         // to pending
         if (matching == null) {
@@ -73,7 +67,6 @@ public class MatchingRequestService {
         }
         // 이미 matched / rejected 이면
         if (matching.getCallStatus() != CallStatus.PENDING) {
-            System.out.println("status not pending");
             throw new RuntimeException();
         }
         // to matched
@@ -85,50 +78,49 @@ public class MatchingRequestService {
         memberRepository.save(fromMember);
         memberRepository.save(toMember);
 
+        // 응답 ProfileRecord로
+        List<String> fromMemberImgUrls = matchingProfileService.pictures(fromMember.getMemberId());
+        List<String> toMemberImgUrls = matchingProfileService.pictures(toMember.getMemberId());
 
-        // 퀴즈, 미션 가져오기
-        List<Icebreaking> icebreakingList = icebreakingRepository.findAll();
-
-        // 응답 객체 생성
-        ChoiceRes fromMemberRes = makeMatchedResponse(toMember, icebreakingList); // 요청자
-        ChoiceRes toMemberRes = makeMatchedResponse(fromMember, icebreakingList); // 상대방
+        Pet fromMembersPet = fromMember.getPet();
+        Pet toMemberPet = toMember.getPet();
 
         // 상대쪽에 전송
         Map<String, Object> responseMap2 = new HashMap<>();
         responseMap2.put("type", "matched");
-        responseMap2.put("value", toMemberRes);
+        responseMap2.put("value", new ProfileRecord(fromMember, fromMembersPet, fromMemberImgUrls));
 
         sendingOperations.convertAndSend("/queue/" + toMember.getUid(), responseMap2);
 
-        return fromMemberRes;
+        return new ProfileRecord(toMember, toMemberPet, toMemberImgUrls);
     }
 
-    private ChoiceRes makeMatchedResponse(Member partnerMember, List<Icebreaking> icebreakingList) {
-        List<SkillMultimedia> skillList = partnerMember.getSkillMultimediaList();
-        List<String> skillUrlList = new ArrayList<>(skillList.size());
-
-        if (!skillList.isEmpty()) {
-            skillList.forEach((skill) -> {
-                skillUrlList.add(awsService.createPresignedUrl(skill.getBucketKey(), Duration.ofMinutes(15)));
-            });
-            return ChoiceRes.builder()
-                    .targetUid(partnerMember.getUid())
-                    .icebreakingList(icebreakingList)
-                    .skillUrlList(skillUrlList)
-                    .build();
-        } else {
-            List<MemberImg> memberImgList = partnerMember.getMemberImgList();
-            List<String> profileImgUrlList = new ArrayList<>(memberImgList.size());
-            memberImgList.forEach((img) -> {
-                profileImgUrlList.add(awsService.createPresignedUrl(img.getBucketKey(), Duration.ofMinutes(15)));
-            });
-            return ChoiceRes.builder()
-                    .targetUid(partnerMember.getUid())
-                    .icebreakingList(icebreakingList)
-                    .profileImgUrlList(profileImgUrlList)
-                    .build();
-        }
-    }
+//    private ChoiceRes makeMatchedResponse(Member partnerMember, List<Icebreaking> icebreakingList) {
+//        List<SkillMultimedia> skillList = partnerMember.getSkillMultimediaList();
+//        List<String> skillUrlList = new ArrayList<>(skillList.size());
+//
+//        if (!skillList.isEmpty()) {
+//            skillList.forEach((skill) -> {
+//                skillUrlList.add(awsService.createPresignedUrl(skill.getBucketKey(), Duration.ofMinutes(15)));
+//            });
+//            return ChoiceRes.builder()
+//                    .targetUid(partnerMember.getUid())
+//                    .icebreakingList(icebreakingList)
+//                    .skillUrlList(skillUrlList)
+//                    .build();
+//        } else {
+//            List<MemberImg> memberImgList = partnerMember.getMemberImgList();
+//            List<String> profileImgUrlList = new ArrayList<>(memberImgList.size());
+//            memberImgList.forEach((img) -> {
+//                profileImgUrlList.add(awsService.createPresignedUrl(img.getBucketKey(), Duration.ofMinutes(15)));
+//            });
+//            return ChoiceRes.builder()
+//                    .targetUid(partnerMember.getUid())
+//                    .icebreakingList(icebreakingList)
+//                    .profileImgUrlList(profileImgUrlList)
+//                    .build();
+//        }
+//    }
 
     @Transactional
     public void changeToCallable(int memberId) {
