@@ -50,7 +50,8 @@ Future<dynamic> postMatching(int targetId) async {
   if (response.statusCode == 200) {
     debugPrint("pending 처리됨");
     String body = response.body;
-    return CardProfileModel.fromJson(jsonDecode(body));
+    return CardProfileModel.fromJson(
+        jsonDecode(utf8.decode(response.bodyBytes)));
   } else if (response.statusCode == 204) {
     return;
   } else {
