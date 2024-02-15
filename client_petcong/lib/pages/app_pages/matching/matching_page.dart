@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:petcong/controller/call_wait_controller.dart';
 import 'package:petcong/controller/match_card_controller.dart';
 import 'package:petcong/models/card_profile_model.dart';
 import 'package:petcong/models/choice_res.dart';
@@ -154,12 +155,16 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   /// targetId = int
 
   Future<void> onLike(int targetId) async {
+    CardWaitController cardWaitController = Get.put(CardWaitController());
     CardProfileModel? targetUserInfo;
     try {
       targetUserInfo = await postMatching(targetId);
+      cardWaitController.setCardProfile(targetUserInfo!);
     } catch (exception) {
-      print("exception = $exception");
-      print("alert: 잘못된 요청");
+      if (kDebugMode) {
+        print("exception = $exception");
+        print("alert: 잘못된 요청");
+      }
       return;
     }
     // when matched

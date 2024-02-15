@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:petcong/controller/call_wait_controller.dart';
 import 'package:petcong/models/card_profile_model.dart';
 import 'package:petcong/pages/app_pages/matching/call_waiting_page.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
@@ -108,9 +109,11 @@ class SocketService extends GetxController {
                     case 'matched':
                       Map<String, dynamic> value = response['value'];
                       // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
+                      CardWaitController cardWaitController = Get.find();
                       targetUid = response['targetUid'];
                       CardProfileModel targetUserInfo =
                           CardProfileModel.fromJson(value);
+                      cardWaitController.setCardProfile(targetUserInfo);
 
                       // 로직 변경될 부분 ---
                       await makeCall(targetUid);
