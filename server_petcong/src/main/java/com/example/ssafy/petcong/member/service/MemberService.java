@@ -11,7 +11,7 @@ public interface MemberService {
     MemberRecord findMemberByMemberId(int memberId);
     MemberRecord save(MemberInfoDto memberInfo);
     SignupResponseDto signup(String uid, SignupRequestDto signupRequestDto);
-    MemberRecord signin(int memberId, boolean state);
+    MemberRecord signin(int memberId);
     boolean signout(int memberId);
     ProfileDto getProfile(int memberId);
     MemberRecord updateMemberInfo(int memberId, MemberInfoDto memberInfo);
