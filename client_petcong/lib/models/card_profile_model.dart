@@ -34,7 +34,7 @@ class CardProfileModel {
     petAge = map['petAge'];
     instagramId = map['instagramId'];
     kakaoId = map['kakaoId'];
-    description = description == null ? map['description'] : '';
+    description = map['description'] ?? '';
     profileImageUrls = List<String>.from(map['profileImageUrls']);
   }
 
