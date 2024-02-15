@@ -72,9 +72,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public MemberRecord signin(int memberId, boolean state) {
+    public MemberRecord signin(int memberId) {
         Member member = memberRepository.findMemberByMemberId(memberId).orElseThrow(() -> new NotRegisterdException(String.valueOf(memberId)));
-        member.updateCallable(state);
+        member.updateCallable(true);
 
         Member result = memberRepository.save(member);
 
@@ -84,12 +84,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public boolean signout(int memberId) {
-        Member signoutMember = memberRepository.findMemberByMemberId(memberId).orElseThrow(() -> new NoSuchElementException(String.valueOf(memberId)));
-        signoutMember.updateCallable(false);
+        Member member = memberRepository.findMemberByMemberId(memberId).orElseThrow(() -> new NoSuchElementException(String.valueOf(memberId)));
+        member.updateCallable(false);
 
-        Member member = memberRepository.save(signoutMember);
+        Member result = memberRepository.save(member);
 
-        if (member != null && !member.isCallable()) {
+        if (result != null && !result.isCallable()) {
             return true;
         } else {
             return false;

@@ -20,10 +20,12 @@ class _MatchingCardState extends State<MatchingCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final bool isMan = widget.matchingUser.gender == "MALE";
+    final bool isMale = widget.matchingUser.petGender == "MALE";
     final String humanProfile =
-        "${widget.matchingUser.nickname}, ${widget.matchingUser.age}";
+        "${isMan ? "👨🏻" : "👩🏻"} ${widget.matchingUser.nickname}, ${widget.matchingUser.age}";
     final String petProfile =
-        "${widget.matchingUser.petName}, ${widget.matchingUser.petAge}";
+        "${isMale ? "🐕" : "🐩"} ${widget.matchingUser.petName}, ${widget.matchingUser.petAge} ";
     return ClipRRect(
       child: Stack(
         children: [
@@ -80,10 +82,9 @@ class _MatchingCardState extends State<MatchingCard> {
                   Text(
                     isPet ? humanProfile : petProfile,
                     style: theme.textTheme.titleLarge!.copyWith(
-                      color: Colors.white,
-                    ),
+                        color: Colors.white, fontWeight: FontWeight.w600),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 15),
                   Text(
                     widget.matchingUser.description!,
                     style: const TextStyle(
@@ -94,7 +95,7 @@ class _MatchingCardState extends State<MatchingCard> {
                       height: 1.2,
                     ),
                   ),
-                  const SizedBox(height: 35),
+                  const SizedBox(height: 45),
                 ],
               ),
             ),

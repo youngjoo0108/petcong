@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:petcong/controller/call_wait_controller.dart';
 import 'package:petcong/controller/match_card_controller.dart';
+import 'package:petcong/models/card_profile_model.dart';
 import 'package:petcong/models/choice_res.dart';
 import 'package:petcong/services/socket_service.dart';
 import 'package:petcong/services/matching_service.dart';
@@ -123,7 +125,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
             onLike(39); // 패드
           } else {
-            onLike(147); // 여기에 쓰면 됨
+            onLike(171); // 여기에 쓰면 됨
           }
         },
         label: const Text('call'),
@@ -153,19 +155,25 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   /// targetId = int
 
   Future<void> onLike(int targetId) async {
-    ChoiceRes? choiceRes;
+    CardWaitController cardWaitController = Get.put(CardWaitController());
+    CardProfileModel? targetUserInfo;
     try {
-      choiceRes = await postMatching(targetId);
+      targetUserInfo = await postMatching(targetId);
+      cardWaitController.setCardProfile(targetUserInfo!);
     } catch (exception) {
-      print("exception = $exception");
-      print("alert: 잘못된 요청");
-      return;
-    }
-    if (choiceRes == null) {
-      print("pending처리됨");
+      if (kDebugMode) {
+        print("exception = $exception");
+        print("alert: 잘못된 요청");
+      }
       return;
     }
     // when matched
-    await socketService.makeCall(choiceRes.targetUid!); // callWaitingPage로 이동만.
+    if (targetUserInfo != null) {
+      // 로직 변경될 부분 ----
+      await socketService
+          .makeCall(targetId.toString()); // callWaitingPage로 이동만.
+
+      // ---- /
+    }
   }
 }
