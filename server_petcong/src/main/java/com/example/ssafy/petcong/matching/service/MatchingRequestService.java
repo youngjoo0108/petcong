@@ -22,15 +22,13 @@ import java.util.*;
 public class MatchingRequestService {
 
     private final MatchingRepository matchingRepository;
-    private final IcebreakingRepository icebreakingRepository;
     private final MemberRepository memberRepository;
     private final SkillMultimediaRepository skillRepository;
     private final AWSService awsService;
     private final SimpMessageSendingOperations sendingOperations;
 
-    public MatchingRequestService(MatchingRepository matchingRepository, IcebreakingRepository icebreakingRepository, MemberRepository memberRepository, SkillMultimediaRepository skillRepository, AWSService awsService, SimpMessageSendingOperations sendingOperations) {
+    public MatchingRequestService(MatchingRepository matchingRepository, MemberRepository memberRepository, SkillMultimediaRepository skillRepository, AWSService awsService, SimpMessageSendingOperations sendingOperations) {
         this.matchingRepository = matchingRepository;
-        this.icebreakingRepository = icebreakingRepository;
         this.skillRepository = skillRepository;
         this.awsService = awsService;
         this.sendingOperations = sendingOperations;
@@ -83,12 +81,11 @@ public class MatchingRequestService {
         memberRepository.save(toMember);
 
 
-        // 퀴즈, 미션 가져오기
-        List<Icebreaking> icebreakingList = icebreakingRepository.findAll();
+
 
         // 응답 객체 생성
-        ChoiceRes fromMemberRes = makeMatchedResponse(toMember, icebreakingList); // 요청자
-        ChoiceRes toMemberRes = makeMatchedResponse(fromMember, icebreakingList); // 상대방
+        ChoiceRes fromMemberRes = null; // 요청자
+        ChoiceRes toMemberRes = null; // 상대방
 
         // 상대쪽에 전송
         Map<String, Object> responseMap2 = new HashMap<>();
@@ -100,32 +97,32 @@ public class MatchingRequestService {
         return fromMemberRes;
     }
 
-    private ChoiceRes makeMatchedResponse(Member partnerMember, List<Icebreaking> icebreakingList) {
-        List<SkillMultimedia> skillList = partnerMember.getSkillMultimediaList();
-        List<String> skillUrlList = new ArrayList<>(skillList.size());
-
-        if (!skillList.isEmpty()) {
-            skillList.forEach((skill) -> {
-                skillUrlList.add(awsService.createPresignedUrl(skill.getBucketKey(), Duration.ofMinutes(15)));
-            });
-            return ChoiceRes.builder()
-                    .targetUid(partnerMember.getUid())
-                    .icebreakingList(icebreakingList)
-                    .skillUrlList(skillUrlList)
-                    .build();
-        } else {
-            List<MemberImg> memberImgList = partnerMember.getMemberImgList();
-            List<String> profileImgUrlList = new ArrayList<>(memberImgList.size());
-            memberImgList.forEach((img) -> {
-                profileImgUrlList.add(awsService.createPresignedUrl(img.getBucketKey(), Duration.ofMinutes(15)));
-            });
-            return ChoiceRes.builder()
-                    .targetUid(partnerMember.getUid())
-                    .icebreakingList(icebreakingList)
-                    .profileImgUrlList(profileImgUrlList)
-                    .build();
-        }
-    }
+//    private ChoiceRes makeMatchedResponse(Member partnerMember, List<Icebreaking> icebreakingList) {
+//        List<SkillMultimedia> skillList = partnerMember.getSkillMultimediaList();
+//        List<String> skillUrlList = new ArrayList<>(skillList.size());
+//
+//        if (!skillList.isEmpty()) {
+//            skillList.forEach((skill) -> {
+//                skillUrlList.add(awsService.createPresignedUrl(skill.getBucketKey(), Duration.ofMinutes(15)));
+//            });
+//            return ChoiceRes.builder()
+//                    .targetUid(partnerMember.getUid())
+//                    .icebreakingList(icebreakingList)
+//                    .skillUrlList(skillUrlList)
+//                    .build();
+//        } else {
+//            List<MemberImg> memberImgList = partnerMember.getMemberImgList();
+//            List<String> profileImgUrlList = new ArrayList<>(memberImgList.size());
+//            memberImgList.forEach((img) -> {
+//                profileImgUrlList.add(awsService.createPresignedUrl(img.getBucketKey(), Duration.ofMinutes(15)));
+//            });
+//            return ChoiceRes.builder()
+//                    .targetUid(partnerMember.getUid())
+//                    .icebreakingList(icebreakingList)
+//                    .profileImgUrlList(profileImgUrlList)
+//                    .build();
+//        }
+//    }
 
     @Transactional
     public void changeToCallable(int memberId) {
