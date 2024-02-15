@@ -52,13 +52,12 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
     @Transactional
     public Optional<ProfileRecord> profile(String uid) {
         Member requestingMember = memberRepository.findMemberByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
-        int requestingMemberId = requestingMember.getMemberId();
         int filteredMemberId = NO_MEMBER;
         for (int i = 0; i < onlineMembers.sizeOfQueue(); i++) {
             int potentialMemberId = nextOnlineMember();
             if (potentialMemberId == NO_MEMBER) {
                 break;
-            } else if (isPotentialMember(requestingMemberId, potentialMemberId)) {
+            } else if (isPotentialMember(requestingMember, potentialMemberId)) {
                 filteredMemberId = potentialMemberId;
                 break;
             }
@@ -88,15 +87,14 @@ public class MatchingProfileServiceImpl implements MatchingProfileService {
         Gender potentialMemberGender = potentialMember.getGender();
 
         return requestingMemberPreference == Preference.BOTH
-                || requestingMemberPreference == Preference.MALE && potentialMemberGender == Gender.MALE
-                || requestingMemberPreference == Preference.FEMALE && potentialMemberGender == Gender.FEMALE;
+                || (requestingMemberPreference == Preference.MALE && potentialMemberGender == Gender.MALE)
+                || (requestingMemberPreference == Preference.FEMALE && potentialMemberGender == Gender.FEMALE);
     }
 
     @Transactional
-    protected boolean isPotentialMember(int requestingMemberId, int potentialMemberId) {
+    public boolean isPotentialMember(Member requestingMember, int potentialMemberId) {
         Optional<Member> optionalPotentialMember = memberRepository.findById(potentialMemberId);
-        Optional<Member> optionalRequestingMember = memberRepository.findById(potentialMemberId);
-        Member requestingMember = optionalRequestingMember.orElseThrow();
+        int requestingMemberId = requestingMember.getMemberId();
         Member potentialMember = optionalPotentialMember.orElseThrow();
 
         // 1. 본인인지 확인
