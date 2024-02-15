@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
+import 'package:petcong/controller/call_wait_controller.dart';
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
 import 'package:petcong/services/socket_service.dart';
 
@@ -21,44 +23,48 @@ class CallWaiting extends StatelessWidget {
       //   ),
       // ),
       body: Center(
-        child: Stack(children: [
-          Image.asset(
-            'assets/src/fatdog-dog-unscreen.gif',
-            fit: BoxFit.cover,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-          ),
-          const Positioned.fill(
-            child: Padding(
-              padding: EdgeInsets.all(50.0),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Column(
-                  children: [
-                    Text(
-                      '매치입니다!',
-                      style: TextStyle(
-                        fontFamily: 'Cafe24',
-                        color: Colors.white,
-                        fontSize: 60.0,
-                        fontWeight: FontWeight.bold,
+        child: MixinBuilder<CardWaitController>(builder: (controller) {
+          String profileUrl = controller.cardProfile.value.profileImageUrls![0];
+          String partnerNickname = controller.cardProfile.value.nickname!;
+          return Stack(children: [
+            Image.network(
+              profileUrl,
+              fit: BoxFit.cover,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+            ),
+            Positioned.fill(
+              child: Padding(
+                padding: EdgeInsets.all(50.0),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Column(
+                    children: [
+                      Text(
+                        '$partnerNickname님 과 ',
+                        style: const TextStyle(
+                          fontFamily: 'Cafe24',
+                          color: Colors.white,
+                          fontSize: 60.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      '인사하세요',
-                      style: TextStyle(
-                        fontFamily: 'Cafe24',
-                        color: Colors.white,
-                        fontSize: 60.0,
-                        fontWeight: FontWeight.bold,
+                      const Text(
+                        '매치했습니다. 인사하세요!',
+                        style: TextStyle(
+                          fontFamily: 'Cafe24',
+                          color: Colors.white,
+                          fontSize: 60.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )
-        ]),
+            )
+          ]);
+        }),
       ),
       floatingActionButton: Stack(
         alignment: Alignment.bottomCenter,
@@ -80,6 +86,7 @@ class CallWaiting extends StatelessWidget {
                 child: const Icon(
                   Icons.call,
                   size: 40,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -94,7 +101,11 @@ class CallWaiting extends StatelessWidget {
                 onPressed: () {},
                 shape: const CircleBorder(eccentricity: 0),
                 backgroundColor: MyColor.petCongColor4,
-                child: const Icon(Icons.call_end, size: 40),
+                child: const Icon(
+                  Icons.call_end,
+                  size: 40,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
