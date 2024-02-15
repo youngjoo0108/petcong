@@ -89,6 +89,7 @@ public class MatchingRequestService {
         Map<String, Object> responseMap2 = new HashMap<>();
         responseMap2.put("type", "matched");
         responseMap2.put("value", new ProfileRecord(fromMember, fromMembersPet, fromMemberImgUrls));
+        responseMap2.put("targetUid", fromMember.getUid());
 
         sendingOperations.convertAndSend("/queue/" + toMember.getUid(), responseMap2);
 
