@@ -19,50 +19,73 @@ class _SignInPageState extends State<SignInPage> {
           gradient: LinearGradient(
             begin: Alignment(0.00, -1.00),
             end: Alignment(0, 1),
-            colors: [
-              Color.fromARGB(255, 240, 107, 100), // 우측 상단 색상
-              Color.fromARGB(255, 255, 87, 143), // 좌측 상단 색상
-            ],
+            colors: [Color(0xFFFFBD98), Color(0xFFF9715F)],
           ),
         ),
-        child: Center(
-          child: GestureDetector(
-            onTap: _handleGoogleSignIn,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              height: 40,
-              width: 200,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2), // 그림자의 색상 및 투명도
-                    spreadRadius: 2, // 그림자의 퍼짐 정도
-                    blurRadius: 4, // 그림자의 흐림 정도
-                    offset: const Offset(0, 2), // 그림자의 위치 (가로, 세로)
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/src/google_logo.png',
-                    height: 20,
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    "Sign in with Google",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+        child: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/src/petcong_c.png',
+                      width: 200,
+                      height: 200,
+                      fit: BoxFit.contain,
                     ),
-                  ),
-                ],
+                    // const SizedBox(height: 10),
+                    // Image.asset(
+                    //   'assets/src/가로형-사이즈맞춤.png',
+                    //   width: 200,
+                    //   fit: BoxFit.contain,
+                    // )
+                  ],
+                ),
               ),
             ),
-          ),
+            GestureDetector(
+              onTap: _handleGoogleSignIn,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 70.0),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  height: 40,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/src/google_logo.png',
+                        height: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        "Sign in with Google",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
