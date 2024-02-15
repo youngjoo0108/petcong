@@ -157,6 +157,8 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
       setState(() {
         if (!showMessage.value) {
           isIdxChanged.value = true;
+        } else {
+          isIdxChanged.value = false;
         }
       });
     });

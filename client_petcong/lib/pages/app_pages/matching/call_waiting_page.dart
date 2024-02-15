@@ -70,7 +70,7 @@ class CallWaiting extends StatelessWidget {
                   if (position == SlidableButtonPosition.start) {
                     socketService!.onCallPressed();
                   } else {
-                    // mainVideoCallWidget.closePeerConnection();
+                    mainVideoCallWidget.closePeerConnection();
                     Get.offAll(const HomePage());
                   }
                 },
