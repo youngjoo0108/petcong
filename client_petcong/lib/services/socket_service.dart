@@ -162,9 +162,14 @@ class SocketService extends GetxController {
     return client!;
   }
 
-  Future<void> makeCall(String targetUidParam) async {
+  Future<void> initRTCWidget() async {
     mainVideoCallWidget = MainVideoCallWidget();
     await mainVideoCallWidget!.init();
+  }
+
+  Future<void> makeCall(String targetUidParam) async {
+    // mainVideoCallWidget = MainVideoCallWidget();
+    // await mainVideoCallWidget!.init();
 
     targetUid = targetUidParam;
     // matched

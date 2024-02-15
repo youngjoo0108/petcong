@@ -50,6 +50,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     super.initState();
     socketService = widget
         .socketService!; // 얘를 생성하는 쪽(HomePage)의 socketService를 전달받아야 함. 전달이 제대로 안 됐다면 에러 나게 설정
+    socketService.initRTCWidget();
     _controller = SwipableStackController()..addListener(_listenController);
     _cardController.onInit();
     initClient();
