@@ -334,3 +334,78 @@ pipeline
     }
 }
 ```
+---
+# 6. Nginx 설치
+```
+# 방화벽 확인
+sudo ufw status
+
+# 방화벽 허용
+sudo ufw allow {포트 번호}
+
+# Nginx 설치
+sudo apt install nginx -y
+
+# Nginx 상태 확인
+sudo systemctl status nginx
+
+sudo apt-get update
+
+# Let's encrypt 와 certbot 설치
+sudo apt-get install letsencrypt
+sudo apt-get install certbot python3-certbot-nginx
+
+# Certbot Nginx 연결
+sudo certbox --nginx
+# 이메일 입력
+# 약관 동의 - Y
+# 이메일 수신 동의
+# 도메인 입력
+# http 입력 시 리다이렉트 여부 - 2
+
+# default 설정파일 안에 아래 코드가 있는지 확인
+cat /etc/nginx/sites-available/default
+# ...
+# listen [::]:443 ssl ipv6only=on; # managed by Certbot
+# listen 443 ssl; # managed by Certbot
+# ssl_certificate /etc/letsencrypt/live/i10a603.p.ssafy.io/fullchain.pem; # managed by Certbot
+# ssl_certificate_key /etc/letsencrypt/live/i10a603.p.ssafy.io/privkey.pem; # managed by Certbot
+# include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+# ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+# ...
+#
+# server {
+#     if ($host = i10a603.p.ssafy.io) {
+#         return 301 https://$host$request_uri;
+#     } # managed by Certbot
+#
+#
+#         listen 80 ;
+#         listen [::]:80 ;
+#     server_name i10a603.p.ssafy.io;
+#     return 404; # managed by Certbot
+#}
+
+# default 설정 수정
+vi /etc/nginx/sites-available/default
+# root가 /var/www/html이면서 
+# server_name이 {서버 주소}인 
+# server { ... } 블록 안에 아래 맵핑 설정 추가하기
+#
+#        location / {
+#                proxy_pass http://localhost:8080;
+#                proxy_set_header Host $http_host;
+#                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#                proxy_set_header X-Real-IP $remote_addr;
+#        }
+#
+#        location /websocket {
+#                proxy_pass http://localhost:8080/websocket;
+#                proxy_set_header Host $http_host;
+#                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#                proxy_set_header X-Real-IP $remote_addr;
+#                proxy_http_version 1.1;
+#                proxy_set_header Upgrade $http_upgrade;
+#                proxy_set_header Connection "upgrade";
+#        }
+```
