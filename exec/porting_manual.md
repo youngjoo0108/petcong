@@ -92,7 +92,7 @@ allowed-url:
     - /websocket/**
 ```
 ---
-# Firebase sdk 설정
+# Firebase 설정
 https://firebase.google.com/docs/admin/setup?hl=ko#initialize-sdk
 
 ##### 환경변수 (윈도우: 시스템 환경 변수 편집 -> 환경 변수 -> 사용자 변수 새로 만들기, 리눅스: export)
