@@ -134,23 +134,7 @@ class MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   late double localRendererY = videoHeight / 20;
   RxBool showMessage = false.obs;
   RxBool isIdxChanged = false.obs;
-
-  // icebreakings
-  List<String> quizs = [
-    "당신의 반려견의 이름은 무엇인가요? 그 이름을 선택한 이유가 있나요?",
-    '개인기 할 줄 아는거 있어요?',
-    "당신의 반려견과 함께하는 평소의 하루는 어떻게 보내시나요? 특별한 루틴이 있나요?",
-    "이름이 뭐에요? 왜 그렇게 지었어요?"
-  ];
-
-  void toggleMessageDialog() {
-    if (showMessage.value == true) {
-      showMessage.value = false;
-    } else {
-      isIdxChanged.value = false;
-      showMessage.value = true;
-    }
-  }
+  String? cameraMode = 'user';
 
   @override
   void initState() {
@@ -172,6 +156,52 @@ class MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   void dispose() {
     super.dispose();
   }
+
+  // icebreakings
+  List<String> quizs = [
+    "당신의 반려견의 이름은 무엇인가요? 그 이름을 선택한 이유가 있나요?",
+    '개인기 할 줄 아는거 있어요?',
+    "당신의 반려견과 함께하는 평소의 하루는 어떻게 보내시나요? 특별한 루틴이 있나요?",
+    "이름이 뭐에요? 왜 그렇게 지었어요?"
+  ];
+
+  void toggleMessageDialog() {
+    if (showMessage.value == true) {
+      showMessage.value = false;
+    } else {
+      isIdxChanged.value = false;
+      showMessage.value = true;
+    }
+  }
+
+  // void toggleCameraMode() {
+  //   setState(() {
+  //     if (cameraMode == 'user') {
+  //       cameraMode = 'environment';
+  //     } else {
+  //       cameraMode = 'user';
+  //     }
+
+  //     final mediaConstraints = {
+  //       'audio': true,
+  //       'video': {'facingMode': cameraMode}
+  //     };
+
+  //     // widget._localStream?.dispose();
+  //     // Helper.openCamera(mediaConstraints).then((stream) {
+  //     //   widget._localStream = stream;
+  //     //   widget._localRenderer!.srcObject = widget._localStream;
+  //     //   widget._localStream!.getTracks().forEach((track) {
+  //     //     widget._pc!.addTrack(track, widget._localStream!);
+  //     //   });
+  //     // });
+  //     Helper.openCamera(mediaConstraints).then((newStream) {
+  //       setState(() {
+  //         widget._localStream = newStream;
+  //       });
+  //     });
+  //   });
+  // }
 
   Future<void> disconnectCall() async {
     widget._localRenderer!.srcObject!.getTracks().forEach((track) {
@@ -195,16 +225,11 @@ class MainVideoCallWidgetState extends State<MainVideoCallWidget> {
       int maxIdx = quizs.length;
       if (widget.quizIdx!.value >= maxIdx) {
         widget.quizIdx!.value = maxIdx;
-        if (kDebugMode) {
-          print("===============index changed by me / max!!");
-        }
+        if (kDebugMode) {}
         return;
       }
       widget.quizIdx!.value++;
-      if (kDebugMode) {
-        print(
-          "===============index changed by me / index = ${widget.quizIdx!.value}==");
-      }
+      if (kDebugMode) {}
       SocketService.sendMessage("idx", widget.quizIdx!.value.toString());
     });
   }
@@ -388,19 +413,38 @@ class MainVideoCallWidgetState extends State<MainVideoCallWidget> {
               height: 20,
             ),
             // 통화 종료 버튼
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: FloatingActionButton(
-                onPressed: () async {
-                  await disconnectCall(); // 다 꺼지면 이동
-                  Get.offAll(const HomePage());
-                },
-                heroTag: 'stop_call_button',
-                shape: const CircleBorder(),
-                backgroundColor: MyColor.petCongColor4,
-                elevation: 3,
-                child: const Icon(Icons.call_end),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // const SizedBox(
+                //   width: 70,
+                // ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: FloatingActionButton(
+                    onPressed: () async {
+                      await disconnectCall(); // 다 꺼지면 이동
+                      Get.offAll(const HomePage());
+                    },
+                    heroTag: 'stop_call_button',
+                    shape: const CircleBorder(),
+                    backgroundColor: MyColor.petCongColor4,
+                    elevation: 3,
+                    child: const Icon(Icons.call_end),
+                  ),
+                ),
+                // const SizedBox(
+                //   width: 20,
+                // ),
+                // FloatingActionButton.small(
+                //   onPressed: toggleCameraMode,
+                //   backgroundColor: Colors.transparent,
+                //   child: const Icon(
+                //     Icons.flip_camera_ios_rounded,
+                //     color: MyColor.petCongColor3,
+                //   ),
+                // ),
+              ],
             ),
           ],
         ),

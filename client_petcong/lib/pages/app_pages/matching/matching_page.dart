@@ -74,64 +74,64 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: SwipableStack(
-                detectableSwipeDirections: const {
-                  SwipeDirection.right,
-                  SwipeDirection.left,
-                  SwipeDirection.up,
-                  SwipeDirection.down,
-                },
-                controller: _controller,
-                stackClipBehaviour: Clip.none,
-                onSwipeCompleted: _onSwipe,
-                horizontalSwipeThreshold: 0.15,
-                verticalSwipeThreshold: 0.15,
-                // itemCount: 3,
-                builder: (context, properties) {
-                  final itemIndex = properties.index % 10;
-                  return Stack(
-                    children: [
-                      MatchingCard(
-                        matchingUser: MatchCardController.to
-                            .getMatchingQue()
-                            .value
-                            .elementAt(itemIndex),
-                      ),
-                      if (properties.stackIndex == 0 &&
-                          properties.direction != null)
-                        CardOverlay(
-                          swipeProgress: properties.swipeProgress,
-                          direction: properties.direction!,
-                        )
-                    ],
-                  );
-                },
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: SwipableStack(
+                  detectableSwipeDirections: const {
+                    SwipeDirection.right,
+                    SwipeDirection.left,
+                    SwipeDirection.up,
+                    SwipeDirection.down,
+                  },
+                  controller: _controller,
+                  stackClipBehaviour: Clip.none,
+                  onSwipeCompleted: _onSwipe,
+                  horizontalSwipeThreshold: 0.15,
+                  verticalSwipeThreshold: 0.15,
+                  // itemCount: 3,
+                  builder: (context, properties) {
+                    final itemIndex = properties.index % 10;
+                    return Stack(
+                      children: [
+                        MatchingCard(
+                          matchingUser: MatchCardController.to
+                              .getMatchingQue()
+                              .value
+                              .elementAt(itemIndex),
+                        ),
+                        if (properties.stackIndex == 0 &&
+                            properties.direction != null)
+                          CardOverlay(
+                            swipeProgress: properties.swipeProgress,
+                            direction: properties.direction!,
+                          )
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    )
-        // floatingActionButton: FloatingActionButton.extended(
-        //   // 매칭페이지의 call버튼 -> onLike() -> makeCall()을 통해 통화대기화면 이동까지만.
-        //   heroTag: 'call',
-        //   onPressed: () {
-        //     if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
-        //       onLike(39); // 패드
-        //     } else {
-        //       onLike(147); // 여기에 쓰면 됨
-        //     }
-        //   },
-        //   label: const Text('call'),
-        //   icon: const Icon(Icons.call),
-        // ),
-        );
+      // floatingActionButton: FloatingActionButton.extended(
+      //   // 매칭페이지의 call버튼 -> onLike() -> makeCall()을 통해 통화대기화면 이동까지만.
+      //   heroTag: 'call',
+      //   onPressed: () {
+      //     if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
+      //       onLike(187); // 패드
+      //     } else {
+      //       onLike(147); // 여기에 쓰면 됨
+      //     }
+      //   },
+      //   label: const Text('call'),
+      //   icon: const Icon(Icons.call),
+      // ),
+    );
   }
 
   void _onSwipe(int index, SwipeDirection direction) {
