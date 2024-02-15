@@ -114,7 +114,82 @@ https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/Welcome.html
 4. 파이프라인 설정
 5. Repository에서 deploy 브랜치에 merge request가 accepted 된 경우 젠킨스가 인식하고 서버에 자동 배포
 ---
-# 1. 도커 설치 
+# 1. Nginx와 Let's Encrypt, Certbot 설치
+```
+# 방화벽 확인
+sudo ufw status
+
+# 방화벽 허용
+sudo ufw allow {포트 번호}
+
+# Nginx 설치
+sudo apt install nginx -y
+
+# Nginx 상태 확인
+sudo systemctl status nginx
+
+sudo apt-get update
+
+# Let's encrypt 와 certbot 설치
+sudo apt-get install letsencrypt
+sudo apt-get install certbot python3-certbot-nginx
+
+# Certbot Nginx 연결
+sudo certbox --nginx
+# 이메일 입력
+# 약관 동의 - Y
+# 이메일 수신 동의
+# 도메인 입력
+# http 입력 시 리다이렉트 여부 - 2 (리다이렉트함)
+
+# default 설정파일 안에 아래 코드가 있는지 확인
+cat /etc/nginx/sites-available/default
+# ...
+# listen [::]:443 ssl ipv6only=on; # managed by Certbot
+# listen 443 ssl; # managed by Certbot
+# ssl_certificate /etc/letsencrypt/live/i10a603.p.ssafy.io/fullchain.pem; # managed by Certbot
+# ssl_certificate_key /etc/letsencrypt/live/i10a603.p.ssafy.io/privkey.pem; # managed by Certbot
+# include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+# ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+# ...
+#
+# server {
+#     if ($host = i10a603.p.ssafy.io) {
+#         return 301 https://$host$request_uri;
+#     } # managed by Certbot
+#
+#
+#         listen 80 ;
+#         listen [::]:80 ;
+#     server_name i10a603.p.ssafy.io;
+#     return 404; # managed by Certbot
+#}
+
+# default 설정 수정
+vi /etc/nginx/sites-available/default
+# root가 /var/www/html이면서 
+# server_name이 {서버 주소}인 
+# server { ... } 블록 안에 아래 맵핑 설정 추가하기
+#
+#        location / {
+#                proxy_pass http://localhost:8080;
+#                proxy_set_header Host $http_host;
+#                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#                proxy_set_header X-Real-IP $remote_addr;
+#        }
+#
+#        location /websocket {
+#                proxy_pass http://localhost:8080/websocket;
+#                proxy_set_header Host $http_host;
+#                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#                proxy_set_header X-Real-IP $remote_addr;
+#                proxy_http_version 1.1;
+#                proxy_set_header Upgrade $http_upgrade;
+#                proxy_set_header Connection "upgrade";
+#        }
+```
+---
+# 2. 도커 설치 
 https://www.hostwinds.kr/tutorials/install-docker-debian-based-operating-system
 ```
 # apt 패키지 색인 업데이트
@@ -147,7 +222,7 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
 ---
-# 2. 도커에 젠킨스 올리기
+# 3. 도커에 젠킨스 올리기
 ```
 # 젠킨스 저장소 설치
 mkdir -p /var/jenkins_home
@@ -165,7 +240,7 @@ docker run --restart=on-failure --user='root' \
 -d --name jenkins jenkins/jenkins:lts
 ```
 ---
-# 3. 젠킨스 컨테이너 환경에서 java와 docker를 설치(Dood)
+# 4. 젠킨스 컨테이너 환경에서 java와 docker를 설치(Dood)
 ```
 # 젠킨스 컨테이너 내부의 프로세스와 환경에 대해 명령을 실행시키기 위해 인터랙티브 모드로 쉘 실행
 docker exec -it jenkins bash
@@ -193,9 +268,12 @@ stable"
 
 apt-get update
 apt-get install docker-ce docker-ce-cli containerd.io
+
+# 설치 다 했으면 빠져나오기
+exit
 ```
 ---
-# 4. 다음 내용을 갖는 Dockerfile을 작성한 후 /var/jenkins_home/workspace/dockerfiles에 위치시키기
+# 5. 다음 내용을 갖는 Dockerfile을 작성한 후 /var/jenkins_home/workspace/dockerfiles에 위치시키기
 ```
 FROM gradle:7.4-jdk17 as builder
 WORKDIR /build
@@ -228,7 +306,7 @@ ENTRYPOINT [ \
 ]
 ```
 ---
-# 5. 젠킨스 설정하기
+# 6. 젠킨스 설정하기
 먼저 {서버 주소}:8001으로 접속해서 jenkins를 unlock 후 Install suggested plugins
 
 ##### 플러그인 설치 
@@ -333,79 +411,4 @@ pipeline
         }
     }
 }
-```
----
-# 6. Nginx 설치
-```
-# 방화벽 확인
-sudo ufw status
-
-# 방화벽 허용
-sudo ufw allow {포트 번호}
-
-# Nginx 설치
-sudo apt install nginx -y
-
-# Nginx 상태 확인
-sudo systemctl status nginx
-
-sudo apt-get update
-
-# Let's encrypt 와 certbot 설치
-sudo apt-get install letsencrypt
-sudo apt-get install certbot python3-certbot-nginx
-
-# Certbot Nginx 연결
-sudo certbox --nginx
-# 이메일 입력
-# 약관 동의 - Y
-# 이메일 수신 동의
-# 도메인 입력
-# http 입력 시 리다이렉트 여부 - 2
-
-# default 설정파일 안에 아래 코드가 있는지 확인
-cat /etc/nginx/sites-available/default
-# ...
-# listen [::]:443 ssl ipv6only=on; # managed by Certbot
-# listen 443 ssl; # managed by Certbot
-# ssl_certificate /etc/letsencrypt/live/i10a603.p.ssafy.io/fullchain.pem; # managed by Certbot
-# ssl_certificate_key /etc/letsencrypt/live/i10a603.p.ssafy.io/privkey.pem; # managed by Certbot
-# include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-# ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
-# ...
-#
-# server {
-#     if ($host = i10a603.p.ssafy.io) {
-#         return 301 https://$host$request_uri;
-#     } # managed by Certbot
-#
-#
-#         listen 80 ;
-#         listen [::]:80 ;
-#     server_name i10a603.p.ssafy.io;
-#     return 404; # managed by Certbot
-#}
-
-# default 설정 수정
-vi /etc/nginx/sites-available/default
-# root가 /var/www/html이면서 
-# server_name이 {서버 주소}인 
-# server { ... } 블록 안에 아래 맵핑 설정 추가하기
-#
-#        location / {
-#                proxy_pass http://localhost:8080;
-#                proxy_set_header Host $http_host;
-#                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-#                proxy_set_header X-Real-IP $remote_addr;
-#        }
-#
-#        location /websocket {
-#                proxy_pass http://localhost:8080/websocket;
-#                proxy_set_header Host $http_host;
-#                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-#                proxy_set_header X-Real-IP $remote_addr;
-#                proxy_http_version 1.1;
-#                proxy_set_header Upgrade $http_upgrade;
-#                proxy_set_header Connection "upgrade";
-#        }
 ```
