@@ -14,5 +14,4 @@ public class ChoiceRes {
     private String targetUid;
     private List<String> skillUrlList;
     private List<String> profileImgUrlList;
-    private List<Icebreaking> icebreakingList;
 }

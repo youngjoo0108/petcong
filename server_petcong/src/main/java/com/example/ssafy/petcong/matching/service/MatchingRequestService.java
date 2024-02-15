@@ -1,12 +1,9 @@
 package com.example.ssafy.petcong.matching.service;
 
 import com.example.ssafy.petcong.AWS.service.AWSService;
-import com.example.ssafy.petcong.AWS.service.AWSServiceImpl;
 import com.example.ssafy.petcong.matching.model.CallStatus;
 import com.example.ssafy.petcong.matching.model.ChoiceRes;
-import com.example.ssafy.petcong.matching.model.entity.Icebreaking;
 import com.example.ssafy.petcong.matching.model.entity.Matching;
-import com.example.ssafy.petcong.matching.repository.IcebreakingRepository;
 import com.example.ssafy.petcong.matching.repository.MatchingRepository;
 import com.example.ssafy.petcong.member.model.entity.Member;
 import com.example.ssafy.petcong.member.model.entity.MemberImg;
