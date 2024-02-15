@@ -25,7 +25,6 @@ class SocketService extends GetxController {
   User user = FirebaseAuth.instance.currentUser!;
   VoidCallback? onInitComplete;
   static late String targetUid; // matched 메시지 받았을 때 초기화됨. static 함수에서 사용함.
-  static late int targetId;
   String subsPrefix = "/queue/";
   static bool callPressed = false;
   List<RTCIceCandidate>? iceCandidates;
@@ -183,8 +182,6 @@ class SocketService extends GetxController {
     // await mainVideoCallWidget!.init();
 
     targetUid = targetUidParam;
-    targetId = targetId;
-    print('debug target id is coming $targetId');
     // matched
     // 전화 오는 화면으로
     Get.to(CallWaiting(this, mainVideoCallWidget!));
