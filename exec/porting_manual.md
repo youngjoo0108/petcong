@@ -86,7 +86,6 @@ springdoc:
 
 allowed-url:
   urls:
-    - /members/signin
   patterns:
     - /api-docs/**
     - /swagger-ui/**
@@ -113,7 +112,7 @@ https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/Welcome.html
 2. Docker를 통해 Jenkins 컨테이너 띄우기
 3. Jenkins 컨테이너 환경에 Java와 Docker를 설치
 4. 파이프라인 설정
-5. https 설정
+5. Repository에서 deploy 브랜치에 merge request가 accepted 된 경우 젠킨스가 인식하고 자동 배포
 ---
 # 1. 도커 설치 
 https://www.hostwinds.kr/tutorials/install-docker-debian-based-operating-system
@@ -199,18 +198,40 @@ apt-get install docker-ce docker-ce-cli containerd.io
 # 4. 젠킨스 설정하기
 먼저 {서버 주소}:8001으로 접속해서 jenkins를 unlock 후 Install suggested plugins
 
-###### 플러그인 설치 
+##### 플러그인 설치 
 1. Dashboard에서 jenkins 관리
 2. Plugins에서 gitlab으로 검색
 3. GitLab API Plugin, GitLab Authentication plugin, GitLab Branch Source, GitLab Plugin 설치
 
-###### Credentials 설정
+##### Credentials 설정
 1. Dashboard에서 jenkins 관리
-2. Security 항목에 있는 Credentials
+2. Security 항목에 있는 Credentials 클릭
 3. Stores scoped to Jenkins에서 (global) 클릭
-4. Add Credentials 클릭
-5. 
+4. Add Credentials 클릭, Kind를 GitLab API token으로 설정
+5. Gitlab에서 Edit profile -> Access Tokens -> Add new token으로 토큰 발급
+6. 발급 받은 토큰을 API token 칸에 입력하고 새로운 credential을 create
+7. Add Credentials 클릭, Kind를 Username with password로 설정
+8. Gitlab 계정의 아이디를 Username에, 비밀번호는 Password에 입력하고 새로운 credential을 create
 
+##### 시스템 설정
+1. Dashboard에서 jenkins 관리
+2. System Configuration 항목에 있는 System 클릭
+3. GitLab 항목의 GitLab connections 찾기
+4. GitLab host URL에는 Gitlab 호스트 주소(ex.https://lab.ssafy.com/)
+5. Credentials은 GitLab API token
+6. test connection을 눌러 연결 되는지 확인하고 저장
+
+##### 파이프라인 설정
+1. Dashboard에서 새로운 Item을 만들어서 Pipeline 생성
+2. 구성 화면에서 GitHub project 체크 후, Project url에 레포지토리 주소 입력
+3. Build Triggers 항목에서 Build when a change is pushed to GitLab. 체크
+4. Enabled GitLab triggers에서 Accepted Merge Request Events 체크 (다른 트리거를 쓰고 싶으면 다른 항목 체크)
+5. 고급을 눌러 Filter branches by name 선택한 후 Include에 deploy 입력 (deploy 브랜치만 인식)
+6. Secret token 아래 Generate를 눌러 Secret token 발급 받기
+7. 깃랩 Repository 가서 Settings -> Webhooks 에서 Add new webhook
+8. URL 칸에 http://{서버 주소}:8001/project/{파이프라인 이름} 입력
+9. Secret token 칸에는 파이프라인에서 발급받은 Secret token 입력
+10. Trigger 항목에서 Merge request events 체크 후 test 해본 뒤 Add webhook
 ---
 # 5. 다음 내용을 갖는 Dockerfile을 작성한 후 /var/jenkins_home/workspace/petcong/server_petcong 에 위치시키기
 ```
