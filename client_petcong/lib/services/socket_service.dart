@@ -99,7 +99,8 @@ class SocketService extends GetxController {
               callback: (frame) async {
                 if (frame.body!.isNotEmpty) {
                   msgArr.add(frame.body!);
-                  Map<String, dynamic> response = jsonDecode(frame.body!);
+                  Map<String, dynamic> response =
+                      jsonDecode(utf8.decode(frame.binaryBody!));
 
                   String type = response['type'];
                   print('type = $type');
