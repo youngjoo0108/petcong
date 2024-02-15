@@ -51,6 +51,17 @@ WebSocket
 
 SpringDoc
 + springdoc-openapi-starter-webmvc-ui : 2.1.0 
+
+Flutter
++ Flutter : 3.16.9
++ Dart : 3.2.6
++ DevTools 2.28.5
+
+Android
++ Kotlin : 1.7.10
++ minSDKVersion : 21
++ targetSDKVersion : 34
++ jvmTarget : 1.8
 ---
 # application.yml
 ```
@@ -147,21 +158,21 @@ cat /etc/nginx/sites-available/default
 # ...
 # listen [::]:443 ssl ipv6only=on; # managed by Certbot
 # listen 443 ssl; # managed by Certbot
-# ssl_certificate /etc/letsencrypt/live/i10a603.p.ssafy.io/fullchain.pem; # managed by Certbot
-# ssl_certificate_key /etc/letsencrypt/live/i10a603.p.ssafy.io/privkey.pem; # managed by Certbot
+# ssl_certificate /etc/letsencrypt/live/{서버 주소}/fullchain.pem; # managed by Certbot
+# ssl_certificate_key /etc/letsencrypt/live/{서버 주소}/privkey.pem; # managed by Certbot
 # include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
 # ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 # ...
 #
 # server {
-#     if ($host = i10a603.p.ssafy.io) {
+#     if ($host = {서버 주소}) {
 #         return 301 https://$host$request_uri;
 #     } # managed by Certbot
 #
 #
 #         listen 80 ;
 #         listen [::]:80 ;
-#     server_name i10a603.p.ssafy.io;
+#     server_name {서버 주소};
 #     return 404; # managed by Certbot
 #}
 
@@ -425,6 +436,14 @@ docker run -d \
 # MySQL 컨테이너 인터렉티브 모드로 쉘 실행
 docker exec -it mysql-container bash
 
-# MySQL root 계정으로 연결
-mysql -uroot -p{root 계정 비밀번호}
+# MySQL 연결 후 덤핑
+mysql -uroot -p{root 계정 비밀번호} < {덤프 파일 위치}
 ```
+
+# 8. Firebase Flutter 설정
+
+[Flutter에서 Firebase 인증 시작하기](https://firebase.google.com/docs/auth/flutter/start?hl=ko)
+
+[Flutter 앱에 Firebase 추가](https://firebase.google.com/docs/flutter/setup?hl=ko&_gl=1*1fwwexv*_up*MQ..*_ga*MTgxNzI5NTA5OS4xNzA3OTIxMDg3*_ga_CW55HF8NVT*MTcwNzkyMTA4Ni4xLjAuMTcwNzkyMTA4Ni4wLjAuMA..&platform=android)
+
+[안드로이드 앱 설치 링크](https://linkhere/)

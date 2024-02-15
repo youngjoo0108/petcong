@@ -22,6 +22,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -46,7 +47,7 @@ public class MatchingController {
     @PostMapping("/choice")
     public ResponseEntity<?> choice(@AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
                                     @RequestBody ChoiceReq choiceReq) {
-        ProfileRecord res = matchingRequestService.choice(uid, choiceReq.getPartnerId());
+        Map<String, Object> res = matchingRequestService.choice(uid, choiceReq.getPartnerId());
         if (res != null) {
             return ResponseEntity.ok(res);
         } else {

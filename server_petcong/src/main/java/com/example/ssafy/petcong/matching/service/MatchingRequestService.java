@@ -40,7 +40,7 @@ public class MatchingRequestService {
     }
 
     @Transactional
-    public ProfileRecord choice(String uid, int partnerId){
+    public Map<String, Object> choice(String uid, int partnerId){
         Member fromMember = memberRepository.findMemberByUid(uid).orElseThrow(() -> new NoSuchElementException(uid));
         // DB에서 requestMemberId, partnerMemberId인 데이터 가져오기
         Member toMember = memberRepository.findMemberByMemberId(partnerId).orElseThrow(() -> new NoSuchElementException(partnerId + ""));
@@ -92,8 +92,10 @@ public class MatchingRequestService {
         responseMap2.put("targetUid", fromMember.getUid());
 
         sendingOperations.convertAndSend("/queue/" + toMember.getUid(), responseMap2);
-
-        return new ProfileRecord(toMember, toMemberPet, toMemberImgUrls);
+        Map<String, Object> res = new HashMap<>();
+        res.put("profileRecord", new ProfileRecord(toMember, toMemberPet, toMemberImgUrls));
+        res.put("targetUid", toMember.getUid());
+        return res;
     }
 
 //    private ChoiceRes makeMatchedResponse(Member partnerMember, List<Icebreaking> icebreakingList) {

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
+
 import 'package:petcong/pages/app_pages/matching/matching_page.dart';
+
+import 'package:petcong/controller/call_wait_controller.dart';
+
 import 'package:petcong/pages/app_pages/webRTC/webrtc.dart';
 import 'package:petcong/services/socket_service.dart';
 import 'package:slidable_button/slidable_button.dart';
@@ -15,14 +19,6 @@ class CallWaiting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // body: Center(
-      //   child: ElevatedButton(
-      //     onPressed: () {
-      //       SocketService().startCamera();
-      //     },
-      //     child: const Text('call'),
-      //   ),
-      // ),
       body: Center(
         child: Stack(
           children: [
@@ -31,36 +27,6 @@ class CallWaiting extends StatelessWidget {
               fit: BoxFit.cover,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-            ),
-            const Positioned.fill(
-              child: Padding(
-                padding: EdgeInsets.all(50.0),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Column(
-                    children: [
-                      Text(
-                        '매치입니다!',
-                        style: TextStyle(
-                          fontFamily: 'Cafe24',
-                          color: Colors.white,
-                          fontSize: 60.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        '인사하세요',
-                        style: TextStyle(
-                          fontFamily: 'Cafe24',
-                          color: Colors.white,
-                          fontSize: 60.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             ),
             HorizontalSlidableButton(
               width: MediaQuery.of(context).size.width / 3,
@@ -91,6 +57,12 @@ class CallWaiting extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+         
+            
+
       // floatingActionButton: Stack(
       //   alignment: Alignment.bottomCenter,
       //   children: [
@@ -134,6 +106,4 @@ class CallWaiting extends StatelessWidget {
       //     ),
       //   ],
       // ),
-    );
-  }
-}
+
