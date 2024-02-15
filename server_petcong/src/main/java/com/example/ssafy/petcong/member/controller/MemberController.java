@@ -61,7 +61,7 @@ public class MemberController {
     })
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId) {
-        MemberRecord updatedUser = memberService.signin(memberId, true);
+        MemberRecord updatedUser = memberService.signin(memberId);
 
         return ResponseEntity
                 .ok()
