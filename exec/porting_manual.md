@@ -277,7 +277,7 @@ pipeline
         {
             steps
             {
-                git branch: 'master',
+                git branch: 'deploy',
                 credentialsId: 'Username with password로 만든 credentials의 ID',
                 url: '깃 url'
             }
@@ -317,7 +317,7 @@ pipeline
                 }
                 dir('server_petcong')
                 {
-                    sh 'cp /var/jenkins_home/workspace/dockerfiles/Dockerfile .' 
+                    sh 'cp /var/jenkins_home/workspace/dockerfiles/Dockerfile .'
                     sh 'docker build -t backend .'
                     sh '''
                         docker run -d\
