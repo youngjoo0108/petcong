@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petcong/constants/style.dart';
@@ -63,7 +64,16 @@ class MainProfilePage extends StatelessWidget {
                                   imgUrl = url;
                                 });
                               }
-                              return Image.network(imgUrl);
+                              return CachedNetworkImage(
+                                imageUrl: imgUrl,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(
+                                  color: MyColor.myColor1,
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              );
                             },
                           ),
                         ),
@@ -111,7 +121,6 @@ class MainProfilePage extends StatelessWidget {
                   builder: (controller) {
                     MemberProfile? member =
                         controller.profile.value.memberProfile;
-                    PetProfile? pet = controller.profile.value.petProfile;
                     String nickname =
                         member?.memberInfo?.nickname ?? 'no response';
                     int age = member?.memberInfo?.age ?? 0;
@@ -134,344 +143,112 @@ class MainProfilePage extends StatelessWidget {
               ClipRRect(
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(10)),
-                child: Container(
-                  // color: const Color.fromRGBO(238, 237, 235, 1),
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: GestureDetector(
-                                // GestureDetector 위젯 추가
-                                onTap: () {
-                                  Get.to(
-                                      const MediaPage()); // 클릭 이벤트 발생 시 MediaPage로 이동
-                                },
-                                child: Container(
-                                  width: 130,
-                                  height: 150,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        spreadRadius: 2,
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: SizedBox(
-                                        child: Image.asset(
-                                          'assets/src/test_4.jpg',
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: GestureDetector(
-                                // GestureDetector 위젯 추가
-                                onTap: () {
-                                  Get.to(
-                                      const MediaPage()); // 클릭 이벤트 발생 시 MediaPage로 이동
-                                },
-                                child: Container(
-                                  width: 130,
-                                  height: 150,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        spreadRadius: 2,
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: SizedBox(
-                                        child: Image.asset(
-                                          'assets/src/test_5.jpg',
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: GestureDetector(
-                                // GestureDetector 위젯 추가
-                                onTap: () {
-                                  Get.to(
-                                      const MediaPage()); // 클릭 이벤트 발생 시 MediaPage로 이동
-                                },
-                                child: Container(
-                                  width: 130,
-                                  height: 150,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        spreadRadius: 2,
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: SizedBox(
-                                        child: Image.asset(
-                                          'assets/src/test_1.jpg',
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: GestureDetector(
-                                // GestureDetector 위젯 추가
-                                onTap: () {
-                                  Get.to(
-                                      const MediaPage()); // 클릭 이벤트 발생 시 MediaPage로 이동
-                                },
-                                child: Container(
-                                  width: 130,
-                                  height: 150,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        spreadRadius: 2,
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: SizedBox(
-                                        child: Image.asset(
-                                          'assets/src/test_3.png',
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: GestureDetector(
-                                // GestureDetector 위젯 추가
-                                onTap: () {
-                                  Get.to(
-                                      const MediaPage()); // 클릭 이벤트 발생 시 MediaPage로 이동
-                                },
-                                child: Container(
-                                  width: 130,
-                                  height: 150,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        spreadRadius: 2,
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: SizedBox(
-                                        child: Image.asset(
-                                          'assets/src/test_2.png',
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: GestureDetector(
-                                // GestureDetector 위젯 추가
-                                onTap: () {
-                                  Get.to(
-                                      const MediaPage()); // 여기를 클릭하면 MediaPage로 이동
-                                },
-                                child: Container(
-                                  width: 130,
-                                  height: 150,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        spreadRadius: 2,
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ],
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        MyColor.petCongColor3,
-                                        MyColor.petCongColor4.withOpacity(0.8),
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                  ),
-                                  child: const Center(
-                                    child: Text(
-                                      'Add Picture',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                child: MixinBuilder<ProfileController>(builder: (controller) {
+                  MemberProfile? member =
+                      controller.profile.value.memberProfile;
+                  int pictureCount = member?.memberImgInfosList?.length ?? 0;
+                  List<MemberImgInfosList> pictureUrls =
+                      member?.memberImgInfosList ?? [];
+                  if (pictureCount < 2) {
+                    return Container();
+                  }
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 30,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Container(
-                        width: 350,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              spreadRadius: 5,
-                              blurRadius: 10,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                          gradient: LinearGradient(
-                            colors: [
-                              MyColor.petCongColor3,
-                              MyColor.petCongColor4.withOpacity(0.8),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              for (int i = 1; i < pictureCount; i++)
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    width: 130,
+                                    height: 150,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          spreadRadius: 2,
+                                          blurRadius: 10,
+                                          offset: const Offset(0, 3),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: SizedBox(
+                                          child: Image.network(
+                                            pictureUrls[i].bucketKey ?? '',
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                             ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
                           ),
                         ),
-                        child: GetBuilder<ProfileController>(
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        MixinBuilder<ProfileController>(
                           builder: (controller) {
-                            // TextEditingController를 다이얼로그 밖에서 선언
-                            final textEditingController = TextEditingController(
-                                text: controller.profile.value.petProfile
-                                    ?.petInfo?.description);
-
-                            return Center(
-                              child: GestureDetector(
-                                onTap: () {
-                                  // 텍스트를 편집할 수 있는 다이얼로그 표시
-                                  showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text('자기소개 편집'),
-                                        content: TextField(
-                                          controller: textEditingController,
-                                          decoration: const InputDecoration(
-                                              hintText: '자기소개를 입력하세요'),
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: const Text('취소'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                          TextButton(
-                                            child: const Text('확인'),
-                                            onPressed: () {
-                                              // 확인 버튼을 누르면 TextEditingController의 값을 가져와서 updateIntroText 호출
-                                              controller.updateIntroText(
-                                                  textEditingController.text);
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                child: Text(
-                                  controller.introText,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                            PetProfile? pet =
+                                controller.profile.value.petProfile;
+                            String description =
+                                pet?.petInfo?.description ?? '';
+                            if (description == '') {
+                              return Container();
+                            }
+                            return Container(
+                              width: 350,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    spreadRadius: 5,
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 3),
                                   ),
+                                ],
+                                gradient: LinearGradient(
+                                  colors: [
+                                    MyColor.petCongColor3,
+                                    MyColor.petCongColor4.withOpacity(0.8),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
                                 ),
+                              ),
+                              child: Center(
+                                child: Text(description,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    )),
                               ),
                             );
                           },
                         ),
-                      ),
-                    ],
-                  ),
-                ),
+                      ],
+                    ),
+                  );
+                }),
               ),
             ],
           ),

@@ -105,6 +105,25 @@ Future<ProfilePageModel> getUserInfo() async {
   }
 }
 
+// GET /members/info/{memberId}
+Future<ProfilePageModel> getCallUserInfo(int memberId) async {
+  Map<String, String> reqHeaders = await getIdToken();
+  final response = await http
+      .get(Uri.parse('$serverUrl/members/info/$memberId'), headers: reqHeaders);
+
+  if (response.statusCode == 200) {
+    return ProfilePageModel.fromJson(
+        jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>);
+  } else {
+    if (kDebugMode) {
+      print("getCallUserInfo response.statusCode: ${response.statusCode}");
+      print("getCallUserInfo response.body: ${response.body}");
+      print("error");
+    }
+    throw Exception("user doesn't exist.");
+  }
+}
+
 // PATCH /members/update
 Future<void> patchUserInfo(UserSignupModel user) async {
   Map<String, String> reqHeaders = await getIdToken();

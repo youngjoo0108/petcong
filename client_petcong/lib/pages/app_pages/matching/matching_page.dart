@@ -92,7 +92,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
                   verticalSwipeThreshold: 0.15,
                   // itemCount: 3,
                   builder: (context, properties) {
-                    final itemIndex = properties.index % 2;
+                    final itemIndex = properties.index % 10;
                     return Stack(
                       children: [
                         MatchingCard(
@@ -123,7 +123,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
             onLike(39); // 패드
           } else {
-            onLike(147); // 영주폰
+            onLike(137); // 여기에 쓰면 됨
           }
         },
         label: const Text('call'),
@@ -139,7 +139,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           .value
           .elementAt(index)
           .memberId);
-      MatchCardController.to.removeCardProfile();
+      // MatchCardController.to.removeCardProfile();
       debugPrint(
           "onLike ${MatchCardController.to.getMatchingQue().value.elementAt(index).nickname}, $direction}");
     } else if (direction == SwipeDirection.left) {
@@ -147,6 +147,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       debugPrint(
           "onDislike {${MatchCardController.to.getMatchingQue().value.elementAt(index).nickname}, $direction}");
     }
+    // MatchCardController.to.fillQueue();
   }
 
   /// targetId = int
