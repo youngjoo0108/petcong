@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:petcong/models/card_profile_model.dart';
-import 'package:petcong/models/matched.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MatchedCard extends StatefulWidget {

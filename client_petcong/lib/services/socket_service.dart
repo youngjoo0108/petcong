@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:petcong/controller/call_wait_controller.dart';
@@ -167,12 +167,16 @@ class SocketService extends GetxController {
         ),
       );
       await activateSocket(client!);
-      print('activating socket');
+      if (kDebugMode) {
+        print('activating socket');
+      }
       await Future.delayed(const Duration(milliseconds: 300));
     }
-    print(
-        "========================in socketService.initSocket, client.hashCode() = ${client.hashCode} ${client!.connected}");
-    print("SocketService.client 할당 됨");
+    if (kDebugMode) {
+      print(
+          "========================in socketService.initSocket, client.hashCode() = ${client.hashCode} ${client!.connected}");
+      print("SocketService.client 할당 됨");
+    }
     return client!;
   }
 
