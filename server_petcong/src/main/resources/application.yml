@@ -36,6 +36,7 @@ springdoc:
 
 allowed-url:
   urls:
+    - /members/dummypic
   patterns:
     - /api-docs/**
     - /swagger-ui/**

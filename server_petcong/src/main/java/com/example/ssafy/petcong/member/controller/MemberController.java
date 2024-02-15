@@ -20,6 +20,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -158,6 +159,20 @@ public class MemberController {
             @AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
             @RequestParam MultipartFile[] files) {
 
+        List<MemberImgRecord> memberImgRecordList = memberService.uploadMemberImage(memberId, uid, files);
+
+        return ResponseEntity
+                .created(null)
+                .body(memberImgRecordList);
+    }
+
+    @PostMapping("/dummypic")
+    public ResponseEntity<?> postDummyPic(
+            @RequestHeader("memberId") int memberId,
+            @RequestHeader("uid") String uid,
+            @RequestParam MultipartFile file) {
+
+        MultipartFile[] files = {file};
         List<MemberImgRecord> memberImgRecordList = memberService.uploadMemberImage(memberId, uid, files);
 
         return ResponseEntity
