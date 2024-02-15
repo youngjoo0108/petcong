@@ -14,7 +14,7 @@ class MediaPageState extends State<MediaPage> {
   final ImagePicker _picker = ImagePicker();
   Future<void> _pickImageFromGallery() async {
     final List<XFile> images = await _picker.pickMultiImage(
-        requestFullMetadata: false, imageQuality: 30);
+        requestFullMetadata: false, imageQuality: 20);
     List<String> imagePaths = [];
 
     for (XFile image in images) {
