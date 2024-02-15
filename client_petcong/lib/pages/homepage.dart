@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int currentIndex = 0;
+  int currentIndex = 1;
   final SocketService socketService =
       SocketService(); // State 객체가 하나 생성되고, socketService 인스턴스도 하나여야 하므로 final
   StompClient? _client;

@@ -7,6 +7,11 @@ class HistoryController extends GetxController {
   static HistoryController get to => Get.find();
 
   RxList<CardProfileModel> matchedUsers = <CardProfileModel>[].obs;
+  @override
+  void onInit() {
+    super.onInit();
+    getMatchedUsers();
+  }
 
   void getMatchedUsers() async {
     debugPrint("getMatchedUsers function called");
