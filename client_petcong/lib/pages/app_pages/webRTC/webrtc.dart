@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
@@ -12,13 +14,10 @@ class MainVideoCallWidget extends StatefulWidget {
   RTCPeerConnection? _pc;
   MediaStream? _localStream;
   List<RTCIceCandidate>? _iceCandidates;
-  static late int quizIdx;
+  RxInt? quizIdx = 0.obs;
 
   MainVideoCallWidget({
     super.key,
-    // required this._localRenderer,
-    // required this._remoteRenderer,
-    // required this._pc,
   });
 
   Future<void> init() async {
@@ -58,11 +57,6 @@ class MainVideoCallWidget extends StatefulWidget {
     };
 
     _pc = await createPeerConnection(config, sdpConstraints);
-
-    // print("=======================makeCall start");
-    // print("_pc is null = ${_pc == null} ===");
-    // print("_localRenderer is null = ${_localRenderer == null}");
-    // print("_remoteRenderer is null = ${_remoteRenderer == null}");
   }
 
   Future<RTCSessionDescription> createOffer() async {
@@ -83,7 +77,6 @@ class MainVideoCallWidget extends StatefulWidget {
 
   Future joinRoom() async {
     _iceCandidates = [];
-    print("=======================joinRoom start");
     try {
       _pc!.onIceCandidate = (ice) {
         _iceCandidates!.add(ice);
@@ -106,7 +99,7 @@ class MainVideoCallWidget extends StatefulWidget {
       await _localRenderer!.initialize();
 
       final mediaConstraints = {
-        'audio': true,
+        'audio': false,
         'video': {'facingMode': 'user'}
       };
 
@@ -117,8 +110,6 @@ class MainVideoCallWidget extends StatefulWidget {
 
       // 스트림의 트랙(카메라 정보가 들어오는 연결)을 peerConnection(정보를 전송할 connection)에 추가
       _localStream!.getTracks().forEach((track) {
-        print(
-            "================================on joinRoom(), track = ${track.toString()} =====");
         _pc!.addTrack(track, _localStream!);
       });
 
@@ -126,16 +117,6 @@ class MainVideoCallWidget extends StatefulWidget {
     } catch (exception) {
       print(exception);
     }
-    // // print rtc objects (reconnect test)
-    // print(
-    //     "================================= _localRenderer.hashCode = ${_localRenderer.hashCode}=======================");
-    // print(
-    //     "================================= _remoteRenderer.hashCode = ${_remoteRenderer.hashCode}=======================");
-    // print(
-    //     "================================= _localStream.hashCode = ${_localStream.hashCode}=======================");
-    // print(
-    //     "================================= _pc.hashCode = ${_pc.hashCode}=======================");
-    print("=======================joinRoom end");
   }
 
   @override
@@ -145,14 +126,44 @@ class MainVideoCallWidget extends StatefulWidget {
 class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   late double videoWidth = MediaQuery.of(context).size.width;
   late double videoHeight = MediaQuery.of(context).size.height;
+  late double scaleValue = 0.5;
+  late double localRendererX = videoWidth * (6 / 7);
+  late double localRendererY = videoHeight / 20;
+  RxBool showMessage = false.obs;
+  RxBool isIdxChanged = false.obs;
+
   // icebreakings
-  List<String> quizs = ["sampleQuiz1", "sampleQuiz2", "sampleQuiz3"];
+  List<String> quizs = [
+    "똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중",
+    '1',
+    "sampleQuiz2",
+    "sampleQuiz3"
+  ];
+
+  void toggleMessageDialog() {
+    if (showMessage.value == true) {
+      showMessage.value = false;
+    } else {
+      isIdxChanged.value = false;
+      showMessage.value = true;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    MainVideoCallWidget.quizIdx = 0;
+
+    widget.quizIdx!.listen((_) {
+      setState(() {
+        if (!showMessage.value) {
+          isIdxChanged.value = true;
+        } else {
+          isIdxChanged.value = false;
+        }
+      });
+    });
   }
+  // widget.quizIdx!.value = 0;}
 
   @override
   void dispose() {
@@ -162,61 +173,63 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   Future<void> disconnectCall() async {
     widget._localRenderer!.srcObject!.getTracks().forEach((track) {
       track.stop();
-      // widget._localRenderer!.srcObject!.removeTrack(track);
-      print(
-          "================================after removeTrack(), track = ${track.toString()} =====");
     });
-    print("tracks.removeTrack() 완료됨");
-    // remoteRendere의 Track 객체는 상대방이 끊었을 때 알아서 stop된다?
-    widget._remoteRenderer!.srcObject!.getTracks().forEach((track) {
-      track.stop();
-      // widget._remoteRenderer!.srcObject!.removeTrack(track);
-    });
-    // await widget._localRenderer.srcObject!.dispose();
-    // await widget._remoteRenderer.srcObject!.dispose();
+
     widget._localRenderer!.srcObject = null;
     widget._remoteRenderer!.srcObject = null;
-    print("srcObject = null 완료됨");
     widget._pc!.close();
-    print("pc.close 완료됨");
-    // print(
-    //     "end btn.onPressed - localRederer.hashCode = ${widget._localRenderer.hashCode}");
-    // print(
-    //     "end btn.onPressed - _remoteRenderer.hashCode = ${widget._remoteRenderer.hashCode}");
+
     widget._localRenderer = null;
     widget._remoteRenderer = null;
-    print("renderer = null 완료됨");
     // disconnect end
     SocketService().setCallPressed(false); // flag false로
     SocketService().disposeSocket(SocketService.uid);
     await Future.delayed(const Duration(seconds: 2));
   }
 
-  void onIdxbtnPressed() {
-    int maxIdx = quizs.length;
-    if (MainVideoCallWidget.quizIdx >= maxIdx) {
-      MainVideoCallWidget.quizIdx = maxIdx;
-      print("===============index changed by me / max!!");
-      return;
-    }
-    MainVideoCallWidget.quizIdx++;
-    print(
-        "===============index changed by me / index = ${MainVideoCallWidget.quizIdx}==");
-    SocketService.sendMessage("idx", MainVideoCallWidget.quizIdx.toString());
+  void onIdxPlusBtnPressed() {
+    setState(() {
+      int maxIdx = quizs.length;
+      if (widget.quizIdx!.value >= maxIdx) {
+        widget.quizIdx!.value = maxIdx;
+        print("===============index changed by me / max!!");
+        return;
+      }
+      widget.quizIdx!.value++;
+      print(
+          "===============index changed by me / index = ${widget.quizIdx!.value}==");
+      SocketService.sendMessage("idx", widget.quizIdx!.value.toString());
+    });
+  }
+
+  void onIdxMinusBtnPressed() {
+    setState(() {
+      if (widget.quizIdx!.value <= 0) {
+        widget.quizIdx!.value = 0;
+        return;
+      }
+      widget.quizIdx!.value--;
+      SocketService.sendMessage("idx", widget.quizIdx!.value.toString());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    Get.put(MainVideoCallWidget());
+    Get.put(_MainVideoCallWidgetState());
     final TransformationController controller = TransformationController();
-    controller.value = Matrix4.identity()..scale(0.5);
+    controller.value = Matrix4.identity()
+      ..scale(scaleValue)
+      ..translate(localRendererX, localRendererY);
     return Scaffold(
       body: Stack(
         children: <Widget>[
           // 상대방 화면
           SizedBox.expand(
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(10),
               child: RTCVideoView(
+                objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
                 widget._remoteRenderer!,
                 mirror: false,
               ),
@@ -226,10 +239,18 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           ClipRect(
             child: InteractiveViewer(
               transformationController: controller,
-              minScale: 0.3,
+              minScale: 0.25,
               maxScale: 0.5,
               constrained: true,
               boundaryMargin: const EdgeInsets.all(double.infinity),
+              onInteractionStart: (details) {},
+              onInteractionUpdate: (details) {
+                scaleValue = controller.value.getMaxScaleOnAxis();
+                localRendererX =
+                    controller.value.getTranslation().x / scaleValue;
+                localRendererY =
+                    controller.value.getTranslation().y / scaleValue;
+              },
               child: SizedBox(
                 width: videoWidth,
                 height: videoHeight,
@@ -246,27 +267,136 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
           ),
         ],
       ),
-      // 통화 종료 버튼
-      floatingActionButton: Row(
-        children: [
-          FloatingActionButton(
-            onPressed: () async {
-              await disconnectCall(); // 다 꺼지면 이동
-              Get.offAll(const HomePage());
-            },
-            heroTag: 'stop_call_button',
-            shape: const CircleBorder(eccentricity: 0),
-            backgroundColor: MyColor.petCongColor4,
-            child: const Icon(Icons.call_end),
-          ),
-          FloatingActionButton(
-            onPressed: onIdxbtnPressed,
-            shape: const CircleBorder(eccentricity: 0),
-            backgroundColor: Colors.blue,
-            heroTag: 'next_button',
-            child: const Icon(Icons.call_end),
-          ),
-        ],
+      floatingActionButton: Align(
+        alignment: Alignment.bottomRight,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Flexible(
+                    fit: FlexFit.loose,
+                    child: Obx(
+                      () => Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        width: showMessage.value
+                            ? MediaQuery.of(context).size.width
+                            : 0.0,
+                        child: showMessage.value
+                            ? Container(
+                                padding: const EdgeInsets.only(
+                                  top: 10,
+                                  bottom: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white.withOpacity(0.3),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(
+                                      onPressed: onIdxMinusBtnPressed,
+                                      icon: const Icon(
+                                        Icons.arrow_back_ios_new_rounded,
+                                      ),
+                                    ),
+                                    Flexible(
+                                      fit: FlexFit.loose,
+                                      child: Obx(
+                                        () => Text(
+                                          quizs.isNotEmpty &&
+                                                  widget.quizIdx!.value >= 0 &&
+                                                  widget.quizIdx!.value <
+                                                      quizs.length
+                                              ? quizs[widget.quizIdx!.value]
+                                              : 'No quiz available',
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: onIdxPlusBtnPressed,
+                                      icon: const Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : null,
+                      ),
+                    ),
+                  ),
+                  Stack(
+                    children: [
+                      Obx(
+                        () => Opacity(
+                          opacity: showMessage.value ? 1.0 : 0.5,
+                          child: FloatingActionButton(
+                            onPressed: toggleMessageDialog,
+                            heroTag: 'text',
+                            backgroundColor: Colors.transparent,
+                            // elevation: 2,
+                            child: Image.asset(
+                              'assets/src/petcong_c_logo.png',
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Obx(
+                        () => Align(
+                          alignment: Alignment.bottomRight,
+                          child: Opacity(
+                            opacity: isIdxChanged.value ? 1.0 : 0.0,
+                            child: const Icon(
+                              Icons.circle,
+                              color: MyColor.petCongColor4,
+                              size: 15,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(
+              height: 20,
+            ),
+            // 통화 종료 버튼
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: FloatingActionButton(
+                onPressed: () async {
+                  await disconnectCall(); // 다 꺼지면 이동
+                  Get.offAll(const HomePage());
+                },
+                heroTag: 'stop_call_button',
+                shape: const CircleBorder(),
+                backgroundColor: MyColor.petCongColor4,
+                elevation: 3,
+                child: const Icon(Icons.call_end),
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

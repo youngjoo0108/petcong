@@ -22,16 +22,20 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
       type: BottomNavigationBarType.fixed,
       showSelectedLabels: false,
       showUnselectedLabels: false,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.chat_outlined),
-          label: 'chat',
-        ),
-        BottomNavigationBarItem(
+      items: <BottomNavigationBarItem>[
+        const BottomNavigationBarItem(
           icon: Icon(Icons.star_rounded),
           label: 'Star',
         ),
         BottomNavigationBarItem(
+          icon: Image.asset(
+            'assets/src/petcong_c_logo.png',
+            width: 30,
+            height: 30,
+          ),
+          label: 'PetCong',
+        ),
+        const BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: 'profile',
         ),
