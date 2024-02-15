@@ -71,9 +71,13 @@ Future<bool> postSignin() async {
   final response = await http.post(Uri.parse('$serverUrl/members/signin'),
       headers: reqHeaders);
 
+  print("postSignin requestHeader");
+  print("postSignIn requestHeader: $reqHeaders");
+
   if (response.statusCode == 200) {
     if (kDebugMode) {
       print("postSignin success");
+      print("postSignin response body: ${response.body}");
     }
     return true;
   } else {
@@ -94,7 +98,7 @@ Future<ProfilePageModel> getUserInfo() async {
 
   if (response.statusCode == 200) {
     return ProfilePageModel.fromJson(
-        jsonDecode(response.body) as Map<String, dynamic>);
+        jsonDecode(utf8.decode(response.bodyBytes)));
   } else {
     if (kDebugMode) {
       print(response.statusCode);

@@ -123,7 +123,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
             onLike(39); // 패드
           } else {
-            onLike(137); // 여기에 쓰면 됨
+            onLike(147); // 여기에 쓰면 됨
           }
         },
         label: const Text('call'),
