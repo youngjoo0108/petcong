@@ -425,6 +425,6 @@ docker run -d \
 # MySQL 컨테이너 인터렉티브 모드로 쉘 실행
 docker exec -it mysql-container bash
 
-# MySQL root 계정으로 연결
-mysql -uroot -p{root 계정 비밀번호}
+# MySQL 연결 후 덤핑
+mysql -uroot -p{root 계정 비밀번호} < {덤프 파일 위치}
 ```
