@@ -75,7 +75,7 @@ class CallWaiting extends StatelessWidget {
                 onPressed: () async {
                   // socketService!
                   //     .onCallPressed('on'); // 통화대기화면 call버튼 -> rtc 연결 시작 ~ 화면 on
-                  // socketService!.onCallPressed();
+                  socketService!.onCallPressed();
                 },
                 shape: const CircleBorder(eccentricity: 0),
                 backgroundColor: MyColor.myColor1,
