@@ -13,8 +13,7 @@ import 'package:slidable_button/slidable_button.dart';
 
 class CallWaiting extends StatelessWidget {
   final SocketService? socketService;
-  final MainVideoCallWidget
-      mainVideoCallWidget; // 통화 대기화면 올 때마다, not null인 MainVideoCallWidget 받음
+  final MainVideoCallWidget mainVideoCallWidget;
   const CallWaiting(this.socketService, this.mainVideoCallWidget, {super.key});
 
   @override
