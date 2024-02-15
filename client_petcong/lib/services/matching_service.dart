@@ -48,8 +48,9 @@ Future<dynamic> postMatching(int targetId) async {
       headers: reqHeaders,
       body: jsonEncode({'partnerId': targetId.toString()}));
   if (response.statusCode == 200) {
+    debugPrint("pending 처리됨");
     String body = response.body;
-    return ChoiceRes.fromJson(jsonDecode(body));
+    return CardProfileModel.fromJson(jsonDecode(body));
   } else if (response.statusCode == 204) {
     return;
   } else {
