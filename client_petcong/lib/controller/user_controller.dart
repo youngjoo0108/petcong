@@ -7,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:petcong/controller/history_controller.dart';
 import 'package:petcong/controller/match_card_controller.dart';
 import 'package:petcong/controller/profile_controller.dart';
+import 'package:petcong/pages/app_pages/profile/nickname_page.dart';
 import 'package:petcong/pages/homepage.dart';
 import 'package:petcong/pages/signin_pages/sign_in_page.dart';
 import 'package:petcong/services/socket_service.dart';
@@ -41,15 +42,20 @@ class UserController extends GetxController {
     ever(_user, _moveToPage);
   }
 
-  _moveToPage(User? user) {
-    // TODO: Registered user goes to match page.
+  _moveToPage(User? user) async {
     if (user == null) {
       Get.offAll(() => const SignInPage());
     } else {
-      HistoryController.to.onInit();
-      MatchCardController.to.onInit();
-      ProfileController.to.onInit();
-      Get.offAll(() => const HomePage());
+      bool isSignedUP = await postSignin();
+      if (isSignedUP) {
+        HistoryController.to.onInit();
+        MatchCardController.to.onInit();
+        ProfileController.to.onInit();
+        Get.offAll(() => const HomePage());
+      }
+      else{
+        Get.offAll(() => const NicknamePage(progress: 0.1));
+      }
     }
   }
 

@@ -20,10 +20,12 @@ class _MatchingCardState extends State<MatchingCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final bool isMan = widget.matchingUser.gender == "MALE";
+    final bool isMale = widget.matchingUser.petGender == "MALE";
     final String humanProfile =
-        "${widget.matchingUser.nickname}, ${widget.matchingUser.age}";
+        "${isMan ? "👨🏻" : "👩🏻"} \n${widget.matchingUser.nickname}, ${widget.matchingUser.age}";
     final String petProfile =
-        "${widget.matchingUser.petName}, ${widget.matchingUser.petAge}";
+        "${isMale ? "💜" : "🧡"} \n${widget.matchingUser.petName}, ${widget.matchingUser.petAge} ";
     return ClipRRect(
       child: Stack(
         children: [

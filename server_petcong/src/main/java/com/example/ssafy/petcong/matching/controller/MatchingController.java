@@ -46,7 +46,7 @@ public class MatchingController {
     @PostMapping("/choice")
     public ResponseEntity<?> choice(@AuthenticationPrincipal(expression = FirebaseUserDetails.UID) String uid,
                                     @RequestBody ChoiceReq choiceReq) {
-        ChoiceRes res = matchingRequestService.choice(uid, choiceReq.getPartnerId());
+        ProfileRecord res = matchingRequestService.choice(uid, choiceReq.getPartnerId());
         if (res != null) {
             return ResponseEntity.ok(res);
         } else {
