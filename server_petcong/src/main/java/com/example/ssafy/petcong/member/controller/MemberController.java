@@ -5,6 +5,8 @@ import com.example.ssafy.petcong.member.service.MemberService;
 import com.example.ssafy.petcong.security.userdetails.FirebaseUserDetails;
 import com.example.ssafy.petcong.member.model.dto.*;
 import com.example.ssafy.petcong.security.userdetails.SignupUserDetails;
+import com.example.ssafy.petcong.util.annotation.MakeCallable;
+import com.example.ssafy.petcong.util.annotation.NotCallable;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -53,6 +55,7 @@ public class MemberController {
                 .body(signupResponseDto);
     }
 
+    @MakeCallable
     @Operation(summary = "로그인", description = "로그인으로 상태를 변경",
             responses = {
                     @ApiResponse(responseCode = "200", description = "가입 기록 있음",
@@ -68,6 +71,7 @@ public class MemberController {
                 .body(updatedUser);
     }
 
+    @NotCallable
     @Operation(summary = "로그아웃", description = "로그아웃으로 상태를 변경",
             responses = @ApiResponse(responseCode = "200", description = "로그아웃 성공")
     )

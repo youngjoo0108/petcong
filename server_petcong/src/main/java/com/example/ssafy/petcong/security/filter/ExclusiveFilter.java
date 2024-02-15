@@ -54,7 +54,7 @@ public class ExclusiveFilter extends OncePerRequestFilter {
         }
 
         if (request.getHeader("tester") != null && request.getHeader("tester").equals("A603")) {
-            setUserRoleToRequest(UserRole.ANONYMOUS, request);
+            setUserRoleToRequest(UserRole.TESTER, request);
             return true;
         } else {
             return false;

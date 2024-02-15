@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,21 +49,27 @@ public class FirebaseAuthenticationFilter extends OncePerRequestFilter {
     }
 
     protected Authentication attemptAuthenticate(UserRole role) {
-        Authentication authentication;
-
-        if (role.equals(UserRole.ANONYMOUS)) { // anonymous request
-            UserDetails anonymousUserDetails = new FirebaseUserDetails(role.getUid(), role.getMemberId(), role.isStatus());
-            AbstractAuthenticationToken authenticatedToken = FirebaseAuthenticationToken.authenticated(anonymousUserDetails, anonymousUserDetails.getPassword(), null);
-            authenticatedToken.setDetails(anonymousUserDetails);
-            return authenticatedToken;
-        } else if (role.equals(UserRole.SIGNUP)) { // signup request
-            String idToken = getTokenFromHeader();
-            authentication = SignupAuthenticationToken.unauthenticated(idToken);
-            return authenticationManager.authenticate(authentication);
-        } else {
-            String idToken = getTokenFromHeader(); // unauthenticated request
-            authentication = FirebaseAuthenticationToken.unauthenticated(idToken);
-            return authenticationManager.authenticate(authentication);
+        switch (role) {
+            case UNAUTHENTICATED -> {
+                String idToken = getTokenFromHeader();
+                Authentication authentication = FirebaseAuthenticationToken.unauthenticated(idToken);
+                return authenticationManager.authenticate(authentication);
+            }
+            case SIGNUP -> {
+                String idToken = getTokenFromHeader();
+                Authentication authentication = SignupAuthenticationToken.unauthenticated(idToken);
+                return authenticationManager.authenticate(authentication);
+            }
+            case TESTER -> {
+                UserDetails anonymousUserDetails = new FirebaseUserDetails(role.getUid(), role.getMemberId(), role.isStatus());
+                AbstractAuthenticationToken authenticatedToken = FirebaseAuthenticationToken.authenticated(anonymousUserDetails, anonymousUserDetails.getPassword(), null);
+                authenticatedToken.setDetails(anonymousUserDetails);
+                return authenticatedToken;
+            }
+            case ANONYMOUS -> {
+                return null;
+            }
+            default -> throw new AuthenticationServiceException("Can not process " + role.getClass() + " type.");
         }
     }
 
