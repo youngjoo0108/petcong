@@ -184,6 +184,7 @@ class SocketService extends GetxController {
     targetUid = targetUidParam;
     // matched
     // 전화 오는 화면으로
+    await initRTCWidget();
     Get.to(CallWaiting(this, mainVideoCallWidget!));
   }
 
