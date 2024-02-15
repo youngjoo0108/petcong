@@ -35,6 +35,7 @@ springdoc:
   packages-to-scan: com.example.ssafy.petcong
 
 allowed-url:
+  urls:
   patterns:
     - /api-docs/**
     - /swagger-ui/**
