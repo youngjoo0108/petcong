@@ -29,7 +29,7 @@ Future<void> initPrefs() async {
   }
 }
 
-Future<dynamic> postMatching(int targetId) async {
+Future postMatching(int targetId) async {
   if (kDebugMode) {
     print("postMatching 실행됨");
   }
@@ -49,10 +49,15 @@ Future<dynamic> postMatching(int targetId) async {
       body: jsonEncode({'partnerId': targetId.toString()}));
   if (response.statusCode == 200) {
     debugPrint("pending 처리됨");
-    String body = response.body;
-    return CardProfileModel.fromJson(
-        jsonDecode(utf8.decode(response.bodyBytes)));
+    Map<String, dynamic> body = jsonDecode(utf8.decode(response
+        .bodyBytes)); // map{"targetUid": targetUid, "profileRecord": ProfileRecord};
+    Map<String, dynamic> result = {
+      "profile": CardProfileModel.fromJson(body['profileRecord']),
+      "targetUid": body['targetUid']
+    };
+    return result;
   } else if (response.statusCode == 204) {
+    debugPrint("pending처리됨");
     return;
   } else {
     if (kDebugMode) {

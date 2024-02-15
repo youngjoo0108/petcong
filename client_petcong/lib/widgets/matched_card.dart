@@ -41,7 +41,7 @@ class _MatchedCardState extends State<MatchedCard> {
                     imageUrl: widget.matchedUser.profileImageUrls![0],
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
-                    fit: BoxFit.cover),
+                    fit: BoxFit.fill),
               ),
             ),
             Text(widget.matchedUser.nickname,

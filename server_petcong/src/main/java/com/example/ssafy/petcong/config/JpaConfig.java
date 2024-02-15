@@ -42,12 +42,6 @@ public class JpaConfig {
         return DataSourceBuilder.create().build();
     }
 
-//    @Bean
-//    public JpaVendorAdapter jpaVendorAdapter() {
-//        HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
-//        return hibernateJpaVendorAdapter;
-//    }
-
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();

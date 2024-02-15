@@ -52,6 +52,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     super.initState();
     socketService = widget
         .socketService!; // 얘를 생성하는 쪽(HomePage)의 socketService를 전달받아야 함. 전달이 제대로 안 됐다면 에러 나게 설정
+    socketService.initRTCWidget();
     _controller = SwipableStackController()..addListener(_listenController);
     _cardController.onInit();
     initClient();
@@ -125,7 +126,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
             onLike(39); // 패드
           } else {
-            onLike(171); // 여기에 쓰면 됨
+            onLike(147); // 여기에 쓰면 됨
           }
         },
         label: const Text('call'),
@@ -157,9 +158,14 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   Future<void> onLike(int targetId) async {
     CardWaitController cardWaitController = Get.put(CardWaitController());
     CardProfileModel? targetUserInfo;
+    String? targetUid;
     try {
-      targetUserInfo = await postMatching(targetId);
-      cardWaitController.setCardProfile(targetUserInfo!);
+      Map<String, dynamic>? response = await postMatching(targetId);
+      if (response != null) {
+        targetUserInfo = response['profile'];
+        targetUid = response['targetUid'];
+        cardWaitController.setCardProfile(targetUserInfo!);
+      }
     } catch (exception) {
       if (kDebugMode) {
         print("exception = $exception");
@@ -168,10 +174,10 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
       return;
     }
     // when matched
+
     if (targetUserInfo != null) {
       // 로직 변경될 부분 ----
-      await socketService
-          .makeCall(targetId.toString()); // callWaitingPage로 이동만.
+      await socketService.makeCall(targetUid!); // callWaitingPage로 이동만.
 
       // ---- /
     }

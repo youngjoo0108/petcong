@@ -67,10 +67,10 @@ class MainProfilePage extends StatelessWidget {
                               return CachedNetworkImage(
                                 imageUrl: imgUrl,
                                 fit: BoxFit.cover,
-                                placeholder: (context, url) =>
-                                    const CircularProgressIndicator(
-                                  color: MyColor.myColor1,
-                                ),
+                                // placeholder: (context, url) =>
+                                //     const CircularProgressIndicator(
+                                //   color: MyColor.myColor1,
+                                // ),
                                 errorWidget: (context, url, error) =>
                                     const Icon(Icons.error),
                               );
