@@ -66,6 +66,7 @@ class MainProfilePage extends StatelessWidget {
                               }
                               return CachedNetworkImage(
                                 imageUrl: imgUrl,
+                                fit: BoxFit.cover,
                                 placeholder: (context, url) =>
                                     const CircularProgressIndicator(
                                   color: MyColor.myColor1,
@@ -84,7 +85,7 @@ class MainProfilePage extends StatelessWidget {
                     right: 5,
                     child: GestureDetector(
                       onTap: () {
-                        Get.to(const NicknamePage(progress: 0));
+                        Get.to(const NicknamePage(progress: 0.1));
                       },
                       child: Container(
                         width: 45,
@@ -187,13 +188,11 @@ class MainProfilePage extends StatelessWidget {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(15),
                                         child: SizedBox(
-                                            // child: Image.asset(
-                                            //   'assets/src/test_${i}.png',
-                                            //   fit: BoxFit.cover,
-                                            // ),
-                                            child: Image.network(
-                                                pictureUrls[i].bucketKey ??
-                                                    '')),
+                                          child: Image.network(
+                                            pictureUrls[i].bucketKey ?? '',
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
