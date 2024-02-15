@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petcong/controller/match_card_controller.dart';
+import 'package:petcong/models/card_profile_model.dart';
 import 'package:petcong/models/choice_res.dart';
 import 'package:petcong/services/socket_service.dart';
 import 'package:petcong/services/matching_service.dart';
@@ -123,7 +124,7 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
             onLike(39); // 패드
           } else {
-            onLike(137); // 여기에 쓰면 됨
+            onLike(147); // 여기에 쓰면 됨
           }
         },
         label: const Text('call'),
@@ -153,19 +154,28 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
   /// targetId = int
 
   Future<void> onLike(int targetId) async {
-    ChoiceRes? choiceRes;
+    CardProfileModel? targetUserInfo;
     try {
-      choiceRes = await postMatching(targetId);
+      targetUserInfo = await postMatching(targetId);
+      // 응답 테스트
+      debugPrint("targetUserInfo = \n");
+      debugPrint(targetUserInfo!.description);
+      debugPrint(targetUserInfo.petName);
+      for (var imgurl in targetUserInfo.profileImageUrls!) {
+        debugPrint(imgurl);
+      }
+      debugPrint(targetUserInfo.memberId.toString());
+      debugPrint(targetUserInfo.gender);
+      debugPrint(targetUserInfo.petGender);
     } catch (exception) {
       print("exception = $exception");
       print("alert: 잘못된 요청");
       return;
     }
-    if (choiceRes == null) {
-      print("pending처리됨");
-      return;
-    }
     // when matched
-    await socketService.makeCall(choiceRes.targetUid!); // callWaitingPage로 이동만.
+    if (targetUserInfo != null) {
+      await socketService
+          .makeCall(targetId.toString()); // callWaitingPage로 이동만.
+    }
   }
 }
