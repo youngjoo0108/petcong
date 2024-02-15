@@ -49,6 +49,62 @@ WebSocket
 SpringDoc
 + springdoc-openapi-starter-webmvc-ui : 2.1.0 
 ---
+# application.yml
+```
+server:
+  port: 8080
+
+spring:
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://{주소}:{포트번호}/petcongdb?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+      username: {MySQL 접속 계정 이름}
+      password: {MySQL 접속 계정 비밀번호}
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs/json
+  swagger-ui:
+    enabled: true
+    path: /api-docs
+    tags-sorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
+  cache:
+    disabled: true
+  packages-to-scan: com.example.ssafy.petcong
+
+allowed-url:
+  urls:
+    - /members/signin
+  patterns:
+    - /api-docs/**
+    - /swagger-ui/**
+    - /websocket/**
+```
+---
+# Firebase sdk 설정
+https://firebase.google.com/docs/admin/setup?hl=ko#initialize-sdk
+
+##### 환경변수 (윈도우: 시스템 환경 변수 편집 -> 환경 변수 -> 사용자 변수 새로 만들기, 리눅스: export)
++ GOOGLE_APPLICATION_CREDENTIALS="서비스 계정으로 만든 비공개 키 경로"
+
+
+# AWS S3 설정
+https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/Welcome.html
+
+##### 환경변수 (윈도우: 시스템 환경 변수 편집 -> 환경 변수 -> 사용자 변수 새로 만들기, 리눅스: export)
++ S3_BUCKET_NAME="S3 버킷 이름"
++ AWS_ACCESS_KEY_ID="엑세스 키 아이디"
++ AWS_SECRET_ACCESS_KEY="시크릿 엑세스 키"
+---
 # 도커 설치 
 https://www.hostwinds.kr/tutorials/install-docker-debian-based-operating-system
 ```
@@ -161,18 +217,3 @@ ENTRYPOINT [ \
         "petcong-0.0.1-SNAPSHOT.jar" \
 ]
 ```
----
-# Firebase sdk 설정
-https://firebase.google.com/docs/admin/setup?hl=ko#initialize-sdk
-
-+ 환경변수
-+ GOOGLE_APPLICATION_CREDENTIALS="서비스 계정으로 만든 비공개 키 경로"
-
-
-# AWS sdk 설정
-https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/Welcome.html
-
-+ 환경변수
-+ S3_BUCKET_NAME="S3 버킷 이름"
-+ AWS_ACCESS_KEY_ID="엑세스 키 아이디"
-+ AWS_SECRET_ACCESS_KEY="시크릿 엑세스 키"
