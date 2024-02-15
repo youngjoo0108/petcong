@@ -120,21 +120,15 @@ public class MemberController {
     }
 
     @Operation(summary = "회원탈퇴", description = "소프트 삭제 필요",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "탈퇴 성공"),
-                    @ApiResponse(responseCode = "202", description = "이미 탈퇴")
-            })
+            responses = @ApiResponse(responseCode = "200", description = "탈퇴 성공")
+    )
     @DeleteMapping("/withdraw")
     public ResponseEntity<?> deleteUser(@AuthenticationPrincipal(expression = FirebaseUserDetails.MEMBER_ID) int memberId) {
-        if (memberService.deleteMemberByMemberId(memberId) == 1) {
-            return ResponseEntity
-                    .ok()
-                    .build();
-        } else {
-            return ResponseEntity
-                    .accepted()
-                    .build();
-        }
+        memberService.deleteMemberByMemberId(memberId);
+
+        return ResponseEntity
+                .ok()
+                .build();
     }
 
     @Operation(summary = "멀티미디어 다운로드 url 얻기", description = "생성된 presigned url 다운로드 링크 제공",
