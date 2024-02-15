@@ -108,21 +108,15 @@ class SocketService extends GetxController {
                     case 'matched':
                       Map<String, dynamic> value = response['value'];
                       // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
-                      targetUid = value['targetUid'];
+                      targetUid = response['targetUid'];
                       CardProfileModel targetUserInfo =
                           CardProfileModel.fromJson(value);
-                      // 응답 테스트
-                      debugPrint("targetUserInfo = \n");
-                      debugPrint(targetUserInfo.description);
-                      debugPrint(targetUserInfo.petName);
-                      for (var imgurl in targetUserInfo.profileImageUrls!) {
-                        debugPrint(imgurl);
-                      }
-                      debugPrint(targetUserInfo.memberId.toString());
-                      debugPrint(targetUserInfo.gender);
-                      debugPrint(targetUserInfo.petGender);
 
+                      // 로직 변경될 부분 ---
                       await makeCall(targetUid);
+
+                      // --- /
+
                       break;
                     case 'offer':
                       Map<String, dynamic> value =
