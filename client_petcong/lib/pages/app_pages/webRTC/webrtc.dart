@@ -219,12 +219,9 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
     setState(() {
       if (widget.quizIdx!.value <= 0) {
         widget.quizIdx!.value = 0;
-        print("===============index changed by me / min!!");
         return;
       }
       widget.quizIdx!.value--;
-      print(
-          "===============index changed by me / index = ${widget.quizIdx!.value}==");
       SocketService.sendMessage("idx", widget.quizIdx!.value.toString());
     });
   }
