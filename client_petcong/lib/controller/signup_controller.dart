@@ -5,6 +5,7 @@ import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/pet_info_model.dart';
 import 'package:petcong/models/user_info_model.dart';
 import 'package:petcong/models/user_signup_model.dart';
+import 'package:petcong/services/matching_service.dart';
 import 'package:petcong/services/user_service.dart';
 
 class SignupController extends GetxController {
@@ -37,11 +38,6 @@ class SignupController extends GetxController {
   bool neutered = false;
   int? weight;
   int? petAge;
-
-//TODO: this function has to be refactored
-  addCommon() {
-    email = authentication.currentUser?.email;
-  }
 
   addNickName(String nickName) {
     nickname = nickName;
@@ -162,13 +158,12 @@ class SignupController extends GetxController {
   }
 
   printUser() {
-    addCommon();
     debugPrint(nickname);
     debugPrint(birthday);
     debugPrint(age.toString());
     debugPrint(gender);
     debugPrint(preference);
-    debugPrint(email);
+    debugPrint(currentUser!.email);
     debugPrint(address);
     debugPrint(instagramId);
     debugPrint(kakaoId);

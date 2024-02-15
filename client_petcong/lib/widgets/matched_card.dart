@@ -1,5 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:petcong/models/card_profile_model.dart';
+import 'package:petcong/models/matched.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MatchedCard extends StatefulWidget {
@@ -13,20 +16,38 @@ class MatchedCard extends StatefulWidget {
 class _MatchedCardState extends State<MatchedCard> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          Hero(
-            tag: widget.matchedUser.profileImageUrls![0],
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: Image.network(widget.matchedUser.profileImageUrls![0],
-                  fit: BoxFit.cover),
+    return GestureDetector(
+      onTap: () {
+        if (kDebugMode) {
+          print("matchedUser nickname onTap:}");
+        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) =>
+                  ProfileDetailPage(matchedUser: widget.matchedUser)),
+        );
+      },
+      child: Card(
+        child: Column(
+          children: <Widget>[
+            Hero(
+              tag: widget.matchedUser.profileImageUrls![0],
+              child: AspectRatio(
+                aspectRatio: 1,
+                // child: Image.network(widget.matchedUser.profileImageUrls![0],
+                //     fit: BoxFit.cover),
+                child: CachedNetworkImage(
+                    imageUrl: widget.matchedUser.profileImageUrls![0],
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    fit: BoxFit.cover),
+              ),
             ),
-          ),
-          Text(widget.matchedUser.nickname,
-              style: const TextStyle(fontSize: 16)),
-        ],
+            Text(widget.matchedUser.nickname,
+                style: const TextStyle(fontSize: 16)),
+          ],
+        ),
       ),
     );
   }
@@ -56,10 +77,12 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
             Hero(
               tag: widget.matchedUser.profileImageUrls![0],
               child: AspectRatio(
-                aspectRatio: 1,
-                child: Image.network(widget.matchedUser.profileImageUrls![0],
-                    fit: BoxFit.cover),
-              ),
+                  aspectRatio: 1,
+                  child: CachedNetworkImage(
+                      imageUrl: widget.matchedUser.profileImageUrls![0],
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      fit: BoxFit.cover)),
             ),
             const SizedBox(height: 10),
             Text(widget.matchedUser.description!),
