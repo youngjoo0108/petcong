@@ -12,7 +12,7 @@ class MainVideoCallWidget extends StatefulWidget {
   RTCPeerConnection? _pc;
   MediaStream? _localStream;
   List<RTCIceCandidate>? _iceCandidates;
-  RxInt? quizIdx = RxInt(0);
+  RxInt? quizIdx = 0.obs;
 
   MainVideoCallWidget({
     super.key,
@@ -203,6 +203,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(MainVideoCallWidget());
     final TransformationController controller = TransformationController();
     controller.value = Matrix4.identity()
       ..scale(scaleValue)
@@ -291,17 +292,19 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                                   ),
                                   Flexible(
                                     fit: FlexFit.loose,
-                                    child: Text(
-                                      quizs.isNotEmpty &&
-                                              widget.quizIdx!.value >= 0 &&
-                                              widget.quizIdx!.value <
-                                                  quizs.length
-                                          ? quizs[widget.quizIdx!.value]
-                                          : 'No quiz available',
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500,
+                                    child: Obx(
+                                      () => Text(
+                                        quizs.isNotEmpty &&
+                                                widget.quizIdx!.value >= 0 &&
+                                                widget.quizIdx!.value <
+                                                    quizs.length
+                                            ? quizs[widget.quizIdx!.value]
+                                            : 'No quiz available',
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
                                   ),
