@@ -104,4 +104,8 @@ public class Member {
     public void updateMemberId(int memberId) {
         this.memberId = memberId;
     }
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }

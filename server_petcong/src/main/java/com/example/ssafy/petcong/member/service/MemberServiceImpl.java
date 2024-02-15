@@ -204,9 +204,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public int deleteMemberByMemberId(int memberId) {
-        memberRepository.findMemberByMemberId(memberId).orElseThrow(() -> new NoSuchElementException(String.valueOf(memberId)));
-
-        return memberRepository.deleteMemberByMemberId(memberId);
+    public void deleteMemberByMemberId(int memberId) {
+        Member member = memberRepository.findMemberByMemberId(memberId).orElseThrow(() -> new NoSuchElementException(String.valueOf(memberId)));
+        if (Status.DELETED.equals(member.getStatus())) return;
+        member.updateStatus(Status.DELETED);
+        memberRepository.save(member);
     }
 }
