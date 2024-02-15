@@ -195,7 +195,40 @@ apt-get update
 apt-get install docker-ce docker-ce-cli containerd.io
 ```
 ---
-# 4. 젠킨스 설정하기
+# 4. 다음 내용을 갖는 Dockerfile을 작성한 후 /var/jenkins_home/workspace/dockerfiles에 위치시키기
+```
+FROM gradle:7.4-jdk17 as builder
+WORKDIR /build
+
+# 그래들 파일이 변경되었을 때만 새롭게 의존패키지 다운로드 받게함.
+COPY build.gradle settings.gradle /build/
+RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
+
+# 빌더 이미지에서 애플리케이션 빌드
+COPY . /build
+RUN gradle build -x test --parallel
+
+# APP
+FROM openjdk:17-ea-4-jdk-slim
+WORKDIR /app
+
+# 빌더 이미지에서 jar 파일만 복사
+COPY --from=builder /build/build/libs/petcong-0.0.1-SNAPSHOT.jar .
+
+EXPOSE 8080
+
+# root 대신 nobody 권한으로 실행
+USER nobody
+ENTRYPOINT [ \
+        "java", \
+        "-jar", \
+        "-Djava.security.egd=file:/dev/./urandom", \
+        "-Dsun.net.inetaddr.ttl=0", \
+        "petcong-0.0.1-SNAPSHOT.jar" \
+]
+```
+---
+# 5. 젠킨스 설정하기
 먼저 {서버 주소}:8001으로 접속해서 jenkins를 unlock 후 Install suggested plugins
 
 ##### 플러그인 설치 
@@ -284,8 +317,7 @@ pipeline
                 }
                 dir('server_petcong')
                 {
-                    sh 'cp /var/jenkins_home/workspace/petcong/server_petcong/Dockerfile ./build/libs'
-                    sh 'pwd'
+                    sh 'cp /var/jenkins_home/workspace/dockerfiles/Dockerfile .' 
                     sh 'docker build -t backend .'
                     sh '''
                         docker run -d\
@@ -301,37 +333,4 @@ pipeline
         }
     }
 }
-```
----
-# 5. 다음 내용을 갖는 Dockerfile을 작성한 후 /var/jenkins_home/workspace/petcong/server_petcong 에 위치시키기
-```
-FROM gradle:7.4-jdk17 as builder
-WORKDIR /build
-
-# 그래들 파일이 변경되었을 때만 새롭게 의존패키지 다운로드 받게함.
-COPY build.gradle settings.gradle /build/
-RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
-
-# 빌더 이미지에서 애플리케이션 빌드
-COPY . /build
-RUN gradle build -x test --parallel
-
-# APP
-FROM openjdk:17-ea-4-jdk-slim
-WORKDIR /app
-
-# 빌더 이미지에서 jar 파일만 복사
-COPY --from=builder /build/build/libs/petcong-0.0.1-SNAPSHOT.jar .
-
-EXPOSE 8080
-
-# root 대신 nobody 권한으로 실행
-USER nobody
-ENTRYPOINT [ \
-        "java", \
-        "-jar", \
-        "-Djava.security.egd=file:/dev/./urandom", \
-        "-Dsun.net.inetaddr.ttl=0", \
-        "petcong-0.0.1-SNAPSHOT.jar" \
-]
 ```
