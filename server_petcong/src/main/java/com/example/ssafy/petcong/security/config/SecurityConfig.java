@@ -59,6 +59,7 @@ public class SecurityConfig {
                                                    UnauthorizedEntryPoint unauthorizedEntryPoint
     ) throws Exception {
         return http
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(exclusiveFilter, UsernamePasswordAuthenticationFilter.class)
