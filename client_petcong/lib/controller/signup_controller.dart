@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petcong/controller/user_controller.dart';
@@ -213,7 +214,9 @@ class SignupController extends GetxController {
 
     UserSignupModel model =
         UserSignupModel(userInfoModel: userModel, petInfoModel: petModel);
-    print(model.toString());
+    if (kDebugMode) {
+      print(model.toString());
+    }
 
     postSignup(model);
   }

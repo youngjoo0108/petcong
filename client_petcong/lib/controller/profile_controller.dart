@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:petcong/models/profile_page_model.dart';
 import 'package:petcong/services/user_service.dart';
@@ -16,11 +17,14 @@ class ProfileController extends GetxController {
   void getProfile() async {
     try {
       var userInfo = await getUserInfo();
-      print("getProfile successful");
-      print(userInfo);
+      if (kDebugMode) {
+        print("getProfile successful: $userInfo");
+      }
       profile.value = userInfo;
     } catch (e) {
-      print("Error in getProfile: $e");
+      if (kDebugMode) {
+        print("Error in getProfile: $e");
+      }
     }
   }
 

@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/models/card_profile_model.dart';
-import 'package:petcong/models/choice_res.dart';
 import 'package:petcong/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,7 +19,9 @@ const String serverUrl = 'https://i10a603.p.ssafy.io';
 // Map<String, String>? reqHeaders;
 
 Future<void> initPrefs() async {
-  print("initPrefs 실행됨");
+  if (kDebugMode) {
+    print("initPrefs 실행됨");
+  }
   try {
     final prefs = await SharedPreferences.getInstance();
     idTokenString = prefs.getString('idToken')!;

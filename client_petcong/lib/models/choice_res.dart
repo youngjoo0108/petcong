@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 // ignore: must_be_immutable
 class ChoiceRes extends Equatable {
@@ -11,11 +12,13 @@ class ChoiceRes extends Equatable {
 
   ChoiceRes.fromJson(Map<String, dynamic>? map) {
     map!.forEach((key, value) {
-      print('Key: ${key.toString()}, Value: ${value.toString()}');
+      if (kDebugMode) {
+        print('Key: ${key.toString()}, Value: ${value.toString()}');
+      }
     });
-    if (map == null) {
-      return;
-    }
+    // if (map == null) {
+    //   return;
+    // }
     targetUid = map['targetUid'];
     // profileImgUrl = map['profileImgUrl'];
     // if (map['questions'] != null) {

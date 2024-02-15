@@ -1,5 +1,4 @@
-import 'dart:ffi';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:get/get.dart';
@@ -87,7 +86,9 @@ class MainVideoCallWidget extends StatefulWidget {
       try {
         await _remoteRenderer!.initialize();
       } catch (exception) {
-        print("exception = $exception");
+        if (kDebugMode) {
+          print("exception = $exception");
+        }
       }
 
       _pc!.onAddStream = (stream) {
@@ -99,7 +100,7 @@ class MainVideoCallWidget extends StatefulWidget {
       await _localRenderer!.initialize();
 
       final mediaConstraints = {
-        'audio': false,
+        'audio': true,
         'video': {'facingMode': 'user'}
       };
 
@@ -115,15 +116,17 @@ class MainVideoCallWidget extends StatefulWidget {
 
       await Future.delayed(const Duration(seconds: 1));
     } catch (exception) {
-      print(exception);
+      if (kDebugMode) {
+        print(exception);
+      }
     }
   }
 
   @override
-  _MainVideoCallWidgetState createState() => _MainVideoCallWidgetState();
+  MainVideoCallWidgetState createState() => MainVideoCallWidgetState();
 }
 
-class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
+class MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   late double videoWidth = MediaQuery.of(context).size.width;
   late double videoHeight = MediaQuery.of(context).size.height;
   late double scaleValue = 0.5;
@@ -134,10 +137,10 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
 
   // icebreakings
   List<String> quizs = [
-    "똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중똥싸는중",
-    '1',
-    "sampleQuiz2",
-    "sampleQuiz3"
+    "당신의 반려견의 이름은 무엇인가요? 그 이름을 선택한 이유가 있나요?",
+    '개인기 할 줄 아는거 있어요?',
+    "당신의 반려견과 함께하는 평소의 하루는 어떻게 보내시나요? 특별한 루틴이 있나요?",
+    "이름이 뭐에요? 왜 그렇게 지었어요?"
   ];
 
   void toggleMessageDialog() {
@@ -192,12 +195,16 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
       int maxIdx = quizs.length;
       if (widget.quizIdx!.value >= maxIdx) {
         widget.quizIdx!.value = maxIdx;
-        print("===============index changed by me / max!!");
+        if (kDebugMode) {
+          print("===============index changed by me / max!!");
+        }
         return;
       }
       widget.quizIdx!.value++;
-      print(
+      if (kDebugMode) {
+        print(
           "===============index changed by me / index = ${widget.quizIdx!.value}==");
+      }
       SocketService.sendMessage("idx", widget.quizIdx!.value.toString());
     });
   }
@@ -216,7 +223,7 @@ class _MainVideoCallWidgetState extends State<MainVideoCallWidget> {
   @override
   Widget build(BuildContext context) {
     Get.put(MainVideoCallWidget());
-    Get.put(_MainVideoCallWidgetState());
+    Get.put(MainVideoCallWidgetState());
     final TransformationController controller = TransformationController();
     controller.value = Matrix4.identity()
       ..scale(scaleValue)

@@ -8,10 +8,9 @@ Future<Uint8List?> getImageFromS3(String imageUrl) async {
     if (response.statusCode == 200) {
       imageData = response.bodyBytes;
     }
-  } catch (error) {
+  } catch (e) {
     if (kDebugMode) {
-      print("error");
-      print(error.toString());
+      print("getImagefrom s3 error: ${e.toString()}");
     }
     rethrow;
   }

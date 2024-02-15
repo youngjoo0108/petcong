@@ -39,13 +39,19 @@ Future<Map<String, String>> getIdToken() async {
 Future<void> postSignup(UserSignupModel user) async {
   Map<String, String> postHeaders = await getIdToken();
   postHeaders['Content-Type'] = 'application/json';
-  print("headers");
+  if (kDebugMode) {
+    print("headers");
+  }
   postHeaders.forEach((key, value) {
-    print("$key : $value");
+    if (kDebugMode) {
+      print("$key : $value");
+    }
   });
 
-  print("json body");
-  print(jsonEncode(user.toJson()));
+  if (kDebugMode) {
+    print("json body");
+    print(jsonEncode(user.toJson()));
+  }
 
   final response = await http.post(Uri.parse('$serverUrl/members/signup'),
       headers: postHeaders, body: jsonEncode(user.toJson()));
@@ -71,8 +77,9 @@ Future<bool> postSignin() async {
   final response = await http.post(Uri.parse('$serverUrl/members/signin'),
       headers: reqHeaders);
 
-  print("postSignin requestHeader");
-  print("postSignIn requestHeader: $reqHeaders");
+  if (kDebugMode) {
+    print("postSignIn requestHeader: $reqHeaders");
+  }
 
   if (response.statusCode == 200) {
     if (kDebugMode) {
@@ -149,7 +156,6 @@ Future<void> patchUserInfo(UserSignupModel user) async {
   }
 }
 
-// TODO: check image quality
 // POST /members/picture
 Future<void> postPicture(List<String> filePaths) async {
   Map<String, String> reqHeaders = await getIdToken();

@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:petcong/models/card_profile_model.dart';
-import 'package:petcong/models/matched.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MatchedCard extends StatefulWidget {
@@ -29,6 +28,10 @@ class _MatchedCardState extends State<MatchedCard> {
         );
       },
       child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Column(
           children: <Widget>[
             Hero(
@@ -41,7 +44,7 @@ class _MatchedCardState extends State<MatchedCard> {
                     imageUrl: widget.matchedUser.profileImageUrls![0],
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
-                    fit: BoxFit.fill),
+                    fit: BoxFit.cover),
               ),
             ),
             Text(widget.matchedUser.nickname,
