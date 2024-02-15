@@ -209,6 +209,7 @@ class MainProfilePage extends StatelessWidget {
                                 controller.profile.value.petProfile;
                             String description =
                                 pet?.petInfo?.description ?? '';
+
                             if (description == '') {
                               return Container();
                             }
