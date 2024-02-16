@@ -44,7 +44,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfiguration corsConfiguration() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Collections.singletonList("https://i10a603.p.ssafy.io"));
+        corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
         corsConfiguration.setAllowedMethods(List.of("OPTIONS", "GET", "POST", "PATCH", "DELETE"));
         corsConfiguration.setMaxAge(Duration.ofMinutes(30));
         return corsConfiguration;
