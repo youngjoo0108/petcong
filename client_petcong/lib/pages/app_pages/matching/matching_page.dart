@@ -118,19 +118,19 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   // 매칭페이지의 call버튼 -> onLike() -> makeCall()을 통해 통화대기화면 이동까지만.
-      //   heroTag: 'call',
-      //   onPressed: () {
-      //     if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
-      //       onLike(187); // 패드
-      //     } else {
-      //       onLike(147); // 여기에 쓰면 됨
-      //     }
-      //   },
-      //   label: const Text('call'),
-      //   icon: const Icon(Icons.call),
-      // ),
+      floatingActionButton: FloatingActionButton.extended(
+        // 매칭페이지의 call버튼 -> onLike() -> makeCall()을 통해 통화대기화면 이동까지만.
+        heroTag: 'call',
+        onPressed: () {
+          if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
+            onLike(187); // 패드
+          } else {
+            onLike(147); // 여기에 쓰면 됨
+          }
+        },
+        label: const Text('call'),
+        icon: const Icon(Icons.call),
+      ),
     );
   }
 

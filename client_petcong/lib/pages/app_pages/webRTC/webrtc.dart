@@ -174,34 +174,36 @@ class MainVideoCallWidgetState extends State<MainVideoCallWidget> {
     }
   }
 
-  // void toggleCameraMode() {
-  //   setState(() {
-  //     if (cameraMode == 'user') {
-  //       cameraMode = 'environment';
-  //     } else {
-  //       cameraMode = 'user';
-  //     }
+  void toggleCameraMode() {
+    setState(() {
+      if (cameraMode == 'user') {
+        cameraMode = 'environment';
+      } else {
+        cameraMode = 'user';
+      }
 
-  //     final mediaConstraints = {
-  //       'audio': true,
-  //       'video': {'facingMode': cameraMode}
-  //     };
+      final videoTrack = widget._localStream!.getTracks();
+      print('find videoTrack $videoTrack');
+      // final mediaConstraints = {
+      //   'audio': true,
+      //   'video': {'facingMode': cameraMode}
+      // };
 
-  //     // widget._localStream?.dispose();
-  //     // Helper.openCamera(mediaConstraints).then((stream) {
-  //     //   widget._localStream = stream;
-  //     //   widget._localRenderer!.srcObject = widget._localStream;
-  //     //   widget._localStream!.getTracks().forEach((track) {
-  //     //     widget._pc!.addTrack(track, widget._localStream!);
-  //     //   });
-  //     // });
-  //     Helper.openCamera(mediaConstraints).then((newStream) {
-  //       setState(() {
-  //         widget._localStream = newStream;
-  //       });
-  //     });
-  //   });
-  // }
+      // widget._localStream?.dispose();
+      // Helper.openCamera(mediaConstraints).then((stream) {
+      //   widget._localStream = stream;
+      //   widget._localRenderer!.srcObject = widget._localStream;
+      //   widget._localStream!.getTracks().forEach((track) {
+      //     widget._pc!.addTrack(track, widget._localStream!);
+      //   });
+      // });
+      // Helper.openCamera(mediaConstraints).then((newStream) {
+      //   setState(() {
+      //     widget._localStream = newStream;
+      //   });
+      // });
+    });
+  }
 
   Future<void> disconnectCall() async {
     widget._localRenderer!.srcObject!.getTracks().forEach((track) {
@@ -436,14 +438,14 @@ class MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                 // const SizedBox(
                 //   width: 20,
                 // ),
-                // FloatingActionButton.small(
-                //   onPressed: toggleCameraMode,
-                //   backgroundColor: Colors.transparent,
-                //   child: const Icon(
-                //     Icons.flip_camera_ios_rounded,
-                //     color: MyColor.petCongColor3,
-                //   ),
-                // ),
+                FloatingActionButton.small(
+                  onPressed: toggleCameraMode,
+                  backgroundColor: Colors.transparent,
+                  child: const Icon(
+                    Icons.flip_camera_ios_rounded,
+                    color: MyColor.petCongColor3,
+                  ),
+                ),
               ],
             ),
           ],
