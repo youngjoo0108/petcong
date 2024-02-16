@@ -38,13 +38,14 @@ class _MatchedCardState extends State<MatchedCard> {
               tag: widget.matchedUser.profileImageUrls![0],
               child: AspectRatio(
                 aspectRatio: 1,
-                // child: Image.network(widget.matchedUser.profileImageUrls![0],
-                //     fit: BoxFit.cover),
-                child: CachedNetworkImage(
-                    imageUrl: widget.matchedUser.profileImageUrls![0],
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                    fit: BoxFit.cover),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10), // 이미지 모서리 둥글게
+                  child: CachedNetworkImage(
+                      imageUrl: widget.matchedUser.profileImageUrls![0],
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      fit: BoxFit.cover),
+                ),
               ),
             ),
             Text(widget.matchedUser.nickname,
@@ -81,26 +82,35 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
               tag: widget.matchedUser.profileImageUrls![0],
               child: AspectRatio(
                   aspectRatio: 1,
-                  child: CachedNetworkImage(
-                      imageUrl: widget.matchedUser.profileImageUrls![0],
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                      fit: BoxFit.cover)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10), // 이미지 모서리 둥글게
+                    child: CachedNetworkImage(
+                        imageUrl: widget.matchedUser.profileImageUrls![0],
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        fit: BoxFit.cover),
+                  )),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Text(widget.matchedUser.description!),
             const SizedBox(height: 10),
-            IconButton(
-              icon: const Icon(Icons.link),
-              onPressed: () async {
-                final url = Uri.parse(
-                    'http://www.instagram.com/${widget.matchedUser.instagramId}');
-                if (await canLaunchUrl(url)) {
-                  await launchUrl(url);
-                } else {
-                  throw 'Could not launch https://instagram.com/${widget.matchedUser.instagramId}}';
-                }
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text('Instagram 주소: '), // 텍스트 추가
+                IconButton(
+                  icon: const Icon(Icons.camera_alt), // 인스타그램 로고 추가
+                  onPressed: () async {
+                    final url = Uri.parse(
+                        'http://www.instagram.com/${widget.matchedUser.instagramId}');
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url);
+                    } else {
+                      throw 'Could not launch https://instagram.com/${widget.matchedUser.instagramId}}';
+                    }
+                  },
+                ),
+              ],
             ),
             const SizedBox(height: 10),
             Text('Kakao ID: ${widget.matchedUser.kakaoId}'),
