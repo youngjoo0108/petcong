@@ -16,13 +16,12 @@ class MainChatPageState extends State<MainChatPage> {
   Widget build(BuildContext context) {
     Get.put(HistoryController());
 
-//TODO: fix getMatchedUsers api
     HistoryController.to.getMatchedUsers();
     RxList<CardProfileModel> matchedUsers = HistoryController.to.matchedUsers;
     if (matchedUsers.isEmpty) {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 30.0), // top 패딩 추가
+          padding: const EdgeInsets.only(bottom: 30.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -54,7 +53,7 @@ class MainChatPageState extends State<MainChatPage> {
         body: SafeArea(
           child: GridView.count(
             crossAxisCount: 2,
-            childAspectRatio: 0.8, // Adjust this value as needed
+            childAspectRatio: 0.8,
             children: List.generate(matchedUsers.length, (index) {
               return MatchedCard(matchedUser: matchedUsers[index]);
             }),

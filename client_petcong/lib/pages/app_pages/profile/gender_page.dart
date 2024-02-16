@@ -18,7 +18,7 @@ class GenderPageState extends State<GenderPage> {
   final SignupController signupController = Get.put(SignupController());
   String _gender = '';
   double _progress = 0.0;
-  bool _isButtonDisabled = true; // _isButtonDisabled 변수 선언
+  bool _isButtonDisabled = true;
 
   @override
   void initState() {
@@ -65,7 +65,7 @@ class GenderPageState extends State<GenderPage> {
                   height: 50.0,
                   child: ContinueButton(
                     isFilled: _gender == 'FEMALE',
-                    buttonText: '여자예요!', // 이제 이 부분을 수정하여 버튼의 텍스트를 변경할 수 있습니다.
+                    buttonText: '여자예요!',
                     onPressed: () {
                       setState(() {
                         _gender = 'FEMALE';
@@ -82,7 +82,7 @@ class GenderPageState extends State<GenderPage> {
                   height: 50.0,
                   child: ContinueButton(
                     isFilled: _gender == 'MALE',
-                    buttonText: '남자예요!', // 이제 이 부분을 수정하여 버튼의 텍스트를 변경할 수 있습니다.
+                    buttonText: '남자예요!',
                     onPressed: () {
                       setState(() {
                         _gender = 'MALE';

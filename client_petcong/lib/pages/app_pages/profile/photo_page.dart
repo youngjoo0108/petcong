@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:petcong/controller/match_card_controller.dart';
 import 'package:petcong/controller/profile_controller.dart';
 import 'package:petcong/controller/signup_controller.dart';
-import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:petcong/widgets/create_button.dart';
 import 'package:petcong/widgets/delete_button.dart';
@@ -22,15 +21,15 @@ class DisplayImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      clipBehavior: Clip.none, // 추가
+      clipBehavior: Clip.none,
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(10.0), // 둥근 모서리의 크기를 지정합니다.
+          borderRadius: BorderRadius.circular(10.0),
           child: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: FileImage(File(imagePath)),
-                fit: BoxFit.cover, // 이미지를 그리드의 크기에 맞게 조절합니다.
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -54,7 +53,7 @@ class PhotoPage extends StatefulWidget {
 
 class PhotoPageState extends State<PhotoPage> {
   late double _progress;
-  final List<String> _photoPaths = []; // 선택한 이미지들의 경로를 저장하는 리스트
+  final List<String> _photoPaths = [];
 
   void navigateToMediaPage() async {
     final result = await Get.to(() => const MediaPage());
@@ -141,7 +140,7 @@ class PhotoPageState extends State<PhotoPage> {
                       clipBehavior: Clip.none,
                       children: [
                         DisplayImage(imagePath: _photoPaths[index]),
-                        if (index == 0) // 첫 번째 그리드일 때만 아이콘을 표시합니다.
+                        if (index == 0)
                           Positioned(
                             top: -45,
                             left: 22.5,
@@ -197,7 +196,6 @@ class PhotoPageState extends State<PhotoPage> {
                               transition: Transition.fade,
                             );
                           } catch (e) {
-                            // postPicture 함수가 실패했을 때의 코드
                             debugPrint('Error: $e');
                           }
                         }

@@ -71,7 +71,6 @@ Future<void> postSignup(UserSignupModel user) async {
 }
 
 // POST /members/signin
-// 가입한적이 있는 경우 true, 없는 경우 false를 반환합니다.
 Future<bool> postSignin() async {
   Map<String, String> reqHeaders = await getIdToken();
   final response = await http.post(Uri.parse('$serverUrl/members/signin'),

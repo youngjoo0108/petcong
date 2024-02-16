@@ -117,7 +117,7 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                     icon: Image.asset(
                       'assets/src/instagram_logo.png',
                       width: 40,
-                    ), // 인스타그램 로고 추가
+                    ),
                     onPressed: () async {
                       final url = Uri.parse(
                           'http://www.instagram.com/${widget.matchedUser.instagramId}');
@@ -134,7 +134,7 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                       fontFamily: 'Cafe24',
                       fontSize: 20,
                     ),
-                  ), // 텍스트 추가
+                  ),
                 ],
               ),
               const SizedBox(height: 10),
@@ -145,7 +145,7 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                     icon: Image.asset(
                       'assets/src/kakaotalk_logo.png',
                       width: 40,
-                    ), // 인스타그램 로고 추가
+                    ),
                     onPressed: () async {
                       final url = Uri.parse(
                           'http://www.instagram.com/${widget.matchedUser.instagramId}');

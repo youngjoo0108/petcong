@@ -316,7 +316,7 @@ class MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                                                   widget.quizIdx!.value <
                                                       quizs.length
                                               ? quizs[widget.quizIdx!.value]
-                                              : 'No quiz available',
+                                              : '질문이 끝났어요!',
                                           style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 20,
@@ -379,7 +379,6 @@ class MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                 ],
               ),
             ),
-
             const SizedBox(
               height: 20,
             ),

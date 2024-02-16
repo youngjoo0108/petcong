@@ -110,7 +110,9 @@ class SocialPageState extends State<SocialPage> {
                       hintText: '카카오톡 아이디를 입력하세요',
                       border: InputBorder.none,
                       enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                        ),
                       ),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(

@@ -152,7 +152,7 @@ class BirthdayPageState extends State<BirthdayPage> {
                     ),
                     const SizedBox(height: 30.0),
                     SizedBox(
-                      width: 200, // 원하는 너비 설정
+                      width: 200,
                       child: TextFormField(
                         controller: _controller,
                         keyboardType: TextInputType.number,
@@ -160,7 +160,7 @@ class BirthdayPageState extends State<BirthdayPage> {
                         decoration: InputDecoration(
                           hintText: 'YYYY-MM-DD',
                           filled: true,
-                          fillColor: _color, // 색상 적용
+                          fillColor: _color,
                           enabledBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey),
                           ),
@@ -172,7 +172,6 @@ class BirthdayPageState extends State<BirthdayPage> {
                         style: const TextStyle(
                             fontSize: 20.0, fontWeight: FontWeight.w400),
                         onChanged: (value) {
-                          // 상태 업데이트 및 에러 메시지 초기화
                           setState(() {
                             _validateDate(value);
                           });
@@ -183,8 +182,7 @@ class BirthdayPageState extends State<BirthdayPage> {
                     ),
                     const SizedBox(height: 30.0),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 6.0), // 위 아래로 패딩 6 추가
+                      padding: const EdgeInsets.symmetric(vertical: 6.0),
                       child: ContinueButton(
                         isFilled: _controller.text.isNotEmpty &&
                             _errorMessage == null,

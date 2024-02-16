@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:petcong/controller/signup_controller.dart';
 import 'birthday_page.dart';
-import 'profile_page.dart'; // ProfilePage를 import 해주세요.
+import 'profile_page.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:get/get.dart';
 import 'package:petcong/controller/user_controller.dart';
@@ -18,7 +18,7 @@ class NicknamePage extends StatefulWidget {
 class NicknamePageState extends State<NicknamePage> {
   final _controller = TextEditingController();
   bool _isButtonDisabled = true;
-  double _progress = 0.1; // _progress 변수를 추가하여 초기화합니다.
+  double _progress = 0.1;
   String? _nickname;
   final UserController userController = Get.put(UserController());
   final SignupController signupController = Get.put(SignupController());
@@ -30,7 +30,7 @@ class NicknamePageState extends State<NicknamePage> {
         _isButtonDisabled = _controller.text.trim().isEmpty;
       });
     });
-    _progress = widget.progress; // progress 값을 _progress에 할당합니다.
+    _progress = widget.progress;
   }
 
   @override
@@ -57,8 +57,7 @@ class NicknamePageState extends State<NicknamePage> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          const MainProfilePage(), // MainProfilePage로 이동하도록 수정
+                      builder: (context) => const MainProfilePage(),
                     ),
                   );
                 },

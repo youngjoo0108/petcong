@@ -18,7 +18,7 @@ class PreferPageState extends State<PreferPage> {
   final SignupController signupController = Get.put(SignupController());
   String _prefer = '';
   double _progress = 0.0;
-  bool _isButtonDisabled = true; // _isButtonDisabled 변수 선언
+  bool _isButtonDisabled = true;
 
   @override
   void initState() {

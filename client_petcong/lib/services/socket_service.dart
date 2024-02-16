@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:petcong/controller/call_wait_controller.dart';
 import 'package:petcong/models/card_profile_model.dart';
@@ -65,7 +64,7 @@ class SocketService extends GetxController {
       if (onInitComplete != null) {
         onInitComplete!();
       }
-      debugPrint('!!!!!!!!!!!!!!!!!!!!!I get IdToken$uid!!!!!!!!!!!!!!');
+      debugPrint(uid);
     } catch (e) {
       debugPrint('Error during initialization: $e');
     }
@@ -104,25 +103,18 @@ class SocketService extends GetxController {
                     case 'matched':
                       Map<String, dynamic> value = response['value'];
                       // 전화 오는 화면으로 이동만. rtc 연결은 요청했던 쪽의 sendOffer로 시작해서 진행됨.
-
                       CardWaitController cardWaitController = Get.find();
-
                       targetUid = response['targetUid'];
                       CardProfileModel targetUserInfo =
                           CardProfileModel.fromJson(value);
                       cardWaitController.setCardProfile(targetUserInfo);
-
-                      // 로직 변경될 부분 ---
                       await makeCall(targetUid);
-
-                      // --- /
-
                       break;
+
                     case 'offer':
                       Map<String, dynamic> value =
                           jsonDecode(response['value']);
-                      debugPrint(
-                          "gotOffer============client ====================================${client.hashCode}");
+
                       value.forEach((key, value) {
                         debugPrint('Key: $key, Value: $value');
                       });
@@ -131,19 +123,18 @@ class SocketService extends GetxController {
                       await Future.delayed(const Duration(milliseconds: 300));
                       sendAllIces();
                       break;
+
                     case 'answer':
                       Map<String, dynamic> value =
                           jsonDecode(response['value']);
-                      debugPrint(
-                          "gotAnswer============client ====================================${client.hashCode}");
                       await gotAnswer(value['sdp'], value['type']);
                       sendAllIces();
                       break;
+
                     case 'ice':
                       Map<String, dynamic> value =
                           jsonDecode(response['value']);
-                      debugPrint(
-                          "gotIce============client ====================================${client.hashCode}");
+
                       gotIce(value['candidate'], value['sdpMid'],
                           value['sdpMLineIndex']);
                       break;
@@ -151,11 +142,10 @@ class SocketService extends GetxController {
                       debugPrint("sendOffer blocked!");
                       callPressed = true;
                       break;
+
                     case 'idx':
                       int newIdx = int.parse(response['value']);
                       mainVideoCallWidget!.quizIdx?.value = newIdx;
-                      debugPrint(
-                          "===============index changed by partner / index = ${mainVideoCallWidget!.quizIdx?.value}==");
                       break;
                   }
                 }
@@ -174,8 +164,7 @@ class SocketService extends GetxController {
     }
     if (kDebugMode) {
       print(
-          "========================in socketService.initSocket, client.hashCode() = ${client.hashCode} ${client!.connected}");
-      print("SocketService.client 할당 됨");
+          " socketService.initSocket, client.hashCode() = ${client.hashCode} ${client!.connected}");
     }
     return client!;
   }
@@ -186,9 +175,6 @@ class SocketService extends GetxController {
   }
 
   Future<void> makeCall(String targetUidParam) async {
-    // mainVideoCallWidget = MainVideoCallWidget();
-    // await mainVideoCallWidget!.init();
-
     targetUid = targetUidParam;
     // matched
     // 전화 오는 화면으로
@@ -230,7 +216,6 @@ class SocketService extends GetxController {
       client!.deactivate();
       client = null;
       debugPrint('연결끔');
-      debugPrint('After deactivating: Is client active? ${client?.isActive}');
     } catch (e) {
       debugPrint('Error disposing socket: $e');
     }

@@ -19,13 +19,13 @@ class PetGenderPageState extends State<PetGenderPage> {
   final SignupController signupController = Get.put(SignupController());
   String _gender = '';
   bool _isNeutered = false;
-  late double _progress; // _progress를 late로 선언
+  late double _progress;
   bool _isButtonDisabled = true;
 
   @override
   void initState() {
     super.initState();
-    _progress = widget.progress; // initState에서 _progress를 초기화
+    _progress = widget.progress;
   }
 
   @override
@@ -99,27 +99,25 @@ class PetGenderPageState extends State<PetGenderPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Transform.scale(
-                      scale: 1.5, // 원하는 사이즈로 조절
+                      scale: 1.5,
                       child: Checkbox(
                         value: _isNeutered,
-                        activeColor: const Color.fromARGB(
-                            255, 249, 113, 95), // 체크박스 컬러 변경
-                        checkColor: Colors.white, // 체크 마크 컬러
+                        activeColor: const Color.fromARGB(255, 249, 113, 95),
+                        checkColor: Colors.white,
                         onChanged: (bool? value) {
                           setState(() {
                             _isNeutered = !_isNeutered;
-                            // _isButtonDisabled = false;
                           });
                         },
                       ),
                     ),
-                    const SizedBox(width: 20.0), // 체크박스와 텍스트 사이의 간격 조절
+                    const SizedBox(width: 20.0),
                     const Text(
                       '중성화했어요',
                       style: TextStyle(
                         fontSize: 20.0,
                         fontFamily: 'Cafe24',
-                      ), // 텍스트 크기 조절
+                      ),
                     ),
                   ],
                 ),
