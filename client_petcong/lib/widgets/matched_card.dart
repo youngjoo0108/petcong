@@ -112,9 +112,8 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                     fontWeight: FontWeight.normal,
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.camera_alt),
-                  onPressed: () async {
+                GestureDetector(
+                  onTap: () async {
                     final url = Uri.parse(
                         'http://www.instagram.com/${widget.matchedUser.instagramId}');
                     if (await canLaunchUrl(url)) {
@@ -123,17 +122,32 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                       throw 'Could not launch https://instagram.com/${widget.matchedUser.instagramId}}';
                     }
                   },
+                  child: Image.asset(
+                    'assets/src/instagram.png',
+                    width: 30, // 여기를 변경
+                    height: 30, // 여기를 변경
+                  ), // 이 부분을 변경
                 ),
               ],
             ),
             const SizedBox(height: 10),
-            Text(
-              'Kakao ID: ${widget.matchedUser.kakaoId}',
-              style: const TextStyle(
-                // 여기에 폰트 사이즈와 무게 추가
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'assets/src/kakaotalk.png',
+                  width: 30, // 원하는 크기로 조절
+                  height: 30, // 원하는 크기로 조절
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  ':${widget.matchedUser.kakaoId}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
