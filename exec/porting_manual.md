@@ -103,17 +103,18 @@ allowed-url:
     - /websocket/**
 ```
 ---
-# Firebase 설정
-https://firebase.google.com/docs/admin/setup?hl=ko#initialize-sdk
+# Firebase
+프로젝트 추가 : https://firebase.google.com/?hl=ko -> 콘솔로 이동 -> 새 프로젝트 추가
+SDK 초기화 : https://firebase.google.com/docs/admin/setup?hl=ko#initialize_the_sdk_in_non-google_environments
 
-##### 환경변수 (윈도우: 시스템 환경 변수 편집 -> 환경 변수 -> 사용자 변수 새로 만들기, 리눅스: export)
-+ GOOGLE_APPLICATION_CREDENTIALS="서비스 계정으로 만든 비공개 키 경로"
+##### 환경변수 설정 (윈도우: 시스템 환경 변수 편집 -> 환경 변수 -> 사용자 변수 새로 만들기, 리눅스: export)
++ GOOGLE_APPLICATION_CREDENTIALS="서비스 계정으로 만든 비공개 키 파일의 경로"
 
 
-# AWS S3 설정
+# AWS S3
 https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/Welcome.html
 
-##### 환경변수 (윈도우: 시스템 환경 변수 편집 -> 환경 변수 -> 사용자 변수 새로 만들기, 리눅스: export)
+##### 환경변수 설정 (윈도우: 시스템 환경 변수 편집 -> 환경 변수 -> 사용자 변수 새로 만들기, 리눅스: export)
 + S3_BUCKET_NAME="S3 버킷 이름"
 + AWS_ACCESS_KEY_ID="엑세스 키 아이디"
 + AWS_SECRET_ACCESS_KEY="시크릿 엑세스 키"
