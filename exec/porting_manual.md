@@ -1,6 +1,6 @@
 # 개발 환경
 Server OS
-+ Ubuntu 20.04.6 LTS
++ ubuntu : Ubuntu 20.04.6 LTS
 
 Java
 + jdk : openjdk version "17.0.9" 2023-10-17
@@ -34,7 +34,7 @@ Deploy
 + jenkins : 2.426.2
 
 SSL/TLS
-+ Let's Encrypt : certbot 0.40.0
++ letsencrypt : certbot 0.40.0
 
 Firebase SDK
 + firebase-admin : 9.2.0
