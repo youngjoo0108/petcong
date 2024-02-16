@@ -50,7 +50,7 @@ class _MatchedCardState extends State<MatchedCard> {
               ),
             ),
             const SizedBox(
-              height: 15,
+              height: 10,
             ),
             Text(
               widget.matchedUser.nickname,
@@ -86,85 +86,87 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
           style: const TextStyle(fontFamily: 'Cafe24'),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            Hero(
-              tag: widget.matchedUser.profileImageUrls![0],
-              child: AspectRatio(
-                  aspectRatio: 1,
-                  child: CachedNetworkImage(
-                      imageUrl: widget.matchedUser.profileImageUrls![0],
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                      fit: BoxFit.cover)),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              widget.matchedUser.description!,
-              style: const TextStyle(
-                fontFamily: 'Cafe24',
-                fontSize: 25,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Hero(
+                tag: widget.matchedUser.profileImageUrls![0],
+                child: AspectRatio(
+                    aspectRatio: 1,
+                    child: CachedNetworkImage(
+                        imageUrl: widget.matchedUser.profileImageUrls![0],
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        fit: BoxFit.cover)),
               ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                IconButton(
-                  icon: Image.asset(
-                    'assets/src/instagram_logo.png',
-                    width: 40,
-                  ), // 인스타그램 로고 추가
-                  onPressed: () async {
-                    final url = Uri.parse(
-                        'http://www.instagram.com/${widget.matchedUser.instagramId}');
-                    if (await canLaunchUrl(url)) {
-                      await launchUrl(url);
-                    } else {
-                      throw 'Could not launch https://instagram.com/${widget.matchedUser.instagramId}}';
-                    }
-                  },
+              const SizedBox(height: 20),
+              Text(
+                widget.matchedUser.description!,
+                style: const TextStyle(
+                  fontFamily: 'Cafe24',
+                  fontSize: 25,
                 ),
-                Text(
-                  '${widget.matchedUser.instagramId}',
-                  style: const TextStyle(
-                    fontFamily: 'Cafe24',
-                    fontSize: 20,
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  IconButton(
+                    icon: Image.asset(
+                      'assets/src/instagram_logo.png',
+                      width: 40,
+                    ), // 인스타그램 로고 추가
+                    onPressed: () async {
+                      final url = Uri.parse(
+                          'http://www.instagram.com/${widget.matchedUser.instagramId}');
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url);
+                      } else {
+                        throw 'Could not launch https://instagram.com/${widget.matchedUser.instagramId}}';
+                      }
+                    },
                   ),
-                ), // 텍스트 추가
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                IconButton(
-                  icon: Image.asset(
-                    'assets/src/kakaotalk_logo.png',
-                    width: 40,
-                  ), // 인스타그램 로고 추가
-                  onPressed: () async {
-                    final url = Uri.parse(
-                        'http://www.instagram.com/${widget.matchedUser.instagramId}');
-                    if (await canLaunchUrl(url)) {
-                      await launchUrl(url);
-                    } else {
-                      throw 'Could not launch https://instagram.com/${widget.matchedUser.instagramId}}';
-                    }
-                  },
-                ),
-                Text(
-                  ' ${widget.matchedUser.kakaoId}',
-                  style: const TextStyle(
-                    fontFamily: 'Cafe24',
-                    fontSize: 20,
+                  Text(
+                    '${widget.matchedUser.instagramId}',
+                    style: const TextStyle(
+                      fontFamily: 'Cafe24',
+                      fontSize: 20,
+                    ),
+                  ), // 텍스트 추가
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  IconButton(
+                    icon: Image.asset(
+                      'assets/src/kakaotalk_logo.png',
+                      width: 40,
+                    ), // 인스타그램 로고 추가
+                    onPressed: () async {
+                      final url = Uri.parse(
+                          'http://www.instagram.com/${widget.matchedUser.instagramId}');
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url);
+                      } else {
+                        throw 'Could not launch https://instagram.com/${widget.matchedUser.instagramId}}';
+                      }
+                    },
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Text(
+                    ' ${widget.matchedUser.kakaoId}',
+                    style: const TextStyle(
+                      fontFamily: 'Cafe24',
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
