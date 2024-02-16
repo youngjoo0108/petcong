@@ -121,9 +121,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       title: const Text(
                         'Logout',
-                        style: TextStyle(
-                          fontFamily: 'Cafe24',
-                        ),
+                        style: TextStyle(fontFamily: 'Cafe24', fontSize: 10),
                       ),
                       onTap: () async {
                         await UserController.signOut(uid!);
