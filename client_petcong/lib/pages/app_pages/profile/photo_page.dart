@@ -104,7 +104,11 @@ class PhotoPageState extends State<PhotoPage> {
           const Center(
             child: Text(
               '사진 첨부',
-              style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 32.0,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Cafe24',
+              ),
             ),
           ),
           const SizedBox(height: 10.0),
@@ -115,12 +119,13 @@ class PhotoPageState extends State<PhotoPage> {
                 fontSize: 16.0,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey,
+                fontFamily: 'Cafe24',
               ),
             ),
           ),
           const SizedBox(height: 60.0),
           SizedBox(
-            height: 250,
+            height: 350,
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,

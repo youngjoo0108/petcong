@@ -82,18 +82,21 @@ class _MatchingCardState extends State<MatchingCard> {
                   Text(
                     isPet ? humanProfile : petProfile,
                     style: theme.textTheme.titleLarge!.copyWith(
-                        color: Colors.white, fontWeight: FontWeight.w600),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Cafe24',
+                    ),
                   ),
                   const SizedBox(height: 15),
                   Text(
                     widget.matchingUser.description!,
                     style: const TextStyle(
-                      color: Color.fromARGB(255, 191, 190, 190),
-                      fontSize: 15,
-                      fontFamily: 'Mulish',
-                      fontWeight: FontWeight.w400,
-                      height: 1.2,
-                    ),
+                        color: Color.fromARGB(255, 191, 190, 190),
+                        fontSize: 15,
+                        // fontFamily: 'Mulish',
+                        fontWeight: FontWeight.w400,
+                        height: 1.2,
+                        fontFamily: 'Cafe24'),
                   ),
                   const SizedBox(height: 45),
                 ],

@@ -35,7 +35,7 @@ class CallWaiting extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        '$partnerNickname님 과 ',
+                        '$partnerNickname님과 ',
                         style: const TextStyle(
                           fontFamily: 'Cafe24',
                           color: Colors.white,
@@ -44,7 +44,7 @@ class CallWaiting extends StatelessWidget {
                         ),
                       ),
                       const Text(
-                        '매치했습니다. 인사하세요!',
+                        '매치됐습니다!',
                         style: TextStyle(
                           fontFamily: 'Cafe24',
                           color: Colors.white,

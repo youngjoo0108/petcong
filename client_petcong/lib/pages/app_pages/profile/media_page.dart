@@ -47,9 +47,11 @@ class MediaPageState extends State<MediaPage> {
           icon: const Text(
             '취소',
             style: TextStyle(
-                color: Color.fromARGB(255, 249, 113, 95),
-                fontSize: 18,
-                fontWeight: FontWeight.w500),
+              color: Color.fromARGB(255, 249, 113, 95),
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Cafe24',
+            ),
           ),
           onPressed: () => Get.back(),
         ),
@@ -70,8 +72,11 @@ class MediaPageState extends State<MediaPage> {
                     SizedBox(width: 25),
                     Text(
                       'Gallery',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Cafe24',
+                      ),
                     ),
                   ],
                 ),

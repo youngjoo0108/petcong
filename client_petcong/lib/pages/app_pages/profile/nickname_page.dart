@@ -66,7 +66,11 @@ class NicknamePageState extends State<NicknamePage> {
             ),
             const SizedBox(height: 5.0),
             const Text('내 별명은?',
-                style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600)),
+                style: TextStyle(
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Cafe24',
+                )),
             const SizedBox(height: 30.0),
             SizedBox(
               width: 200, // 원하는 너비 설정
@@ -81,6 +85,7 @@ class NicknamePageState extends State<NicknamePage> {
                   fontSize: 20.0,
                   fontWeight: FontWeight.w400,
                   decoration: TextDecoration.none,
+                  fontFamily: 'Cafe24',
                 ),
                 decoration: const InputDecoration(
                   hintText: '별명을 입력하세요',

@@ -61,9 +61,11 @@ class IntroducePageState extends State<IntroducePage> {
                         child: const Text(
                           '건너뛰기',
                           style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.grey),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey,
+                            fontFamily: 'Cafe24',
+                          ),
                         ),
                         onPressed: () {
                           Get.to(const SocialPage(
@@ -76,8 +78,11 @@ class IntroducePageState extends State<IntroducePage> {
                 ),
                 const SizedBox(height: 5.0),
                 const Text('자기 소개 해주세요!',
-                    style:
-                        TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600)),
+                    style: TextStyle(
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Cafe24',
+                    )),
                 const SizedBox(height: 30.0),
                 SizedBox(
                   width: 300.0,
@@ -90,6 +95,7 @@ class IntroducePageState extends State<IntroducePage> {
                       fontSize: 20.0,
                       decoration: TextDecoration.none,
                       fontWeight: FontWeight.w400,
+                      fontFamily: 'Cafe24',
                     ),
                     decoration: const InputDecoration(
                       hintText: '자기 소개',

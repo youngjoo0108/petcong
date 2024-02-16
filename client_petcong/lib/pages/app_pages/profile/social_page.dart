@@ -72,9 +72,11 @@ class SocialPageState extends State<SocialPage> {
                       child: const Text(
                         '건너뛰기',
                         style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey,
+                          fontFamily: 'Cafe24',
+                        ),
                       ),
                       onPressed: () {
                         Get.to(const PhotoPage(
@@ -89,7 +91,10 @@ class SocialPageState extends State<SocialPage> {
               const Center(
                   child: Text('SNS',
                       style: TextStyle(
-                          fontSize: 32.0, fontWeight: FontWeight.w600))),
+                        fontSize: 32.0,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Cafe24',
+                      ))),
               const SizedBox(height: 30.0),
               SizedBox(
                 width: 300,
@@ -99,6 +104,7 @@ class SocialPageState extends State<SocialPage> {
                       fontSize: 20.0,
                       fontWeight: FontWeight.w400,
                       decoration: TextDecoration.none,
+                      fontFamily: 'Cafe24',
                     ),
                     decoration: const InputDecoration(
                       hintText: '카카오톡 아이디를 입력하세요',
@@ -123,6 +129,7 @@ class SocialPageState extends State<SocialPage> {
                       fontSize: 20.0,
                       fontWeight: FontWeight.w400,
                       decoration: TextDecoration.none,
+                      fontFamily: 'Cafe24',
                     ),
                     decoration: const InputDecoration(
                       hintText: '인스타그램 아이디를 입력하세요',

@@ -48,8 +48,16 @@ class _MatchedCardState extends State<MatchedCard> {
                 ),
               ),
             ),
-            Text(widget.matchedUser.nickname,
-                style: const TextStyle(fontSize: 16)),
+            const SizedBox(
+              height: 15,
+            ),
+            Text(
+              widget.matchedUser.nickname,
+              style: const TextStyle(
+                fontSize: 20,
+                fontFamily: 'Cafe24',
+              ),
+            ),
           ],
         ),
       ),
@@ -72,7 +80,10 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.matchedUser.nickname),
+        title: Text(
+          widget.matchedUser.nickname,
+          style: const TextStyle(fontFamily: 'Cafe24'),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -92,14 +103,22 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                   )),
             ),
             const SizedBox(height: 20),
-            Text(widget.matchedUser.description!),
-            const SizedBox(height: 10),
+            Text(
+              widget.matchedUser.description!,
+              style: const TextStyle(
+                fontFamily: 'Cafe24',
+                fontSize: 25,
+              ),
+            ),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Text('Instagram 주소: '), // 텍스트 추가
                 IconButton(
-                  icon: const Icon(Icons.camera_alt), // 인스타그램 로고 추가
+                  icon: Image.asset(
+                    'assets/src/instagram_logo.png',
+                    width: 40,
+                  ), // 인스타그램 로고 추가
                   onPressed: () async {
                     final url = Uri.parse(
                         'http://www.instagram.com/${widget.matchedUser.instagramId}');
@@ -110,10 +129,43 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                     }
                   },
                 ),
+                Text(
+                  '${widget.matchedUser.instagramId}',
+                  style: const TextStyle(
+                    fontFamily: 'Cafe24',
+                    fontSize: 20,
+                  ),
+                ), // 텍스트 추가
               ],
             ),
             const SizedBox(height: 10),
-            Text('Kakao ID: ${widget.matchedUser.kakaoId}'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                IconButton(
+                  icon: Image.asset(
+                    'assets/src/kakaotalk_logo.png',
+                    width: 40,
+                  ), // 인스타그램 로고 추가
+                  onPressed: () async {
+                    final url = Uri.parse(
+                        'http://www.instagram.com/${widget.matchedUser.instagramId}');
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url);
+                    } else {
+                      throw 'Could not launch https://instagram.com/${widget.matchedUser.instagramId}}';
+                    }
+                  },
+                ),
+                Text(
+                  ' ${widget.matchedUser.kakaoId}',
+                  style: const TextStyle(
+                    fontFamily: 'Cafe24',
+                    fontSize: 20,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

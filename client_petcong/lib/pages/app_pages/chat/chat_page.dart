@@ -29,8 +29,9 @@ class MainChatPageState extends State<MainChatPage> {
               Image.asset('assets/src/waiting.png'),
               const SizedBox(height: 20),
               const Text(
-                '아직 매치가 없습니다.',
+                '아직 매칭된 상대가 없습니다.',
                 style: TextStyle(
+                    fontFamily: 'Cafe24',
                     color: MyColor.myColor2,
                     fontSize: 24,
                     fontWeight: FontWeight.w700),
@@ -39,6 +40,7 @@ class MainChatPageState extends State<MainChatPage> {
               const Text(
                 '매칭 상대를 찾아보세요!',
                 style: TextStyle(
+                    fontFamily: 'Cafe24',
                     color: MyColor.myColor2,
                     fontSize: 24,
                     fontWeight: FontWeight.w700),

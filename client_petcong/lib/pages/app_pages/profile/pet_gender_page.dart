@@ -55,7 +55,10 @@ class PetGenderPageState extends State<PetGenderPage> {
               const SizedBox(height: 5.0),
               Text('${widget.petName}의 성별은?',
                   style: const TextStyle(
-                      fontSize: 32.0, fontWeight: FontWeight.w600)),
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Cafe24',
+                  )),
               const SizedBox(height: 40.0),
               Center(
                 child: SizedBox(
@@ -113,7 +116,10 @@ class PetGenderPageState extends State<PetGenderPage> {
                     const SizedBox(width: 20.0), // 체크박스와 텍스트 사이의 간격 조절
                     const Text(
                       '중성화했어요',
-                      style: TextStyle(fontSize: 20.0), // 텍스트 크기 조절
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontFamily: 'Cafe24',
+                      ), // 텍스트 크기 조절
                     ),
                   ],
                 ),

@@ -145,7 +145,10 @@ class BirthdayPageState extends State<BirthdayPage> {
                     const Text(
                       '내 생일은?',
                       style: TextStyle(
-                          fontSize: 32.0, fontWeight: FontWeight.w600),
+                        fontSize: 32.0,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Cafe24',
+                      ),
                     ),
                     const SizedBox(height: 30.0),
                     SizedBox(

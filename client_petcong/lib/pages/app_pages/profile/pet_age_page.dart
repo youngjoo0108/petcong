@@ -98,7 +98,10 @@ class PetAgePageState extends State<PetAgePage> {
                   Text(
                     '${widget.petName}의 나이는?',
                     style: const TextStyle(
-                        fontSize: 32.0, fontWeight: FontWeight.w600),
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Cafe24',
+                    ),
                   ),
                   const SizedBox(height: 30.0),
                   SizedBox(
@@ -119,6 +122,7 @@ class PetAgePageState extends State<PetAgePage> {
                       style: const TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.w400,
+                        fontFamily: 'Cafe24',
                       ),
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,

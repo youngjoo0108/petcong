@@ -129,10 +129,10 @@ class MainProfilePage extends StatelessWidget {
                       '$nickname, $age',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 30,
-                        fontWeight: FontWeight.w800,
-                      ),
+                          color: Colors.black,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Cafe24'),
                     );
                   },
                 ),
@@ -237,10 +237,10 @@ class MainProfilePage extends StatelessWidget {
                               child: Center(
                                 child: Text(description,
                                     style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    )),
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Cafe24')),
                               ),
                             );
                           },
