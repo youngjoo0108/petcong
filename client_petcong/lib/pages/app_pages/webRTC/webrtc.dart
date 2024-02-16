@@ -321,6 +321,7 @@ class MainVideoCallWidgetState extends State<MainVideoCallWidget> {
                                             color: Colors.black,
                                             fontSize: 20,
                                             fontWeight: FontWeight.w500,
+                                            fontFamily: 'Cafe24',
                                           ),
                                         ),
                                       ),

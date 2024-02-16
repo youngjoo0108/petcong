@@ -39,12 +39,13 @@ class _MatchedCardState extends State<MatchedCard> {
               child: AspectRatio(
                 aspectRatio: 1,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10), // 이미지 모서리 둥글게
+                  borderRadius: BorderRadius.circular(10),
                   child: CachedNetworkImage(
-                      imageUrl: widget.matchedUser.profileImageUrls![0],
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                      fit: BoxFit.cover),
+                    imageUrl: widget.matchedUser.profileImageUrls![0],
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -93,14 +94,11 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
               tag: widget.matchedUser.profileImageUrls![0],
               child: AspectRatio(
                   aspectRatio: 1,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10), // 이미지 모서리 둥글게
-                    child: CachedNetworkImage(
-                        imageUrl: widget.matchedUser.profileImageUrls![0],
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                        fit: BoxFit.cover),
-                  )),
+                  child: CachedNetworkImage(
+                      imageUrl: widget.matchedUser.profileImageUrls![0],
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      fit: BoxFit.cover)),
             ),
             const SizedBox(height: 20),
             Text(
