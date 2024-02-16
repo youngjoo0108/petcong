@@ -55,6 +55,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> activateClient() async {
     await socketService.init();
     _client = await socketService.initSocket();
+    debugPrint(_client.toString());
   }
 
   @override
@@ -121,9 +122,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       title: const Text(
                         'Logout',
-                        style: TextStyle(
-                          fontFamily: 'Cafe24',
-                        ),
+                        style: TextStyle(fontFamily: 'Cafe24', fontSize: 10),
                       ),
                       onTap: () async {
                         await UserController.signOut(uid!);

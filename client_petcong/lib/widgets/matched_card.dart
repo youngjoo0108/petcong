@@ -106,7 +106,7 @@ class _ProfileDetailPageState extends State<ProfileDetailPage> {
                 widget.matchedUser.description!,
                 style: const TextStyle(
                   fontFamily: 'Cafe24',
-                  fontSize: 25,
+                  fontSize: 20,
                 ),
               ),
               const SizedBox(height: 20),
