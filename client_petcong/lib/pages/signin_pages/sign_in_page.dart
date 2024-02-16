@@ -30,7 +30,7 @@ class _SignInPageState extends State<SignInPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/src/petcong_c.png',
+                      'assets/src/petcong_c_logo.png',
                       width: 200,
                       height: 200,
                       fit: BoxFit.contain,

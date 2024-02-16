@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:petcong/controller/call_wait_controller.dart';
 import 'package:petcong/controller/match_card_controller.dart';
 import 'package:petcong/models/card_profile_model.dart';
-import 'package:petcong/models/choice_res.dart';
 import 'package:petcong/services/socket_service.dart';
 import 'package:petcong/services/matching_service.dart';
 import 'package:petcong/widgets/card_overlay.dart';
@@ -119,19 +118,19 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        // 매칭페이지의 call버튼 -> onLike() -> makeCall()을 통해 통화대기화면 이동까지만.
-        heroTag: 'call',
-        onPressed: () {
-          if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
-            onLike(39); // 패드
-          } else {
-            onLike(147); // 여기에 쓰면 됨
-          }
-        },
-        label: const Text('call'),
-        icon: const Icon(Icons.call),
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   // 매칭페이지의 call버튼 -> onLike() -> makeCall()을 통해 통화대기화면 이동까지만.
+      //   heroTag: 'call',
+      //   onPressed: () {
+      //     if (uid == '4GtzqrsSDBVSC1FkOWXXJ2i7CfA3') {
+      //       onLike(187); // 패드
+      //     } else {
+      //       onLike(147); // 여기에 쓰면 됨
+      //     }
+      //   },
+      //   label: const Text('call'),
+      //   icon: const Icon(Icons.call),
+      // ),
     );
   }
 
@@ -152,8 +151,6 @@ class _MainMatchingPageState extends State<MainMatchingPage> {
     }
     // MatchCardController.to.fillQueue();
   }
-
-  /// targetId = int
 
   Future<void> onLike(int targetId) async {
     CardWaitController cardWaitController = Get.put(CardWaitController());

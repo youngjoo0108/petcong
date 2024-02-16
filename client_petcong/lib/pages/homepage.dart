@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/pages/app_pages/matching/matching_page.dart';
@@ -43,7 +44,9 @@ class _HomePageState extends State<HomePage> {
     try {
       final prefs = await SharedPreferences.getInstance();
       uid = prefs.getString('uid');
-      print(uid);
+      if (kDebugMode) {
+        print("initPrefs: $uid");
+      }
     } catch (e) {
       debugPrint('Error retrieving values from SharedPreferences: $e');
     }
