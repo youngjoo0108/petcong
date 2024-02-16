@@ -104,7 +104,7 @@ allowed-url:
 ```
 ---
 # Firebase
-프로젝트 추가 : https://firebase.google.com/?hl=ko -> 콘솔로 이동 -> 새 프로젝트 추가
+프로젝트 추가 : https://firebase.google.com/?hl=ko -> 콘솔로 이동 -> 새 프로젝트 추가 
 SDK 초기화 : https://firebase.google.com/docs/admin/setup?hl=ko#initialize_the_sdk_in_non-google_environments
 
 ##### 환경변수 설정 (윈도우: 시스템 환경 변수 편집 -> 환경 변수 -> 사용자 변수 새로 만들기, 리눅스: export)
