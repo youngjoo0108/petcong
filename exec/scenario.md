@@ -1,5 +1,5 @@
 ![사진 1](/exec/images/스냅샷01.png)
-Sign in with Google 버튼을 눌러 구글 계정으로 로그인 합니다.
+### Sign in with Google 버튼을 눌러 구글 계정으로 로그인 합니다.
 
 ![사진 2](/exec/images/스냅샷02.png)
 새로운 회원은 회원가입 절차를 진행합니다.
