@@ -55,6 +55,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> activateClient() async {
     await socketService.init();
     _client = await socketService.initSocket();
+    debugPrint(_client.toString());
   }
 
   @override

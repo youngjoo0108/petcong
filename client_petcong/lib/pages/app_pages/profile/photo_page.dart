@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:petcong/controller/match_card_controller.dart';
 import 'package:petcong/controller/profile_controller.dart';
 import 'package:petcong/controller/signup_controller.dart';
-import 'package:petcong/controller/user_controller.dart';
 import 'package:petcong/widgets/continue_button.dart';
 import 'package:petcong/widgets/create_button.dart';
 import 'package:petcong/widgets/delete_button.dart';
