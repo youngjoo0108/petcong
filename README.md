@@ -89,10 +89,15 @@
 
 # 🎨 아키텍처
 
-![아키텍처]()
+![아키텍처](./asset/architecture.png)
 <br/>
 
 # 💡 주요기능
+
+- 매칭 상대 탐색
+
+
+- 화상통화 with IceBreaking
 
 
 
