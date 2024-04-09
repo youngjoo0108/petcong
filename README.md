@@ -1,7 +1,7 @@
 # 펫콩! 반려동물 실시간 랜덤 소개팅 모바일 어플리케이션
 
 
-![petcong](./assets/petcong.PNG)
+![petcong](./asset/logo.png)
 
 # 목차
 
