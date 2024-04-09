@@ -44,7 +44,7 @@
 | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | <img src="https://avatars.githubusercontent.com/u/91371560?v=4" width="150" height="150"> | <img src="https://avatars.githubusercontent.com/u/91371560?v=4" width="150" height="150"> | <img src="https://avatars.githubusercontent.com/u/91371560?v=4" width="150" height="150"> | <img src="https://avatars.githubusercontent.com/u/91371560?v=4" width="150" height="150"> | <img src="https://avatars.githubusercontent.com/u/91371560?v=4" width="150" height="150"> | <img src="https://avatars.githubusercontent.com/u/91371560?v=4" width="150" height="150"> |
 | 팀장, 풀스택                                                                               | 백엔드, WebRTC                                                                                    | 프론트엔드, WebRTC                                                                              | 백엔드, 인프라                                                                                | 프론트엔드                                                                                    | 프론트엔드                                                                                    |
-| Docs 페이지 구현<br/>사용자 인증/인가<br/>                                | 은행 생성 API 개발<br/>더미데이터 API 개발<br/>                                           | CI/CD 구축<br/>이메일 인증 및 검색 API 개발<br/>                                           | 계좌, 상품 API 개발<br/> 거래내역 API 개발<br/>                                            | 애플리케이션 구현<br/>Admin 페이지 API 연동                                               | Admin 레이아웃 구현<br/> 대시보드 구현<br/>                                               |
+| 매칭 알고리즘 구현<br/> <br/>                                | 매칭 알고리즘 구현<br/>WebRTC 시그널링 서버 구현<br/>                                           | 프로필 페이지 구현<br/>WebRTC 상태관리<br/>                                           | CI/CD 구축<br/> 인증/인가 서비스 구현<br/>                                            | 매칭페이지 구현<br/> Firebase 소셜로그인 구현                                               | 프로필 입력 구현<br/> UI/UX 디자인<br/>                                               |
 
 <br/>
 
@@ -54,6 +54,7 @@
 <br/>
 <img src="https://img.shields.io/badge/flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white" width="auto" height="25">
 <img src="https://img.shields.io/badge/getx-8A2BE2?style=for-the-badge&logo=getx&logoColor=white" width="auto" height="25">
+<img src="https://img.shields.io/badge/webrtc-333333?style=for-the-badge&logo=webrtc&logoColor=white" width="auto" height="25">
 
 **Back**
 <br/>
@@ -99,15 +100,15 @@
 
 ### [1. 요구사항 명세서]()
 
-![Required](./assets/Required.PNG)
+![Required](./asset/required.png)
 
 ### [2. ERD]()
 
-![ERD](./assets/ERD.PNG)
+![ERD](./asset/erd.png)
 
 ### [3. API 명세서]()
 
-![API](./assets/API.PNG)
+![API](./asset/api.png)
 <br/>
 
 
